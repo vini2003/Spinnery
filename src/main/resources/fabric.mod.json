@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "id": "beeinajar",
+  "version": "${version}",
+
+  "name": "Bee-in-a-Jar",
+  "description": "A bee. A jar. A bee in a jar.",
+  "authors": [
+    "vini2003"
+  ],
+  "contact": {
+    "sources": "https://github.com/vini2003/bee-in-a-jar"
+  },
+
+  "license": "GPL v3.0",
+  "icon": "assets/beeinajar/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "beeinajar.BeeInAJarMod"
+    ]
+  },
+  "mixins": [
+  ],
+  "depends": {
+    "fabricloader": ">=0.4.0",
+    "fabric": "*"
+  },
+  "suggests": {
+    "flamingo": "*"
+  }
+}
