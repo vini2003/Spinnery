@@ -1,12 +1,12 @@
 package glib.container.common;
 
 import glib.container.common.widget.Dropdown;
+import glib.container.common.widget.DynamicImage;
 import glib.container.common.widget.ItemSlot;
 import glib.container.common.widget.Panel;
 import glib.container.common.widget.Slider;
 import glib.container.common.widget.StaticImage;
 import glib.container.common.widget.Toggle;
-import glib.container.common.widget.Widget;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.BasicInventory;
 import net.minecraft.inventory.Inventory;
@@ -30,7 +30,7 @@ public class TestContainer extends BaseContainer {
 
 		getLinkedPanel().alignWithContainerEdge();
 
-		StaticImage exampleImage = new StaticImage(0, 40, 137, 59.2, 73, new Identifier("glib:textures/widget/catgirl.png"), linkedPanel);
+		StaticImage exampleStaticImage = new StaticImage(0, 40, 137, 59.2, 73, new Identifier("glib:textures/widget/catgirl.png"), linkedPanel);
 
 		Slider exampleSlider = new Slider(0, 120, -5, 100, 12, 16, new Identifier("glib:textures/widget/test.png"), linkedPanel);
 
@@ -41,10 +41,20 @@ public class TestContainer extends BaseContainer {
 		ItemSlot exampleSlot2 = new ItemSlot(76, 140, -6, 18, 18, 1, linkedInventory, linkedPanel);
 		ItemSlot exampleSlot3 = new ItemSlot(94, 140, -6, 18, 18, 2, linkedInventory, linkedPanel);
 
-		exampleDropdown1.setCanMove(true);
-		exampleDropdown2.setCanMove(true);
+		DynamicImage exampleDynamicImage = new DynamicImage(0, 80, 137, 59.2, 73, linkedPanel,
+		new Identifier("glib:textures/widget/0.png"),
+		new Identifier("glib:textures/widget/1.png"),
+		new Identifier("glib:textures/widget/2.png"),
+		new Identifier("glib:textures/widget/3.png"),
+		new Identifier("glib:textures/widget/4.png"),
+		new Identifier("glib:textures/widget/5.png"),
+		new Identifier("glib:textures/widget/6.png"),
+		new Identifier("glib:textures/widget/7.png"));
 
-		getLinkedPanel().addWidget(exampleImage);
+		exampleDropdown1.setMovable(true);
+		exampleDropdown2.setMovable(true);
+
+		getLinkedPanel().addWidget(exampleStaticImage);
 		getLinkedPanel().addWidget(exampleSlider);
 		getLinkedPanel().addWidget(exampleDropdown1);
 		getLinkedPanel().addWidget(exampleDropdown2);
@@ -52,6 +62,8 @@ public class TestContainer extends BaseContainer {
 		getLinkedPanel().addWidget(exampleSlot1);
 		getLinkedPanel().addWidget(exampleSlot2);
 		getLinkedPanel().addWidget(exampleSlot3);
+
+		getLinkedPanel().addWidget(exampleDynamicImage);
 
 		exampleSlot2.getSlot().setStack(new ItemStack(Items.BRAIN_CORAL, 64));
 
@@ -61,7 +73,7 @@ public class TestContainer extends BaseContainer {
 
 		exampleDropdown2.addWidget(new StaticImage(29.1, 40, 137, 72.6, 102.4, new Identifier("glib:textures/widget/cattegirl.png"), linkedPanel));
 
-		exampleImage.alignWithContainerCenter();
+		exampleStaticImage.alignWithContainerCenter();
 		exampleSlider.alignWithContainerCenter();
 	}
 }

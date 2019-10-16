@@ -54,16 +54,20 @@ public class Panel extends Widget {
 		this.linkedWidgets = linkedWidgets;
 	}
 
-	public void addWidget(Widget widget) {
-		if (!this.getLinkedWidgets().contains(widget)) {
-			widget.setLinkedPanel(this);
-			getLinkedWidgets().add(widget);
+	public void addWidget(Widget... widgets) {
+		for (Widget widget : widgets) {
+			if (!this.getLinkedWidgets().contains(widget)) {
+				widget.setLinkedPanel(this);
+				getLinkedWidgets().add(widget);
+			}
 		}
 	}
 
-	public void removeWidget(Widget widget) {
-		if (this.getLinkedWidgets().contains(widget)) {
-			getLinkedWidgets().remove(widget);
+	public void removeWidget(Widget... widgets) {
+		for (Widget widget : widgets) {
+			if (this.getLinkedWidgets().contains(widget)) {
+				getLinkedWidgets().remove(widget);
+			}
 		}
 	}
 

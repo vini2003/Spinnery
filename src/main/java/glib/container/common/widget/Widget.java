@@ -200,7 +200,7 @@ public class Widget implements Tickable {
 		return canMove;
 	}
 
-	public void setCanMove(boolean canMove) {
+	public void setMovable(boolean canMove) {
 		this.canMove = canMove;
 	}
 
