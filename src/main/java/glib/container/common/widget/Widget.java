@@ -291,7 +291,9 @@ public class Widget implements Tickable {
 	}
 
 	public boolean isFocused(double mouseX, double mouseY) {
-		Optional<? extends Widget> optional = linkedPanel.getLinkedWidgets().stream().filter((widget) -> ((Widget) widget).getPositionZ() > getPositionZ()).findAny();
+		Optional<? extends Widget> optional = linkedPanel.getLinkedWidgets().stream().filter((widget) ->
+				widget.getPositionZ() > getPositionZ() && widget.isWithinBounds(mouseX, mouseY)
+		).findAny();
 		setFocus(!optional.isPresent() && isWithinBounds(mouseX, mouseY));
 		return getFocus();
 	}

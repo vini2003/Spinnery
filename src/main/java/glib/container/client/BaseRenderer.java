@@ -30,7 +30,7 @@ public class BaseRenderer {
 
 		GlStateManager.enableBlend();
 		GlStateManager.disableTexture();
-		GlStateManager.blendFuncSeparate(GlStateManager.class_4534.SRC_ALPHA.value, GlStateManager.class_4534.ONE_MINUS_SRC_ALPHA.value, GlStateManager.class_4534.ONE.value, GlStateManager.class_4534.ZERO.value);
+		GlStateManager.blendFuncSeparate(770, 771, 1, 0);
 		GlStateManager.color4f(R, G, B, A);
 
 		bufferBuilder.begin(GL11.GL_QUADS, VertexFormats.POSITION);
@@ -87,7 +87,7 @@ public class BaseRenderer {
 		BufferBuilder bufferBuilder = tessellator.getBufferBuilder();
 
 		GlStateManager.enableBlend();
-		GlStateManager.blendFuncSeparate(GlStateManager.class_4534.SRC_ALPHA.value, GlStateManager.class_4534.ONE_MINUS_SRC_ALPHA.value, GlStateManager.class_4534.ONE.value, GlStateManager.class_4534.ZERO.value);
+		GlStateManager.blendFuncSeparate(770, 771, 1, 0);
 		GlStateManager.color4f(255, 255, 255, 255);
 
 		bufferBuilder.begin(GL11.GL_QUADS, VertexFormats.POSITION_UV);
