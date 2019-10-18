@@ -14,20 +14,15 @@ import java.util.List;
 import java.util.Optional;
 
 public class BaseScreen<T extends BaseContainer> extends AbstractContainerScreen<T> {
-	T linkedContainer;
 	List<Slot> dragSlots = new ArrayList<>();
 
 	public BaseScreen(Text name, T linkedContainer, PlayerEntity player) {
 		super(linkedContainer, player.inventory, name);
-		setLinkedContainer(linkedContainer);
+		linkedContainer.tick();
 	}
 
 	public T getLinkedContainer() {
-		return linkedContainer;
-	}
-
-	public void setLinkedContainer(T linkedContainer) {
-		this.linkedContainer = linkedContainer;
+		return getContainer();
 	}
 
 	@Override
@@ -116,8 +111,14 @@ public class BaseScreen<T extends BaseContainer> extends AbstractContainerScreen
 
 	@Override
 	public void tick() {
-		super.containerWidth = (int) linkedContainer.getLinkedPanel().getSizeX();
-		super.containerHeight = (int) linkedContainer.getLinkedPanel().getSizeY();
+		super.containerWidth = (int) getLinkedContainer().getLinkedPanel().getSizeX();
+		super.containerHeight = (int) getLinkedContainer().getLinkedPanel().getSizeY();
+		super.width = containerWidth;
+		super.height = containerHeight;
+		super.left = (int) ((getLinkedContainer().getLinkedPanel().getPositionX()));
+		super.top = (int) ((getLinkedContainer().getLinkedPanel().getPositionY()));
+		getLinkedContainer().left = super.left;
+		getLinkedContainer().top = super.top;
 		getLinkedContainer().tick();
 		super.tick();
 	}

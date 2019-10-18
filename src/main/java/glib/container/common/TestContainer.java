@@ -25,14 +25,16 @@ public class TestContainer extends BaseContainer {
 
 		setLinkedPanel(new Panel(0, 0, -10, 150 + 32, 178 + 32, this));
 
-		getLinkedPanel().setSizeX(182);
-		getLinkedPanel().setSizeY(210);
+		getLinkedPanel().setSizeX(172);
+		getLinkedPanel().setSizeY(250);
+
+		getLinkedPanel().getLinkedContainer().tick();
 
 		getLinkedPanel().alignWithContainerEdge();
 
-		StaticImage exampleStaticImage = new StaticImage(0, 40, 137, 59.2, 73, new Identifier("glib:textures/widget/catgirl.png"), linkedPanel);
+		StaticImage exampleStaticImage = new StaticImage(0, 20, 137, 59.2, 73, new Identifier("glib:textures/widget/catgirl.png"), linkedPanel);
 
-		Slider exampleSlider = new Slider(0, 120, -5, 100, 12, 16, new Identifier("glib:textures/widget/test.png"), linkedPanel);
+		Slider exampleSlider = new Slider(0, 110, -5, 100, 12, 16, new Identifier("glib:textures/widget/test.png"), linkedPanel);
 
 		Dropdown exampleDropdown1 = new Dropdown(331, 143, -3, 96, 18, "OwO who dis?", linkedPanel);
 		Dropdown exampleDropdown2 = new Dropdown(331, 22, -3, 96, 18, "Whoms't ze fuck?", linkedPanel);
@@ -41,7 +43,8 @@ public class TestContainer extends BaseContainer {
 		ItemSlot exampleSlot2 = new ItemSlot(76, 140, -6, 18, 18, 1, linkedInventory, linkedPanel);
 		ItemSlot exampleSlot3 = new ItemSlot(94, 140, -6, 18, 18, 2, linkedInventory, linkedPanel);
 
-		DynamicImage exampleDynamicImage = new DynamicImage(0, 80, 137, 59.2, 73, linkedPanel,
+		DynamicImage exampleDynamicImage = new DynamicImage(0, 161, 170, 10, 10, linkedPanel,
+
 		new Identifier("glib:textures/widget/0.png"),
 		new Identifier("glib:textures/widget/1.png"),
 		new Identifier("glib:textures/widget/2.png"),
@@ -75,5 +78,8 @@ public class TestContainer extends BaseContainer {
 
 		exampleStaticImage.alignWithContainerCenter();
 		exampleSlider.alignWithContainerCenter();
+		exampleDynamicImage.alignWithContainerCenter();
+
+		ItemSlot.addPlayerInventory(0, 18, 18, linkedPlayerInventory, linkedPanel);
 	}
 }

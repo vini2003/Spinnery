@@ -26,6 +26,9 @@ public class BaseContainer extends CraftingContainer<Inventory> implements Ticka
 	protected World linkedWorld;
 	protected Panel linkedPanel;
 
+	public int top = 0;
+	public int left = 0;
+
 	public Slot addSlot(Slot slot) {
 		return super.addSlot(slot);
 	}
