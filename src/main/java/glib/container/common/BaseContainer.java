@@ -1,9 +1,7 @@
 package glib.container.common;
 
-import glib.container.common.widget.Panel;
-import glib.container.common.widget.Widget;
+import glib.container.common.widget.WPanel;
 import net.minecraft.container.CraftingContainer;
-import net.minecraft.container.PropertyDelegate;
 import net.minecraft.container.Slot;
 import net.minecraft.container.SlotActionType;
 import net.minecraft.entity.player.PlayerEntity;
@@ -16,15 +14,12 @@ import net.minecraft.recipe.RecipeFinder;
 import net.minecraft.recipe.RecipeInputProvider;
 import net.minecraft.util.Tickable;
 import net.minecraft.world.World;
-import org.lwjgl.system.NonnullDefault;
-
-import java.util.List;
 
 public class BaseContainer extends CraftingContainer<Inventory> implements Tickable {
 	protected PlayerInventory linkedPlayerInventory;
 	protected Inventory linkedInventory = new BasicInventory(9);
 	protected World linkedWorld;
-	protected Panel linkedPanel;
+	protected WPanel linkedWPanel;
 
 	public int top = 0;
 	public int left = 0;
@@ -41,19 +36,19 @@ public class BaseContainer extends CraftingContainer<Inventory> implements Ticka
 	}
 
 	/**
-	 * Set linked Panel.
-	 * @param linkedPanel Panel to bet set.
+	 * Set linked WPanel.
+	 * @param linkedWPanel WPanel to bet set.
 	 */
-	public void setLinkedPanel(Panel linkedPanel) {
-		this.linkedPanel = linkedPanel;
+	public void setLinkedWPanel(WPanel linkedWPanel) {
+		this.linkedWPanel = linkedWPanel;
 	}
 
 	/**
-	 * Get linked Panel.
-	 * @return Retrieved Panel.
+	 * Get linked WPanel.
+	 * @return Retrieved WPanel.
 	 */
-	public Panel getLinkedPanel() {
-		return linkedPanel;
+	public WPanel getLinkedWPanel() {
+		return linkedWPanel;
 	}
 
 	/**
@@ -91,7 +86,7 @@ public class BaseContainer extends CraftingContainer<Inventory> implements Ticka
 	/**
 	 * Defines custom behavior for 'onSlotClick'.
 	 * @param slot Slot clicked.
-	 * @param button Toggle clicked.
+	 * @param button WToggle clicked.
 	 * @param action Action type.
 	 * @param player Player entity which did action.
 	 * @return ItemStack remaining after click.

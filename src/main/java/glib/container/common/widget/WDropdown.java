@@ -4,14 +4,14 @@ import glib.container.client.BaseRenderer;
 import net.minecraft.client.MinecraftClient;
 import org.lwjgl.glfw.GLFW;
 
-public class Dropdown extends Widget {
-	protected Panel dropdownPanel;
+public class WDropdown extends WWidget {
+	protected WPanel dropdownWPanel;
 
 	protected String dropdownLabel;
 
 	protected boolean state = false;
 
-	public Dropdown(int positionX, int positionY, int positionZ, double sizeX, double sizeY, String dropdownLabel, Panel linkedPanel) {
+	public WDropdown(int positionX, int positionY, int positionZ, double sizeX, double sizeY, String dropdownLabel, WPanel linkedWPanel) {
 		setPositionX(positionX);
 		setPositionY(positionY);
 		setPositionZ(positionZ);
@@ -19,18 +19,18 @@ public class Dropdown extends Widget {
 		setSizeX(sizeX);
 		setSizeY(sizeY);
 
-		setLinkedPanel(linkedPanel);
+		setLinkedWPanel(linkedWPanel);
 
 		setDropdownLabel(dropdownLabel);
-		setDropdownPanel(new Panel(positionX, (int) (positionY + this.sizeY) - 4, positionZ - 1, (int) sizeX, 4));
+		setDropdownPanel(new WPanel(positionX, (int) (positionY + this.sizeY) - 4, positionZ - 1, (int) sizeX, 4));
 	}
 
-	public Panel getDropdownPanel() {
-		return dropdownPanel;
+	public WPanel getDropdownPanel() {
+		return dropdownWPanel;
 	}
 
-	public void setDropdownPanel(Panel dropdownPanel) {
-		this.dropdownPanel = dropdownPanel;
+	public void setDropdownPanel(WPanel dropdownWPanel) {
+		this.dropdownWPanel = dropdownWPanel;
 	}
 
 	public String getDropdownLabel() {
@@ -87,20 +87,20 @@ public class Dropdown extends Widget {
 		return getFocus();
 	}
 
-	public void addWidget(Widget widget) {
+	public void addWidget(WWidget WWidget) {
 		if (getDropdownPanel().getLinkedWidgets().size() > 0) {
-			widget.setPositionY(getDropdownPanel().getLinkedWidgets().get(getDropdownPanel().getLinkedWidgets().size() - 1).getPositionY() + widget.getSizeY());
+			WWidget.setPositionY(getDropdownPanel().getLinkedWidgets().get(getDropdownPanel().getLinkedWidgets().size() - 1).getPositionY() + WWidget.getSizeY());
 		}
 		if (getDropdownPanel().getLinkedWidgets().size() == 0) {
-			widget.setPositionY(getDropdownPanel().getPositionY() + getDropdownPanel().getSizeY());
+			WWidget.setPositionY(getDropdownPanel().getPositionY() + getDropdownPanel().getSizeY());
 		}
-		widget.setPositionX(getDropdownPanel().getPositionX() + 4);
-		getDropdownPanel().setSizeY(getDropdownPanel().getSizeY() + widget.getSizeY() + 1);
-		getDropdownPanel().addWidget(widget);
+		WWidget.setPositionX(getDropdownPanel().getPositionX() + 4);
+		getDropdownPanel().setSizeY(getDropdownPanel().getSizeY() + WWidget.getSizeY() + 4);
+		getDropdownPanel().addWidget(WWidget);
 	}
 
-	public void removeWidget(Widget widget) {
-		getDropdownPanel().removeWidget(widget);
+	public void removeWidget(WWidget WWidget) {
+		getDropdownPanel().removeWidget(WWidget);
 		if (getDropdownPanel().getLinkedWidgets().get(getDropdownPanel().getLinkedWidgets().size() - 1).getSizeX() < getDropdownPanel().getSizeX()) {
 			getDropdownPanel().setSizeX(getDropdownPanel().getLinkedWidgets().get(getDropdownPanel().getLinkedWidgets().size() - 1).getSizeX());
 		}

@@ -3,10 +3,10 @@ package glib.container.common.widget;
 import glib.container.client.BaseRenderer;
 import net.minecraft.util.Identifier;
 
-public class StaticImage extends Widget {
+public class WStaticImage extends WWidget {
 	protected Identifier texture;
 
-	public StaticImage(double positionX, double positionY, double positionZ, double sizeX, double sizeY, Identifier texture, Panel linkedPanel) {
+	public WStaticImage(double positionX, double positionY, double positionZ, double sizeX, double sizeY, Identifier texture, WPanel linkedWPanel) {
 		setPositionX(positionX);
 		setPositionY(positionY);
 		setPositionZ(positionZ);
@@ -16,7 +16,7 @@ public class StaticImage extends Widget {
 
 		setTexture(texture);
 
-		setLinkedPanel(linkedPanel);
+		setLinkedWPanel(linkedWPanel);
 	}
 
 	public Identifier getTexture() {

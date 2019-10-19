@@ -3,12 +3,12 @@ package glib.container.common.widget;
 import glib.container.client.BaseRenderer;
 import net.minecraft.util.Identifier;
 
-public class DynamicImage extends Widget {
+public class WDynamicImage extends WWidget {
 	protected Identifier[] textures;
 
 	protected int position = 0;
 
-	public DynamicImage(double positionX, double positionY, double positionZ, double sizeX, double sizeY, Panel linkedPanel, Identifier... textures) {
+	public WDynamicImage(double positionX, double positionY, double positionZ, double sizeX, double sizeY, WPanel linkedWPanel, Identifier... textures) {
 		setPositionX(positionX);
 		setPositionY(positionY);
 		setPositionZ(positionZ);
@@ -18,7 +18,7 @@ public class DynamicImage extends Widget {
 
 		setTextures(textures);
 
-		setLinkedPanel(linkedPanel);
+		setLinkedWPanel(linkedWPanel);
 	}
 
 	public int next() {

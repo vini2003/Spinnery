@@ -1,17 +1,14 @@
 package glib.container.common.widget;
 
-import javafx.scene.layout.Pane;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.container.Slot;
 import net.minecraft.container.SlotActionType;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.Tickable;
-import org.lwjgl.glfw.GLFW;
 
 import java.util.Optional;
 
-public class Widget implements Tickable {
-	protected Panel linkedPanel;
+public class WWidget implements Tickable {
+	protected WPanel linkedWPanel;
 
 	protected double offsetX;
 	protected double offsetY;
@@ -39,7 +36,7 @@ public class Widget implements Tickable {
 	protected Runnable linkedRunnableOnMouseScrolled;
 	protected Runnable linkedRunnableOnSlotClicked;
 
-	public Widget() {
+	public WWidget() {
 	}
 
 	public void onKeyPressed(int keyPressed) {
@@ -204,12 +201,12 @@ public class Widget implements Tickable {
 		this.canMove = canMove;
 	}
 
-	public Panel getLinkedPanel() {
-		return linkedPanel;
+	public WPanel getLinkedWPanel() {
+		return linkedWPanel;
 	}
 
-	public void setLinkedPanel(Panel linkedPanel) {
-		this.linkedPanel = linkedPanel;
+	public void setLinkedWPanel(WPanel linkedWPanel) {
+		this.linkedWPanel = linkedWPanel;
 	}
 
 	public double getSizeX() {
@@ -291,7 +288,7 @@ public class Widget implements Tickable {
 	}
 
 	public boolean isFocused(double mouseX, double mouseY) {
-		Optional<? extends Widget> optional = linkedPanel.getLinkedWidgets().stream().filter((widget) ->
+		Optional<? extends WWidget> optional = linkedWPanel.getLinkedWidgets().stream().filter((widget) ->
 				widget.getPositionZ() > getPositionZ() && widget.isWithinBounds(mouseX, mouseY)
 		).findAny();
 		setFocus(!optional.isPresent() && isWithinBounds(mouseX, mouseY));
@@ -299,8 +296,8 @@ public class Widget implements Tickable {
 	}
 
 	public void alignWithContainerEdge() {
-		this.setPositionX(getPositionX() + MinecraftClient.getInstance().window.getScaledWidth() / 2D - getLinkedPanel().getSizeX() / 2);
-		this.setPositionY(getPositionY() + MinecraftClient.getInstance().window.getScaledHeight() / 2D - getLinkedPanel().getSizeY() / 2);
+		this.setPositionX(getPositionX() + MinecraftClient.getInstance().window.getScaledWidth() / 2D - getLinkedWPanel().getSizeX() / 2);
+		this.setPositionY(getPositionY() + MinecraftClient.getInstance().window.getScaledHeight() / 2D - getLinkedWPanel().getSizeY() / 2);
 	}
 
 	public void alignWithContainerCenter() {

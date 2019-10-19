@@ -7,14 +7,14 @@ import org.lwjgl.glfw.GLFW;
 
 import java.util.Optional;
 
-public class Slider extends Widget {
+public class WSlider extends WWidget {
 	public static final Identifier DEFAULT_PICKER = new Identifier("glib:textures/widget/slider_picker.png");
 	public static final Identifier DEFAULT_BAR = new Identifier("glib:textures/widget/slider_bar.png");
 
 	protected double limit = 0;
 	protected double position = 0;
 
-	public Slider(int positionX, int positionY, int positionZ, double sizeX, double sizeY, int limit, Identifier texture, Panel linkedPanel) {
+	public WSlider(int positionX, int positionY, int positionZ, double sizeX, double sizeY, int limit, Identifier texture, WPanel linkedWPanel) {
 		setPositionX(positionX);
 		setPositionY(positionY);
 		setPositionZ(positionZ);
@@ -24,7 +24,7 @@ public class Slider extends Widget {
 
 		setLimit(limit);
 
-		setLinkedPanel(linkedPanel);
+		setLinkedWPanel(linkedWPanel);
 	}
 
 	public double getLimit() {
@@ -82,7 +82,7 @@ public class Slider extends Widget {
 
 	@Override
 	public boolean isFocused(double mouseX, double mouseY) {
-		Optional<? extends Widget> isBelowOtherWidget = linkedPanel.getLinkedWidgets().stream().filter((widget) ->
+		Optional<? extends WWidget> isBelowOtherWidget = linkedWPanel.getLinkedWidgets().stream().filter((widget) ->
 			   widget.getPositionZ() > getPositionZ() && widget.isWithinBounds(mouseX, mouseY)
 		).findAny();
 		return setFocus(!isBelowOtherWidget.isPresent() && isWithinBounds(mouseX, mouseY));

@@ -3,13 +3,13 @@ package glib.container.common.widget;
 import glib.container.client.BaseRenderer;
 import net.minecraft.util.Identifier;
 
-public class Toggle extends Widget {
+public class WToggle extends WWidget {
 	protected Identifier texture_on = new Identifier("glib:textures/widget/toggle_on_default.png");
 	protected Identifier texture_off = new Identifier("glib:textures/widget/toggle_off_default.png");
 
 	protected boolean state = false;
 
-	public Toggle(int positionX, int positionY, int positionZ, double sizeX, double sizeY, Panel linkedPanel) {
+	public WToggle(int positionX, int positionY, int positionZ, double sizeX, double sizeY, WPanel linkedWPanel) {
 		setPositionX(positionX);
 		setPositionY(positionY);
 		setPositionZ(positionZ);
@@ -17,7 +17,7 @@ public class Toggle extends Widget {
 		setSizeX(sizeX);
 		setSizeY(sizeY);
 
-		setLinkedPanel(linkedPanel);
+		setLinkedWPanel(linkedWPanel);
 	}
 
 	@Override

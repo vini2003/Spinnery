@@ -7,18 +7,17 @@ import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
-public class Panel extends Widget {
+public class WPanel extends WWidget {
 	protected BaseContainer linkedContainer;
 
-	protected List<Widget> linkedWidgets = new ArrayList<>();
+	protected List<WWidget> linkedWWidgets = new ArrayList<>();
 
-	public Panel(BaseContainer linkedContainer) {
+	public WPanel(BaseContainer linkedContainer) {
 		setLinkedContainer(linkedContainer);
 	}
 
-	public Panel(int positionX, int positionY, int positionZ, int sizeX, int sizeY) {
+	public WPanel(int positionX, int positionY, int positionZ, int sizeX, int sizeY) {
 		setPositionX(positionX);
 		setPositionY(positionY);
 		setPositionZ(positionZ);
@@ -27,7 +26,7 @@ public class Panel extends Widget {
 		setSizeY(sizeY);
 	}
 
-	public Panel(int positionX, int positionY, int positionZ, int sizeX, int sizeY, BaseContainer linkedContainer) {
+	public WPanel(int positionX, int positionY, int positionZ, int sizeX, int sizeY, BaseContainer linkedContainer) {
 		setPositionX(positionX);
 		setPositionY(positionY);
 		setPositionZ(positionZ);
@@ -46,27 +45,27 @@ public class Panel extends Widget {
 		this.linkedContainer = linkedContainer;
 	}
 
-	public List<Widget> getLinkedWidgets() {
-		return linkedWidgets;
+	public List<WWidget> getLinkedWidgets() {
+		return linkedWWidgets;
 	}
 
-	public void setLinkedWidgets(List<Widget> linkedWidgets) {
-		this.linkedWidgets = linkedWidgets;
+	public void setLinkedWWidgets(List<WWidget> linkedWWidgets) {
+		this.linkedWWidgets = linkedWWidgets;
 	}
 
-	public void addWidget(Widget... widgets) {
-		for (Widget widget : widgets) {
-			if (!this.getLinkedWidgets().contains(widget)) {
-				widget.setLinkedPanel(this);
-				getLinkedWidgets().add(widget);
+	public void addWidget(WWidget... WWidgets) {
+		for (WWidget WWidget : WWidgets) {
+			if (!this.getLinkedWidgets().contains(WWidget)) {
+				WWidget.setLinkedWPanel(this);
+				getLinkedWidgets().add(WWidget);
 			}
 		}
 	}
 
-	public void removeWidget(Widget... widgets) {
-		for (Widget widget : widgets) {
-			if (this.getLinkedWidgets().contains(widget)) {
-				getLinkedWidgets().remove(widget);
+	public void removeWidget(WWidget... WWidgets) {
+		for (WWidget WWidget : WWidgets) {
+			if (this.getLinkedWidgets().contains(WWidget)) {
+				getLinkedWidgets().remove(WWidget);
 			}
 		}
 	}
@@ -112,11 +111,11 @@ public class Panel extends Widget {
 
 	@Override
 	public void drawWidget() {
-		getLinkedWidgets().forEach(Widget::drawWidget);
+		getLinkedWidgets().forEach(WWidget::drawWidget);
 	}
 
 	@Override
 	public void tick() {
-		linkedWidgets.forEach(Widget::tick);
+		linkedWWidgets.forEach(WWidget::tick);
 	}
 }

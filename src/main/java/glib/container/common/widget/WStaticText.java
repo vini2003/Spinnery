@@ -4,12 +4,12 @@ import glib.container.client.BaseRenderer;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
-public class StaticText extends Widget {
+public class WStaticText extends WWidget {
 	protected Identifier texture;
 
 	protected Text text;
 
-	public StaticText(int positionX, int positionY, int positionZ, double sizeX, double sizeY, Text text, Panel linkedPanel) {
+	public WStaticText(int positionX, int positionY, int positionZ, double sizeX, double sizeY, Text text, WPanel linkedWPanel) {
 		setPositionX(positionX);
 		setPositionY(positionY);
 		setPositionZ(positionZ);
@@ -19,7 +19,7 @@ public class StaticText extends Widget {
 
 		setText(text);
 
-		setLinkedPanel(linkedPanel);
+		setLinkedWPanel(linkedWPanel);
 	}
 
 	public void setText(Text text) {
