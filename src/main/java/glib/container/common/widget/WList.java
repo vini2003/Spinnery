@@ -6,24 +6,28 @@ import net.minecraft.util.Pair;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
 public class WList extends WWidget {
 	protected WPanel dropdownWPanel;
 
-	protected LinkedList<WWidget> listWidgets = new LinkedList<>();
+	protected LinkedList<List<WWidget>> listWidgets = new LinkedList<>();
 	protected int scrollY = 0;
 
 	protected String listLabel;
 
 	protected double listSizeY = 0;
+	protected double listSizeX = 0;
+
 	protected double entrySizeY = 0;
+	protected double entrySizeX = 0;
 
-	protected WWidget startMarker;
-	protected WWidget endMarker;
+	protected List<WWidget> startMarker;
+	protected List<WWidget> endMarker;
 
-	public WList(int positionX, int positionY, int positionZ, double sizeX, double sizeY, double listSizeY, double entrySizeY, WPanel linkedWPanel) {
+	public WList(int positionX, int positionY, int positionZ, double sizeX, double sizeY, double listSizeX, double listSizeY, double entrySizeX, double entrySizeY, WPanel linkedWPanel) {
 		setPositionX(positionX);
 		setPositionY(positionY);
 		setPositionZ(positionZ);
@@ -32,19 +36,22 @@ public class WList extends WWidget {
 		setSizeY(sizeY);
 
 		this.listSizeY = listSizeY;
+		this.listSizeX = listSizeX;
+
 		this.entrySizeY = entrySizeY;
+		this.entrySizeX = entrySizeX;
 
 		setLinkedWPanel(linkedWPanel);
 
 		setListLabel(listLabel);
 		setDropdownPanel(new WPanel(positionX, positionY, positionZ - 1, (int) sizeX, 4));
-		for (int i = 0; i < listSizeY; ++i) {
+		for (int i = 0; i < listSizeX * listSizeY; ++i) {
 			getDropdownPanel().getLinkedWidgets().add(new WWidget());
 		}
 	}
 
-	public static void addSingle(int positionX, int positionY, int positionZ, double sizeX, double sizeY, double listSizeY, double entrySizeY, WPanel linkedWPanel) {
-		linkedWPanel.addWidget(new WList(positionX, positionY, positionZ, sizeX, sizeY, listSizeY, entrySizeY, linkedWPanel));
+	public static void addSingle(int positionX, int positionY, int positionZ, double sizeX, double sizeY, double listSizeX, double listSizeY, double entrySizeX, double entrySizeY, WPanel linkedWPanel) {
+		linkedWPanel.addWidget(new WList(positionX, positionY, positionZ, sizeX, sizeY, listSizeX, listSizeY, entrySizeX, entrySizeY, linkedWPanel));
 	}
 
 	public WPanel getDropdownPanel() {
@@ -84,22 +91,30 @@ public class WList extends WWidget {
 	public void onMouseScrolled(double mouseX, double mouseY, double scrollOffsetY) {
 		if (scrollOffsetY > 0) {
 			if (listWidgets.getLast() != endMarker) {
+				getDropdownPanel().getLinkedWidgets().clear();
 				listWidgets.addFirst(listWidgets.getLast());
 				listWidgets.removeLast();
 
-				for (int i = 0; i <= getDropdownPanel().getLinkedWidgets().size() - 1; ++i) {
-					getDropdownPanel().getLinkedWidgets().set(i, listWidgets.get(i));
-					getDropdownPanel().getLinkedWidgets().get(i).setPositionY(dropdownWPanel.getPositionY() + 3 + i * entrySizeY);
+				for (int i = 0; i <= listSizeY - 1; ++i) {
+					for (int k = 0; k <= listSizeX - 1; ++k) {
+						listWidgets.get(i).get(k).setPositionX(dropdownWPanel.getPositionY() + 3 + k * entrySizeY);
+						listWidgets.get(i).get(k).setPositionY(dropdownWPanel.getPositionY() + 3 + i * entrySizeY);
+						getDropdownPanel().addWidget(listWidgets.get(i).get(k));
+					}
 				}
 			}
 		} else {
 			if (listWidgets.get((int) listSizeY - 1) != endMarker) {
+				getDropdownPanel().getLinkedWidgets().clear();
 				listWidgets.add(listWidgets.getFirst());
 				listWidgets.removeFirst();
 
-				for (int i = 0; i <= getDropdownPanel().getLinkedWidgets().size() - 1; ++i) {
-					getDropdownPanel().getLinkedWidgets().set(i, listWidgets.get(i));
-					getDropdownPanel().getLinkedWidgets().get(i).setPositionY(dropdownWPanel.getPositionY() + 3 + i * entrySizeY);
+				for (int i = 0; i <= listSizeY - 1; ++i) {
+					for (int k = 0; k <= listSizeX - 1; ++k) {
+						listWidgets.get(i).get(k).setPositionX(dropdownWPanel.getPositionY() + 3 + k * entrySizeY);
+						listWidgets.get(i).get(k).setPositionY(dropdownWPanel.getPositionY() + 3 + i * entrySizeY);
+						getDropdownPanel().addWidget(listWidgets.get(i).get(k));
+					}
 				}
 			}
 		}
@@ -124,19 +139,22 @@ public class WList extends WWidget {
 		return getFocus();
 	}
 
-	public void addWidget(WWidget widget) {
-		widget.setPositionY(getPositionY() + entrySizeY * listWidgets.size());
-		widget.setPositionX(getPositionX() + 4);
-		if (listWidgets.size() == 0) {
-			startMarker = widget;
-		} else {
-			endMarker = widget;
+	public void addWidget(WWidget... widget) {
+		List<WWidget> widgets = Arrays.asList(widget);
+		for (int i = 0; i < widgets.size() - 1; ++i) {
+			widgets.get(i).setPositionY(getPositionY() + entrySizeY * listWidgets.size());
+			widgets.get(i).setPositionX(getPositionX() + 4);
 		}
-		listWidgets.add(widget);
+		if (listWidgets.size() == 0) {
+			startMarker = widgets;
+		} else {
+			endMarker = widgets;
+		}
+		listWidgets.add(widgets);
 	}
 
-	public void removeWidget(WWidget widget) {
-		listWidgets.remove(widget);
+	public void removeWidget(WWidget... widget) {
+		listWidgets.remove(Arrays.asList(widget));
 		getDropdownPanel().getLinkedWidgets().remove(getLinkedWPanel().getLinkedWidgets().size() - 1);
 	}
 

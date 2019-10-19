@@ -83,18 +83,20 @@ public class TestContainer extends BaseContainer {
 
 		WSlot.addPlayerInventory(0, 18, 18, linkedPlayerInventory, linkedWPanel);
 
-		WList exampleList = new WList(0, 0, -3, 96, 96, 5, 18, linkedWPanel);
-		exampleList.addWidget(new WStaticImage(0, 0, 137, 18, 18, new Identifier("glib:textures/widget/cattegirl.png"), linkedWPanel));
+		WList exampleList = new WList(0, 0, -3, 96, 96, 3, 5, 18, 18, linkedWPanel);
+		exampleList.addWidget(new WStaticImage(0, 0, 137, 18, 18, new Identifier("glib:textures/widget/cattegirl.png"), linkedWPanel), new WStaticImage(0, 0, 137, 18, 18, new Identifier("glib:textures/widget/cattegirl.png"), linkedWPanel), new WStaticImage(0, 0, 137, 18, 18, new Identifier("glib:textures/widget/cattegirl.png"), linkedWPanel));
 
 		for (int i = 0; i < 9; ++i) {
-			exampleList.addWidget(new WToggle(0, 0, -4, 18, 18, linkedWPanel));
+			exampleList.addWidget(new WToggle(0, 0, -4, 18, 18, linkedWPanel), new WToggle(0, 0, -4, 18, 18, linkedWPanel), new WToggle(0, 0, -4, 18, 18, linkedWPanel));
 		}
 
-		exampleList.addWidget(new WStaticImage(0, 0, 137, 18, 18, new Identifier("glib:textures/widget/catgirl.png"), linkedWPanel));
+		exampleList.addWidget(new WStaticImage(0, 0, 137, 18, 18, new Identifier("glib:textures/widget/catgirl.png"), linkedWPanel), new WStaticImage(0, 0, 137, 18, 18, new Identifier("glib:textures/widget/catgirl.png"), linkedWPanel), new WStaticImage(0, 0, 137, 18, 18, new Identifier("glib:textures/widget/catgirl.png"), linkedWPanel));
 
 		//WSlot exampleDumpsterFire = new WSlot(40, 140, -3, 18, 18, 0, linkedInventory, linkedWPanel);
 		//exampleDumpsterFire.getSlot().setStack(new ItemStack(Items.PUFFERFISH, 64));
 		//exampleList.addWidget(exampleDumpsterFire);
+
+		exampleList.setMovable(true);
 
 		getLinkedWPanel().addWidget(exampleList);
 	}
