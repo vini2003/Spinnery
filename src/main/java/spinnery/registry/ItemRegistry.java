@@ -1,4 +1,4 @@
-package glib.registry;
+package spinnery.registry;
 
 import net.minecraft.item.Item;
 import net.minecraft.util.Identifier;

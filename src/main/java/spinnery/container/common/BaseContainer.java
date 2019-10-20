@@ -1,6 +1,6 @@
-package glib.container.common;
+package spinnery.container.common;
 
-import glib.container.common.widget.WPanel;
+import spinnery.container.common.widget.WPanel;
 import net.minecraft.container.CraftingContainer;
 import net.minecraft.container.Slot;
 import net.minecraft.container.SlotActionType;
@@ -39,7 +39,7 @@ public class BaseContainer extends CraftingContainer<Inventory> implements Ticka
 	 * Set linked WPanel.
 	 * @param linkedWPanel WPanel to bet set.
 	 */
-	public void setLinkedWPanel(WPanel linkedWPanel) {
+	public void setLinkedPanel(WPanel linkedWPanel) {
 		this.linkedWPanel = linkedWPanel;
 	}
 
@@ -47,7 +47,7 @@ public class BaseContainer extends CraftingContainer<Inventory> implements Ticka
 	 * Get linked WPanel.
 	 * @return Retrieved WPanel.
 	 */
-	public WPanel getLinkedWPanel() {
+	public WPanel getLinkedPanel() {
 		return linkedWPanel;
 	}
 

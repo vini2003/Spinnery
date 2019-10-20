@@ -1,6 +1,6 @@
-package glib.registry;
+package spinnery.registry;
 
-import glib.block.TestBlock;
+import spinnery.block.TestBlock;
 import net.fabricmc.fabric.api.block.FabricBlockSettings;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;

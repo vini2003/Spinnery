@@ -1,6 +1,6 @@
-package glib.container.common.widget;
+package spinnery.container.common.widget;
 
-import glib.container.client.BaseRenderer;
+import spinnery.container.client.BaseRenderer;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
@@ -19,7 +19,7 @@ public class WStaticText extends WWidget {
 
 		setText(text);
 
-		setLinkedWPanel(linkedWPanel);
+		setLinkedPanel(linkedWPanel);
 	}
 
 	public void setText(Text text) {

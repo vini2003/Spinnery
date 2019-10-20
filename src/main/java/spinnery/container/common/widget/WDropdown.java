@@ -1,6 +1,6 @@
-package glib.container.common.widget;
+package spinnery.container.common.widget;
 
-import glib.container.client.BaseRenderer;
+import spinnery.container.client.BaseRenderer;
 import net.minecraft.client.MinecraftClient;
 import org.lwjgl.glfw.GLFW;
 
@@ -19,7 +19,7 @@ public class WDropdown extends WWidget {
 		setSizeX(sizeX);
 		setSizeY(sizeY);
 
-		setLinkedWPanel(linkedWPanel);
+		setLinkedPanel(linkedWPanel);
 
 		setDropdownLabel(dropdownLabel);
 		setDropdownPanel(new WPanel(positionX, (int) (positionY + this.sizeY) - 4, positionZ - 1, (int) sizeX, 4));

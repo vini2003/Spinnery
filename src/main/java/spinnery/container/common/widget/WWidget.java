@@ -1,4 +1,4 @@
-package glib.container.common.widget;
+package spinnery.container.common.widget;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.container.Slot;
@@ -201,11 +201,11 @@ public class WWidget implements Tickable {
 		this.canMove = canMove;
 	}
 
-	public WPanel getLinkedWPanel() {
+	public WPanel getLinkedPanel() {
 		return linkedWPanel;
 	}
 
-	public void setLinkedWPanel(WPanel linkedWPanel) {
+	public void setLinkedPanel(WPanel linkedWPanel) {
 		this.linkedWPanel = linkedWPanel;
 	}
 
@@ -296,8 +296,8 @@ public class WWidget implements Tickable {
 	}
 
 	public void alignWithContainerEdge() {
-		this.setPositionX(getPositionX() + MinecraftClient.getInstance().window.getScaledWidth() / 2D - getLinkedWPanel().getSizeX() / 2);
-		this.setPositionY(getPositionY() + MinecraftClient.getInstance().window.getScaledHeight() / 2D - getLinkedWPanel().getSizeY() / 2);
+		this.setPositionX(getPositionX() + MinecraftClient.getInstance().window.getScaledWidth() / 2D - getLinkedPanel().getSizeX() / 2);
+		this.setPositionY(getPositionY() + MinecraftClient.getInstance().window.getScaledHeight() / 2D - getLinkedPanel().getSizeY() / 2);
 	}
 
 	public void alignWithContainerCenter() {

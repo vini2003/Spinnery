@@ -1,6 +1,6 @@
-package glib.container.common.widget;
+package spinnery.container.common.widget;
 
-import glib.container.client.BaseRenderer;
+import spinnery.container.client.BaseRenderer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.container.Slot;
 import net.minecraft.entity.player.PlayerInventory;
@@ -60,9 +60,9 @@ public class WSlot extends WWidget {
 		setSizeX(sizeX);
 		setSizeY(sizeY);
 
-		setLinkedWPanel(linkedWPanel);
+		setLinkedPanel(linkedWPanel);
 
-		getLinkedWPanel().getLinkedContainer().addSlot(internalSlot = new Slot(linkedInventory, slotNumber, (int) offsetX, (int) offsetY));
+		getLinkedPanel().getLinkedContainer().addSlot(internalSlot = new Slot(linkedInventory, slotNumber, (int) offsetX, (int) offsetY));
 
 		getSlot().xPosition = positionX;
 		getSlot().yPosition = positionY;;

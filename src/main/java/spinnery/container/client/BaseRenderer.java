@@ -1,4 +1,4 @@
-package glib.container.client;
+package spinnery.container.client;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.MinecraftClient;

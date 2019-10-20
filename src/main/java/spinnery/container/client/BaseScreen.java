@@ -1,8 +1,8 @@
-package glib.container.client;
+package spinnery.container.client;
 
-import glib.container.common.BaseContainer;
-import glib.container.common.widget.WSlot;
-import glib.container.common.widget.WWidget;
+import spinnery.container.common.BaseContainer;
+import spinnery.container.common.widget.WSlot;
+import spinnery.container.common.widget.WWidget;
 import net.minecraft.client.gui.screen.ingame.AbstractContainerScreen;
 import net.minecraft.container.Slot;
 import net.minecraft.container.SlotActionType;
@@ -32,7 +32,7 @@ public class BaseScreen<T extends BaseContainer> extends AbstractContainerScreen
 
 	@Override
 	protected boolean isPointWithinBounds(int slotX, int slotY, int defaultSizeX, int defaultSizeY, double mouseX, double mouseY) {
-		Optional<? extends WWidget> focusedWidget = getLinkedContainer().getLinkedWPanel().getLinkedWidgets().stream().filter((widget) -> widget.isFocused(mouseX, mouseY)).findAny();
+		Optional<? extends WWidget> focusedWidget = getLinkedContainer().getLinkedPanel().getLinkedWidgets().stream().filter((widget) -> widget.isFocused(mouseX, mouseY)).findAny();
 		if (focusedWidget.isPresent()) {
 			if (focusedWidget.get() instanceof WSlot) {
 				WSlot wSlot = (WSlot) focusedWidget.get();
@@ -53,55 +53,55 @@ public class BaseScreen<T extends BaseContainer> extends AbstractContainerScreen
 
 	@Override
 	protected void drawMouseoverTooltip(int mouseX, int mouseY) {
-		getLinkedContainer().getLinkedWPanel().getLinkedWidgets().forEach((widget) -> widget.onDrawTooltip());
+		getLinkedContainer().getLinkedPanel().getLinkedWidgets().forEach((widget) -> widget.onDrawTooltip());
 		super.drawMouseoverTooltip(mouseX, mouseY);
 	}
 
 	@Override
 	public boolean keyPressed(int character, int keyCode, int keyModifier) {
-		getLinkedContainer().getLinkedWPanel().getLinkedWidgets().forEach((widget) -> widget.onKeyPressed(keyCode));
+		getLinkedContainer().getLinkedPanel().getLinkedWidgets().forEach((widget) -> widget.onKeyPressed(keyCode));
 		return super.keyPressed(character, keyCode, keyModifier);
 	}
 
 	@Override
 	public boolean keyReleased(int character, int keyCode, int keyModifier) {
-		getLinkedContainer().getLinkedWPanel().getLinkedWidgets().forEach((widget) -> widget.onKeyReleased(keyCode));
+		getLinkedContainer().getLinkedPanel().getLinkedWidgets().forEach((widget) -> widget.onKeyReleased(keyCode));
 		return super.keyPressed(character, keyCode, keyModifier);
 	}
 
 	@Override
 	public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
-		getLinkedContainer().getLinkedWPanel().getLinkedWidgets().forEach((widget) -> widget.onMouseClicked(mouseX, mouseY, mouseButton));
+		getLinkedContainer().getLinkedPanel().getLinkedWidgets().forEach((widget) -> widget.onMouseClicked(mouseX, mouseY, mouseButton));
 		return super.mouseClicked(mouseX, mouseY, mouseButton);
 	}
 
 	@Override
 	public boolean mouseReleased(double mouseX, double mouseY, int mouseButton) {
-		getLinkedContainer().getLinkedWPanel().getLinkedWidgets().forEach((widget) -> widget.onMouseReleased(mouseX, mouseY, mouseButton));
+		getLinkedContainer().getLinkedPanel().getLinkedWidgets().forEach((widget) -> widget.onMouseReleased(mouseX, mouseY, mouseButton));
 		return super.mouseReleased(mouseX, mouseY, mouseButton);
 	}
 
 	@Override
 	public void mouseMoved(double mouseX, double mouseY) {
-		getLinkedContainer().getLinkedWPanel().getLinkedWidgets().forEach((widget) -> widget.onMouseMoved(mouseX, mouseY));
+		getLinkedContainer().getLinkedPanel().getLinkedWidgets().forEach((widget) -> widget.onMouseMoved(mouseX, mouseY));
 		super.mouseMoved(mouseX, mouseY);
 	}
 
 	@Override
 	public boolean mouseScrolled(double mouseX, double mouseY, double mouseZ) {
-		getLinkedContainer().getLinkedWPanel().getLinkedWidgets().forEach((widget) -> widget.onMouseScrolled(mouseX, mouseY, mouseZ));
+		getLinkedContainer().getLinkedPanel().getLinkedWidgets().forEach((widget) -> widget.onMouseScrolled(mouseX, mouseY, mouseZ));
 		return super.mouseScrolled(mouseX, mouseY, mouseZ);
 	}
 
 	@Override
 	protected void onMouseClick(Slot slot, int slotX, int slotY, SlotActionType slotActionType) {
-		getLinkedContainer().getLinkedWPanel().getLinkedWidgets().forEach((widget) -> widget.onSlotClicked(slot, slotX, slotY, slotActionType));
+		getLinkedContainer().getLinkedPanel().getLinkedWidgets().forEach((widget) -> widget.onSlotClicked(slot, slotX, slotY, slotActionType));
 		super.onMouseClick(slot, slotX, slotY, slotActionType);
 	}
 
 	@Override
 	public boolean mouseDragged(double slotX, double slotY, int mouseButton, double mouseX, double mouseY) {
-		getLinkedContainer().getLinkedWPanel().getLinkedWidgets().forEach((widget) -> widget.onMouseDragged(slotX, slotY, mouseButton, mouseX, mouseY));
+		getLinkedContainer().getLinkedPanel().getLinkedWidgets().forEach((widget) -> widget.onMouseDragged(slotX, slotY, mouseButton, mouseX, mouseY));
 		return super.mouseDragged(slotX, slotY, mouseButton, mouseX, mouseY);
 	}
 
@@ -111,12 +111,12 @@ public class BaseScreen<T extends BaseContainer> extends AbstractContainerScreen
 
 	@Override
 	public void tick() {
-		super.containerWidth = (int) getLinkedContainer().getLinkedWPanel().getSizeX();
-		super.containerHeight = (int) getLinkedContainer().getLinkedWPanel().getSizeY();
+		super.containerWidth = (int) getLinkedContainer().getLinkedPanel().getSizeX();
+		super.containerHeight = (int) getLinkedContainer().getLinkedPanel().getSizeY();
 		super.width = containerWidth;
 		super.height = containerHeight;
-		super.left = (int) ((getLinkedContainer().getLinkedWPanel().getPositionX()));
-		super.top = (int) ((getLinkedContainer().getLinkedWPanel().getPositionY()));
+		super.left = (int) ((getLinkedContainer().getLinkedPanel().getPositionX()));
+		super.top = (int) ((getLinkedContainer().getLinkedPanel().getPositionY()));
 		getLinkedContainer().left = super.left;
 		getLinkedContainer().top = super.top;
 		getLinkedContainer().tick();
@@ -125,15 +125,15 @@ public class BaseScreen<T extends BaseContainer> extends AbstractContainerScreen
 
 	@Override
 	public void render(int mouseX, int mouseY, float tick) {
-		getLinkedContainer().getLinkedWPanel().drawPanel();
-		getLinkedContainer().getLinkedWPanel().drawWidget();
-		getLinkedContainer().getLinkedWPanel().getLinkedWidgets().forEach((widget) -> {
+		getLinkedContainer().getLinkedPanel().drawPanel();
+		getLinkedContainer().getLinkedPanel().drawWidget();
+		getLinkedContainer().getLinkedPanel().getLinkedWidgets().forEach((widget) -> {
 			widget.isFocused(mouseX, mouseY);
 		});
 
 		super.render(mouseX, mouseY, tick);
 
-		getLinkedContainer().getLinkedWPanel().getLinkedWidgets().forEach((widget) -> {
+		getLinkedContainer().getLinkedPanel().getLinkedWidgets().forEach((widget) -> {
 			if (widget.getFocus() && widget instanceof WSlot && playerInventory.getCursorStack().isEmpty() && !((WSlot) widget).getSlot().getStack().isEmpty()) {
 				this.renderTooltip(((WSlot) widget).getSlot().getStack(), mouseX, mouseY);
 			}

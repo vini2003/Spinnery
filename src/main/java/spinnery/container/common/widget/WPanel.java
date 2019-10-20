@@ -1,7 +1,7 @@
-package glib.container.common.widget;
+package spinnery.container.common.widget;
 
-import glib.container.client.BaseRenderer;
-import glib.container.common.BaseContainer;
+import spinnery.container.client.BaseRenderer;
+import spinnery.container.common.BaseContainer;
 import net.minecraft.client.MinecraftClient;
 import org.lwjgl.glfw.GLFW;
 
@@ -56,7 +56,7 @@ public class WPanel extends WWidget {
 	public void addWidget(WWidget... WWidgets) {
 		for (WWidget WWidget : WWidgets) {
 			if (!this.getLinkedWidgets().contains(WWidget)) {
-				WWidget.setLinkedWPanel(this);
+				WWidget.setLinkedPanel(this);
 				getLinkedWidgets().add(WWidget);
 			}
 		}

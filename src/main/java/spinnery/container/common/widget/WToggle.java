@@ -1,11 +1,11 @@
-package glib.container.common.widget;
+package spinnery.container.common.widget;
 
-import glib.container.client.BaseRenderer;
+import spinnery.container.client.BaseRenderer;
 import net.minecraft.util.Identifier;
 
 public class WToggle extends WWidget {
-	protected Identifier texture_on = new Identifier("glib:textures/widget/toggle_on_default.png");
-	protected Identifier texture_off = new Identifier("glib:textures/widget/toggle_off_default.png");
+	protected Identifier texture_on = new Identifier("spinnery:textures/widget/toggle_on_default.png");
+	protected Identifier texture_off = new Identifier("spinnery:textures/widget/toggle_off_default.png");
 
 	protected boolean state = false;
 
@@ -17,7 +17,7 @@ public class WToggle extends WWidget {
 		setSizeX(sizeX);
 		setSizeY(sizeY);
 
-		setLinkedWPanel(linkedWPanel);
+		setLinkedPanel(linkedWPanel);
 	}
 
 	@Override

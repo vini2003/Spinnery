@@ -1,7 +1,7 @@
-package glib.block;
+package spinnery.block;
 
-import glib.registry.ContainerRegistry;
-import glib.registry.ScreenRegistry;
+import spinnery.registry.ContainerRegistry;
+import spinnery.registry.ScreenRegistry;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;

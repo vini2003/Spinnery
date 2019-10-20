@@ -1,9 +1,9 @@
-package glib;
+package spinnery;
 
-import glib.registry.BlockRegistry;
-import glib.registry.ContainerRegistry;
-import glib.registry.ItemRegistry;
-import glib.registry.ScreenRegistry;
+import spinnery.registry.BlockRegistry;
+import spinnery.registry.ContainerRegistry;
+import spinnery.registry.ItemRegistry;
+import spinnery.registry.ScreenRegistry;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.block.FabricBlockSettings;
 import net.minecraft.block.Material;
@@ -14,7 +14,7 @@ import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
-public class GlibMod implements ModInitializer {
+public class SpinneryMod implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		BlockRegistry.initialize();

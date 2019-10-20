@@ -1,4 +1,4 @@
-package glib.container.common.widget;
+package spinnery.container.common.widget;
 
 public class WDynamicText extends WWidget {
 }

@@ -1,6 +1,6 @@
-package glib.container.common.widget;
+package spinnery.container.common.widget;
 
-import glib.container.client.BaseRenderer;
+import spinnery.container.client.BaseRenderer;
 import net.minecraft.util.Identifier;
 
 public class WStaticImage extends WWidget {
@@ -16,7 +16,7 @@ public class WStaticImage extends WWidget {
 
 		setTexture(texture);
 
-		setLinkedWPanel(linkedWPanel);
+		setLinkedPanel(linkedWPanel);
 	}
 
 	public Identifier getTexture() {

@@ -1,6 +1,6 @@
-package glib.container.common.widget;
+package spinnery.container.common.widget;
 
-import glib.container.client.BaseRenderer;
+import spinnery.container.client.BaseRenderer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.Identifier;
 import org.lwjgl.glfw.GLFW;
@@ -8,8 +8,8 @@ import org.lwjgl.glfw.GLFW;
 import java.util.Optional;
 
 public class WSlider extends WWidget {
-	public static final Identifier DEFAULT_PICKER = new Identifier("glib:textures/widget/slider_picker.png");
-	public static final Identifier DEFAULT_BAR = new Identifier("glib:textures/widget/slider_bar.png");
+	public static final Identifier DEFAULT_PICKER = new Identifier("spinnery:textures/widget/slider_picker.png");
+	public static final Identifier DEFAULT_BAR = new Identifier("spinnery:textures/widget/slider_bar.png");
 
 	protected double limit = 0;
 	protected double position = 0;
@@ -24,7 +24,7 @@ public class WSlider extends WWidget {
 
 		setLimit(limit);
 
-		setLinkedWPanel(linkedWPanel);
+		setLinkedPanel(linkedWPanel);
 	}
 
 	public double getLimit() {
