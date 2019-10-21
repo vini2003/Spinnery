@@ -83,7 +83,7 @@ public class TestContainer extends BaseContainer {
 
 		WSlot.addPlayerInventory(0, 18, 18, linkedPlayerInventory, linkedWPanel);
 
-		WList exampleList = new WList(0, 0, -3, 96, 96, 3, 5, 18, 18, linkedWPanel);
+		WList exampleList = new WList(40, 40, -5, 96, 96, 3, 5, 18, 18, linkedWPanel);
 		//exampleList.addWidget(new WStaticImage(0, 0, 137, 18, 18, new Identifier("spinnery:textures/widget/cattegirl.png"), linkedWPanel), new WStaticImage(0, 0, 137, 18, 18, new Identifier("spinnery:textures/widget/cattegirl.png"), linkedWPanel), new WStaticImage(0, 0, 137, 18, 18, new Identifier("spinnery:textures/widget/cattegirl.png"), linkedWPanel));
 
 		for (int i = 0; i < 9; ++i) {
@@ -96,7 +96,7 @@ public class TestContainer extends BaseContainer {
 		//exampleDumpsterFire.getSlot().setStack(new ItemStack(Items.PUFFERFISH, 64));
 		//exampleList.addWidget(exampleDumpsterFire);
 
-		//exampleList.setMovable(true);
+		exampleList.setMovable(true);
 
 		getLinkedPanel().addWidget(exampleList);
 	}

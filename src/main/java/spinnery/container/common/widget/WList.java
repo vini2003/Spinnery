@@ -96,12 +96,7 @@ public class WList extends WWidget {
 	@Override
 	public void onMouseScrolled(double mouseX, double mouseY, double scrollOffsetY) {
 		boolean[] canScroll = { true };
-		if (scrollOffsetY >= 0) {
-			scrollOffsetY = -1;
-		} else {
-			scrollOffsetY = 1;
-		}
-		double finalScrollOffsetY = scrollOffsetY;
+		double finalScrollOffsetY = scrollOffsetY * 2.5;
 
 		listWidgets.get(0).forEach((widget) -> {
 			if (widget.getPositionY() + finalScrollOffsetY > getPositionY()) {
@@ -127,9 +122,13 @@ public class WList extends WWidget {
 	public void onMouseClicked(double mouseX, double mouseY, int mouseButton) {
 		listWidgets.forEach((widgets) -> {
 			widgets.forEach((widget) -> {
-				if (isFocused(mouseX, mouseY))
+				if (widget.isWithinBounds(mouseX, mouseY) && isFocused(mouseX, mouseY)) {
+					widget.setHidden(false);
 					widget.isFocused(mouseX, mouseY);
 					widget.onMouseClicked(mouseX, mouseY, mouseButton);
+				} else {
+					widget.setHidden(true);
+				}
 			});
 		});
 		super.onMouseClicked(mouseX, mouseY, mouseButton);
@@ -147,7 +146,7 @@ public class WList extends WWidget {
 	public void updatePositions() {
 		int y = 0;
 		for (int i = 0; i <= listWidgets.size() -1; ++i) {
-			int x = 2;
+			int x = (int) getPositionX() + 2;
 			for (int k = 0; k <= listWidgets.get(i).size() - 1; ++k) {
 				listWidgets.get(i).get(k).setPositionX(x);
 				listWidgets.get(i).get(k).setPositionY(y);
@@ -186,16 +185,14 @@ public class WList extends WWidget {
 
 	@Override
 	public void drawWidget() {
-		BaseRenderer.drawPanel(getPositionX(), getPositionY(), getPositionZ() - 1, getSizeX(), getSizeY(), BaseRenderer.SHADOW_DEFAULT, BaseRenderer.PANEL_DEFAULT, BaseRenderer.HILIGHT_DEFUALT, BaseRenderer.OUTLINE_DEFAULT);
+		BaseRenderer.drawPanel(getPositionX() - 4, getPositionY() - 4, getPositionZ() - 1, getSizeX() + 8, getSizeY() + 8, BaseRenderer.SHADOW_DEFAULT, BaseRenderer.PANEL_DEFAULT, BaseRenderer.HILIGHT_DEFUALT, BaseRenderer.OUTLINE_DEFAULT);
 
-		final int height = MinecraftClient.getInstance().window.getHeight();
-		final int width = MinecraftClient.getInstance().window.getWidth();
+		final int rawHeight = MinecraftClient.getInstance().window.getHeight();
 		final double scale = MinecraftClient.getInstance().window.getScaleFactor();
 
 		GL11.glEnable(GL11.GL_SCISSOR_TEST);
 
-		GL11.glScissor((int) (getPositionX() * scale), (int) (height - (getPositionY() * scale) - (getSizeY() * scale)), (int) (getSizeX() * scale), (int) (getSizeY() * scale));
-
+		GL11.glScissor((int) (getPositionX() * scale), (int) (rawHeight - (getPositionY() * scale) - (getSizeY() * scale)), (int) (getSizeX() * scale), (int) (getSizeY() * scale));
 
 		listWidgets.forEach((widgets) -> {
 			widgets.forEach(WWidget::drawWidget);

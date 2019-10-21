@@ -20,6 +20,8 @@ public class WWidget implements Tickable {
 	protected double sizeX = 0;
 	protected double sizeY = 0;
 
+	protected boolean isHidden = false;
+
 	protected boolean hasFocus = false;
 
 	protected boolean canMove = false;
@@ -280,6 +282,14 @@ public class WWidget implements Tickable {
 		return hasFocus;
 	}
 
+	public boolean isHidden() {
+		return isHidden;
+	}
+
+	public void setHidden(boolean isHidden) {
+		this.isHidden = isHidden;
+	}
+
 	public boolean isWithinBounds(double positionX, double positionY) {
 		return positionX > getPositionX() - 1
 			&& positionX < getPositionX() + getSizeX() - 2
@@ -288,6 +298,9 @@ public class WWidget implements Tickable {
 	}
 
 	public boolean isFocused(double mouseX, double mouseY) {
+		if (isHidden) {
+			return false;
+		}
 		Optional<? extends WWidget> optional = linkedWPanel.getLinkedWidgets().stream().filter((widget) ->
 				widget.getPositionZ() > getPositionZ() && widget.isWithinBounds(mouseX, mouseY)
 		).findAny();
@@ -305,6 +318,9 @@ public class WWidget implements Tickable {
 	}
 
 	public void drawWidget() {
+		if (isHidden) {
+			return;
+		}
 	}
 
 	@Override
