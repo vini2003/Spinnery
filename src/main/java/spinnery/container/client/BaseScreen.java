@@ -52,6 +52,17 @@ public class BaseScreen<T extends BaseContainer> extends AbstractContainerScreen
 	}
 
 	@Override
+	protected boolean isClickOutsideBounds(double mouseX, double mouseY, int int_1, int int_2, int int_3) {
+		boolean[] isOutsideBounds = { true };
+		getLinkedContainer().getLinkedPanel().getLinkedWidgets().forEach((widget) -> {
+			if (widget.isWithinBounds(mouseX, mouseY)) {
+				isOutsideBounds[0] = false;
+			}
+		});
+		return isOutsideBounds[0];
+	}
+
+	@Override
 	protected void drawMouseoverTooltip(int mouseX, int mouseY) {
 		getLinkedContainer().getLinkedPanel().getLinkedWidgets().forEach((widget) -> widget.onDrawTooltip());
 		super.drawMouseoverTooltip(mouseX, mouseY);

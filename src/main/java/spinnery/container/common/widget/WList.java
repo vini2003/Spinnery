@@ -123,10 +123,16 @@ public class WList extends WWidget {
 		listWidgets.forEach((widgets) -> {
 			widgets.forEach((widget) -> {
 				if (widget.isWithinBounds(mouseX, mouseY) && isFocused(mouseX, mouseY)) {
+					if (widget instanceof WSlot) {
+						getLinkedPanel().getLinkedContainer().slotList.add(((WSlot) widget).internalSlot);
+					}
 					widget.setHidden(false);
 					widget.isFocused(mouseX, mouseY);
 					widget.onMouseClicked(mouseX, mouseY, mouseButton);
 				} else {
+					if (widget instanceof WSlot) {
+						getLinkedPanel().getLinkedContainer().slotList.remove(((WSlot) widget).internalSlot);
+					}
 					widget.setHidden(true);
 				}
 			});

@@ -25,7 +25,7 @@ public class WSlot extends WWidget {
 		int slotN = 0;
 		addArray(9,
 				1,
-				6,
+				(int) (MinecraftClient.getInstance().window.getScaledWidth() / 2 - linkedWPanel.getSizeX() / 2) + 6,
 				(int) linkedWPanel.getSizeY() - 18 - 3,
 				positionZ,
 				sizeX,
@@ -36,7 +36,7 @@ public class WSlot extends WWidget {
 		slotN = 9;
 		addArray(9,
 				 3,
-				 6,
+				(int) (MinecraftClient.getInstance().window.getScaledHeight() / 2 - linkedWPanel.getSizeY() / 2) - 6,
 				(int) linkedWPanel.getSizeY() - 72 - 6,
 				 positionZ,
 				 sizeX,
@@ -63,7 +63,11 @@ public class WSlot extends WWidget {
 	public void setPositionX(double positionX) {
 		super.setPositionX(positionX);
 		if (getSlot() != null) {
-			getSlot().xPosition = (int) (-(Math.abs(positionX - (int) (MinecraftClient.getInstance().window.getScaledWidth() / 2 - linkedWPanel.getSizeX() / 2))) + 1);
+			if (getPositionX() < MinecraftClient.getInstance().window.getScaledWidth() / 2f - linkedWPanel.getSizeX() / 2) {
+				getSlot().xPosition = (int) (-(Math.abs(positionX - (int) (MinecraftClient.getInstance().window.getScaledWidth() / 2 - linkedWPanel.getSizeX() / 2))) + 1);
+			} else {
+				getSlot().xPosition = (int) ((Math.abs(positionX - (int) (MinecraftClient.getInstance().window.getScaledWidth() / 2 - linkedWPanel.getSizeX() / 2))) + 1);
+			}
 		}
 	}
 
@@ -71,18 +75,20 @@ public class WSlot extends WWidget {
 	public void setPositionY(double positionY) {
 		super.setPositionY(positionY);
 		if (getSlot() != null) {
-			getSlot().yPosition = (int) ((Math.abs(positionY + (int) (MinecraftClient.getInstance().window.getScaledHeight() / 2 - linkedWPanel.getSizeY() / 2))) - 3);
+			if (getPositionY() > MinecraftClient.getInstance().window.getScaledHeight() / 2f - linkedWPanel.getSizeX() / 2) {
+				getSlot().yPosition = (int) ((Math.abs(positionY + (int) (MinecraftClient.getInstance().window.getScaledHeight() / 2 - linkedWPanel.getSizeY() / 2))) - 3);
+			} else {
+				getSlot().yPosition = (int) (-(Math.abs(positionY + (int) (MinecraftClient.getInstance().window.getScaledHeight() / 2 - linkedWPanel.getSizeY() / 2))) - 3);
+			}
 		}
-	}
-
-	@Override
-	public void alignWithContainerCenter() {
-		getSlot().xPosition = (int) (linkedWPanel.getSizeX() / 2);
-		super.alignWithContainerCenter();
 	}
 
 	public Slot getSlot() {
 		return internalSlot;
+	}
+
+	public void setSlot(Slot internalSlot) {
+		this.internalSlot = internalSlot;
 	}
 
 	@Override
