@@ -77,7 +77,7 @@ public class BaseRenderer {
 	}
 
 	public static void drawSlot(double positionX, double positionY, double positionZ) {
-		drawBeveledPanel(positionX + 1, positionY - 2, positionZ, 18, 18, 0xFF373737, 0xFF8b8b8b,0xFFFFFFFF);
+		drawBeveledPanel(positionX, positionY, positionZ, 18, 18, 0xFF373737, 0xFF8b8b8b,0xFFFFFFFF);
 	}
 
 	public static void drawImage(double positionX, double positionY, double positionZ, double sizeX, double sizeY, Identifier texture) {

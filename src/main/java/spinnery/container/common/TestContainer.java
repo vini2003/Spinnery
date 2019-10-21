@@ -40,9 +40,10 @@ public class TestContainer extends BaseContainer {
 		WDropdown exampleWDropdown1 = new WDropdown(331, 143, -3, 96, 18, "OwO who dis?", linkedWPanel);
 		WDropdown exampleWDropdown2 = new WDropdown(331, 22, -3, 96, 18, "Whoms't ze fuck?", linkedWPanel);
 
-		WSlot exampleSlot1 = new WSlot(58, 140, -6, 18, 18, 0, linkedInventory, linkedWPanel);
-		WSlot exampleSlot2 = new WSlot(76, 140, -6, 18, 18, 1, linkedInventory, linkedWPanel);
-		WSlot exampleSlot3 = new WSlot(94, 140, -6, 18, 18, 2, linkedInventory, linkedWPanel);
+		WSlot exampleSlot1 = new WSlot(0, 0, -3, 18, 18, 0, linkedInventory, linkedWPanel);
+		exampleSlot1.getSlot().setStack(new ItemStack(Items.BREAD));
+		WSlot exampleSlot2 = new WSlot(76, 140, -3, 18, 18, 1, linkedInventory, linkedWPanel);
+		WSlot exampleSlot3 = new WSlot(94, 140, -3, 18, 18, 2, linkedInventory, linkedWPanel);
 
 		WDynamicImage exampleWDynamicImage = new WDynamicImage(0, 161, 170, 10, 10, linkedWPanel,
 
@@ -63,9 +64,13 @@ public class TestContainer extends BaseContainer {
 		getLinkedPanel().addWidget(exampleWDropdown1);
 		getLinkedPanel().addWidget(exampleWDropdown2);
 
-		getLinkedPanel().addWidget(exampleSlot1);
-		getLinkedPanel().addWidget(exampleSlot2);
-		getLinkedPanel().addWidget(exampleSlot3);
+		//getLinkedPanel().addWidget(exampleSlot1);
+		//getLinkedPanel().addWidget(exampleSlot2);
+		//getLinkedPanel().addWidget(exampleSlot3);
+
+		exampleSlot1.getSlot().setStack(new ItemStack(Items.RED_WOOL));
+		exampleSlot2.getSlot().setStack(new ItemStack(Items.BLUE_WOOL));
+		exampleSlot3.getSlot().setStack(new ItemStack(Items.PINK_WOOL));
 
 		getLinkedPanel().addWidget(exampleWDynamicImage);
 
@@ -90,7 +95,9 @@ public class TestContainer extends BaseContainer {
 			exampleList.addWidget(new WToggle(0, 0, -4, 18, 18, linkedWPanel), new WToggle(0, 0, -4, 18, 18, linkedWPanel), new WToggle(0, 0, -4, 18, 18, linkedWPanel));
 		}
 
-		//exampleList.addWidget(new WStaticImage(0, 0, 137, 18, 18, new Identifier("spinnery:textures/widget/catgirl.png"), linkedWPanel), new WStaticImage(0, 0, 137, 18, 18, new Identifier("spinnery:textures/widget/catgirl.png"), linkedWPanel), new WStaticImage(0, 0, 137, 18, 18, new Identifier("spinnery:textures/widget/catgirl.png"), linkedWPanel));
+		exampleList.addWidget(exampleSlot1, exampleSlot2, exampleSlot3);
+
+		exampleList.addWidget(new WStaticImage(0, 0, 137, 18, 18, new Identifier("spinnery:textures/widget/catgirl.png"), linkedWPanel), new WStaticImage(0, 0, 137, 18, 18, new Identifier("spinnery:textures/widget/catgirl.png"), linkedWPanel), new WStaticImage(0, 0, 137, 18, 18, new Identifier("spinnery:textures/widget/catgirl.png"), linkedWPanel));
 
 		//WSlot exampleDumpsterFire = new WSlot(40, 140, -3, 18, 18, 0, linkedInventory, linkedWPanel);
 		//exampleDumpsterFire.getSlot().setStack(new ItemStack(Items.PUFFERFISH, 64));

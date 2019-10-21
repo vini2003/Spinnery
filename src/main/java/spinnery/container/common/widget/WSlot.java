@@ -47,25 +47,32 @@ public class WSlot extends WWidget {
 	}
 
 	public WSlot(int positionX, int positionY, int positionZ, double sizeX, double sizeY, int slotNumber, Inventory linkedInventory, WPanel linkedWPanel) {
-		double fuckSlots1 = MinecraftClient.getInstance().window.getScaledWidth();
-		double fuckSlots2 = MinecraftClient.getInstance().window.getScaledHeight();
-
-		double fuckSlots3 = fuckSlots1 / 2 - linkedWPanel.getSizeX() / 2;
-		double fuckSlots4 = fuckSlots2 / 2 - linkedWPanel.getSizeY() / 2;
-
-		setPositionX(fuckSlots3 - 2 + positionX);
-		setPositionY(fuckSlots4 + 0.5 + positionY);
-		setPositionZ(positionZ);
-
-		setSizeX(sizeX);
-		setSizeY(sizeY);
-
 		setLinkedPanel(linkedWPanel);
 
 		getLinkedPanel().getLinkedContainer().addSlot(internalSlot = new Slot(linkedInventory, slotNumber, (int) offsetX, (int) offsetY));
 
-		getSlot().xPosition = positionX;
-		getSlot().yPosition = positionY;;
+		setPositionX(positionX);
+		setPositionY(positionY);
+		setPositionZ(positionZ);
+
+		setSizeX(sizeX);
+		setSizeY(sizeY);
+	}
+
+	@Override
+	public void setPositionX(double positionX) {
+		super.setPositionX(positionX);
+		if (getSlot() != null) {
+			getSlot().xPosition = (int) (-(Math.abs(positionX - (int) (MinecraftClient.getInstance().window.getScaledWidth() / 2 - linkedWPanel.getSizeX() / 2))) + 1);
+		}
+	}
+
+	@Override
+	public void setPositionY(double positionY) {
+		super.setPositionY(positionY);
+		if (getSlot() != null) {
+			getSlot().yPosition = (int) ((Math.abs(positionY + (int) (MinecraftClient.getInstance().window.getScaledHeight() / 2 - linkedWPanel.getSizeY() / 2))) - 3);
+		}
 	}
 
 	@Override
@@ -80,6 +87,6 @@ public class WSlot extends WWidget {
 
 	@Override
 	public void drawWidget() {
-		BaseRenderer.drawSlot(positionX, positionY, positionZ);
+		BaseRenderer.drawSlot(getPositionX(), getPositionY(), getPositionZ());
 	}
 }
