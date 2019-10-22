@@ -10,6 +10,8 @@ import java.util.Optional;
 public class WWidget implements Tickable {
 	protected WPanel linkedWPanel;
 
+	protected WAlignment alignment;
+
 	protected double offsetX;
 	protected double offsetY;
 
@@ -320,6 +322,29 @@ public class WWidget implements Tickable {
 	public void drawWidget() {
 		if (isHidden) {
 			return;
+		}
+	}
+
+	public void setAlignment(WAlignment alignment) {
+		this.alignment = alignment;
+		switch (alignment) {
+			case PANEL_TOP_LEFT:
+				setPositionX(MinecraftClient.getInstance().window.getScaledWidth() / 2f - getLinkedPanel().getSizeX() / 2f);
+				setPositionY(MinecraftClient.getInstance().window.getScaledHeight() / 2f - getLinkedPanel().getSizeY() / 2f);
+				break;
+			case SCREEN_TOP_LEFT:
+				setPositionX(0);
+				setPositionY(0);
+				break;
+			case SCREEN_MIDDLE:
+				setPositionX(MinecraftClient.getInstance().window.getScaledWidth() / 2f - getSizeX() / 2);
+				setPositionY(MinecraftClient.getInstance().window.getScaledHeight() / 2f - getSizeY() / 2);
+			case SCREEN_MIDDLE_HORIZONTAL:
+				setPositionX(MinecraftClient.getInstance().window.getScaledWidth() / 2f - getSizeX() / 2f);
+				break;
+			case SCREEN_MIDDLE_VERTICAL:
+				setPositionY(MinecraftClient.getInstance().window.getScaledHeight() / 2f - getSizeY() / 2f);
+				break;
 		}
 	}
 

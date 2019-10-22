@@ -1,5 +1,6 @@
 package spinnery.container.common;
 
+import spinnery.container.common.widget.WAlignment;
 import spinnery.container.common.widget.WDropdown;
 import spinnery.container.common.widget.WDynamicImage;
 import spinnery.container.common.widget.WList;
@@ -40,9 +41,9 @@ public class TestContainer extends BaseContainer {
 		WDropdown exampleWDropdown1 = new WDropdown(331, 143, -3, 96, 18, "OwO who dis?", linkedWPanel);
 		WDropdown exampleWDropdown2 = new WDropdown(331, 22, -3, 96, 18, "Whoms't ze fuck?", linkedWPanel);
 
-		WSlot exampleSlot1 = new WSlot(54, 0, -3, 18, 18, 0, linkedInventory, linkedWPanel);
-		WSlot exampleSlot2 = new WSlot(72, 140, -3, 18, 18, 1, linkedInventory, linkedWPanel);
-		WSlot exampleSlot3 = new WSlot(90, 140, -3, 18, 18, 2, linkedInventory, linkedWPanel);
+		//WSlot exampleSlot1 = new WSlot(54, 140, -3, 18, 18, 0, linkedInventory, linkedWPanel);
+		//WSlot exampleSlot2 = new WSlot(72, 140, -3, 18, 18, 1, linkedInventory, linkedWPanel);
+		//WSlot exampleSlot3 = new WSlot(90, 140, -3, 18, 18, 2, linkedInventory, linkedWPanel);
 
 		exampleWDropdown2.addWidget(exampleWStaticImage);
 
@@ -66,17 +67,17 @@ public class TestContainer extends BaseContainer {
 		getLinkedPanel().addWidget(exampleWDropdown1);
 		getLinkedPanel().addWidget(exampleWDropdown2);
 
-		getLinkedPanel().addWidget(exampleSlot1);
-		getLinkedPanel().addWidget(exampleSlot2);
-		getLinkedPanel().addWidget(exampleSlot3);
-
-		exampleSlot1.getSlot().setStack(new ItemStack(Items.RED_WOOL));
-		exampleSlot2.getSlot().setStack(new ItemStack(Items.BLUE_WOOL));
-		exampleSlot3.getSlot().setStack(new ItemStack(Items.PINK_WOOL));
+//		getLinkedPanel().addWidget(exampleSlot1);
+//		getLinkedPanel().addWidget(exampleSlot2);
+//		getLinkedPanel().addWidget(exampleSlot3);
+//
+//		exampleSlot1.getSlot().setStack(new ItemStack(Items.RED_WOOL));
+//		exampleSlot2.getSlot().setStack(new ItemStack(Items.BLUE_WOOL));
+//		exampleSlot3.getSlot().setStack(new ItemStack(Items.PINK_WOOL));
 
 		getLinkedPanel().addWidget(exampleWDynamicImage);
 
-		exampleSlot2.getSlot().setStack(new ItemStack(Items.BRAIN_CORAL, 64));
+//		exampleSlot2.getSlot().setStack(new ItemStack(Items.BRAIN_CORAL, 64));
 
 		for (int i = 0; i < 3; ++i) {
 			exampleWDropdown1.addWidget(new WToggle(0, 0, -4, 18, 18, linkedWPanel));
@@ -90,27 +91,31 @@ public class TestContainer extends BaseContainer {
 
 		WSlot.addPlayerInventory(0, 18, 18, linkedPlayerInventory, linkedWPanel);
 
-		WList exampleList = new WList(154, 10, -5, 96, 96, 3, 5, 18, 18, linkedWPanel);
+		//WList exampleList = new WList(154, 10, -5, 96, 96, 3, 5, 18, 18, linkedWPanel);
 		//exampleList.addWidget(new WStaticImage(0, 0, 137, 18, 18, new Identifier("spinnery:textures/widget/cattegirl.png"), linkedWPanel), new WStaticImage(0, 0, 137, 18, 18, new Identifier("spinnery:textures/widget/cattegirl.png"), linkedWPanel), new WStaticImage(0, 0, 137, 18, 18, new Identifier("spinnery:textures/widget/cattegirl.png"), linkedWPanel));
 
-		for (int i = 0; i < 9; ++i) {
-			exampleList.addWidget(new WToggle(0, 0, -4, 18, 18, linkedWPanel), new WToggle(0, 0, -4, 18, 18, linkedWPanel), new WToggle(0, 0, -4, 18, 18, linkedWPanel));
-		}
+//		for (int i = 0; i < 9; ++i) {
+//			exampleList.addWidget(new WToggle(0, 0, -4, 18, 18, linkedWPanel), new WToggle(0, 0, -4, 18, 18, linkedWPanel), new WToggle(0, 0, -4, 18, 18, linkedWPanel));
+//		}
 
-		for (int i = 0; i < 8; ++i) {
-			exampleList.addWidget(new WSlot(0, 0, -3, 18, 18, 0, linkedInventory, linkedWPanel), new WSlot(0, 0, -3, 18, 18, 0, linkedInventory, linkedWPanel), new WSlot(0, 0, -3, 18, 18, 0, linkedInventory, linkedWPanel));
-		}
+		//for (int i = 0; i < 8; ++i) {
+			//exampleList.addWidget(new WSlot(0, 0, -3, 18, 18, 0, linkedInventory, linkedWPanel), new WSlot(0, 0, -3, 18, 18, 1, linkedInventory, linkedWPanel), new WSlot(0, 0, -3, 18, 18, 2, linkedInventory, linkedWPanel));
+		//}
 
 		//exampleList.addWidget(exampleSlot1, exampleSlot2, exampleSlot3);
 
-		exampleList.addWidget(new WStaticImage(0, 0, 137, 18, 18, new Identifier("spinnery:textures/widget/catgirl.png"), linkedWPanel), new WStaticImage(0, 0, 137, 18, 18, new Identifier("spinnery:textures/widget/catgirl.png"), linkedWPanel), new WStaticImage(0, 0, 137, 18, 18, new Identifier("spinnery:textures/widget/catgirl.png"), linkedWPanel));
+		//exampleList.addWidget(new WStaticImage(0, 0, 137, 18, 18, new Identifier("spinnery:textures/widget/catgirl.png"), linkedWPanel), new WStaticImage(0, 0, 137, 18, 18, new Identifier("spinnery:textures/widget/catgirl.png"), linkedWPanel), new WStaticImage(0, 0, 137, 18, 18, new Identifier("spinnery:textures/widget/catgirl.png"), linkedWPanel));
+
+		WSlot exampleDumpsterFire = new WSlot(WAlignment.SCREEN_MIDDLE, 0, 0, -3, 18, 18, 0, linkedInventory, linkedWPanel);
+
+		getLinkedPanel().addWidget(exampleDumpsterFire);
 
 		//WSlot exampleDumpsterFire = new WSlot(40, 140, -3, 18, 18, 0, linkedInventory, linkedWPanel);
 		//exampleDumpsterFire.getSlot().setStack(new ItemStack(Items.PUFFERFISH, 64));
 		//exampleList.addWidget(exampleDumpsterFire);
 
-		exampleList.setMovable(true);
+		//exampleList.setMovable(true);
 
-		getLinkedPanel().addWidget(exampleList);
+		//getLinkedPanel().addWidget(exampleList);
 	}
 }

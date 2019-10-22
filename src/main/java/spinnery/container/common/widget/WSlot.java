@@ -9,24 +9,26 @@ import net.minecraft.inventory.Inventory;
 public class WSlot extends WWidget {
 	public Slot internalSlot;
 
-	public static void addSingle(int positionX, int positionY, int positionZ, double sizeX, double sizeY, int slotNumber, Inventory linkedInventory, WPanel linkedWPanel) {
-		linkedWPanel.addWidget(new WSlot(positionX, positionY, positionZ, sizeX, sizeY, slotNumber, linkedInventory, linkedWPanel));
+	public static void addSingle(WAlignment alignment, int positionX, int positionY, int positionZ, double sizeX, double sizeY, int slotNumber, Inventory linkedInventory, WPanel linkedWPanel) {
+		linkedWPanel.addWidget(new WSlot(alignment, positionX, positionY, positionZ, sizeX, sizeY, slotNumber, linkedInventory, linkedWPanel));
 	}
 
-	public static void addArray(int arrayX, int arrayY, int positionX, int positionY, int positionZ, double sizeX, double sizeY, int slotNumber, Inventory linkedInventory, WPanel linkedWPanel) {
+	public static void addArray(WAlignment alignment, int arrayX, int arrayY, int positionX, int positionY, int positionZ, double sizeX, double sizeY, int slotNumber, Inventory linkedInventory, WPanel linkedWPanel) {
 		for (int y = 0; y < arrayY; ++y) {
 			for (int x = 0; x < arrayX; ++x) {
-				WSlot.addSingle(positionX + (int) (sizeX * x), positionY + (int) (sizeY * y), positionZ, sizeX, sizeY, slotNumber++, linkedInventory, linkedWPanel);
+				WSlot.addSingle(alignment, positionX + (int) (sizeX * x), positionY + (int) (sizeY * y), positionZ, sizeX, sizeY, slotNumber++, linkedInventory, linkedWPanel);
 			}
 		}
 	}
 
 	public static void addPlayerInventory(int positionZ, double sizeX, double sizeY, PlayerInventory linkedInventory, WPanel linkedWPanel) {
 		int slotN = 0;
-		addArray(9,
+		addArray(
+				WAlignment.PANEL_TOP_LEFT,
+				9,
 				1,
-				(int) (MinecraftClient.getInstance().window.getScaledWidth() / 2 - linkedWPanel.getSizeX() / 2) + 6,
-				(int) linkedWPanel.getSizeY() - 18 - 3,
+				4,
+				(int) linkedWPanel.getSizeY() - 18 - 4,
 				positionZ,
 				sizeX,
 				sizeY,
@@ -34,26 +36,31 @@ public class WSlot extends WWidget {
 				linkedInventory,
 				linkedWPanel);
 		slotN = 9;
-		addArray(9,
+		addArray(
+				 WAlignment.PANEL_TOP_LEFT,
+				 9,
 				 3,
-				(int) (MinecraftClient.getInstance().window.getScaledHeight() / 2 - linkedWPanel.getSizeY() / 2) - 6,
+				 4,
 				(int) linkedWPanel.getSizeY() - 72 - 6,
 				 positionZ,
 				 sizeX,
 				 sizeY,
 				 slotN,
 				 linkedInventory,
-				linkedWPanel);
+				 linkedWPanel);
 	}
 
-	public WSlot(int positionX, int positionY, int positionZ, double sizeX, double sizeY, int slotNumber, Inventory linkedInventory, WPanel linkedWPanel) {
+	public WSlot(WAlignment alignment, int positionX, int positionY, int positionZ, double sizeX, double sizeY, int slotNumber, Inventory linkedInventory, WPanel linkedWPanel) {
 		setLinkedPanel(linkedWPanel);
 
-		getLinkedPanel().getLinkedContainer().addSlot(internalSlot = new Slot(linkedInventory, slotNumber, (int) offsetX, (int) offsetY));
+		setAlignment(alignment);
 
-		setPositionX(positionX);
-		setPositionY(positionY);
+		getLinkedPanel().getLinkedContainer().addSlot(internalSlot = new Slot(linkedInventory, slotNumber, (int) positionX + 1, (int) positionY + 1));
+
+		setPositionX(getPositionX() + positionX);
+		setPositionY(getPositionY() + positionY);
 		setPositionZ(positionZ);
+
 
 		setSizeX(sizeX);
 		setSizeY(sizeY);
@@ -76,9 +83,9 @@ public class WSlot extends WWidget {
 		super.setPositionY(positionY);
 		if (getSlot() != null) {
 			if (getPositionY() > MinecraftClient.getInstance().window.getScaledHeight() / 2f - linkedWPanel.getSizeX() / 2) {
-				getSlot().yPosition = (int) ((Math.abs(positionY + (int) (MinecraftClient.getInstance().window.getScaledHeight() / 2 - linkedWPanel.getSizeY() / 2))) - 3);
+				getSlot().yPosition = (int) ((Math.abs(positionY + (MinecraftClient.getInstance().window.getScaledHeight() / 2f - linkedWPanel.getSizeY() / 2))) - 4);
 			} else {
-				getSlot().yPosition = (int) (-(Math.abs(positionY + (int) (MinecraftClient.getInstance().window.getScaledHeight() / 2 - linkedWPanel.getSizeY() / 2))) - 3);
+				getSlot().yPosition = (int) (-(Math.abs(positionY +(MinecraftClient.getInstance().window.getScaledHeight() / 2f - linkedWPanel.getSizeY() / 2))) + 1);
 			}
 		}
 	}
@@ -93,6 +100,6 @@ public class WSlot extends WWidget {
 
 	@Override
 	public void drawWidget() {
-		BaseRenderer.drawSlot(getPositionX(), getPositionY(), getPositionZ());
+		BaseRenderer.drawSlot((int) getPositionX(), (int) getPositionY(), getPositionZ());
 	}
 }
