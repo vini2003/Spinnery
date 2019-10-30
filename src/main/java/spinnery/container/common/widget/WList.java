@@ -15,7 +15,7 @@ import java.util.List;
 public class WList extends WWidget {
 	protected WPanel dropdownWPanel;
 
-	protected LinkedList<List<WWidget>> listWidgets = new LinkedList<>();
+	public List<List<WWidget>> listWidgets = new ArrayList<>();
 	protected int scrollY = 0;
 
 	protected String listLabel;

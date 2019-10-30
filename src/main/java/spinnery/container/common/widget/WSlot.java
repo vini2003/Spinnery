@@ -90,6 +90,11 @@ public class WSlot extends WWidget {
 		}
 	}
 
+	@Override
+	public boolean isFocused(double mouseX, double mouseY) {
+		return super.isFocused(mouseX, mouseY);
+	}
+
 	public Slot getSlot() {
 		return internalSlot;
 	}

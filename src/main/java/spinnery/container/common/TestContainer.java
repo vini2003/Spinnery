@@ -89,7 +89,7 @@ public class TestContainer extends BaseContainer {
 		exampleWSlider.alignWithContainerCenter();
 		exampleWDynamicImage.alignWithContainerCenter();
 
-		//WSlot.addPlayerInventory(0, 18, 18, linkedPlayerInventory, linkedWPanel);
+		WSlot.addPlayerInventory(0, 18, 18, linkedPlayerInventory, linkedWPanel);
 
 		WList exampleList = new WList(154, 10, -5, 96, 96, 3, 5, 18, 18, linkedWPanel);
 		//exampleList.addWidget(new WStaticImage(0, 0, 137, 18, 18, new Identifier("spinnery:textures/widget/cattegirl.png"), linkedWPanel), new WStaticImage(0, 0, 137, 18, 18, new Identifier("spinnery:textures/widget/cattegirl.png"), linkedWPanel), new WStaticImage(0, 0, 137, 18, 18, new Identifier("spinnery:textures/widget/cattegirl.png"), linkedWPanel));
