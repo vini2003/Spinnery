@@ -51,6 +51,7 @@ public class WList extends WWidget {
 
 		setListLabel(listLabel);
 		setDropdownPanel(new WPanel(positionX, positionY + 18, positionZ - 1, (int) (entrySizeX * listSizeX), (int) (entrySizeY * listSizeY)));
+
 		for (int i = 0; i < listSizeX * listSizeY; ++i) {
 			getDropdownPanel().getLinkedWidgets().add(new WWidget());
 		}

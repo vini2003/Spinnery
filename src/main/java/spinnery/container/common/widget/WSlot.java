@@ -55,12 +55,11 @@ public class WSlot extends WWidget {
 
 		setAlignment(alignment);
 
-		getLinkedPanel().getLinkedContainer().addSlot(internalSlot = new Slot(linkedInventory, slotNumber, (int) positionX + 1, (int) positionY + 1));
+		getLinkedPanel().getLinkedContainer().addSlot(internalSlot = new Slot(linkedInventory, slotNumber, positionX + 1, positionY + 1));
 
 		setPositionX(getPositionX() + positionX);
 		setPositionY(getPositionY() + positionY);
 		setPositionZ(positionZ);
-
 
 		setSizeX(sizeX);
 		setSizeY(sizeY);

@@ -38,20 +38,18 @@ public class BaseScreen<T extends BaseContainer> extends AbstractContainerScreen
 	protected boolean isPointWithinBounds(int slotX, int slotY, int defaultSizeX, int defaultSizeY, double mouseX, double mouseY) {
 		Optional<? extends WWidget> focusedWidget = getLinkedContainer().getLinkedPanel().getLinkedWidgets().stream().filter((widget) -> widget.isFocused(mouseX, mouseY)).findAny();
 		if (focusedWidget.isPresent()) {
-			List<WWidget> checkWidgets = new ArrayList<>();
-			if (focusedWidget.get() instanceof WList) {
-				List<List<WWidget>> verticalArray = (((WList) focusedWidget.get()).listWidgets);
-				verticalArray.forEach(checkWidgets::addAll);
+			if (focusedWidget.get() instanceof WSlot) {
+					WSlot wSlot = (WSlot) focusedWidget.get();
+				return (slotX > wSlot.internalSlot.xPosition - 8
+						&&  slotX < wSlot.internalSlot.xPosition + 8
+						&&  slotY > wSlot.internalSlot.yPosition - 8
+						&&  slotY < wSlot.internalSlot.yPosition + 8);
+			} else {
+				return (mouseX > slotX - 8
+						&&  mouseX < slotX + 8
+						&&  mouseY > slotY - 8
+						&&  mouseY < slotY + 8);
 			}
-			if (focusedWidget.get() instanceof WDropdown) {
-				checkWidgets.addAll(((WDropdown) focusedWidget.get()).getDropdownPanel().getLinkedWidgets());
-			}
-			return checkWidgets.stream().anyMatch(widget -> widget instanceof WSlot
-										  && slotX > ((WSlot) widget).internalSlot.xPosition - 8
-										  && slotX < ((WSlot) widget).internalSlot.xPosition + 8
-										  && slotY > ((WSlot) widget).internalSlot.xPosition - 8
-										  && slotY < ((WSlot) widget).internalSlot.xPosition + 8);
-
 		} else {
 			return false;
 		}
