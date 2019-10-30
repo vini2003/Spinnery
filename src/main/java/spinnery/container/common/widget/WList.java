@@ -103,11 +103,13 @@ public class WList extends WWidget {
 				canScroll[0] = false;
 			}
 		});
+
 		listWidgets.get(listWidgets.size() - 1).forEach((widget) -> {
-			if (widget.getPositionY() + finalScrollOffsetY <= getPositionY() + getSizeY()) {
+			if (widget.getPositionY() + widget.getSizeY() + finalScrollOffsetY <= getPositionY() + getSizeY() - 3) {
 				canScroll[0] = false;
 			}
 		});
+
 		if (canScroll[0]) {
 			listWidgets.forEach((widgets) -> {
 				widgets.forEach((widget) -> {
@@ -123,16 +125,10 @@ public class WList extends WWidget {
 		listWidgets.forEach((widgets) -> {
 			widgets.forEach((widget) -> {
 				if (widget.isWithinBounds(mouseX, mouseY) && isFocused(mouseX, mouseY)) {
-					if (widget instanceof WSlot) {
-						getLinkedPanel().getLinkedContainer().slotList.add(((WSlot) widget).internalSlot);
-					}
 					widget.setHidden(false);
 					widget.isFocused(mouseX, mouseY);
 					widget.onMouseClicked(mouseX, mouseY, mouseButton);
 				} else {
-					if (widget instanceof WSlot) {
-						getLinkedPanel().getLinkedContainer().slotList.remove(((WSlot) widget).internalSlot);
-					}
 					widget.setHidden(true);
 				}
 			});

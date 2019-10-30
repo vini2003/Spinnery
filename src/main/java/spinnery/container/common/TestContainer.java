@@ -89,14 +89,14 @@ public class TestContainer extends BaseContainer {
 		exampleWSlider.alignWithContainerCenter();
 		exampleWDynamicImage.alignWithContainerCenter();
 
-		WSlot.addPlayerInventory(0, 18, 18, linkedPlayerInventory, linkedWPanel);
+		//WSlot.addPlayerInventory(0, 18, 18, linkedPlayerInventory, linkedWPanel);
 
-		//WList exampleList = new WList(154, 10, -5, 96, 96, 3, 5, 18, 18, linkedWPanel);
+		WList exampleList = new WList(154, 10, -5, 96, 96, 3, 5, 18, 18, linkedWPanel);
 		//exampleList.addWidget(new WStaticImage(0, 0, 137, 18, 18, new Identifier("spinnery:textures/widget/cattegirl.png"), linkedWPanel), new WStaticImage(0, 0, 137, 18, 18, new Identifier("spinnery:textures/widget/cattegirl.png"), linkedWPanel), new WStaticImage(0, 0, 137, 18, 18, new Identifier("spinnery:textures/widget/cattegirl.png"), linkedWPanel));
 
-//		for (int i = 0; i < 9; ++i) {
-//			exampleList.addWidget(new WToggle(0, 0, -4, 18, 18, linkedWPanel), new WToggle(0, 0, -4, 18, 18, linkedWPanel), new WToggle(0, 0, -4, 18, 18, linkedWPanel));
-//		}
+		for (int i = 0; i < 9; ++i) {
+			exampleList.addWidget(new WToggle(0, 0, -4, 18, 18, linkedWPanel), new WToggle(0, 0, -4, 18, 18, linkedWPanel), new WToggle(0, 0, -4, 18, 18, linkedWPanel));
+		}
 
 		//for (int i = 0; i < 8; ++i) {
 			//exampleList.addWidget(new WSlot(0, 0, -3, 18, 18, 0, linkedInventory, linkedWPanel), new WSlot(0, 0, -3, 18, 18, 1, linkedInventory, linkedWPanel), new WSlot(0, 0, -3, 18, 18, 2, linkedInventory, linkedWPanel));
@@ -108,7 +108,7 @@ public class TestContainer extends BaseContainer {
 
 		WSlot exampleDumpsterFire = new WSlot(WAlignment.SCREEN_MIDDLE, 0, 0, -3, 18, 18, 0, linkedInventory, linkedWPanel);
 
-		getLinkedPanel().addWidget(exampleDumpsterFire);
+		//getLinkedPanel().addWidget(exampleDumpsterFire);
 
 		//WSlot exampleDumpsterFire = new WSlot(40, 140, -3, 18, 18, 0, linkedInventory, linkedWPanel);
 		//exampleDumpsterFire.getSlot().setStack(new ItemStack(Items.PUFFERFISH, 64));
@@ -116,6 +116,8 @@ public class TestContainer extends BaseContainer {
 
 		//exampleList.setMovable(true);
 
-		//getLinkedPanel().addWidget(exampleList);
+		exampleList.addWidget(exampleDumpsterFire);
+
+		getLinkedPanel().addWidget(exampleList);
 	}
 }
