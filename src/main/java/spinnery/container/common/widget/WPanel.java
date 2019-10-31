@@ -17,12 +17,13 @@ public class WPanel extends WWidget {
 		setLinkedContainer(linkedContainer);
 	}
 
-	public WPanel(int positionX, int positionY, int positionZ, int sizeX, int sizeY) {
+	public WPanel(int positionX, int positionY, int positionZ, double sizeX, double sizeY) {
 		setPosition(positionX, positionY, positionZ);
 		setSize(sizeX, sizeY);
 	}
 
-	public WPanel(BaseContainer linkedContainer, int positionX, int positionY, int positionZ, int sizeX, int sizeY) {
+	public WPanel(BaseContainer linkedContainer, int positionX, int positionY, int positionZ,
+				  double sizeX, double sizeY) {
 		this(positionX, positionY, positionZ, sizeX, sizeY);
 
 		setLinkedContainer(linkedContainer);
