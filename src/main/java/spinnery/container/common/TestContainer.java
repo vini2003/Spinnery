@@ -7,13 +7,12 @@ import spinnery.container.common.widget.WList;
 import spinnery.container.common.widget.WSlot;
 import spinnery.container.common.widget.WPanel;
 import spinnery.container.common.widget.WSlider;
+import spinnery.container.common.widget.WSlotList;
 import spinnery.container.common.widget.WStaticImage;
 import spinnery.container.common.widget.WToggle;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.BasicInventory;
 import net.minecraft.inventory.Inventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.util.Identifier;
 
 
@@ -89,13 +88,15 @@ public class TestContainer extends BaseContainer {
 		exampleWSlider.alignWithContainerCenter();
 		exampleWDynamicImage.alignWithContainerCenter();
 
-		//WSlot.addPlayerInventory(0, 18, 18, linkedPlayerInventory, linkedWPanel);
+		WSlot.addPlayerInventory(0, 18, 18, linkedPlayerInventory, linkedWPanel);
 
 		WList exampleList = new WList(50, 10, -5, 96, 96, 3, 5, 18, 18, linkedWPanel);
+		WSlotList exampleSlotList = new WSlotList(50, 90, -5, 96, 96, 3, 5, 18, 18, linkedWPanel);
 		//exampleList.addWidget(new WStaticImage(0, 0, 137, 18, 18, new Identifier("spinnery:textures/widget/cattegirl.png"), linkedWPanel), new WStaticImage(0, 0, 137, 18, 18, new Identifier("spinnery:textures/widget/cattegirl.png"), linkedWPanel), new WStaticImage(0, 0, 137, 18, 18, new Identifier("spinnery:textures/widget/cattegirl.png"), linkedWPanel));
 
-		for (int i = 0; i < 9; ++i) {
-			//exampleList.addWidget(new WToggle(0, 0, -4, 18, 18, linkedWPanel), new WToggle(0, 0, -4, 18, 18, linkedWPanel), new WToggle(0, 0, -4, 18, 18, linkedWPanel));
+		for (int i = 0; i < 27; ++i) {
+			exampleList.add(new WToggle(0, 0, -4, 18, 18, linkedWPanel), new WToggle(0, 0, -4, 18, 18, linkedWPanel), new WToggle(0, 0, -4, 18, 18, linkedWPanel));
+			exampleSlotList.add(new WSlot(WAlignment.PANEL_TOP_LEFT, 0, 0, -3, 18, 18, i, linkedPlayerInventory, linkedWPanel), new WSlot(WAlignment.PANEL_TOP_LEFT, 0, 0, -3, 18, 18, i, linkedPlayerInventory, linkedWPanel), new WSlot(WAlignment.PANEL_TOP_LEFT, 0, 0, -3, 18, 18, i, linkedPlayerInventory, linkedWPanel));
 		}
 
 		//for (int i = 0; i < 8; ++i) {
@@ -116,8 +117,9 @@ public class TestContainer extends BaseContainer {
 
 		//exampleList.setMovable(true);
 
-		exampleList.addWidget(exampleDumpsterFire);
+		exampleList.add(exampleDumpsterFire);
 
-		getLinkedPanel().addWidget(exampleList);
+		//getLinkedPanel().addWidget(exampleList);
+		getLinkedPanel().addWidget(exampleSlotList);
 	}
 }

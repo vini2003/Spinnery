@@ -1,23 +1,21 @@
 package spinnery.container.common.widget;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import net.minecraft.client.MinecraftClient;
 import org.apache.logging.log4j.Level;
+import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 import spinnery.SpinneryMod;
 import spinnery.container.client.BaseRenderer;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.util.Pair;
-import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-public class WList extends WWidget {
+public class WSlotList extends WWidget {
 	protected WPanel dropdownWPanel;
 
-	public List<List<WWidget>> listWidgets = new ArrayList<>();
+	public LinkedList<List<WWidget>> listWidgets = new LinkedList<>();
 	protected int scrollY = 0;
 
 	protected String listLabel;
@@ -35,7 +33,7 @@ public class WList extends WWidget {
 	protected List<WWidget> startMarker;
 	protected List<WWidget> endMarker;
 
-	public WList(int positionX, int positionY, int positionZ, double sizeX, double sizeY, double listSizeX, double listSizeY, double entrySizeX, double entrySizeY, WPanel linkedWPanel) {
+	public WSlotList(int positionX, int positionY, int positionZ, double sizeX, double sizeY, double listSizeX, double listSizeY, double entrySizeX, double entrySizeY, WPanel linkedWPanel) {
 		setPositionX(positionX);
 		setPositionY(positionY);
 		setPositionZ(positionZ);
@@ -52,15 +50,10 @@ public class WList extends WWidget {
 		setLinkedPanel(linkedWPanel);
 
 		setListLabel(listLabel);
-		setDropdownPanel(new WPanel(positionX, positionY + 18, positionZ - 1, (int) (entrySizeX * listSizeX), (int) (entrySizeY * listSizeY)));
-
-		for (int i = 0; i < listSizeX * listSizeY; ++i) {
-			getDropdownPanel().getLinkedWidgets().add(new WWidget());
-		}
 	}
 
 	public static void addSingle(int positionX, int positionY, int positionZ, double sizeX, double sizeY, double listSizeX, double listSizeY, double entrySizeX, double entrySizeY, WPanel linkedWPanel) {
-		linkedWPanel.addWidget(new WList(positionX, positionY, positionZ, sizeX, sizeY, listSizeX, listSizeY, entrySizeX, entrySizeY, linkedWPanel));
+		linkedWPanel.addWidget(new WSlotList(positionX, positionY, positionZ, sizeX, sizeY, listSizeX, listSizeY, entrySizeX, entrySizeY, linkedWPanel));
 	}
 
 	public WPanel getDropdownPanel() {
@@ -98,23 +91,63 @@ public class WList extends WWidget {
 
 	@Override
 	public void onMouseScrolled(double mouseX, double mouseY, double scrollOffsetY) {
-		double scaledOffsetY = scrollOffsetY * 2.5;
+		/**
+		 * XXX
+		 * YYY
+		 * ZZZ
+		 *
+		 * YYY -> XXX
+		 * ZZZ -> YYY
+		 * XXX -> ZZZ
+		 *
+		 * 2nd -> 1st
+		 * 1st -> 3rd
+		 *
+		 * updatePosition();
+		 */
 
-		boolean hitTop = listWidgets.get(0).stream().anyMatch(widget ->
-				widget.getPositionY() + scaledOffsetY > getPositionY()
-		);
+		updatePositions();
 
-		boolean hitBottom = listWidgets.get(listWidgets.size() - 1).stream().anyMatch(widget ->
-				widget.getPositionY() + widget.getSizeY() + scaledOffsetY <= getPositionY() + getSizeY() - 3
-		);
+		if (scrollOffsetY > 0) {
+			//List<WWidget> firstRowWidgets = listWidgets.get(0);
+			//List<WWidget> lastRowWidgets = listWidgets.get(listWidgets.size() - 1);
 
-		if (!hitTop && !hitBottom) {
-			listWidgets.forEach((widgets) -> {
-				widgets.forEach((widget) -> {
-					widget.setPositionY(widget.getPositionY() + scaledOffsetY);
-				});
-			});
+			if (listWidgets.getLast() != endMarker) {
+				//double firstPositionY = firstRowWidgets.get(0).getPositionY();
+				//double lastPositionY = lastRowWidgets.get(0).getPositionY();
+
+				//firstRowWidgets.forEach(widget -> widget.setPositionY(lastPositionY));
+				//lastRowWidgets.forEach(widget -> widget.setPositionY(firstPositionY));
+
+				//listWidgets.set(0, lastRowWidgets);
+				//listWidgets.set(listWidgets.size() - 1, firstRowWidgets);
+			listWidgets.addFirst(listWidgets.getLast());
+			listWidgets.removeLast();
+
+
+			}
+		} else {
+			//List<WWidget> firstRowWidgets = listWidgets.get(0);
+			//List<WWidget> lastRowWidgets = listWidgets.get(listWidgets.size() - 1);
+
+			if (listWidgets.getFirst() != endMarker) {
+				//double firstPositionY = firstRowWidgets.get(0).getPositionY();
+				//double lastPositionY = lastRowWidgets.get(0).getPositionY();
+
+				//firstRowWidgets.forEach(widget -> widget.setPositionY(lastPositionY));
+				//lastRowWidgets.forEach(widget -> widget.setPositionY(firstPositionY));
+
+
+				//listWidgets.set(0, lastRowWidgets);
+				//listWidgets.set(listWidgets.size() - 1, firstRowWidgets);
+				listWidgets.addLast(listWidgets.getFirst());
+				listWidgets.removeFirst();
+			}
+
 		}
+
+		updatePositions();
+
 		super.onMouseScrolled(mouseX, mouseY, scrollOffsetY);
 	}
 
@@ -144,7 +177,7 @@ public class WList extends WWidget {
 	}
 
 	public void updatePositions() {
-		int y = 0;
+		int y = (int) getPositionY();
 		for (int i = 0; i <= listWidgets.size() -1; ++i) {
 			int x = (int) getPositionX() + 2;
 			for (int k = 0; k <= listWidgets.get(i).size() - 1; ++k) {
@@ -163,10 +196,15 @@ public class WList extends WWidget {
 
 	public void add(WWidget... widgetArray) {
 		List<WWidget> widgets = Arrays.asList(widgetArray);
-		if (Arrays.stream(widgetArray).anyMatch(widget ->  (widget instanceof WSlot))) {
-			SpinneryMod.logger.log(Level.WARN, SpinneryMod.LOG_ID + " Illegal operation: Cannot add WSlot to non-WSlotList!");
+		if (Arrays.stream(widgetArray).anyMatch(widget ->  !(widget instanceof WSlot))) {
+			SpinneryMod.logger.log(Level.WARN, SpinneryMod.LOG_ID + " Illegal operation: Cannot add non-WSlot to WSlotList!");
 			return;
 		} else {
+			if (startMarker == null) {
+				startMarker = widgets;
+			} else {
+				endMarker = widgets;
+			}
 			listWidgets.add(widgets);
 		}
 		updateSize();

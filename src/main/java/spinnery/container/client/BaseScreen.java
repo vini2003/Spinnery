@@ -4,6 +4,8 @@ import spinnery.container.common.BaseContainer;
 import spinnery.container.common.widget.WDropdown;
 import spinnery.container.common.widget.WList;
 import spinnery.container.common.widget.WSlot;
+import spinnery.container.common.widget.WSlotList;
+import spinnery.container.common.widget.WToggle;
 import spinnery.container.common.widget.WWidget;
 import net.minecraft.client.gui.screen.ingame.AbstractContainerScreen;
 import net.minecraft.container.Slot;
@@ -38,17 +40,26 @@ public class BaseScreen<T extends BaseContainer> extends AbstractContainerScreen
 	protected boolean isPointWithinBounds(int slotX, int slotY, int defaultSizeX, int defaultSizeY, double mouseX, double mouseY) {
 		Optional<? extends WWidget> focusedWidget = getLinkedContainer().getLinkedPanel().getLinkedWidgets().stream().filter((widget) -> widget.isFocused(mouseX, mouseY)).findAny();
 		if (focusedWidget.isPresent()) {
-			if (focusedWidget.get() instanceof WSlot) {
-					WSlot wSlot = (WSlot) focusedWidget.get();
+			if (focusedWidget.get() instanceof WSlotList) {
+				return ((WSlotList) focusedWidget.get()).listWidgets.stream().anyMatch(widgets ->
+																				   widgets.stream().anyMatch(widget ->
+																				                             widget instanceof WSlot
+																				                             && widget.isWithinBounds(mouseX, mouseY)
+																				                             && slotX > ((WSlot) widget).internalSlot.xPosition - 8
+																				                             && slotX < ((WSlot) widget).internalSlot.xPosition + 8
+																				                             && slotY > ((WSlot) widget).internalSlot.yPosition - 8
+																				                             && slotY < ((WSlot) widget).internalSlot.yPosition + 8));
+			} else if (focusedWidget.get() instanceof WSlot) {
+				WSlot wSlot = (WSlot) focusedWidget.get();
 				return (slotX > wSlot.internalSlot.xPosition - 8
-						&&  slotX < wSlot.internalSlot.xPosition + 8
-						&&  slotY > wSlot.internalSlot.yPosition - 8
-						&&  slotY < wSlot.internalSlot.yPosition + 8);
+					 && slotX < wSlot.internalSlot.xPosition + 8
+					 && slotY > wSlot.internalSlot.yPosition - 8
+					 && slotY < wSlot.internalSlot.yPosition + 8);
 			} else {
 				return (mouseX > slotX - 8
-						&&  mouseX < slotX + 8
-						&&  mouseY > slotY - 8
-						&&  mouseY < slotY + 8);
+					&&  mouseX < slotX + 8
+					&&  mouseY > slotY - 8
+					&&  mouseY < slotY + 8);
 			}
 		} else {
 			return false;
