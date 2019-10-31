@@ -4,18 +4,17 @@ import spinnery.container.client.BaseRenderer;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
+/**
+ * Represents a static (unchanging) text widget.
+ */
 public class WStaticText extends WWidget {
-	protected Identifier texture;
+	// protected Identifier texture;  // ??
 
 	protected Text text;
 
-	public WStaticText(int positionX, int positionY, int positionZ, double sizeX, double sizeY, Text text, WPanel linkedWPanel) {
-		setPositionX(positionX);
-		setPositionY(positionY);
-		setPositionZ(positionZ);
-
-		setSizeX(sizeX);
-		setSizeY(sizeY);
+	public WStaticText(WPanel linkedPanel, int positionX, int positionY, int positionZ, double sizeX, double sizeY, Text text) {
+		setPosition(positionX, positionY, positionZ);
+		setSize(sizeX, sizeY);
 
 		setText(text);
 
