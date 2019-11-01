@@ -67,25 +67,41 @@ public class WSlot extends WWidget {
 
 	@Override
 	public void setPositionX(double positionX) {
-		super.setPositionX(positionX);
-		if (getSlot() != null) {
-			if (getPositionX() < MinecraftClient.getInstance().window.getScaledWidth() / 2f - linkedWPanel.getSizeX() / 2) {
-				getSlot().xPosition = (int) (-(Math.abs(positionX - (int) (MinecraftClient.getInstance().window.getScaledWidth() / 2 - linkedWPanel.getSizeX() / 2))) + 1);
-			} else {
-				getSlot().xPosition = (int) ((Math.abs(positionX - (int) (MinecraftClient.getInstance().window.getScaledWidth() / 2 - linkedWPanel.getSizeX() / 2))) + 1);
+		if (!isHidden) {
+			super.setPositionX(positionX);
+			if (getSlot() != null) {
+				if (getPositionX() < MinecraftClient.getInstance().window.getScaledWidth() / 2f - linkedWPanel.getSizeX() / 2) {
+					getSlot().xPosition = (int) (-(Math.abs(positionX - (int) (MinecraftClient.getInstance().window.getScaledWidth() / 2 - linkedWPanel.getSizeX() / 2))) + 1);
+				} else {
+					getSlot().xPosition = (int) ((Math.abs(positionX - (int) (MinecraftClient.getInstance().window.getScaledWidth() / 2 - linkedWPanel.getSizeX() / 2))) + 1);
+				}
 			}
 		}
 	}
 
 	@Override
 	public void setPositionY(double positionY) {
-		super.setPositionY(positionY);
-		if (getSlot() != null) {
-			if (getPositionY() > MinecraftClient.getInstance().window.getScaledHeight() / 2f - linkedWPanel.getSizeX() / 2) {
-				getSlot().yPosition = (int) ((Math.abs(positionY + (MinecraftClient.getInstance().window.getScaledHeight() / 2f - linkedWPanel.getSizeY() / 2))) - 4);
-			} else {
-				getSlot().yPosition = (int) (-(Math.abs(positionY +(MinecraftClient.getInstance().window.getScaledHeight() / 2f - linkedWPanel.getSizeY() / 2))) + 1);
+		if (!isHidden) {
+			super.setPositionY(positionY);
+			if (getSlot() != null) {
+				if (getPositionY() > MinecraftClient.getInstance().window.getScaledHeight() / 2f - linkedWPanel.getSizeX() / 2) {
+					getSlot().yPosition = (int) ((Math.abs(positionY + (MinecraftClient.getInstance().window.getScaledHeight() / 2f - linkedWPanel.getSizeY() / 2))) - 3);
+				} else {
+					getSlot().yPosition = (int) (-(Math.abs(positionY +(MinecraftClient.getInstance().window.getScaledHeight() / 2f - linkedWPanel.getSizeY() / 2))) + 1);
+				}
 			}
+		}
+	}
+
+	@Override
+	public void setHidden(boolean isHidden) {
+		super.setHidden(isHidden);
+		if (isHidden) {
+			internalSlot.xPosition = Integer.MAX_VALUE;
+			internalSlot.yPosition = Integer.MAX_VALUE;
+		} else {
+			setPositionX(getPositionX());
+			setPositionY(getPositionY());
 		}
 	}
 

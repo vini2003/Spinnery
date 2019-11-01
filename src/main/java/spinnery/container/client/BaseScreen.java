@@ -1,5 +1,6 @@
 package spinnery.container.client;
 
+import net.minecraft.client.MinecraftClient;
 import spinnery.container.common.BaseContainer;
 import spinnery.container.common.widget.WDropdown;
 import spinnery.container.common.widget.WList;
@@ -24,11 +25,23 @@ public class BaseScreen<T extends BaseContainer> extends AbstractContainerScreen
 
 	public BaseScreen(Text name, T linkedContainer, PlayerEntity player) {
 		super(linkedContainer, player.inventory, name);
+		resizeAll();
 		linkedContainer.tick();
 	}
 
 	public T getLinkedContainer() {
 		return getContainer();
+	}
+
+	public void resizeAll() {
+		super.containerWidth = (int) getLinkedContainer().getLinkedPanel().getSizeX();
+		super.containerHeight = (int) getLinkedContainer().getLinkedPanel().getSizeY();
+		super.width = containerWidth;
+		super.height = containerHeight;
+		super.left = (int) ((getLinkedContainer().getLinkedPanel().getPositionX()));
+		super.top = (int) ((getLinkedContainer().getLinkedPanel().getPositionY()));
+		getLinkedContainer().left = super.left;
+		getLinkedContainer().top = super.top;
 	}
 
 	@Override
@@ -136,15 +149,13 @@ public class BaseScreen<T extends BaseContainer> extends AbstractContainerScreen
 	}
 
 	@Override
+	public void resize(MinecraftClient minecraftClient, int width, int height) {
+		super.resize(minecraftClient, width, height);
+		resizeAll();
+	}
+
+	@Override
 	public void tick() {
-		super.containerWidth = (int) getLinkedContainer().getLinkedPanel().getSizeX();
-		super.containerHeight = (int) getLinkedContainer().getLinkedPanel().getSizeY();
-		super.width = containerWidth;
-		super.height = containerHeight;
-		super.left = (int) ((getLinkedContainer().getLinkedPanel().getPositionX()));
-		super.top = (int) ((getLinkedContainer().getLinkedPanel().getPositionY()));
-		getLinkedContainer().left = super.left;
-		getLinkedContainer().top = super.top;
 		getLinkedContainer().tick();
 		super.tick();
 	}

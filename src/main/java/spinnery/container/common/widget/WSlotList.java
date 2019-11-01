@@ -28,7 +28,8 @@ public class WSlotList extends WWidget {
 
 	protected int listPixelsY = 0;
 
-	protected double scrollPercentage = 0;
+	protected int scrollTotal = 0;
+	protected int scrollCurrent = 0;
 
 	protected List<WWidget> startMarker;
 	protected List<WWidget> endMarker;
@@ -91,61 +92,21 @@ public class WSlotList extends WWidget {
 
 	@Override
 	public void onMouseScrolled(double mouseX, double mouseY, double scrollOffsetY) {
-		/**
-		 * XXX
-		 * YYY
-		 * ZZZ
-		 *
-		 * YYY -> XXX
-		 * ZZZ -> YYY
-		 * XXX -> ZZZ
-		 *
-		 * 2nd -> 1st
-		 * 1st -> 3rd
-		 *
-		 * updatePosition();
-		 */
-
-		updatePositions();
-
 		if (scrollOffsetY > 0) {
-			//List<WWidget> firstRowWidgets = listWidgets.get(0);
-			//List<WWidget> lastRowWidgets = listWidgets.get(listWidgets.size() - 1);
-
-			if (listWidgets.getLast() != endMarker) {
-				//double firstPositionY = firstRowWidgets.get(0).getPositionY();
-				//double lastPositionY = lastRowWidgets.get(0).getPositionY();
-
-				//firstRowWidgets.forEach(widget -> widget.setPositionY(lastPositionY));
-				//lastRowWidgets.forEach(widget -> widget.setPositionY(firstPositionY));
-
-				//listWidgets.set(0, lastRowWidgets);
-				//listWidgets.set(listWidgets.size() - 1, firstRowWidgets);
-			listWidgets.addFirst(listWidgets.getLast());
-			listWidgets.removeLast();
-
-
+			if (scrollCurrent > 0) {
+				listWidgets.addFirst(listWidgets.getLast());
+				listWidgets.removeLast();
+				--scrollCurrent;
 			}
 		} else {
-			//List<WWidget> firstRowWidgets = listWidgets.get(0);
-			//List<WWidget> lastRowWidgets = listWidgets.get(listWidgets.size() - 1);
-
-			if (listWidgets.getFirst() != endMarker) {
-				//double firstPositionY = firstRowWidgets.get(0).getPositionY();
-				//double lastPositionY = lastRowWidgets.get(0).getPositionY();
-
-				//firstRowWidgets.forEach(widget -> widget.setPositionY(lastPositionY));
-				//lastRowWidgets.forEach(widget -> widget.setPositionY(firstPositionY));
-
-
-				//listWidgets.set(0, lastRowWidgets);
-				//listWidgets.set(listWidgets.size() - 1, firstRowWidgets);
+			if (scrollCurrent < scrollTotal - getSizeY() / 18) {
 				listWidgets.addLast(listWidgets.getFirst());
 				listWidgets.removeFirst();
+				++scrollCurrent;
 			}
-
 		}
 
+		updateHidden();
 		updatePositions();
 
 		super.onMouseScrolled(mouseX, mouseY, scrollOffsetY);
@@ -155,13 +116,8 @@ public class WSlotList extends WWidget {
 	public void onMouseClicked(double mouseX, double mouseY, int mouseButton) {
 		listWidgets.forEach((widgets) -> {
 			widgets.forEach((widget) -> {
-				if (widget.isWithinBounds(mouseX, mouseY) && isFocused(mouseX, mouseY)) {
-					widget.setHidden(false);
-					widget.isFocused(mouseX, mouseY);
-					widget.onMouseClicked(mouseX, mouseY, mouseButton);
-				} else {
-					widget.setHidden(true);
-				}
+				widget.isFocused(mouseX, mouseY);
+				widget.onMouseClicked(mouseX, mouseY, mouseButton);
 			});
 		});
 		super.onMouseClicked(mouseX, mouseY, mouseButton);
@@ -189,6 +145,15 @@ public class WSlotList extends WWidget {
 		}
 	}
 
+	public void updateHidden() {
+		listWidgets.forEach(widgets -> widgets.forEach(widget -> widget.setHidden(true)));
+		for (int i = (int) Math.floor(getSizeY() / (20)); i >= 0; --i) {
+			if (listWidgets.size() - 1 >= i) {
+				listWidgets.get(i).forEach(widget -> widget.setHidden(false));
+			}
+		}
+	}
+
 	public void updateSize() {
 		listPixelsY = 0;
 		listWidgets.forEach(widgets -> widgets.forEach(widget -> listPixelsY += widget.getSizeY() + 2));
@@ -200,20 +165,19 @@ public class WSlotList extends WWidget {
 			SpinneryMod.logger.log(Level.WARN, SpinneryMod.LOG_ID + " Illegal operation: Cannot add non-WSlot to WSlotList!");
 			return;
 		} else {
-			if (startMarker == null) {
-				startMarker = widgets;
-			} else {
-				endMarker = widgets;
-			}
 			listWidgets.add(widgets);
 		}
+		++scrollTotal;
 		updateSize();
+		updateHidden();
 		updatePositions();
 	}
 
 	public void remove(WWidget... widgetArray) {
 		listWidgets.remove(Arrays.asList(widgetArray));
+		--scrollTotal;
 		updateSize();
+		updateHidden();
 		updatePositions();
 	}
 
@@ -221,7 +185,7 @@ public class WSlotList extends WWidget {
 	public boolean isWithinBounds(double positionX, double positionY) {
 		return (positionX <= getPositionX() + getSizeX()
 				&& positionX >= getPositionX()
-				&& positionY <= getPositionY() + getDropdownPanel().getSizeY()
+				&& positionY <= getPositionY() + getSizeY()
 				&& positionY >= getPositionY());
 	}
 
