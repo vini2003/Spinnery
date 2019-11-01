@@ -3,54 +3,48 @@ package spinnery.container.common.widget;
 import spinnery.container.client.BaseRenderer;
 import net.minecraft.util.Identifier;
 
+/**
+ * Represents a dynamic image (an image with multiple possible textures).
+ */
 public class WDynamicImage extends WWidget {
 	protected Identifier[] textures;
 
-	protected int position = 0;
+	protected int cyclePos = 0;
 
-	public WDynamicImage(double positionX, double positionY, double positionZ, double sizeX, double sizeY, WPanel linkedWPanel, Identifier... textures) {
-		setPositionX(positionX);
-		setPositionY(positionY);
-		setPositionZ(positionZ);
-
-		setSizeX(sizeX);
-		setSizeY(sizeY);
+	public WDynamicImage(WPanel linkedWPanel, int positionX, int positionY, int positionZ,
+						 double sizeX, double sizeY, Identifier... textures) {
+		setPosition(positionX, positionY, positionZ);
+		setSize(sizeX, sizeY);
 
 		setTextures(textures);
 
 		setLinkedPanel(linkedWPanel);
 	}
 
-	public int next() {
-		if (getPosition() < getTextures().length - 1) {
-			setPosition(getPosition() + 1);
+	/**
+	 * Moves the cycle position forwards one, and returns the new cycle position.
+	 */
+	public int nextCyclePos() {
+		setCyclePos((getCyclePos() + 1) % getTextures().length);
+		return getCyclePos();
+	}
+
+	/**
+	 * Moves the cycle position backwards one, and returns the previous cycle position.
+	 */
+	public int previousCyclePos() {
+		if (getCyclePos() > 0) {
+			setCyclePos(getCyclePos() - 1);
 		} else {
-			setPosition(0);
+			setCyclePos(getTextures().length - 1);
 		}
-		return getPosition();
-	}
-
-	public int previous() {
-		if (getPosition() > 0) {
-			setPosition(getPosition() - 1);
-		} else {
-			setPosition(getTextures().length - 1);
-		}
-		return getPosition();
+		return getCyclePos();
 	}
 
 
-	public void setPosition(int position) {
-		this.position = position;
-	}
+	public void setCyclePos(int position) { this.cyclePos = position; }
 
-	public int getPosition() {
-		return position;
-	}
-
-	public Identifier getTexture(int position) {
-		return textures[position];
-	}
+	public int getCyclePos() { return this.cyclePos; }
 
 	public void setTextures(Identifier... textures) {
 		this.textures = textures;
@@ -60,8 +54,20 @@ public class WDynamicImage extends WWidget {
 		return textures;
 	}
 
+	public Identifier getTexture(int cyclePos) {
+		return textures[cyclePos];
+	}
+
+	/**
+	 * Gets the current texture in the cycle.
+	 */
+	public Identifier getCurrentTexture() {
+		return textures[cyclePos];
+	}
+
 	@Override
 	public void drawWidget() {
-		BaseRenderer.drawImage(getPositionX(), getPositionY(), getPositionZ(), getSizeX(), getSizeY(), getTexture(next()));
+		nextCyclePos();
+		BaseRenderer.drawImage(getPositionX(), getPositionY(), getPositionZ(), getSizeX(), getSizeY(), getCurrentTexture());
 	}
 }

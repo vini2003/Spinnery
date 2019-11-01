@@ -1,23 +1,26 @@
 package spinnery.container.common.widget;
 
+import net.minecraft.text.Text;
 import spinnery.container.client.BaseRenderer;
 import net.minecraft.client.MinecraftClient;
 import org.lwjgl.glfw.GLFW;
 
+import java.util.List;
+
+/**
+ * Represents a dropdown widget.
+ */
 public class WDropdown extends WWidget {
 	protected WPanel dropdownWPanel;
 
-	protected String dropdownLabel;
+	protected Text dropdownLabel;
 
-	protected boolean state = false;
+	// when clicked
+	protected boolean opened = false;
 
-	public WDropdown(int positionX, int positionY, int positionZ, double sizeX, double sizeY, String dropdownLabel, WPanel linkedWPanel) {
-		setPositionX(positionX);
-		setPositionY(positionY);
-		setPositionZ(positionZ);
-
-		setSizeX(sizeX);
-		setSizeY(sizeY);
+	public WDropdown(WPanel linkedWPanel, int positionX, int positionY, int positionZ, double sizeX, double sizeY, Text dropdownLabel) {
+		setPosition(positionX, positionY, positionZ);
+		setSize(sizeX, sizeY);
 
 		setLinkedPanel(linkedWPanel);
 
@@ -33,34 +36,40 @@ public class WDropdown extends WWidget {
 		this.dropdownWPanel = dropdownWPanel;
 	}
 
-	public String getDropdownLabel() {
+	public Text getDropdownLabel() {
 		return dropdownLabel;
 	}
 
-	public void setDropdownLabel(String dropdownLabel) {
+	public void setDropdownLabel(Text dropdownLabel) {
 		this.dropdownLabel = dropdownLabel;
 	}
 
-	public boolean getState() {
-		return state;
+	public boolean isOpened() {
+		return opened;
 	}
 
-	public void setState(boolean state) {
-		this.state = state;
+	public void setOpened(boolean opened) {
+		this.opened = opened;
 	}
 
 	@Override
 	public void onMouseDragged(double mouseX, double mouseY, int mouseButton, double dragOffsetX, double dragOffsetY) {
-		if (getCanMove() && getFocus() && mouseButton == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
+		if (isMovable() && getFocus() && mouseButton == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
 			setPositionX(getPositionX() + dragOffsetX);
 			setPositionY(getPositionY() + dragOffsetY);
 
-			getDropdownPanel().setPositionX(getDropdownPanel().getPositionX() + dragOffsetX);
-			getDropdownPanel().setPositionY(getDropdownPanel().getPositionY() + dragOffsetY);
+			WPanel dropdown = getDropdownPanel();
 
-			getDropdownPanel().getLinkedWidgets().forEach((widget) -> {
-				widget.setPositionX(widget.getPositionX() + dragOffsetX);
-				widget.setPositionY(widget.getPositionY() + dragOffsetY);
+			dropdown.setPosition(
+					dropdown.getPositionX() + dragOffsetX,
+					dropdown.getPositionY() + dragOffsetY
+			);
+
+			dropdown.getLinkedWidgets().forEach((widget) -> {
+				widget.setPosition(
+						widget.getPositionX() + dragOffsetX,
+						widget.getPositionY() + dragOffsetY
+				);
 			});
 		}
 		super.onMouseDragged(mouseX, mouseY, mouseButton, dragOffsetX, dragOffsetY);
@@ -69,7 +78,7 @@ public class WDropdown extends WWidget {
 	@Override
 	public void onMouseClicked(double mouseX, double mouseY, int mouseButton) {
 		if (getFocus() && mouseButton == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
-			setState(!getState());
+			setOpened(!isOpened());
 		}
 		getDropdownPanel().getLinkedWidgets().forEach((widget) -> {
 			widget.isFocused(mouseX, mouseY);
@@ -87,25 +96,33 @@ public class WDropdown extends WWidget {
 		return getFocus();
 	}
 
-	public void addWidget(WWidget WWidget) {
-		if (getDropdownPanel().getLinkedWidgets().size() > 0) {
-			WWidget.setPositionY(getDropdownPanel().getLinkedWidgets().get(getDropdownPanel().getLinkedWidgets().size() - 1).getPositionY() + WWidget.getSizeY());
+	public void addWidget(WWidget child) {
+		WPanel dropdown = getDropdownPanel();
+		List<WWidget> ddWidgets = dropdown.getLinkedWidgets();
+
+		// if (dropdown.getLinkedWidgets().size() > 0) {
+		if (!dropdown.getLinkedWidgets().isEmpty()) {  // same thing as commented line!
+			child.setPositionY(ddWidgets.get(ddWidgets.size() - 1).getPositionY() + child.getSizeY());
 		}
-		if (getDropdownPanel().getLinkedWidgets().size() == 0) {
-			WWidget.setPositionY(getDropdownPanel().getPositionY() + getDropdownPanel().getSizeY());
+		else {
+			child.setPositionY(dropdown.getPositionY() + dropdown.getSizeY());
 		}
-		WWidget.setPositionX(getDropdownPanel().getPositionX() + 4);
-		getDropdownPanel().setSizeY(getDropdownPanel().getSizeY() + WWidget.getSizeY() + 4);
-		getDropdownPanel().addWidget(WWidget);
+
+		child.setPositionX(getDropdownPanel().getPositionX() + 4);
+		dropdown.setSizeY(dropdown.getSizeY() + child.getSizeY() + 4);
+		dropdown.addWidget(child);
 	}
 
-	public void removeWidget(WWidget WWidget) {
-		getDropdownPanel().removeWidget(WWidget);
-		if (getDropdownPanel().getLinkedWidgets().get(getDropdownPanel().getLinkedWidgets().size() - 1).getSizeX() < getDropdownPanel().getSizeX()) {
-			getDropdownPanel().setSizeX(getDropdownPanel().getLinkedWidgets().get(getDropdownPanel().getLinkedWidgets().size() - 1).getSizeX());
+	public void removeWidget(WWidget child) {
+		WPanel dropdown = getDropdownPanel();
+		List<WWidget> ddWidgets = dropdown.getLinkedWidgets();
+
+		dropdown.removeWidget(child);
+		if (ddWidgets.get(ddWidgets.size() - 1).getSizeX() < dropdown.getSizeX()) {
+			dropdown.setSizeX(ddWidgets.get(ddWidgets.size() - 1).getSizeX());
 		}
-		if (getDropdownPanel().getLinkedWidgets().get(getDropdownPanel().getLinkedWidgets().size() - 1).getSizeY() < getDropdownPanel().getSizeY()) {
-			getDropdownPanel().setSizeY(getDropdownPanel().getLinkedWidgets().get(getDropdownPanel().getLinkedWidgets().size() - 1).getSizeY());
+		if (ddWidgets.get(ddWidgets.size() - 1).getSizeY() < dropdown.getSizeY()) {
+			dropdown.setSizeY(ddWidgets.get(ddWidgets.size() - 1).getSizeY());
 		}
 	}
 
@@ -113,17 +130,19 @@ public class WDropdown extends WWidget {
 	public boolean isWithinBounds(double positionX, double positionY) {
 		return (positionX <= getPositionX() + getSizeX()
 		     && positionX >= getPositionX()
-			 && positionY <= getPositionY() + (getState() ? getSizeY()  + getDropdownPanel().getSizeY() : getSizeY())
+			 && positionY <= getPositionY() + (isOpened() ? getSizeY()  + getDropdownPanel().getSizeY() : getSizeY())
 			 && positionY >= getPositionY());
 	}
 
 	@Override
 	public void drawWidget() {
 		BaseRenderer.drawPanel(getPositionX(), getPositionY(), getPositionZ(), getSizeX(), getSizeY(), BaseRenderer.SHADOW_DEFAULT, BaseRenderer.PANEL_DEFAULT, BaseRenderer.HILIGHT_DEFUALT, BaseRenderer.OUTLINE_DEFAULT);
-		if (getState()) {
-			getDropdownPanel().drawPanel();
-			getDropdownPanel().drawWidget();
+		WPanel dropdown = getDropdownPanel();
+		if (isOpened()) {
+			dropdown.drawPanel();
+			dropdown.drawWidget();
 		}
-		MinecraftClient.getInstance().textRenderer.draw(getDropdownLabel(), (int) (getPositionX() + (getSizeX() / 16)), (int) (getPositionY() + (getSizeY() / 3F)), 0);
+
+		MinecraftClient.getInstance().textRenderer.draw(getDropdownLabel().asFormattedString(), (int) (getPositionX() + (getSizeX() / 16)), (int) (getPositionY() + (getSizeY() / 3F)), 0);
 	}
 }

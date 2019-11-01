@@ -7,6 +7,9 @@ import net.minecraft.util.Tickable;
 
 import java.util.Optional;
 
+/**
+ * The base class for any Widget.
+ */
 public class WWidget implements Tickable {
 	protected WPanel linkedWPanel;
 
@@ -28,7 +31,7 @@ public class WWidget implements Tickable {
 
 	protected boolean canMove = false;
 
-	protected Runnable linkedRunnableOnMouseClicekd;
+	protected Runnable linkedRunnableOnMouseClicked;
 	protected Runnable linkedRunnableOnKeyPressed;
 	protected Runnable linkedRunnableOnKeyReleased;
 	protected Runnable linkedRunnableOnFocusGained;
@@ -44,8 +47,9 @@ public class WWidget implements Tickable {
 	}
 
 	public void onKeyPressed(int keyPressed) {
-		if (linkedRunnableOnKeyPressed != null) {
-			linkedRunnableOnKeyPressed.run();
+		Runnable r = getOnKeyPressed();
+		if (r != null) {
+			r.run();
 		}
 	}
 
@@ -53,13 +57,17 @@ public class WWidget implements Tickable {
 		return linkedRunnableOnKeyPressed;
 	}
 
+	/**
+	 * Sets the runnable that is called when a key is pressed within the container.
+	 */
 	public void setOnKeyPressed(Runnable linkedRunnableOnKeyPressed) {
 		this.linkedRunnableOnKeyPressed = linkedRunnableOnKeyPressed;
 	}
 
 	public void onKeyReleased(int keyReleased) {
-		if (linkedRunnableOnKeyReleased != null) {
-			linkedRunnableOnKeyReleased.run();
+		Runnable r = getOnKeyReleased();
+		if (r != null) {
+			r.run();
 		}
 	}
 
@@ -67,13 +75,17 @@ public class WWidget implements Tickable {
 		return linkedRunnableOnKeyReleased;
 	}
 
+	/**
+	 * Sets the runnable that is called when a key is released within the container.
+	 */
 	public void setOnKeyReleased(Runnable linkedRunnableOnKeyReleased) {
 		this.linkedRunnableOnKeyReleased = linkedRunnableOnKeyReleased;
 	}
 
 	public void onFocusGained() {
-		if (linkedRunnableOnFocusGained != null) {
-			linkedRunnableOnFocusGained.run();
+		Runnable r = getOnFocusGained();
+		if (r != null) {
+			r.run();
 		}
 	}
 
@@ -81,13 +93,17 @@ public class WWidget implements Tickable {
 		return linkedRunnableOnFocusGained;
 	}
 
+	/**
+	 * Sets the runnable that is called when the container gains focus.
+	 */
 	public void setOnFocusGained(Runnable linkedRunnableOnFocusGained) {
 		this.linkedRunnableOnFocusGained = linkedRunnableOnFocusGained;
 	}
 
 	public void onFocusReleased() {
-		if (linkedRunnableOnFocusReleased != null) {
-			linkedRunnableOnFocusReleased.run();
+		Runnable r = getOnFocusReleased();
+		if (r != null) {
+			r.run();
 		}
 	}
 
@@ -95,13 +111,17 @@ public class WWidget implements Tickable {
 		return linkedRunnableOnFocusReleased;
 	}
 
+	/**
+	 * Sets the runnable that is called when the container loses focus.
+	 */
 	public void setOnFocusReleased(Runnable linkedRunnableOnFocusReleased) {
 		this.linkedRunnableOnFocusReleased = linkedRunnableOnFocusReleased;
 	}
 
 	public void onMouseReleased(double mouseX, double mouseY, int mouseButton) {
-		if (linkedRunnableOnMouseReleased != null) {
-			linkedRunnableOnMouseReleased.run();
+		Runnable r = getOnMouseReleased();
+		if (r != null) {
+			r.run();
 		}
 	}
 
@@ -109,27 +129,35 @@ public class WWidget implements Tickable {
 		return linkedRunnableOnMouseReleased;
 	}
 
+	/**
+	 * Sets the runnable that is called when the mouse is released in this container.
+	 */
 	public void setOnMouseReleased(Runnable linkedRunnable) {
 		this.linkedRunnableOnMouseReleased = linkedRunnable;
 	}
 
 	public void onMouseClicked(double mouseX, double mouseY, int mouseButton) {
-		if (linkedRunnableOnMouseClicekd != null) {
-			linkedRunnableOnMouseClicekd.run();
+		Runnable r = getOnMouseClicked();
+		if (r != null) {
+			r.run();
 		}
 	}
 
 	public Runnable getOnMouseClicked() {
-		return linkedRunnableOnMouseClicekd;
+		return linkedRunnableOnMouseClicked;
 	}
 
+	/**
+	 * Sets the runnable that is called when the mouse is clicked within the container.
+	 */
 	public void setOnMouseClicked(Runnable linkedRunnable) {
-		this.linkedRunnableOnMouseClicekd = linkedRunnable;
+		this.linkedRunnableOnMouseClicked = linkedRunnable;
 	}
 
 	public void onMouseDragged(double mouseX, double mouseY, int mouseButton, double dragOffsetX, double dragOffsetY) {
-		if (linkedRunnableOnMouseDragged != null) {
-			linkedRunnableOnMouseDragged.run();
+		Runnable r = getOnMouseDragged();
+		if (r != null) {
+			r.run();
 		}
 	}
 
@@ -137,13 +165,17 @@ public class WWidget implements Tickable {
 		return linkedRunnableOnMouseDragged;
 	}
 
+	/**
+	 * Sets the runnable that is called when the mouse is dragged within the container.
+	 */
 	public void setOnMouseDragged(Runnable linkedRunnable) {
 		this.linkedRunnableOnMouseDragged = linkedRunnable;
 	}
 
 	public void onMouseMoved(double mouseX, double mouseY) {
-		if (linkedRunnableOnMouseMoved != null) {
-			linkedRunnableOnMouseMoved.run();
+		Runnable r = getOnMouseMoved();
+		if (r != null) {
+			r.run();
 		}
 	}
 
@@ -151,6 +183,9 @@ public class WWidget implements Tickable {
 		return linkedRunnableOnMouseMoved;
 	}
 
+	/**
+	 * Sets the runnable that is called when the mouse is moved within the container.
+	 */
 	public void setOnMouseMoved(Runnable linkedRunnable) {
 		this.linkedRunnableOnMouseMoved = linkedRunnable;
 	}
@@ -165,13 +200,17 @@ public class WWidget implements Tickable {
 		return linkedRunnableOnMouseScrolled;
 	}
 
+	/**
+	 * Sets the runnable that is called when the mouse is scrolled within the container.
+	 */
 	public void setOnMouseScrolled(Runnable linkedRunnable) {
 		this.linkedRunnableOnMouseScrolled = linkedRunnable;
 	}
 
 	public void onSlotClicked(Slot slot, int slotX, int slotY, SlotActionType slotActionType) {
-		if (linkedRunnableOnSlotClicked != null) {
-			linkedRunnableOnSlotClicked.run();
+		Runnable r = getOnSlotClicked();
+		if (r != null) {
+			r.run();
 		}
 	}
 
@@ -179,13 +218,17 @@ public class WWidget implements Tickable {
 		return linkedRunnableOnSlotClicked;
 	}
 
+	/**
+	 * Sets the runnable that is called when a slot is clicked within the container.
+	 */
 	public void setOnSlotClicked(Runnable linkedRunnable) {
 		this.linkedRunnableOnSlotClicked = linkedRunnable;
 	}
 
 	public void onDrawTooltip() {
-		if (linkedRunnableOnDrawTooltip != null) {
-			linkedRunnableOnDrawTooltip.run();
+		Runnable r = getOnDrawTooltip();
+		if (r != null) {
+			r.run();
 		}
 	}
 
@@ -193,11 +236,14 @@ public class WWidget implements Tickable {
 		return linkedRunnableOnDrawTooltip;
 	}
 
+	/**
+	 * Sets the runnable that is called when a tooltip is drawn.
+	 */
 	public void setOnDrawTooltip(Runnable linkedRunnableOnDrawTooltip) {
 		this.linkedRunnableOnDrawTooltip = linkedRunnableOnDrawTooltip;
 	}
 
-	public boolean getCanMove() {
+	public boolean isMovable() {
 		return canMove;
 	}
 
@@ -229,6 +275,14 @@ public class WWidget implements Tickable {
 		this.sizeY = sizeY;
 	}
 
+	/**
+	 * Sets the size of this widget.
+	 */
+	public void setSize(double sizeX, double sizeY) {
+		setSizeX(sizeX);
+		setSizeY(sizeY);
+	}
+
 	public double getPositionX() {
 		return positionX;
 	}
@@ -251,6 +305,22 @@ public class WWidget implements Tickable {
 
 	public void setPositionZ(double positionZ) {
 		this.positionZ = positionZ;
+	}
+
+	/**
+	 * Sets the position of this widget within the container.
+	 */
+	public void setPosition(double positionX, double positionY) {
+		setPositionX(positionX);
+		setPositionY(positionY);
+	}
+
+	/**
+	 * Sets the position of this widget within the container, including the Z layer.
+	 */
+	public void setPosition(double positionX, double positionY, double positionZ) {
+		setPosition(positionX, positionY);
+		setPositionZ(positionZ);
 	}
 
 	public double getOffsetX() {
@@ -319,12 +389,16 @@ public class WWidget implements Tickable {
 		setPositionX(getPositionX() + MinecraftClient.getInstance().window.getScaledWidth() / 2D - (this.getSizeX() / 2));
 	}
 
+	/**
+	 * Called to draw this widget on the screen.
+	 */
 	public void drawWidget() {
-		if (isHidden) {
-			return;
-		}
+
 	}
 
+	/**
+	 * Sets the alignment of this widget on the panel, updating its position.
+	 */
 	public void setAlignment(WAlignment alignment) {
 		this.alignment = alignment;
 		switch (alignment) {

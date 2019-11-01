@@ -6,24 +6,28 @@ import net.minecraft.container.Slot;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 
+/**
+ * Represents a slot widget.
+ */
 public class WSlot extends WWidget {
-	public Slot internalSlot;
+	protected Slot internalSlot;
 
-	public static void addSingle(WAlignment alignment, int positionX, int positionY, int positionZ, double sizeX, double sizeY, int slotNumber, Inventory linkedInventory, WPanel linkedWPanel) {
-		linkedWPanel.addWidget(new WSlot(alignment, positionX, positionY, positionZ, sizeX, sizeY, slotNumber, linkedInventory, linkedWPanel));
+	public static void addSingle(WPanel linkedWPanel, WAlignment alignment, int positionX, int positionY, int positionZ, double sizeX, double sizeY, int slotNumber, Inventory linkedInventory) {
+		linkedWPanel.addWidget(new WSlot(linkedWPanel, alignment, positionX, positionY, positionZ, sizeX,	sizeY, slotNumber, linkedInventory));
 	}
 
-	public static void addArray(WAlignment alignment, int arrayX, int arrayY, int positionX, int positionY, int positionZ, double sizeX, double sizeY, int slotNumber, Inventory linkedInventory, WPanel linkedWPanel) {
+	public static void addArray(WPanel linkedWPanel, WAlignment alignment, int arrayX, int arrayY, int positionX, int positionY, int positionZ, double sizeX, double sizeY, int slotNumber, Inventory linkedInventory) {
 		for (int y = 0; y < arrayY; ++y) {
 			for (int x = 0; x < arrayX; ++x) {
-				WSlot.addSingle(alignment, positionX + (int) (sizeX * x), positionY + (int) (sizeY * y), positionZ, sizeX, sizeY, slotNumber++, linkedInventory, linkedWPanel);
+				WSlot.addSingle(linkedWPanel, alignment, positionX + (int) (sizeX * x), positionY + (int) (sizeY * y), positionZ, sizeX, sizeY, slotNumber++, linkedInventory);
 			}
 		}
 	}
 
-	public static void addPlayerInventory(int positionZ, double sizeX, double sizeY, PlayerInventory linkedInventory, WPanel linkedWPanel) {
+	public static void addPlayerInventory(WPanel linkedWPanel, int positionZ, double sizeX, double sizeY, PlayerInventory linkedInventory) {
 		int slotN = 0;
 		addArray(
+				linkedWPanel,
 				WAlignment.PANEL_TOP_LEFT,
 				9,
 				1,
@@ -33,10 +37,11 @@ public class WSlot extends WWidget {
 				sizeX,
 				sizeY,
 				slotN,
-				linkedInventory,
-				linkedWPanel);
+				linkedInventory
+		);
 		slotN = 9;
 		addArray(
+				linkedWPanel,
 				 WAlignment.PANEL_TOP_LEFT,
 				 9,
 				 3,
@@ -46,16 +51,16 @@ public class WSlot extends WWidget {
 				 sizeX,
 				 sizeY,
 				 slotN,
-				 linkedInventory,
-				 linkedWPanel);
+				 linkedInventory
+		);
 	}
 
-	public WSlot(WAlignment alignment, int positionX, int positionY, int positionZ, double sizeX, double sizeY, int slotNumber, Inventory linkedInventory, WPanel linkedWPanel) {
+	public WSlot(WPanel linkedWPanel, WAlignment alignment, int positionX, int positionY, int positionZ, double sizeX, double sizeY, int slotNumber, Inventory linkedInventory) {
 		setLinkedPanel(linkedWPanel);
 
 		setAlignment(alignment);
 
-		getLinkedPanel().getLinkedContainer().addSlot(internalSlot = new Slot(linkedInventory, slotNumber, (int) positionX + 1, (int) positionY + 1));
+		getLinkedPanel().getLinkedContainer().addSlot(internalSlot = new Slot(linkedInventory, slotNumber, positionX + 1, positionY + 1));
 
 		setPositionX(getPositionX() + positionX);
 		setPositionY(getPositionY() + positionY);
