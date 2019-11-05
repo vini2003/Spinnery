@@ -124,6 +124,10 @@ public class BaseScreen<T extends BaseContainer> extends AbstractContainerScreen
 	public void mouseMoved(double mouseX, double mouseY) {
 		getLinkedContainer().getLinkedPanel().getLinkedWidgets().forEach((widget) -> widget.onMouseMoved(mouseX, mouseY));
 		super.mouseMoved(mouseX, mouseY);
+
+		getLinkedContainer().getLinkedPanel().getLinkedWidgets().forEach((widget) -> {
+			widget.isFocused(mouseX, mouseY);
+		});
 	}
 
 	@Override
@@ -160,20 +164,27 @@ public class BaseScreen<T extends BaseContainer> extends AbstractContainerScreen
 		super.tick();
 	}
 
+	public void drawTooltip() {
+		getLinkedContainer().getLinkedPanel().getLinkedWidgets().forEach(widget -> {
+			if (widget.getFocus() && widget instanceof WSlot && playerInventory.getCursorStack().isEmpty() && !((WSlot) widget).getSlot().getStack().isEmpty()) {
+				this.renderTooltip(((WSlot) widget).getSlot().getStack(), mouseX, mouseY);
+			} else if (widget.getFocus() && widget instanceof WSlotList) {
+				((WSlotList) widget).listWidgets.forEach(slots -> slots.forEach(slot -> {
+					if (slot.isFocused(mouseX, mouseY) && playerInventory.getCursorStack().isEmpty() && !((WSlot) slot).getSlot().getStack().isEmpty()) {
+						this.renderTooltip(((WSlot) slot).getSlot().getStack(), mouseX, mouseY);
+					}
+				}));
+			}
+		});
+	}
+
 	@Override
 	public void render(int mouseX, int mouseY, float tick) {
 		getLinkedContainer().getLinkedPanel().drawPanel();
 		getLinkedContainer().getLinkedPanel().drawWidget();
-		getLinkedContainer().getLinkedPanel().getLinkedWidgets().forEach((widget) -> {
-			widget.isFocused(mouseX, mouseY);
-		});
 
 		super.render(mouseX, mouseY, tick);
 
-		getLinkedContainer().getLinkedPanel().getLinkedWidgets().forEach((widget) -> {
-			if (widget.getFocus() && widget instanceof WSlot && playerInventory.getCursorStack().isEmpty() && !((WSlot) widget).getSlot().getStack().isEmpty()) {
-				this.renderTooltip(((WSlot) widget).getSlot().getStack(), mouseX, mouseY);
-			}
-		});
+		drawTooltip();
 	}
 }

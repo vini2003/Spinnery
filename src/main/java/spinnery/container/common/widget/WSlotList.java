@@ -1,6 +1,8 @@
 package spinnery.container.common.widget;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.container.CraftingContainer;
+import net.minecraft.container.CraftingTableContainer;
 import org.apache.logging.log4j.Level;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
@@ -92,6 +94,10 @@ public class WSlotList extends WWidget {
 
 	@Override
 	public void onMouseScrolled(double mouseX, double mouseY, double scrollOffsetY) {
+		if (!isWithinBounds(mouseX, mouseY)) {
+			return;
+		}
+
 		if (scrollOffsetY > 0) {
 			if (scrollCurrent > 0) {
 				listWidgets.addFirst(listWidgets.getLast());

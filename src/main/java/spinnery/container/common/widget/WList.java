@@ -98,6 +98,10 @@ public class WList extends WWidget {
 
 	@Override
 	public void onMouseScrolled(double mouseX, double mouseY, double scrollOffsetY) {
+		if (!isWithinBounds(mouseX, mouseY)) {
+			return;
+		}
+
 		double scaledOffsetY = scrollOffsetY * 2.5;
 
 		boolean hitTop = listWidgets.get(0).stream().anyMatch(widget ->

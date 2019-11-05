@@ -90,7 +90,7 @@ public class TestContainer extends BaseContainer {
 
 		WSlot.addPlayerInventory(0, 18, 18, linkedPlayerInventory, linkedWPanel);
 
-		WList exampleList = new WList(50, 10, -5, 96, 96, 3, 5, 18, 18, linkedWPanel);
+		WList exampleList = new WList(250, 10, -5, 96, 96, 3, 5, 18, 18, linkedWPanel);
 		WSlotList exampleSlotList = new WSlotList(50, 90, -5, 96, 96, 3, 5, 18, 18, linkedWPanel);
 		//exampleList.addWidget(new WStaticImage(0, 0, 137, 18, 18, new Identifier("spinnery:textures/widget/cattegirl.png"), linkedWPanel), new WStaticImage(0, 0, 137, 18, 18, new Identifier("spinnery:textures/widget/cattegirl.png"), linkedWPanel), new WStaticImage(0, 0, 137, 18, 18, new Identifier("spinnery:textures/widget/cattegirl.png"), linkedWPanel));
 
@@ -119,7 +119,7 @@ public class TestContainer extends BaseContainer {
 
 		exampleList.add(exampleDumpsterFire);
 
-		//getLinkedPanel().addWidget(exampleList);
+		getLinkedPanel().addWidget(exampleList);
 		getLinkedPanel().addWidget(exampleSlotList);
 
 		tick();
