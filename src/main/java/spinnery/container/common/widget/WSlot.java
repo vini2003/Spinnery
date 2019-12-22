@@ -8,6 +8,7 @@ import net.minecraft.inventory.Inventory;
 
 public class WSlot extends WWidget {
 	public Slot internalSlot;
+	public boolean isMemberOfList = false;
 
 	public static void addSingle(WAlignment alignment, int positionX, int positionY, int positionZ, double sizeX, double sizeY, int slotNumber, Inventory linkedInventory, WPanel linkedWPanel) {
 		linkedWPanel.addWidget(new WSlot(alignment, positionX, positionY, positionZ, sizeX, sizeY, slotNumber, linkedInventory, linkedWPanel));
@@ -55,7 +56,7 @@ public class WSlot extends WWidget {
 
 		setAlignment(alignment);
 
-		getLinkedPanel().getLinkedContainer().addSlot(internalSlot = new Slot(linkedInventory, slotNumber, positionX + 1, positionY + 1));
+		getLinkedPanel().getLinkedContainer().addSlot(internalSlot = new Slot(linkedInventory, slotNumber, positionX, positionY));
 
 		setPositionX(getPositionX() + positionX);
 		setPositionY(getPositionY() + positionY);
@@ -65,29 +66,47 @@ public class WSlot extends WWidget {
 		setSizeY(sizeY);
 	}
 
+	/**
+	 * This function is cursed.
+	 * Please, if you have any idea how to fix it, tell me.
+	 * @param positionX
+	 */
 	@Override
 	public void setPositionX(double positionX) {
 		if (!isHidden) {
 			super.setPositionX(positionX);
 			if (getSlot() != null) {
-				if (getPositionX() < MinecraftClient.getInstance().window.getScaledWidth() / 2f - linkedWPanel.getSizeX() / 2) {
-					getSlot().xPosition = (int) (-(Math.abs(positionX - (int) (MinecraftClient.getInstance().window.getScaledWidth() / 2 - linkedWPanel.getSizeX() / 2))) + 1);
+				if (getPositionX() < MinecraftClient.getInstance().window.getScaledWidth() / 2f - linkedWPanel.getSizeX() / 2f) {
+					getSlot().xPosition = (int) (-(Math.abs(positionX - (MinecraftClient.getInstance().window.getScaledWidth() / 2f - linkedWPanel.getSizeX() / 2f))));
 				} else {
-					getSlot().xPosition = (int) ((Math.abs(positionX - (int) (MinecraftClient.getInstance().window.getScaledWidth() / 2 - linkedWPanel.getSizeX() / 2))) + 1);
+					getSlot().xPosition = (int) ((Math.abs(positionX - (MinecraftClient.getInstance().window.getScaledWidth() / 2f - linkedWPanel.getSizeX() / 2f))));
 				}
 			}
 		}
 	}
 
+	/**
+	 * This function is cursed.
+	 * Please, if you have any idea how to fix it, tell me.
+	 * @param positionY
+	 */
 	@Override
 	public void setPositionY(double positionY) {
 		if (!isHidden) {
 			super.setPositionY(positionY);
 			if (getSlot() != null) {
-				if (getPositionY() > MinecraftClient.getInstance().window.getScaledHeight() / 2f - linkedWPanel.getSizeX() / 2) {
-					getSlot().yPosition = (int) ((Math.abs(positionY + (MinecraftClient.getInstance().window.getScaledHeight() / 2f - linkedWPanel.getSizeY() / 2))) - 3);
+				if (isMemberOfList) {
+					if (getPositionY() < MinecraftClient.getInstance().window.getScaledHeight() / 2f - linkedWPanel.getSizeX() / 2f) {
+						getSlot().yPosition = (int) ((Math.abs(positionY + (MinecraftClient.getInstance().window.getScaledHeight() / 2f - linkedWPanel.getSizeY() / 2f)))) - 3;
+					} else {
+						getSlot().yPosition = (int) ((Math.abs(positionY + (MinecraftClient.getInstance().window.getScaledHeight() / 2f - linkedWPanel.getSizeY() / 2f)))) - 4;
+					}
 				} else {
-					getSlot().yPosition = (int) (-(Math.abs(positionY + (MinecraftClient.getInstance().window.getScaledHeight() / 2f - linkedWPanel.getSizeY() / 2))) + 1);
+					if (getPositionY() < MinecraftClient.getInstance().window.getScaledHeight() / 2f - linkedWPanel.getSizeX() / 2f) {
+						getSlot().yPosition = (int) ((Math.abs(positionY + (MinecraftClient.getInstance().window.getScaledHeight() / 2f - linkedWPanel.getSizeY() / 2f)))) - 4;
+					} else {
+						getSlot().yPosition = (int) ((Math.abs(positionY + (MinecraftClient.getInstance().window.getScaledHeight() / 2f - linkedWPanel.getSizeY() / 2f)))) - 5;
+					}
 				}
 			}
 		}
@@ -106,8 +125,8 @@ public class WSlot extends WWidget {
 	}
 
 	@Override
-	public boolean isFocused(double mouseX, double mouseY) {
-		return super.isFocused(mouseX, mouseY);
+	public boolean scanFocus(double mouseX, double mouseY) {
+		return super.scanFocus(mouseX, mouseY);
 	}
 
 	public Slot getSlot() {
@@ -120,6 +139,6 @@ public class WSlot extends WWidget {
 
 	@Override
 	public void drawWidget() {
-		BaseRenderer.drawSlot((int) getPositionX(), (int) getPositionY(), getPositionZ());
+		BaseRenderer.drawSlot((int) getPositionX() - 1, (int) getPositionY() - 1, getPositionZ());
 	}
 }

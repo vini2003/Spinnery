@@ -22,7 +22,7 @@ public class WToggle extends WWidget {
 
 	@Override
 	public void onMouseClicked(double mouseX, double mouseY, int mouseButton) {
-		if (isFocused(mouseX, mouseY)) {
+		if (scanFocus(mouseX, mouseY)) {
 			setState(!getState());
 		}
 		super.onMouseClicked(mouseX, mouseY, mouseButton);

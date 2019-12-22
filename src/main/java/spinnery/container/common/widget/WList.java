@@ -1,24 +1,19 @@
 package spinnery.container.common.widget;
 
-import com.mojang.blaze3d.platform.GlStateManager;
 import org.apache.logging.log4j.Level;
 import org.lwjgl.opengl.GL11;
 import spinnery.SpinneryMod;
 import spinnery.container.client.BaseRenderer;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.util.Pair;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 
 public class WList extends WWidget {
-	protected WPanel dropdownWPanel;
 
 	public List<List<WWidget>> listWidgets = new ArrayList<>();
-	protected int scrollY = 0;
 
 	protected String listLabel;
 
@@ -30,10 +25,7 @@ public class WList extends WWidget {
 
 	protected int listPixelsY = 0;
 
-	protected double scrollPercentage = 0;
-
-	protected List<WWidget> startMarker;
-	protected List<WWidget> endMarker;
+	protected double kineticScroll = 0;
 
 	public WList(int positionX, int positionY, int positionZ, double sizeX, double sizeY, double listSizeX, double listSizeY, double entrySizeX, double entrySizeY, WPanel linkedWPanel) {
 		setPositionX(positionX);
@@ -52,23 +44,6 @@ public class WList extends WWidget {
 		setLinkedPanel(linkedWPanel);
 
 		setListLabel(listLabel);
-		setDropdownPanel(new WPanel(positionX, positionY + 18, positionZ - 1, (int) (entrySizeX * listSizeX), (int) (entrySizeY * listSizeY)));
-
-		for (int i = 0; i < listSizeX * listSizeY; ++i) {
-			getDropdownPanel().getLinkedWidgets().add(new WWidget());
-		}
-	}
-
-	public static void addSingle(int positionX, int positionY, int positionZ, double sizeX, double sizeY, double listSizeX, double listSizeY, double entrySizeX, double entrySizeY, WPanel linkedWPanel) {
-		linkedWPanel.addWidget(new WList(positionX, positionY, positionZ, sizeX, sizeY, listSizeX, listSizeY, entrySizeX, entrySizeY, linkedWPanel));
-	}
-
-	public WPanel getDropdownPanel() {
-		return dropdownWPanel;
-	}
-
-	public void setDropdownPanel(WPanel dropdownWPanel) {
-		this.dropdownWPanel = dropdownWPanel;
 	}
 
 	public String getListLabel() {
@@ -77,23 +52,6 @@ public class WList extends WWidget {
 
 	public void setListLabel(String listLabel) {
 		this.listLabel = listLabel;
-	}
-
-	@Override
-	public void onMouseDragged(double mouseX, double mouseY, int mouseButton, double dragOffsetX, double dragOffsetY) {
-		if (getCanMove() && getFocus() && mouseButton == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
-			setPositionX(getPositionX() + dragOffsetX);
-			setPositionY(getPositionY() + dragOffsetY);
-
-			getDropdownPanel().setPositionX(getDropdownPanel().getPositionX() + dragOffsetX);
-			getDropdownPanel().setPositionY(getDropdownPanel().getPositionY() + dragOffsetY);
-
-			getDropdownPanel().getLinkedWidgets().forEach((widget) -> {
-				widget.setPositionX(widget.getPositionX() + dragOffsetX);
-				widget.setPositionY(widget.getPositionY() + dragOffsetY);
-			});
-		}
-		super.onMouseDragged(mouseX, mouseY, mouseButton, dragOffsetX, dragOffsetY);
 	}
 
 	@Override
@@ -116,6 +74,7 @@ public class WList extends WWidget {
 			listWidgets.forEach((widgets) -> {
 				widgets.forEach((widget) -> {
 					widget.setPositionY(widget.getPositionY() + scaledOffsetY);
+					widget.setHidden(widget.getPositionY() > getPositionY() + getSizeY() || widget.getPositionY() + widget.getSizeY() < getPositionY());
 				});
 			});
 		}
@@ -126,20 +85,44 @@ public class WList extends WWidget {
 	public void onMouseClicked(double mouseX, double mouseY, int mouseButton) {
 		listWidgets.forEach((widgets) -> {
 			widgets.forEach((widget) -> {
-				if (widget.isWithinBounds(mouseX, mouseY) && isFocused(mouseX, mouseY)) {
-					widget.setHidden(false);
-					widget.isFocused(mouseX, mouseY);
-					widget.onMouseClicked(mouseX, mouseY, mouseButton);
-				} else {
-					widget.setHidden(true);
-				}
+				widget.onMouseClicked(mouseX, mouseY, mouseButton);
 			});
 		});
 		super.onMouseClicked(mouseX, mouseY, mouseButton);
 	}
 
 	@Override
-	public boolean isFocused(double mouseX, double mouseY) {
+	public void onMouseReleased(double mouseX, double mouseY, int mouseButton) {
+		listWidgets.forEach((widgets) -> {
+			widgets.forEach((widget) -> {
+				widget.onMouseReleased(mouseX, mouseY, mouseButton);
+			});
+		});
+		super.onMouseReleased(mouseX, mouseY, mouseButton);
+	}
+
+	@Override
+	public void onMouseDragged(double mouseX, double mouseY, int mouseButton, double dragOffsetX, double dragOffsetY) {
+		listWidgets.forEach((widgets) -> {
+			widgets.forEach((widget) -> {
+				widget.onMouseDragged(mouseX, mouseY, mouseButton, dragOffsetX, dragOffsetY);
+			});
+		});
+		super.onMouseDragged(mouseX, mouseY, mouseButton, dragOffsetX, dragOffsetY);
+	}
+
+	@Override
+	public void onMouseMoved(double mouseX, double mouseY) {
+		listWidgets.forEach((widgets) -> {
+			widgets.forEach((widget) -> {
+				widget.onMouseMoved(mouseX, mouseY);
+			});
+		});
+		super.onMouseMoved(mouseX, mouseY);
+	}
+
+	@Override
+	public boolean scanFocus(double mouseX, double mouseY) {
 		setFocus(mouseX > getPositionX()
 				&& mouseX < getPositionX() + getSizeX()
 				&& mouseY > getPositionY()
@@ -165,6 +148,15 @@ public class WList extends WWidget {
 		listWidgets.forEach(widgets -> widgets.forEach(widget -> listPixelsY += widget.getSizeY() + 2));
 	}
 
+	public void updateHidden() {
+		listWidgets.forEach(widgets -> widgets.forEach(widget -> widget.setHidden(true)));
+		for (int i = (int) Math.floor(getSizeY() / (20)); i >= 0; --i) {
+			if (listWidgets.size() - 1 >= i) {
+				listWidgets.get(i).forEach(widget -> widget.setHidden(false));
+			}
+		}
+	}
+
 	public void add(WWidget... widgetArray) {
 		List<WWidget> widgets = Arrays.asList(widgetArray);
 		if (Arrays.stream(widgetArray).anyMatch(widget ->  (widget instanceof WSlot))) {
@@ -174,12 +166,14 @@ public class WList extends WWidget {
 			listWidgets.add(widgets);
 		}
 		updateSize();
+		updateHidden();
 		updatePositions();
 	}
 
 	public void remove(WWidget... widgetArray) {
 		listWidgets.remove(Arrays.asList(widgetArray));
 		updateSize();
+		updateHidden();
 		updatePositions();
 	}
 
@@ -187,14 +181,9 @@ public class WList extends WWidget {
 	public boolean isWithinBounds(double positionX, double positionY) {
 		return (positionX <= getPositionX() + getSizeX()
 				&& positionX >= getPositionX()
-				&& positionY <= getPositionY() + getDropdownPanel().getSizeY()
+				&& positionY <= getPositionY() + getSizeY()
 				&& positionY >= getPositionY());
 	}
-
-	/**
-	 * If is within widget *and* is within list.
-	 * GlScissors.
-	 */
 
 	@Override
 	public void drawWidget() {
@@ -212,11 +201,5 @@ public class WList extends WWidget {
 		});
 
 		GL11.glDisable(GL11.GL_SCISSOR_TEST);
-
-		//getLinkedPanel().drawPanel();
-		//getDropdownPanel().drawPanel();
-		//getDropdownPanel().drawWidget();
-
-		//MinecraftClient.getInstance().textRenderer.draw(getListLabel(), (int) (getPositionX() + (getSizeX() / 16)), (int) (getPositionY() + (getSizeY() / 3F)), 0);
 	}
 }

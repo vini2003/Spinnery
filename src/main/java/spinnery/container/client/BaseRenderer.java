@@ -6,14 +6,11 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexFormats;
-import net.minecraft.client.render.item.ItemRenderer;
+import net.minecraft.client.texture.TextureManager;
 import net.minecraft.util.Identifier;
 import org.lwjgl.opengl.GL11;
 
 public class BaseRenderer {
-	public static ItemRenderer itemRenderer = MinecraftClient.getInstance().getItemRenderer();
-	public static TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
-
 	public static final int SHADOW_DEFAULT = 0xFF555555;
 	public static final int PANEL_DEFAULT = 0xFFC6C6C6;
 	public static final int HILIGHT_DEFUALT = 0xFFFFFFFF;
@@ -25,22 +22,19 @@ public class BaseRenderer {
 		float G = (integerColor >> 8 & 255) / 255.0F;
 		float B = (integerColor & 255) / 255.0F;
 
-		Tessellator tessellator = Tessellator.getInstance();
-		BufferBuilder bufferBuilder = tessellator.getBufferBuilder();
-
 		GlStateManager.enableBlend();
 		GlStateManager.disableTexture();
 		GlStateManager.blendFuncSeparate(770, 771, 1, 0);
 		GlStateManager.color4f(R, G, B, A);
 
-		bufferBuilder.begin(GL11.GL_QUADS, VertexFormats.POSITION);
+		getBufferBuilder().begin(GL11.GL_QUADS, VertexFormats.POSITION);
 
-		bufferBuilder.vertex(positionX,         positionY + sizeY, positionZ).next();
-		bufferBuilder.vertex(positionX + sizeX, positionY + sizeY, positionZ).next();
-		bufferBuilder.vertex(positionX + sizeX, positionY,         positionZ).next();
-		bufferBuilder.vertex(positionX,         positionY,         positionZ).next();
+		getBufferBuilder().vertex(positionX,         positionY + sizeY, positionZ).next();
+		getBufferBuilder().vertex(positionX + sizeX, positionY + sizeY, positionZ).next();
+		getBufferBuilder().vertex(positionX + sizeX, positionY,         positionZ).next();
+		getBufferBuilder().vertex(positionX,         positionY,         positionZ).next();
 
-		tessellator.draw();
+		getTesselator().draw();
 
 		GlStateManager.enableTexture();
 		GlStateManager.disableBlend();
@@ -81,24 +75,37 @@ public class BaseRenderer {
 	}
 
 	public static void drawImage(double positionX, double positionY, double positionZ, double sizeX, double sizeY, Identifier texture) {
-		MinecraftClient.getInstance().getTextureManager().bindTexture(texture);
-
-		Tessellator tessellator = Tessellator.getInstance();
-		BufferBuilder bufferBuilder = tessellator.getBufferBuilder();
+		getTextureManager().bindTexture(texture);
 
 		GlStateManager.enableBlend();
 		GlStateManager.blendFuncSeparate(770, 771, 1, 0);
 		GlStateManager.color4f(255, 255, 255, 255);
 
-		bufferBuilder.begin(GL11.GL_QUADS, VertexFormats.POSITION_UV);
+		getBufferBuilder().begin(GL11.GL_QUADS, VertexFormats.POSITION_UV);
 
-		bufferBuilder.vertex(positionX,         positionY + sizeY,  positionZ).texture(0, 1).next();
-		bufferBuilder.vertex(positionX + sizeX, positionY + sizeY,  positionZ).texture(1, 1).next();
-		bufferBuilder.vertex(positionX + sizeX, positionY,          positionZ).texture(1, 0).next();
-		bufferBuilder.vertex(positionX,         positionY,          positionZ).texture(0, 0).next();
+		getBufferBuilder().vertex(positionX,         positionY + sizeY,  positionZ).texture(0, 1).next();
+		getBufferBuilder().vertex(positionX + sizeX, positionY + sizeY,  positionZ).texture(1, 1).next();
+		getBufferBuilder().vertex(positionX + sizeX, positionY,          positionZ).texture(1, 0).next();
+		getBufferBuilder().vertex(positionX,         positionY,          positionZ).texture(0, 0).next();
 
-		tessellator.draw();
+		getTesselator().draw();
 
 		GlStateManager.disableBlend();
+	}
+
+	public static TextRenderer getTextRenderer() {
+		return MinecraftClient.getInstance().textRenderer;
+	}
+
+	public static Tessellator getTesselator() {
+		return Tessellator.getInstance();
+	}
+
+	public static BufferBuilder getBufferBuilder() {
+		return getTesselator().getBufferBuilder();
+	}
+
+	public static TextureManager getTextureManager() {
+		return MinecraftClient.getInstance().getTextureManager();
 	}
 }

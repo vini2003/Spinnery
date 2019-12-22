@@ -50,36 +50,19 @@ public class WDropdown extends WWidget {
 	}
 
 	@Override
-	public void onMouseDragged(double mouseX, double mouseY, int mouseButton, double dragOffsetX, double dragOffsetY) {
-		if (getCanMove() && getFocus() && mouseButton == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
-			setPositionX(getPositionX() + dragOffsetX);
-			setPositionY(getPositionY() + dragOffsetY);
-
-			getDropdownPanel().setPositionX(getDropdownPanel().getPositionX() + dragOffsetX);
-			getDropdownPanel().setPositionY(getDropdownPanel().getPositionY() + dragOffsetY);
-
-			getDropdownPanel().getLinkedWidgets().forEach((widget) -> {
-				widget.setPositionX(widget.getPositionX() + dragOffsetX);
-				widget.setPositionY(widget.getPositionY() + dragOffsetY);
-			});
-		}
-		super.onMouseDragged(mouseX, mouseY, mouseButton, dragOffsetX, dragOffsetY);
-	}
-
-	@Override
 	public void onMouseClicked(double mouseX, double mouseY, int mouseButton) {
 		if (getFocus() && mouseButton == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
 			setState(!getState());
 		}
 		getDropdownPanel().getLinkedWidgets().forEach((widget) -> {
-			widget.isFocused(mouseX, mouseY);
+			widget.scanFocus(mouseX, mouseY);
 			widget.onMouseClicked(mouseX, mouseY, mouseButton);
 		});
 		super.onMouseClicked(mouseX, mouseY, mouseButton);
 	}
 
 	@Override
-	public boolean isFocused(double mouseX, double mouseY) {
+	public boolean scanFocus(double mouseX, double mouseY) {
 		setFocus(mouseX > getPositionX()
 			  && mouseX < getPositionX() + getSizeX() - 7
 			  && mouseY > getPositionY()

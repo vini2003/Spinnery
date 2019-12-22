@@ -32,6 +32,6 @@ public class WStaticText extends WWidget {
 
 	@Override
 	public void drawWidget() {
-		BaseRenderer.textRenderer.drawStringBounded(getText().getString(), (int) getPositionX(), (int) getPositionY(), (int) getSizeX(), (int) getSizeY());
+		BaseRenderer.getTextRenderer().drawStringBounded(getText().getString(), (int) getPositionX(), (int) getPositionY(), (int) getSizeX(), (int) getSizeY());
 	}
 }

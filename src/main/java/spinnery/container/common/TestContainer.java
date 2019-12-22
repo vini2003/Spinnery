@@ -90,14 +90,16 @@ public class TestContainer extends BaseContainer {
 
 		WSlot.addPlayerInventory(0, 18, 18, linkedPlayerInventory, linkedWPanel);
 
-		WList exampleList = new WList(250, 10, -5, 96, 96, 3, 5, 18, 18, linkedWPanel);
-		WSlotList exampleSlotList = new WSlotList(50, 90, -5, 96, 96, 3, 5, 18, 18, linkedWPanel);
+		WList exampleList = new WList(250, 10, -5, 36, 18, 3, 5, 18, 18, linkedWPanel);
+		WSlotList exampleSlotList = new WSlotList(50, 90, -5, 54, 162, 3, 5, 18, 18, linkedWPanel);
 		//exampleList.addWidget(new WStaticImage(0, 0, 137, 18, 18, new Identifier("spinnery:textures/widget/cattegirl.png"), linkedWPanel), new WStaticImage(0, 0, 137, 18, 18, new Identifier("spinnery:textures/widget/cattegirl.png"), linkedWPanel), new WStaticImage(0, 0, 137, 18, 18, new Identifier("spinnery:textures/widget/cattegirl.png"), linkedWPanel));
 
-		for (int i = 0; i < 9; ++i) {
-			exampleList.add(new WToggle(0, 0, -4, 18, 18, linkedWPanel), new WToggle(0, 0, -4, 18, 18, linkedWPanel), new WToggle(0, 0, -4, 18, 18, linkedWPanel));
-			exampleSlotList.add(new WSlot(WAlignment.PANEL_TOP_LEFT, 0, 0, -3, 18, 18, i, linkedPlayerInventory, linkedWPanel), new WSlot(WAlignment.PANEL_TOP_LEFT, 0, 0, -3, 18, 18, i, linkedPlayerInventory, linkedWPanel), new WSlot(WAlignment.PANEL_TOP_LEFT, 0, 0, -3, 18, 18, i, linkedPlayerInventory, linkedWPanel));
+		for (int i = 0; i < 27; ++i) {
+			exampleSlotList.add(new WSlot(WAlignment.SCREEN_TOP_LEFT, 0, 0, -4, 18, 18, i, linkedInventory, linkedWPanel), new WSlot(WAlignment.SCREEN_TOP_LEFT, 0, 0, -4, 18, 18, i, linkedInventory, linkedWPanel), new WSlot(WAlignment.SCREEN_TOP_LEFT, 0, 0, -4, 18, 18, i, linkedInventory, linkedWPanel));
 		}
+
+		exampleSlotList.setPositionX(linkedWPanel.getPositionX() - 62);
+		exampleSlotList.setPositionY(linkedWPanel.getPositionY() + 4);
 
 		//for (int i = 0; i < 8; ++i) {
 			//exampleList.addWidget(new WSlot(0, 0, -3, 18, 18, 0, linkedInventory, linkedWPanel), new WSlot(0, 0, -3, 18, 18, 1, linkedInventory, linkedWPanel), new WSlot(0, 0, -3, 18, 18, 2, linkedInventory, linkedWPanel));
@@ -117,10 +119,14 @@ public class TestContainer extends BaseContainer {
 
 		//exampleList.setMovable(true);
 
-		exampleList.add(exampleDumpsterFire);
+		 exampleList.add(exampleDumpsterFire);
 
 		getLinkedPanel().addWidget(exampleList);
 		getLinkedPanel().addWidget(exampleSlotList);
+
+		WSlot testSlot = new WSlot(WAlignment.SCREEN_TOP_LEFT, 0, 0, 8, 18, 18, 0, linkedInventory, linkedWPanel);
+
+		getLinkedPanel().addWidget(testSlot);
 
 		tick();
 	}

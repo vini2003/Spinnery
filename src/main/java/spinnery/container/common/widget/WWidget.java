@@ -293,13 +293,13 @@ public class WWidget implements Tickable {
 	}
 
 	public boolean isWithinBounds(double positionX, double positionY) {
-		return positionX > getPositionX() - 1
-			&& positionX < getPositionX() + getSizeX() - 2
-			&& positionY > getPositionY() - 1
-			&& positionY < getPositionY() + getSizeY() - 2;
+		return positionX > getPositionX()
+			&& positionX < getPositionX() + getSizeX()
+			&& positionY > getPositionY()
+			&& positionY < getPositionY() + getSizeY();
 	}
 
-	public boolean isFocused(double mouseX, double mouseY) {
+	public boolean scanFocus(double mouseX, double mouseY) {
 		if (isHidden) {
 			return false;
 		}

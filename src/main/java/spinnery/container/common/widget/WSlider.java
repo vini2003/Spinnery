@@ -1,7 +1,6 @@
 package spinnery.container.common.widget;
 
 import spinnery.container.client.BaseRenderer;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.Identifier;
 import org.lwjgl.glfw.GLFW;
 
@@ -13,6 +12,9 @@ public class WSlider extends WWidget {
 
 	protected double limit = 0;
 	protected double position = 0;
+
+	protected String slidTotal;
+	protected int slidStringPosition;
 
 	public WSlider(int positionX, int positionY, int positionZ, double sizeX, double sizeY, int limit, Identifier texture, WPanel linkedWPanel) {
 		setPositionX(positionX);
@@ -41,10 +43,12 @@ public class WSlider extends WWidget {
 
 	public void setPosition(double position) {
 		this.position = position;
+		slidTotal = Integer.toString((int) Math.round(getPosition()));
+		slidStringPosition = (int) (getPositionX() + getSizeX() / 2 - BaseRenderer.getTextRenderer().getStringWidth(Integer.toString((int) getPosition())) / 2);
 	}
 
 	public void updatePosition(double mouseX, double mouseY) {
-		if (isFocused(mouseX, mouseY)) {
+		if (scanFocus(mouseX, mouseY)) {
 			setPosition((mouseX - getPositionX()) * (getLimit() / (getSizeX())));
 		}
 	}
@@ -81,7 +85,7 @@ public class WSlider extends WWidget {
 	}
 
 	@Override
-	public boolean isFocused(double mouseX, double mouseY) {
+	public boolean scanFocus(double mouseX, double mouseY) {
 		Optional<? extends WWidget> isBelowOtherWidget = linkedWPanel.getLinkedWidgets().stream().filter((widget) ->
 			   widget.getPositionZ() > getPositionZ() && widget.isWithinBounds(mouseX, mouseY)
 		).findAny();
@@ -90,7 +94,7 @@ public class WSlider extends WWidget {
 
 	@Override
 	public void drawWidget() {
-		MinecraftClient.getInstance().textRenderer.draw(Integer.toString((int) Math.round(getPosition())), (int) (getPositionX() + getSizeX() / 2 - BaseRenderer.textRenderer.getStringWidth(Integer.toString((int) getPosition())) / 2), (int) (getPositionY() + getSizeY()) + 4, 16);
+		BaseRenderer.getTextRenderer().draw(slidTotal, slidStringPosition, (int) (getPositionY() + getSizeY()) + 4, 16);
 
 		BaseRenderer.drawImage(getPositionX(), getPositionY(), getPositionZ(), 100, 10, DEFAULT_BAR);
 		BaseRenderer.drawImage(getPositionX() + (getSizeX() / getLimit()) * getPosition(), getPositionY() - 1, getPositionZ(), 7, 12, DEFAULT_PICKER);

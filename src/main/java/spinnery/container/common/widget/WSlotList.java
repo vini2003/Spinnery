@@ -1,24 +1,18 @@
 package spinnery.container.common.widget;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.container.CraftingContainer;
-import net.minecraft.container.CraftingTableContainer;
 import org.apache.logging.log4j.Level;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 import spinnery.SpinneryMod;
 import spinnery.container.client.BaseRenderer;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
 public class WSlotList extends WWidget {
-	protected WPanel dropdownWPanel;
-
 	public LinkedList<List<WWidget>> listWidgets = new LinkedList<>();
-	protected int scrollY = 0;
 
 	protected String listLabel;
 
@@ -32,9 +26,6 @@ public class WSlotList extends WWidget {
 
 	protected int scrollTotal = 0;
 	protected int scrollCurrent = 0;
-
-	protected List<WWidget> startMarker;
-	protected List<WWidget> endMarker;
 
 	public WSlotList(int positionX, int positionY, int positionZ, double sizeX, double sizeY, double listSizeX, double listSizeY, double entrySizeX, double entrySizeY, WPanel linkedWPanel) {
 		setPositionX(positionX);
@@ -59,37 +50,12 @@ public class WSlotList extends WWidget {
 		linkedWPanel.addWidget(new WSlotList(positionX, positionY, positionZ, sizeX, sizeY, listSizeX, listSizeY, entrySizeX, entrySizeY, linkedWPanel));
 	}
 
-	public WPanel getDropdownPanel() {
-		return dropdownWPanel;
-	}
-
-	public void setDropdownPanel(WPanel dropdownWPanel) {
-		this.dropdownWPanel = dropdownWPanel;
-	}
-
 	public String getListLabel() {
 		return listLabel;
 	}
 
 	public void setListLabel(String listLabel) {
 		this.listLabel = listLabel;
-	}
-
-	@Override
-	public void onMouseDragged(double mouseX, double mouseY, int mouseButton, double dragOffsetX, double dragOffsetY) {
-		if (getCanMove() && getFocus() && mouseButton == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
-			setPositionX(getPositionX() + dragOffsetX);
-			setPositionY(getPositionY() + dragOffsetY);
-
-			getDropdownPanel().setPositionX(getDropdownPanel().getPositionX() + dragOffsetX);
-			getDropdownPanel().setPositionY(getDropdownPanel().getPositionY() + dragOffsetY);
-
-			getDropdownPanel().getLinkedWidgets().forEach((widget) -> {
-				widget.setPositionX(widget.getPositionX() + dragOffsetX);
-				widget.setPositionY(widget.getPositionY() + dragOffsetY);
-			});
-		}
-		super.onMouseDragged(mouseX, mouseY, mouseButton, dragOffsetX, dragOffsetY);
 	}
 
 	@Override
@@ -122,7 +88,6 @@ public class WSlotList extends WWidget {
 	public void onMouseClicked(double mouseX, double mouseY, int mouseButton) {
 		listWidgets.forEach((widgets) -> {
 			widgets.forEach((widget) -> {
-				widget.isFocused(mouseX, mouseY);
 				widget.onMouseClicked(mouseX, mouseY, mouseButton);
 			});
 		});
@@ -130,7 +95,37 @@ public class WSlotList extends WWidget {
 	}
 
 	@Override
-	public boolean isFocused(double mouseX, double mouseY) {
+	public void onMouseReleased(double mouseX, double mouseY, int mouseButton) {
+		listWidgets.forEach((widgets) -> {
+			widgets.forEach((widget) -> {
+				widget.onMouseReleased(mouseX, mouseY, mouseButton);
+			});
+		});
+		super.onMouseReleased(mouseX, mouseY, mouseButton);
+	}
+
+	@Override
+	public void onMouseDragged(double mouseX, double mouseY, int mouseButton, double dragOffsetX, double dragOffsetY) {
+		listWidgets.forEach((widgets) -> {
+			widgets.forEach((widget) -> {
+				widget.onMouseDragged(mouseX, mouseY, mouseButton, dragOffsetX, dragOffsetY);
+			});
+		});
+		super.onMouseDragged(mouseX, mouseY, mouseButton, dragOffsetX, dragOffsetY);
+	}
+
+	@Override
+	public void onMouseMoved(double mouseX, double mouseY) {
+		listWidgets.forEach((widgets) -> {
+			widgets.forEach((widget) -> {
+				widget.onMouseMoved(mouseX, mouseY);
+			});
+		});
+		super.onMouseMoved(mouseX, mouseY);
+	}
+
+	@Override
+	public boolean scanFocus(double mouseX, double mouseY) {
 		setFocus(mouseX > getPositionX()
 				&& mouseX < getPositionX() + getSizeX()
 				&& mouseY > getPositionY()
@@ -141,13 +136,13 @@ public class WSlotList extends WWidget {
 	public void updatePositions() {
 		int y = (int) getPositionY();
 		for (int i = 0; i <= listWidgets.size() -1; ++i) {
-			int x = (int) getPositionX() + 2;
+			int x = (int) getPositionX();
 			for (int k = 0; k <= listWidgets.get(i).size() - 1; ++k) {
 				listWidgets.get(i).get(k).setPositionX(x);
 				listWidgets.get(i).get(k).setPositionY(y);
-				x += listWidgets.get(i).get(k).getSizeX() + 2;
+				x += listWidgets.get(i).get(k).getSizeX();
 			}
-			y += listWidgets.get(i).get(0).getSizeY() + 2;
+			y += listWidgets.get(i).get(0).getSizeY();
 		}
 	}
 
@@ -171,6 +166,7 @@ public class WSlotList extends WWidget {
 			SpinneryMod.logger.log(Level.WARN, SpinneryMod.LOG_ID + " Illegal operation: Cannot add non-WSlot to WSlotList!");
 			return;
 		} else {
+			widgets.forEach(widget -> ((WSlot) widget).isMemberOfList = true);
 			listWidgets.add(widgets);
 		}
 		++scrollTotal;
@@ -188,6 +184,20 @@ public class WSlotList extends WWidget {
 	}
 
 	@Override
+	public void setPositionX(double positionX) {
+		super.setPositionX(positionX);
+		listWidgets.forEach(widgets -> widgets.forEach(widget -> widget.setPositionX(positionX)));
+		updatePositions();
+	}
+
+	@Override
+	public void setPositionY(double positionY) {
+		super.setPositionY(positionY);
+		listWidgets.forEach(widgets -> widgets.forEach(widget -> widget.setPositionY(positionY)));
+		updatePositions();
+	}
+
+	@Override
 	public boolean isWithinBounds(double positionX, double positionY) {
 		return (positionX <= getPositionX() + getSizeX()
 				&& positionX >= getPositionX()
@@ -195,32 +205,12 @@ public class WSlotList extends WWidget {
 				&& positionY >= getPositionY());
 	}
 
-	/**
-	 * If is within widget *and* is within list.
-	 * GlScissors.
-	 */
-
 	@Override
 	public void drawWidget() {
 		BaseRenderer.drawPanel(getPositionX() - 4, getPositionY() - 4, getPositionZ() - 1, getSizeX() + 8, getSizeY() + 8, BaseRenderer.SHADOW_DEFAULT, BaseRenderer.PANEL_DEFAULT, BaseRenderer.HILIGHT_DEFUALT, BaseRenderer.OUTLINE_DEFAULT);
 
-		final int rawHeight = MinecraftClient.getInstance().window.getHeight();
-		final double scale = MinecraftClient.getInstance().window.getScaleFactor();
-
-		GL11.glEnable(GL11.GL_SCISSOR_TEST);
-
-		GL11.glScissor((int) (getPositionX() * scale), (int) (rawHeight - (getPositionY() * scale) - (getSizeY() * scale)), (int) (getSizeX() * scale), (int) (getSizeY() * scale));
-
 		listWidgets.forEach((widgets) -> {
 			widgets.forEach(WWidget::drawWidget);
 		});
-
-		GL11.glDisable(GL11.GL_SCISSOR_TEST);
-
-		//getLinkedPanel().drawPanel();
-		//getDropdownPanel().drawPanel();
-		//getDropdownPanel().drawWidget();
-
-		//MinecraftClient.getInstance().textRenderer.draw(getListLabel(), (int) (getPositionX() + (getSizeX() / 16)), (int) (getPositionY() + (getSizeY() / 3F)), 0);
 	}
 }
