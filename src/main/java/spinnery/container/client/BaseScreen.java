@@ -1,5 +1,9 @@
 package spinnery.container.client;
 
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.util.InputUtil;
+import net.minecraft.item.ItemStack;
+import org.lwjgl.glfw.GLFW;
 import spinnery.container.common.BaseContainer;
 import spinnery.container.common.widget.WSlot;
 import spinnery.container.common.widget.WSlotList;
@@ -13,11 +17,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BaseScreen<T extends BaseContainer> extends AbstractContainerScreen<T> {
-	List<Slot> dragSlots = new ArrayList<>();
-
 	double tooltipX = 0;
 	double tooltipY = 0;
-	WSlot drawSlot = null;
+	boolean isMouseHovering = false;
+	WSlot drawSlot;
 
 	public BaseScreen(Text name, T linkedContainer, PlayerEntity player) {
 		super(linkedContainer, player.inventory, name);
@@ -45,25 +48,19 @@ public class BaseScreen<T extends BaseContainer> extends AbstractContainerScreen
 		return false;
 	}
 
-	@Override
-	protected boolean isPointWithinBounds(int slotX, int slotY, int defaultSizeX, int defaultSizeY, double mouseX, double mouseY) {
-		return drawSlot != null
-		    && drawSlot.isWithinBounds(mouseX, mouseY)
-		    && slotX > drawSlot.internalSlot.xPosition - 8
-		    && slotX < drawSlot.internalSlot.xPosition + 8
-		    && slotY > drawSlot.internalSlot.yPosition - 8
-		    && slotY < drawSlot.internalSlot.yPosition + 8;
-	}
+//	@Override
+//	protected boolean isPointWithinBounds(int slotX, int slotY, int defaultSizeX, int defaultSizeY, double mouseX, double mouseY) {
+//		return drawSlot != null
+//		    && drawSlot.isWithinBounds(mouseX, mouseY)
+//		    && slotX > drawSlot.internalSlot.xPosition - 8
+//		    && slotX < drawSlot.internalSlot.xPosition + 8
+//		    && slotY > drawSlot.internalSlot.yPosition - 8
+//		    && slotY < drawSlot.internalSlot.yPosition + 8;
+//	}
 
 	@Override
 	protected boolean isClickOutsideBounds(double mouseX, double mouseY, int int_1, int int_2, int int_3) {
-		boolean[] isOutsideBounds = { true };
-		getLinkedContainer().getLinkedPanel().getLinkedWidgets().forEach((widget) -> {
-			if (widget.isWithinBounds(mouseX, mouseY)) {
-				isOutsideBounds[0] = false;
-			}
-		});
-		return isOutsideBounds[0];
+		return false;
 	}
 
 	@Override
@@ -86,13 +83,35 @@ public class BaseScreen<T extends BaseContainer> extends AbstractContainerScreen
 
 	@Override
 	public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
-		getLinkedContainer().getLinkedPanel().getLinkedWidgets().forEach((widget) -> widget.onMouseClicked(mouseX, mouseY, mouseButton));
+		if (!InputUtil.isKeyPressed(MinecraftClient.getInstance().window.getHandle(), GLFW.GLFW_KEY_LEFT_SHIFT)) {
+			getLinkedContainer().getLinkedPanel().getLinkedWidgets().forEach((widget) -> widget.onMouseClicked(mouseX, mouseY, mouseButton));
+		}
 		return super.mouseClicked(mouseX, mouseY, mouseButton);
 	}
 
 	@Override
 	public boolean mouseReleased(double mouseX, double mouseY, int mouseButton) {
-		getLinkedContainer().getLinkedPanel().getLinkedWidgets().forEach((widget) -> widget.onMouseReleased(mouseX, mouseY, mouseButton));
+		if (InputUtil.isKeyPressed(MinecraftClient.getInstance().window.getHandle(), GLFW.GLFW_KEY_LEFT_SHIFT)) {
+			ItemStack[] stackA = { MinecraftClient.getInstance().player.inventory.getCursorStack() };
+			int quantityA = mouseButton == 0 ? (int) Math.floor((float) stackA[0].getCount() / getLinkedContainer().dragSlots.size()) : mouseButton == 1 ? 1 : 0;
+			getLinkedContainer().dragSlots.forEach(widget -> {
+				if (((WSlot) widget).internalStack.getCount() != ((WSlot) widget).internalStack.getMaxCount()) {
+					if (((WSlot) widget).internalStack.isEmpty()) {
+						((WSlot) widget).internalStack = new ItemStack(stackA[0].getItem(), quantityA);
+						stackA[0].decrement(quantityA);
+					} else if (((WSlot) widget).internalStack.isItemEqualIgnoreDamage(stackA[0])) {
+						int quantityB = Math.min(quantityA, ((WSlot) widget).internalStack.getMaxCount() - ((WSlot) widget).internalStack.getCount());
+						((WSlot) widget).internalStack.increment(quantityB);
+						stackA[0].decrement(quantityB);
+					}
+					((WSlot) widget).previewStack = ItemStack.EMPTY;
+				}
+			});
+			isMouseHovering = false;
+			getLinkedContainer().dragSlots.clear();
+		} else {
+			getLinkedContainer().getLinkedPanel().getLinkedWidgets().forEach((widget) -> widget.onMouseReleased(mouseX, mouseY, mouseButton));
+		}
 		return super.mouseReleased(mouseX, mouseY, mouseButton);
 	}
 
@@ -122,6 +141,22 @@ public class BaseScreen<T extends BaseContainer> extends AbstractContainerScreen
 
 	@Override
 	public boolean mouseDragged(double slotX, double slotY, int mouseButton, double mouseX, double mouseY) {
+		isMouseHovering = true;
+		if (InputUtil.isKeyPressed(MinecraftClient.getInstance().window.getHandle(), GLFW.GLFW_KEY_LEFT_SHIFT)) {
+			ItemStack stackA = MinecraftClient.getInstance().player.inventory.getCursorStack();
+			int quantityA = mouseButton == 0 ? (int) Math.floor((float) stackA.getCount() / getLinkedContainer().dragSlots.size()) : mouseButton == 1 ? 1 : 0;
+			getLinkedContainer().dragSlots.forEach(widgetA -> {
+				if ((widgetA.internalStack.getCount() !=  widgetA.internalStack.getMaxCount())) {
+					if (widgetA.internalStack.isEmpty()) {
+						widgetA.previewStack = new ItemStack(stackA.getItem(), quantityA);
+					} else if (widgetA.internalStack.isItemEqualIgnoreDamage(stackA)) {
+						int quantityB = Math.min(quantityA, widgetA.internalStack.getMaxCount() - widgetA.internalStack.getCount());
+						widgetA.previewStack = widgetA.internalStack.copy();
+						widgetA.previewStack.increment(quantityB);
+					}
+				}
+			});
+		}
 		getLinkedContainer().getLinkedPanel().getLinkedWidgets().forEach((widget) -> widget.onMouseDragged(slotX, slotY, mouseButton, mouseX, mouseY));
 		return super.mouseDragged(slotX, slotY, mouseButton, mouseX, mouseY);
 	}
@@ -137,8 +172,8 @@ public class BaseScreen<T extends BaseContainer> extends AbstractContainerScreen
 	}
 
 	public void renderTooltip() {
-		if (drawSlot != null && playerInventory.getCursorStack().isEmpty() && !drawSlot.getSlot().getStack().isEmpty()) {
-			this.renderTooltip(drawSlot.getSlot().getStack(), (int) tooltipX, (int) tooltipY);
+		if (drawSlot != null && playerInventory.getCursorStack().isEmpty() && !drawSlot.internalStack.isEmpty()) {
+			this.renderTooltip(drawSlot.internalStack, (int) tooltipX, (int) tooltipY);
 		}
 	}
 

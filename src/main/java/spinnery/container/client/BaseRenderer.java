@@ -6,7 +6,9 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexFormats;
+import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.texture.TextureManager;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 import org.lwjgl.opengl.GL11;
 
@@ -68,10 +70,6 @@ public class BaseRenderer {
 		drawRectangle(positionX,             positionY + 1,         positionZ, 1,         sizeY - 2, topleft);
 		drawRectangle(positionX + sizeX - 1, positionY + 1,         positionZ, 1,         sizeY - 1, bottomright);
 		drawRectangle(positionX + 1,         positionY + sizeY - 1, positionZ, sizeX - 1, 1,         bottomright);
-	}
-
-	public static void drawSlot(double positionX, double positionY, double positionZ) {
-		drawBeveledPanel(positionX, positionY, positionZ, 18, 18, 0xFF373737, 0xFF8b8b8b,0xFFFFFFFF);
 	}
 
 	public static void drawImage(double positionX, double positionY, double positionZ, double sizeX, double sizeY, Identifier texture) {

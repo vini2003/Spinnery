@@ -121,12 +121,12 @@ public class TestContainer extends BaseContainer {
 
 		 exampleList.add(exampleDumpsterFire);
 
-		getLinkedPanel().addWidget(exampleList);
-		getLinkedPanel().addWidget(exampleSlotList);
+		//getLinkedPanel().addWidget(exampleList);
+		//getLinkedPanel().addWidget(exampleSlotList);
 
 		WSlot testSlot = new WSlot(WAlignment.SCREEN_TOP_LEFT, 0, 0, 8, 18, 18, 0, linkedInventory, linkedWPanel);
 
-		getLinkedPanel().addWidget(testSlot);
+		//getLinkedPanel().addWidget(testSlot);
 
 		tick();
 	}

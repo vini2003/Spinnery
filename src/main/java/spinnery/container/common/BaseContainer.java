@@ -14,12 +14,18 @@ import net.minecraft.recipe.RecipeFinder;
 import net.minecraft.recipe.RecipeInputProvider;
 import net.minecraft.util.Tickable;
 import net.minecraft.world.World;
+import spinnery.container.common.widget.WSlot;
+import spinnery.container.common.widget.WSlotList;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class BaseContainer extends CraftingContainer<Inventory> implements Tickable {
 	protected PlayerInventory linkedPlayerInventory;
 	protected Inventory linkedInventory = new BasicInventory(9);
 	protected World linkedWorld;
 	protected WPanel linkedWPanel;
+	public List<WSlot> dragSlots = new ArrayList<>();
 
 	public int top = 0;
 	public int left = 0;
@@ -183,5 +189,15 @@ public class BaseContainer extends CraftingContainer<Inventory> implements Ticka
 	 */
 	@Override
 	public void tick() {
+		linkedInventory = linkedPlayerInventory;
+		linkedWPanel.getLinkedWidgets().forEach(widgetA -> {
+			if (widgetA instanceof WSlot) {
+				((WSlot) widgetA).tick();
+			} else if (widgetA instanceof WSlotList) {
+				((WSlotList) widgetA).listWidgets.forEach(widgetB -> {
+					((List) widgetB).forEach(widgetC -> ((WSlot) widgetC).tick());
+				});
+			}
+		});
 	}
 }
