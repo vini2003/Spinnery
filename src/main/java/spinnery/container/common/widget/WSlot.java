@@ -3,6 +3,7 @@ package spinnery.container.common.widget;
 import net.minecraft.client.render.GuiLighting;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.util.InputUtil;
+import net.minecraft.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import org.lwjgl.glfw.GLFW;
@@ -14,7 +15,6 @@ import net.minecraft.inventory.Inventory;
 import java.util.List;
 
 public class WSlot extends WWidget {
-	public ItemStack internalStack = ItemStack.EMPTY;
 	public boolean isMemberOfList = false;
 	public int slotNumber;
 	public ItemStack previewStack = ItemStack.EMPTY;
@@ -75,15 +75,16 @@ public class WSlot extends WWidget {
 		setSizeX(sizeX);
 		setSizeY(sizeY);
 
-		this.internalStack = linkedWPanel.getLinkedContainer().getLinkedInventory().getInvStack(slotNumber);
-
 	}
 
-	@Override
-	public boolean scanFocus(double mouseX, double mouseY) {
-		return super.scanFocus(mouseX, mouseY);
+	public void setStack(ItemStack stack) {
+		linkedWPanel.getLinkedContainer().getLinkedInventory().setInvStack(slotNumber, stack);
 	}
 
+	public ItemStack getStack() {
+		return linkedWPanel.getLinkedContainer().getLinkedInventory().getInvStack(slotNumber);
+	}
+	
 	@Override
 	public void onMouseClicked(double mouseX, double mouseY, int mouseButton) {
 		super.onMouseClicked(mouseX, mouseY, mouseButton);
@@ -91,9 +92,7 @@ public class WSlot extends WWidget {
 			PlayerInventory playerInventory = MinecraftClient.getInstance().player.inventory;
 
 			ItemStack stackA = playerInventory.getCursorStack().copy();
-			ItemStack stackB = internalStack.copy();
-
-			boolean isDoubleClick = (System.nanoTime() - lastClick <= 200000000);
+			ItemStack stackB = getStack().copy();
 
 			if (InputUtil.isKeyPressed(MinecraftClient.getInstance().window.getHandle(), GLFW.GLFW_KEY_LEFT_CONTROL)) {
 				if (mouseButton == 0) {
@@ -101,7 +100,7 @@ public class WSlot extends WWidget {
 						for (WWidget widget : linkedWPanel.getLinkedWidgets()) {
 							if (widget != this) {
 								if (widget instanceof WSlot) {
-									ItemStack stackC = ((WSlot) widget).internalStack;
+									ItemStack stackC = ((WSlot) widget).getStack();
 
 									if (stackB.getCount() < stackB.getMaxCount() && stackB.getItem() == stackC.getItem()) {
 										int quantityA = stackB.getMaxCount() - stackB.getCount();
@@ -119,7 +118,7 @@ public class WSlot extends WWidget {
 								} else if (widget instanceof WSlotList) {
 									for (List listWidget : ((WSlotList) widget).listWidgets) {
 										for (Object internalWidget : listWidget) {
-											ItemStack stackC = ((WSlot) internalWidget).internalStack;
+											ItemStack stackC = ((WSlot) internalWidget).getStack();
 
 											if (stackB.getCount() < stackB.getMaxCount() && stackB.isItemEqualIgnoreDamage(stackC)) {
 												int quantityA = stackB.getMaxCount() - stackB.getCount();
@@ -134,7 +133,7 @@ public class WSlot extends WWidget {
 													stackC.decrement(quantityA);
 												}
 											} else {
-												internalStack = stackB;
+												setStack(stackB);
 
 												lastClick = System.nanoTime();
 
@@ -192,7 +191,7 @@ public class WSlot extends WWidget {
 				}
 			}
 			playerInventory.setCursorStack(stackA);
-			internalStack = stackB;
+			setStack(stackB);
 
 			lastClick = System.nanoTime();
 		}
@@ -210,12 +209,12 @@ public class WSlot extends WWidget {
 
 	@Override
 	public void drawWidget() {
-		BaseRenderer.drawBeveledPanel(positionX, positionY, positionZ, 18, 18, 0xFF373737, hasFocus ? 0xFF00C116 : 0xFF8b8b8b, 0xFFFFFFFF);
+		BaseRenderer.drawBeveledPanel(positionX, positionY, positionZ, sizeX, sizeY, 0xFF373737, hasFocus ? 0xFF00C116 : 0xFF8b8b8b, 0xFFFFFFFF);
 
 		ItemRenderer itemRenderer = MinecraftClient.getInstance().getItemRenderer();
 		GuiLighting.enableForItems();
-		itemRenderer.renderGuiItem(previewStack.isEmpty() ? internalStack : previewStack, 1 + (int) positionX, 1 + (int) positionY);
-		itemRenderer.renderGuiItemOverlay(MinecraftClient.getInstance().textRenderer, previewStack.isEmpty() ? internalStack : previewStack, 1 + (int) positionX, 1 + (int) positionY);
+		itemRenderer.renderGuiItem(previewStack.isEmpty() ? getStack() : previewStack, 1 + (int) (positionX + (sizeX - 18) / 2), 1 + (int) (positionY + (sizeY - 18) / 2));
+		itemRenderer.renderGuiItemOverlay(MinecraftClient.getInstance().textRenderer, previewStack.isEmpty() ? getStack() : previewStack, 1 + (int) (positionX + (sizeX - 18) / 2), 1 + (int) (positionY + (sizeY - 18) / 2));
 		GuiLighting.disable();
 	}
 

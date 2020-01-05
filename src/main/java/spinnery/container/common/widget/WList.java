@@ -7,6 +7,7 @@ import spinnery.container.client.BaseRenderer;
 import net.minecraft.client.MinecraftClient;
 import org.lwjgl.glfw.GLFW;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -74,7 +75,7 @@ public class WList extends WWidget {
 			listWidgets.forEach((widgets) -> {
 				widgets.forEach((widget) -> {
 					widget.setPositionY(widget.getPositionY() + scaledOffsetY);
-					widget.setHidden(widget.getPositionY() > getPositionY() + getSizeY() || widget.getPositionY() + widget.getSizeY() < getPositionY());
+					widget.setHidden(!(isWithinBounds(widget.getPositionX(), widget.getPositionY())));
 				});
 			});
 		}
@@ -149,22 +150,11 @@ public class WList extends WWidget {
 	}
 
 	public void updateHidden() {
-		listWidgets.forEach(widgets -> widgets.forEach(widget -> widget.setHidden(true)));
-		for (int i = (int) Math.floor(getSizeY() / (20)); i >= 0; --i) {
-			if (listWidgets.size() - 1 >= i) {
-				listWidgets.get(i).forEach(widget -> widget.setHidden(false));
-			}
-		}
+		listWidgets.forEach(widgets -> widgets.forEach(widget -> widget.setHidden(!isWithinBounds(widget.getPositionX(), widget.getPositionY()))));
 	}
 
 	public void add(WWidget... widgetArray) {
-		List<WWidget> widgets = Arrays.asList(widgetArray);
-		if (Arrays.stream(widgetArray).anyMatch(widget ->  (widget instanceof WSlot))) {
-			SpinneryMod.logger.log(Level.WARN, SpinneryMod.LOG_ID + " Illegal operation: Cannot add WSlot to non-WSlotList!");
-			return;
-		} else {
-			listWidgets.add(widgets);
-		}
+		listWidgets.add(Arrays.asList(widgetArray));
 		updateSize();
 		updateHidden();
 		updatePositions();
@@ -175,14 +165,6 @@ public class WList extends WWidget {
 		updateSize();
 		updateHidden();
 		updatePositions();
-	}
-
-	@Override
-	public boolean isWithinBounds(double positionX, double positionY) {
-		return (positionX <= getPositionX() + getSizeX()
-				&& positionX >= getPositionX()
-				&& positionY <= getPositionY() + getSizeY()
-				&& positionY >= getPositionY());
 	}
 
 	@Override

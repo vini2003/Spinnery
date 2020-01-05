@@ -50,6 +50,17 @@ public class WToggle extends WWidget {
 
 	@Override
 	public void drawWidget() {
-		BaseRenderer.drawImage(getPositionX(), getPositionY(), getPositionZ(), getSizeX(), getSizeY(), getTexture(getState()));
+		BaseRenderer.drawRectangle(positionX, positionY, positionZ, sizeX, 1, 0xFF373737);
+		BaseRenderer.drawRectangle(positionX, positionY, positionZ, 1, sizeY, 0xFF373737);
+		BaseRenderer.drawRectangle(positionX + 1, positionY + 1, positionZ, sizeX - 1, sizeY - 1, getState() ? 0xFF00C116 : 0xFF8b8b8b);
+		BaseRenderer.drawRectangle(positionX, positionY + sizeY, positionZ, sizeX, 1, 0xFFFFFFFF);
+		BaseRenderer.drawRectangle(positionX + sizeX, positionY, positionZ, 1, sizeY + 1, 0xFFFFFFFF);
+
+		if (getState()) {
+			BaseRenderer.drawBeveledPanel(positionX + sizeX - 8, positionY - 1, positionZ, 8, sizeY + 3, 0xFFFFFFFF, 0xFF8b8b8b, 0xFF373737);
+		} else {
+			BaseRenderer.drawBeveledPanel(positionX + 1, positionY - 1, positionZ, 8, sizeY + 3, 0xFFFFFFFF, 0xFF8b8b8b, 0xFF373737);
+
+		}
 	}
 }

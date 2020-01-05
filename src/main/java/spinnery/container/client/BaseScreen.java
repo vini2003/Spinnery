@@ -1,5 +1,6 @@
 package spinnery.container.client;
 
+import net.minecraft.block.BarrelBlock;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.item.ItemStack;
@@ -95,13 +96,13 @@ public class BaseScreen<T extends BaseContainer> extends AbstractContainerScreen
 			ItemStack[] stackA = { MinecraftClient.getInstance().player.inventory.getCursorStack() };
 			int quantityA = mouseButton == 0 ? (int) Math.floor((float) stackA[0].getCount() / getLinkedContainer().dragSlots.size()) : mouseButton == 1 ? 1 : 0;
 			getLinkedContainer().dragSlots.forEach(widget -> {
-				if (((WSlot) widget).internalStack.getCount() != ((WSlot) widget).internalStack.getMaxCount()) {
-					if (((WSlot) widget).internalStack.isEmpty()) {
-						((WSlot) widget).internalStack = new ItemStack(stackA[0].getItem(), quantityA);
+				if (((WSlot) widget).getStack().getCount() != ((WSlot) widget).getStack().getMaxCount()) {
+					if (((WSlot) widget).getStack().isEmpty()) {
+						((WSlot) widget).setStack(new ItemStack(stackA[0].getItem(), quantityA));
 						stackA[0].decrement(quantityA);
-					} else if (((WSlot) widget).internalStack.isItemEqualIgnoreDamage(stackA[0])) {
-						int quantityB = Math.min(quantityA, ((WSlot) widget).internalStack.getMaxCount() - ((WSlot) widget).internalStack.getCount());
-						((WSlot) widget).internalStack.increment(quantityB);
+					} else if (((WSlot) widget).getStack().isItemEqualIgnoreDamage(stackA[0])) {
+						int quantityB = Math.min(quantityA, ((WSlot) widget).getStack().getMaxCount() - ((WSlot) widget).getStack().getCount());
+						((WSlot) widget).getStack().increment(quantityB);
 						stackA[0].decrement(quantityB);
 					}
 					((WSlot) widget).previewStack = ItemStack.EMPTY;
@@ -146,12 +147,12 @@ public class BaseScreen<T extends BaseContainer> extends AbstractContainerScreen
 			ItemStack stackA = MinecraftClient.getInstance().player.inventory.getCursorStack();
 			int quantityA = mouseButton == 0 ? (int) Math.floor((float) stackA.getCount() / getLinkedContainer().dragSlots.size()) : mouseButton == 1 ? 1 : 0;
 			getLinkedContainer().dragSlots.forEach(widgetA -> {
-				if ((widgetA.internalStack.getCount() !=  widgetA.internalStack.getMaxCount())) {
-					if (widgetA.internalStack.isEmpty()) {
+				if ((widgetA.getStack().getCount() !=  widgetA.getStack().getMaxCount())) {
+					if (widgetA.getStack().isEmpty()) {
 						widgetA.previewStack = new ItemStack(stackA.getItem(), quantityA);
-					} else if (widgetA.internalStack.isItemEqualIgnoreDamage(stackA)) {
-						int quantityB = Math.min(quantityA, widgetA.internalStack.getMaxCount() - widgetA.internalStack.getCount());
-						widgetA.previewStack = widgetA.internalStack.copy();
+					} else if (widgetA.getStack().isItemEqualIgnoreDamage(stackA)) {
+						int quantityB = Math.min(quantityA, widgetA.getStack().getMaxCount() - widgetA.getStack().getCount());
+						widgetA.previewStack = widgetA.getStack().copy();
 						widgetA.previewStack.increment(quantityB);
 					}
 				}
@@ -172,8 +173,8 @@ public class BaseScreen<T extends BaseContainer> extends AbstractContainerScreen
 	}
 
 	public void renderTooltip() {
-		if (drawSlot != null && playerInventory.getCursorStack().isEmpty() && !drawSlot.internalStack.isEmpty()) {
-			this.renderTooltip(drawSlot.internalStack, (int) tooltipX, (int) tooltipY);
+		if (drawSlot != null && playerInventory.getCursorStack().isEmpty() && !drawSlot.getStack().isEmpty()) {
+			this.renderTooltip(drawSlot.getStack(), (int) tooltipX, (int) tooltipY);
 		}
 	}
 

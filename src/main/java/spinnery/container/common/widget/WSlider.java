@@ -96,7 +96,13 @@ public class WSlider extends WWidget {
 	public void drawWidget() {
 		BaseRenderer.getTextRenderer().draw(slidTotal, slidStringPosition, (int) (getPositionY() + getSizeY()) + 4, 16);
 
-		BaseRenderer.drawImage(getPositionX(), getPositionY(), getPositionZ(), 100, 10, DEFAULT_BAR);
-		BaseRenderer.drawImage(getPositionX() + (getSizeX() / getLimit()) * getPosition(), getPositionY() - 1, getPositionZ(), 7, 12, DEFAULT_PICKER);
+		BaseRenderer.drawRectangle(positionX, positionY, positionZ, sizeX, 1, 0xFF373737);
+		BaseRenderer.drawRectangle(positionX, positionY, positionZ, 1, sizeY, 0xFF373737);
+		BaseRenderer.drawRectangle(positionX + 1, positionY + 1, positionZ, (sizeX / limit) * position, sizeY - 1, 0xFF00C116);
+		BaseRenderer.drawRectangle(positionX + (sizeX / limit) * position, positionY + 1, positionZ, sizeX - (sizeX / limit) * position, sizeY - 1, 0xFF8b8b8b);
+		BaseRenderer.drawRectangle(positionX, positionY + sizeY, positionZ, sizeX, 1, 0xFFFFFFFF);
+		BaseRenderer.drawRectangle(positionX + sizeX, positionY, positionZ, 1, sizeY + 1, 0xFFFFFFFF);
+
+		BaseRenderer.drawBeveledPanel(getPositionX() + (getSizeX() / getLimit()) * getPosition(), getPositionY() - 1, getPositionZ(), 8, sizeY + 3, 0xFFFFFFFF, 0xFF8b8b8b, 0xFF373737);
 	}
 }
