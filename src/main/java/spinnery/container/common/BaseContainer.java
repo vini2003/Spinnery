@@ -1,5 +1,6 @@
 package spinnery.container.common;
 
+import net.minecraft.util.math.BlockPos;
 import spinnery.container.common.widget.WPanel;
 import net.minecraft.container.CraftingContainer;
 import net.minecraft.container.Slot;
@@ -34,11 +35,10 @@ public class BaseContainer extends CraftingContainer<Inventory> implements Ticka
 		return super.addSlot(slot);
 	}
 
-	public BaseContainer(int synchronizationID, Inventory linkedInventory, PlayerInventory linkedPlayerInventory) {
+	public BaseContainer(int synchronizationID, PlayerInventory newLinkedPlayerInventory) {
 		super(null, synchronizationID);
-		this.linkedInventory = linkedInventory;
-		this.linkedPlayerInventory = linkedPlayerInventory;
-		this.linkedWorld = linkedPlayerInventory.player.world;
+		this.linkedPlayerInventory = newLinkedPlayerInventory;
+		this.linkedWorld = newLinkedPlayerInventory.player.world;
 	}
 
 	/**
@@ -189,7 +189,6 @@ public class BaseContainer extends CraftingContainer<Inventory> implements Ticka
 	 */
 	@Override
 	public void tick() {
-		linkedInventory = linkedPlayerInventory;
 		linkedWPanel.getLinkedWidgets().forEach(widgetA -> {
 			if (widgetA instanceof WSlot) {
 				((WSlot) widgetA).tick();

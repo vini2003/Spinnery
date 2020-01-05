@@ -3,10 +3,10 @@ package spinnery.container.common.widget;
 import net.minecraft.client.render.GuiLighting;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.util.InputUtil;
-import net.minecraft.container.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
+import org.apache.logging.log4j.Level;
 import org.lwjgl.glfw.GLFW;
+import spinnery.SpinneryMod;
 import spinnery.container.client.BaseRenderer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerInventory;
@@ -18,24 +18,25 @@ public class WSlot extends WWidget {
 	public boolean isMemberOfList = false;
 	public int slotNumber;
 	public ItemStack previewStack = ItemStack.EMPTY;
+	public Inventory linkedInventory;
 	long lastClick = System.nanoTime();
 
-	public static void addSingle(WAlignment alignment, int positionX, int positionY, int positionZ, double sizeX, double sizeY, int slotNumber, Inventory linkedInventory, WPanel linkedWPanel) {
-		linkedWPanel.addWidget(new WSlot(alignment, positionX, positionY, positionZ, sizeX, sizeY, slotNumber, linkedInventory, linkedWPanel));
+	public static void addSingle(WAnchor anchor, int positionX, int positionY, int positionZ, double sizeX, double sizeY, int slotNumber, Inventory linkedInventory, WPanel linkedWPanel) {
+		linkedWPanel.addWidget(new WSlot(anchor, positionX, positionY, positionZ, sizeX, sizeY, slotNumber, linkedInventory, linkedWPanel));
 	}
 
-	public static void addArray(WAlignment alignment, int arrayX, int arrayY, int positionX, int positionY, int positionZ, double sizeX, double sizeY, int slotNumber, Inventory linkedInventory, WPanel linkedWPanel) {
+	public static void addArray(WAnchor anchor, int arrayX, int arrayY, int positionX, int positionY, int positionZ, double sizeX, double sizeY, int slotNumber, Inventory linkedInventory, WPanel linkedWPanel) {
 		for (int y = 0; y < arrayY; ++y) {
 			for (int x = 0; x < arrayX; ++x) {
-				WSlot.addSingle(alignment, positionX + (int) (sizeX * x), positionY + (int) (sizeY * y), positionZ, sizeX, sizeY, slotNumber++, linkedInventory, linkedWPanel);
+				WSlot.addSingle(anchor, positionX + (int) (sizeX * x), positionY + (int) (sizeY * y), positionZ, sizeX, sizeY, slotNumber++, linkedInventory, linkedWPanel);
 			}
 		}
 	}
 
 	public static void addPlayerInventory(int positionZ, double sizeX, double sizeY, PlayerInventory linkedInventory, WPanel linkedWPanel) {
-		int slotN = 0;
+		int temporarySlotNumber = 0;
 		addArray(
-				WAlignment.PANEL_TOP_LEFT,
+				WAnchor.MC_ORIGIN,
 				9,
 				1,
 				4,
@@ -43,34 +44,35 @@ public class WSlot extends WWidget {
 				positionZ,
 				sizeX,
 				sizeY,
-				slotN,
+				temporarySlotNumber,
 				linkedInventory,
 				linkedWPanel);
-		slotN = 9;
+		temporarySlotNumber = 9;
 		addArray(
-				 WAlignment.PANEL_TOP_LEFT,
+				 WAnchor.MC_ORIGIN,
 				 9,
 				 3,
 				 4,
-				(int) linkedWPanel.getSizeY() - 72 - 6,
+				 (int) linkedWPanel.getSizeY() - 72 - 6,
 				 positionZ,
 				 sizeX,
 				 sizeY,
-				 slotN,
+				 temporarySlotNumber,
 				 linkedInventory,
 				 linkedWPanel);
 	}
 
-	public WSlot(WAlignment alignment, int positionX, int positionY, int positionZ, double sizeX, double sizeY, int slotNumber, Inventory linkedInventory, WPanel linkedWPanel) {
+	public WSlot(WAnchor anchor, int positionX, int positionY, int positionZ, double sizeX, double sizeY, int slotNumber, Inventory linkedInventory, WPanel linkedWPanel) {
 		setLinkedPanel(linkedWPanel);
 
-		setAlignment(alignment);
+		setAlignment(anchor);
 
-		setPositionX(positionX);
-		setPositionY(positionY);
+		setPositionX(positionX + (anchor == WAnchor.MC_ORIGIN ? getLinkedPanel().getPositionX() : 0));
+		setPositionY(positionY + (anchor == WAnchor.MC_ORIGIN ? getLinkedPanel().getPositionY() : 0));
 		setPositionZ(positionZ);
 
 		this.slotNumber = slotNumber;
+		this.linkedInventory = linkedInventory;
 
 		setSizeX(sizeX);
 		setSizeY(sizeY);
@@ -78,11 +80,20 @@ public class WSlot extends WWidget {
 	}
 
 	public void setStack(ItemStack stack) {
-		linkedWPanel.getLinkedContainer().getLinkedInventory().setInvStack(slotNumber, stack);
+		try {
+			linkedInventory.setInvStack(slotNumber, stack);
+		} catch (ArrayIndexOutOfBoundsException exception) {
+			SpinneryMod.logger.log(Level.ERROR, "Cannot access slot " + slotNumber + ", as it does exist in the inventory!");
+		}
 	}
 
 	public ItemStack getStack() {
-		return linkedWPanel.getLinkedContainer().getLinkedInventory().getInvStack(slotNumber);
+		try {
+			return linkedInventory.getInvStack(slotNumber);
+		} catch (ArrayIndexOutOfBoundsException exception) {
+			SpinneryMod.logger.log(Level.ERROR, "Cannot access slot " + slotNumber + ", as it does exist in the inventory!");
+			return ItemStack.EMPTY;
+		}
 	}
 	
 	@Override
@@ -210,15 +221,11 @@ public class WSlot extends WWidget {
 	@Override
 	public void drawWidget() {
 		BaseRenderer.drawBeveledPanel(positionX, positionY, positionZ, sizeX, sizeY, 0xFF373737, hasFocus ? 0xFF00C116 : 0xFF8b8b8b, 0xFFFFFFFF);
-
+		
 		ItemRenderer itemRenderer = MinecraftClient.getInstance().getItemRenderer();
 		GuiLighting.enableForItems();
 		itemRenderer.renderGuiItem(previewStack.isEmpty() ? getStack() : previewStack, 1 + (int) (positionX + (sizeX - 18) / 2), 1 + (int) (positionY + (sizeY - 18) / 2));
 		itemRenderer.renderGuiItemOverlay(MinecraftClient.getInstance().textRenderer, previewStack.isEmpty() ? getStack() : previewStack, 1 + (int) (positionX + (sizeX - 18) / 2), 1 + (int) (positionY + (sizeY - 18) / 2));
 		GuiLighting.disable();
-	}
-
-	@Override
-	public void tick() {
 	}
 }

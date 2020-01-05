@@ -10,7 +10,7 @@ import java.util.Optional;
 public class WWidget implements Tickable {
 	protected WPanel linkedWPanel;
 
-	protected WAlignment alignment;
+	protected WAnchor alignment;
 
 	protected double offsetX;
 	protected double offsetY;
@@ -325,7 +325,7 @@ public class WWidget implements Tickable {
 		}
 	}
 
-	public void setAlignment(WAlignment alignment) {
+	public void setAlignment(WAnchor alignment) {
 		this.alignment = alignment;
 		switch (alignment) {
 			case PANEL_TOP_LEFT:
