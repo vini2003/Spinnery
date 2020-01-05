@@ -53,7 +53,7 @@ public class WPanel extends WWidget {
 		this.linkedWWidgets = linkedWWidgets;
 	}
 
-	public void addWidget(WWidget... WWidgets) {
+	public void add(WWidget... WWidgets) {
 		for (WWidget WWidget : WWidgets) {
 			if (!this.getLinkedWidgets().contains(WWidget)) {
 				WWidget.setLinkedPanel(this);
@@ -62,17 +62,12 @@ public class WPanel extends WWidget {
 		}
 	}
 
-	public void removeWidget(WWidget... WWidgets) {
+	public void remove(WWidget... WWidgets) {
 		for (WWidget WWidget : WWidgets) {
 			if (this.getLinkedWidgets().contains(WWidget)) {
 				getLinkedWidgets().remove(WWidget);
 			}
 		}
-	}
-
-	public void alignWithContainerEdge() {
-		this.setPositionX(MinecraftClient.getInstance().window.getScaledWidth() / 2D - this.getSizeX() / 2);
-		this.setPositionY(MinecraftClient.getInstance().window.getScaledHeight() / 2D - this.getSizeY() / 2);
 	}
 
 	@Override

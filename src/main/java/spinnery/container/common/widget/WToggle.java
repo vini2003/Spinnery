@@ -1,23 +1,21 @@
 package spinnery.container.common.widget;
 
 import spinnery.container.client.BaseRenderer;
-import net.minecraft.util.Identifier;
 
 public class WToggle extends WWidget {
-	protected Identifier texture_on = new Identifier("spinnery:textures/widget/toggle_on_default.png");
-	protected Identifier texture_off = new Identifier("spinnery:textures/widget/toggle_off_default.png");
-
 	protected boolean state = false;
 
-	public WToggle(int positionX, int positionY, int positionZ, double sizeX, double sizeY, WPanel linkedWPanel) {
-		setPositionX(positionX);
-		setPositionY(positionY);
+	public WToggle(WAnchor anchor, int positionX, int positionY, int positionZ, double sizeX, double sizeY, WPanel linkedWPanel) {
+		setLinkedPanel(linkedWPanel);
+
+		setAnchor(anchor);
+
+		setPositionX(positionX + (getAnchor() == WAnchor.MC_ORIGIN ? getLinkedPanel().getPositionX() : 0));
+		setPositionY(positionY + (getAnchor() == WAnchor.MC_ORIGIN ? getLinkedPanel().getPositionY() : 0));
 		setPositionZ(positionZ);
 
 		setSizeX(sizeX);
 		setSizeY(sizeY);
-
-		setLinkedPanel(linkedWPanel);
 	}
 
 	@Override
@@ -36,31 +34,18 @@ public class WToggle extends WWidget {
 		this.state = state;
 	}
 
-	public Identifier getTexture(boolean state) {
-		return state ? texture_on : texture_off;
-	}
-
-	public void setTexture(boolean state, Identifier texture) {
-		if (state) {
-			texture_on = texture;
-		} else {
-			texture_off = texture;
-		}
-	}
-
 	@Override
 	public void drawWidget() {
-		BaseRenderer.drawRectangle(positionX, positionY, positionZ, sizeX, 1, 0xFF373737);
-		BaseRenderer.drawRectangle(positionX, positionY, positionZ, 1, sizeY, 0xFF373737);
-		BaseRenderer.drawRectangle(positionX + 1, positionY + 1, positionZ, sizeX - 1, sizeY - 1, getState() ? 0xFF00C116 : 0xFF8b8b8b);
-		BaseRenderer.drawRectangle(positionX, positionY + sizeY, positionZ, sizeX, 1, 0xFFFFFFFF);
-		BaseRenderer.drawRectangle(positionX + sizeX, positionY, positionZ, 1, sizeY + 1, 0xFFFFFFFF);
+		BaseRenderer.drawRectangle(getPositionX(), getPositionY(), getPositionZ(), getSizeX(), 1, 0xFF373737);
+		BaseRenderer.drawRectangle(getPositionX(), getPositionY(), getPositionZ(), 1, getSizeY(), 0xFF373737);
+		BaseRenderer.drawRectangle(getPositionX() + 1, getPositionY() + 1, getPositionZ(), getSizeX() - 1, getSizeY() - 1, getState() ? 0xFF00C116 : 0xFF8b8b8b);
+		BaseRenderer.drawRectangle(getPositionX(), getPositionY() + getSizeY(), getPositionZ(), getSizeX(), 1, 0xFFFFFFFF);
+		BaseRenderer.drawRectangle(getPositionX() + getSizeX(), getPositionY(), getPositionZ(), 1, getSizeY() + 1, 0xFFFFFFFF);
 
 		if (getState()) {
-			BaseRenderer.drawBeveledPanel(positionX + sizeX - 8, positionY - 1, positionZ, 8, sizeY + 3, 0xFFFFFFFF, 0xFF8b8b8b, 0xFF373737);
+			BaseRenderer.drawBeveledPanel(getPositionX() + getSizeX() - 8, getPositionY() - 1, getPositionZ(), 8, getSizeY() + 3, 0xFFFFFFFF, 0xFF8b8b8b, 0xFF373737);
 		} else {
-			BaseRenderer.drawBeveledPanel(positionX + 1, positionY - 1, positionZ, 8, sizeY + 3, 0xFFFFFFFF, 0xFF8b8b8b, 0xFF373737);
-
+			BaseRenderer.drawBeveledPanel(getPositionX() + 1, getPositionY() - 1, getPositionZ(), 8, getSizeY() + 3, 0xFFFFFFFF, 0xFF8b8b8b, 0xFF373737);
 		}
 	}
 }

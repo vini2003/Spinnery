@@ -8,17 +8,19 @@ public class WDynamicImage extends WWidget {
 
 	protected int position = 0;
 
-	public WDynamicImage(double positionX, double positionY, double positionZ, double sizeX, double sizeY, WPanel linkedWPanel, Identifier... textures) {
-		setPositionX(positionX);
-		setPositionY(positionY);
+	public WDynamicImage(WAnchor anchor, double positionX, double positionY, double positionZ, double sizeX, double sizeY, WPanel linkedWPanel, Identifier... textures) {
+		setLinkedPanel(linkedWPanel);
+
+		setAnchor(anchor);
+
+		setPositionX(positionX + (getAnchor() == WAnchor.MC_ORIGIN ? getLinkedPanel().getPositionX() : 0));
+		setPositionY(positionY + (getAnchor() == WAnchor.MC_ORIGIN ? getLinkedPanel().getPositionY() : 0));
 		setPositionZ(positionZ);
 
 		setSizeX(sizeX);
 		setSizeY(sizeY);
 
 		setTextures(textures);
-
-		setLinkedPanel(linkedWPanel);
 	}
 
 	public int next() {

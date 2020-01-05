@@ -9,17 +9,19 @@ public class WStaticText extends WWidget {
 
 	protected Text text;
 
-	public WStaticText(int positionX, int positionY, int positionZ, double sizeX, double sizeY, Text text, WPanel linkedWPanel) {
-		setPositionX(positionX);
-		setPositionY(positionY);
+	public WStaticText(WAnchor anchor, int positionX, int positionY, int positionZ, double sizeX, double sizeY, Text text, WPanel linkedWPanel) {
+		setLinkedPanel(linkedWPanel);
+
+		setAnchor(anchor);
+
+		setPositionX(positionX + (getAnchor() == WAnchor.MC_ORIGIN ? getLinkedPanel().getPositionX() : 0));
+		setPositionY(positionY + (getAnchor() == WAnchor.MC_ORIGIN ? getLinkedPanel().getPositionY() : 0));
 		setPositionZ(positionZ);
 
 		setSizeX(sizeX);
 		setSizeY(sizeY);
 
 		setText(text);
-
-		setLinkedPanel(linkedWPanel);
 	}
 
 	public void setText(Text text) {

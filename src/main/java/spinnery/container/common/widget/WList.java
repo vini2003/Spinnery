@@ -1,58 +1,35 @@
 package spinnery.container.common.widget;
 
-import org.apache.logging.log4j.Level;
-import org.lwjgl.opengl.GL11;
-import spinnery.SpinneryMod;
-import spinnery.container.client.BaseRenderer;
 import net.minecraft.client.MinecraftClient;
-import org.lwjgl.glfw.GLFW;
+import org.lwjgl.opengl.GL11;
+import spinnery.container.client.BaseRenderer;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class WList extends WWidget {
-
 	public List<List<WWidget>> listWidgets = new ArrayList<>();
 
-	protected String listLabel;
+	public WList(WAnchor anchor, int positionX, int positionY, int positionZ, double sizeX, double sizeY, WPanel linkedWPanel) {
+		setLinkedPanel(linkedWPanel);
 
-	protected double listSizeY = 0;
-	protected double listSizeX = 0;
+		setAnchor(anchor);
 
-	protected double entrySizeY = 0;
-	protected double entrySizeX = 0;
-
-	protected int listPixelsY = 0;
-
-	protected double kineticScroll = 0;
-
-	public WList(int positionX, int positionY, int positionZ, double sizeX, double sizeY, double listSizeX, double listSizeY, double entrySizeX, double entrySizeY, WPanel linkedWPanel) {
-		setPositionX(positionX);
-		setPositionY(positionY);
+		setPositionX(positionX + (getAnchor() == WAnchor.MC_ORIGIN ? getLinkedPanel().getPositionX() : 0));
+		setPositionY(positionY + (getAnchor() == WAnchor.MC_ORIGIN ? getLinkedPanel().getPositionY() : 0));
 		setPositionZ(positionZ);
 
 		setSizeX(sizeX);
 		setSizeY(sizeY);
-
-		this.listSizeY = listSizeY;
-		this.listSizeX = listSizeX;
-
-		this.entrySizeY = entrySizeY;
-		this.entrySizeX = entrySizeX;
-
-		setLinkedPanel(linkedWPanel);
-
-		setListLabel(listLabel);
 	}
 
-	public String getListLabel() {
-		return listLabel;
+	public List<List<WWidget>> getListWidgets() {
+		return listWidgets;
 	}
 
-	public void setListLabel(String listLabel) {
-		this.listLabel = listLabel;
+	public void setListWidgets(List<List<WWidget>> listWidgets) {
+		this.listWidgets = listWidgets;
 	}
 
 	@Override
@@ -63,16 +40,16 @@ public class WList extends WWidget {
 
 		double scaledOffsetY = scrollOffsetY * 2.5;
 
-		boolean hitTop = listWidgets.get(0).stream().anyMatch(widget ->
+		boolean hitTop = getListWidgets().get(0).stream().anyMatch(widget ->
 				widget.getPositionY() + scaledOffsetY > getPositionY()
 		);
 
-		boolean hitBottom = listWidgets.get(listWidgets.size() - 1).stream().anyMatch(widget ->
+		boolean hitBottom = getListWidgets().get(getListWidgets().size() - 1).stream().anyMatch(widget ->
 				widget.getPositionY() + widget.getSizeY() + scaledOffsetY <= getPositionY() + getSizeY() - 3
 		);
 
 		if (!hitTop && !hitBottom) {
-			listWidgets.forEach((widgets) -> {
+			getListWidgets().forEach((widgets) -> {
 				widgets.forEach((widget) -> {
 					widget.setPositionY(widget.getPositionY() + scaledOffsetY);
 					widget.setHidden(!(isWithinBounds(widget.getPositionX(), widget.getPositionY())));
@@ -84,7 +61,7 @@ public class WList extends WWidget {
 
 	@Override
 	public void onMouseClicked(double mouseX, double mouseY, int mouseButton) {
-		listWidgets.forEach((widgets) -> {
+		getListWidgets().forEach((widgets) -> {
 			widgets.forEach((widget) -> {
 				widget.onMouseClicked(mouseX, mouseY, mouseButton);
 			});
@@ -94,7 +71,7 @@ public class WList extends WWidget {
 
 	@Override
 	public void onMouseReleased(double mouseX, double mouseY, int mouseButton) {
-		listWidgets.forEach((widgets) -> {
+		getListWidgets().forEach((widgets) -> {
 			widgets.forEach((widget) -> {
 				widget.onMouseReleased(mouseX, mouseY, mouseButton);
 			});
@@ -104,7 +81,7 @@ public class WList extends WWidget {
 
 	@Override
 	public void onMouseDragged(double mouseX, double mouseY, int mouseButton, double dragOffsetX, double dragOffsetY) {
-		listWidgets.forEach((widgets) -> {
+		getListWidgets().forEach((widgets) -> {
 			widgets.forEach((widget) -> {
 				widget.onMouseDragged(mouseX, mouseY, mouseButton, dragOffsetX, dragOffsetY);
 			});
@@ -114,7 +91,7 @@ public class WList extends WWidget {
 
 	@Override
 	public void onMouseMoved(double mouseX, double mouseY) {
-		listWidgets.forEach((widgets) -> {
+		getListWidgets().forEach((widgets) -> {
 			widgets.forEach((widget) -> {
 				widget.onMouseMoved(mouseX, mouseY);
 			});
@@ -123,46 +100,60 @@ public class WList extends WWidget {
 	}
 
 	@Override
+	public void onKeyPressed(int keyPressed) {
+		getListWidgets().forEach((widgets) -> {
+			widgets.forEach((widget) -> {
+				widget.onKeyPressed(keyPressed);
+			});
+		});
+		super.onKeyPressed(keyPressed);
+	}
+
+	@Override
+	public void onKeyReleased(int keyReleased) {
+		getListWidgets().forEach((widgets) -> {
+			widgets.forEach((widget) -> {
+				widget.onKeyReleased(keyReleased);
+			});
+		});
+		super.onKeyReleased(keyReleased);
+	}
+
+	@Override
 	public boolean scanFocus(double mouseX, double mouseY) {
-		setFocus(mouseX > getPositionX()
-				&& mouseX < getPositionX() + getSizeX()
-				&& mouseY > getPositionY()
-				&& mouseY < getPositionY() + getSizeY());
-		return getFocus();
+		getListWidgets().forEach((widgets) -> {
+			widgets.forEach((widget) -> {
+				widget.scanFocus(mouseX, mouseY);
+			});
+		});
+		return super.scanFocus(mouseX, mouseY);
 	}
 
 	public void updatePositions() {
 		int y = 0;
-		for (int i = 0; i <= listWidgets.size() -1; ++i) {
+		for (int i = 0; i <= getListWidgets().size() - 1; ++i) {
 			int x = (int) getPositionX() + 2;
-			for (int k = 0; k <= listWidgets.get(i).size() - 1; ++k) {
-				listWidgets.get(i).get(k).setPositionX(x);
-				listWidgets.get(i).get(k).setPositionY(y);
-				x += listWidgets.get(i).get(k).getSizeX() + 2;
+			for (int k = 0; k <= getListWidgets().get(i).size() - 1; ++k) {
+				getListWidgets().get(i).get(k).setPositionX(x);
+				getListWidgets().get(i).get(k).setPositionY(y);
+				x += getListWidgets().get(i).get(k).getSizeX() + 2;
 			}
-			y += listWidgets.get(i).get(0).getSizeY() + 2;
+			y += getListWidgets().get(i).get(0).getSizeY() + 2;
 		}
 	}
 
-	public void updateSize() {
-		listPixelsY = 0;
-		listWidgets.forEach(widgets -> widgets.forEach(widget -> listPixelsY += widget.getSizeY() + 2));
-	}
-
 	public void updateHidden() {
-		listWidgets.forEach(widgets -> widgets.forEach(widget -> widget.setHidden(!isWithinBounds(widget.getPositionX(), widget.getPositionY()))));
+		getListWidgets().forEach(widgets -> widgets.forEach(widget -> widget.setHidden(!isWithinBounds(widget.getPositionX(), widget.getPositionY()))));
 	}
 
 	public void add(WWidget... widgetArray) {
-		listWidgets.add(Arrays.asList(widgetArray));
-		updateSize();
+		getListWidgets().add(Arrays.asList(widgetArray));
 		updateHidden();
 		updatePositions();
 	}
 
 	public void remove(WWidget... widgetArray) {
-		listWidgets.remove(Arrays.asList(widgetArray));
-		updateSize();
+		getListWidgets().remove(Arrays.asList(widgetArray));
 		updateHidden();
 		updatePositions();
 	}
@@ -171,14 +162,14 @@ public class WList extends WWidget {
 	public void drawWidget() {
 		BaseRenderer.drawPanel(getPositionX() - 4, getPositionY() - 4, getPositionZ() - 1, getSizeX() + 8, getSizeY() + 8, BaseRenderer.SHADOW_DEFAULT, BaseRenderer.PANEL_DEFAULT, BaseRenderer.HILIGHT_DEFUALT, BaseRenderer.OUTLINE_DEFAULT);
 
-		final int rawHeight = MinecraftClient.getInstance().window.getHeight();
-		final double scale = MinecraftClient.getInstance().window.getScaleFactor();
+		int rawHeight = MinecraftClient.getInstance().window.getHeight();
+		double scale = MinecraftClient.getInstance().window.getScaleFactor();
 
 		GL11.glEnable(GL11.GL_SCISSOR_TEST);
 
 		GL11.glScissor((int) (getPositionX() * scale), (int) (rawHeight - (getPositionY() * scale) - (getSizeY() * scale)), (int) (getSizeX() * scale), (int) (getSizeY() * scale));
 
-		listWidgets.forEach((widgets) -> {
+		getListWidgets().forEach((widgets) -> {
 			widgets.forEach(WWidget::drawWidget);
 		});
 

@@ -7,26 +7,25 @@ import org.lwjgl.glfw.GLFW;
 import java.util.Optional;
 
 public class WSlider extends WWidget {
-	public static final Identifier DEFAULT_PICKER = new Identifier("spinnery:textures/widget/slider_picker.png");
-	public static final Identifier DEFAULT_BAR = new Identifier("spinnery:textures/widget/slider_bar.png");
-
 	protected double limit = 0;
 	protected double position = 0;
 
 	protected String slidTotal;
 	protected int slidStringPosition;
 
-	public WSlider(int positionX, int positionY, int positionZ, double sizeX, double sizeY, int limit, Identifier texture, WPanel linkedWPanel) {
-		setPositionX(positionX);
-		setPositionY(positionY);
+	public WSlider(WAnchor anchor, int positionX, int positionY, int positionZ, double sizeX, double sizeY, int limit, WPanel linkedWPanel) {
+		setLinkedPanel(linkedWPanel);
+
+		setAnchor(anchor);
+
+		setPositionX(positionX + (getAnchor() == WAnchor.MC_ORIGIN ? getLinkedPanel().getPositionX() : 0));
+		setPositionY(positionY + (getAnchor() == WAnchor.MC_ORIGIN ? getLinkedPanel().getPositionY() : 0));
 		setPositionZ(positionZ);
 
 		setSizeX(sizeX);
 		setSizeY(sizeY);
 
 		setLimit(limit);
-
-		setLinkedPanel(linkedWPanel);
 	}
 
 	public double getLimit() {
@@ -37,14 +36,30 @@ public class WSlider extends WWidget {
 		this.limit = limit;
 	}
 
+	public void setSlidTotal(String slidTotal) {
+		this.slidTotal = slidTotal;
+	}
+
+	public String getSlidTotal() {
+		return slidTotal;
+	}
+
+	public void setSlidStringPosition(int slidStringPosition) {
+		this.slidStringPosition = slidStringPosition;
+	}
+
+	public int getSlidStringPosition() {
+		return slidStringPosition;
+	}
+
 	public double getPosition() {
 		return position;
 	}
 
 	public void setPosition(double position) {
 		this.position = position;
-		slidTotal = Integer.toString((int) Math.round(getPosition()));
-		slidStringPosition = (int) (getPositionX() + getSizeX() / 2 - BaseRenderer.getTextRenderer().getStringWidth(Integer.toString((int) getPosition())) / 2);
+		setSlidTotal(Integer.toString((int) Math.round(getPosition())));
+		setSlidStringPosition((int) (getPositionX() + getSizeX() / 2 - BaseRenderer.getTextRenderer().getStringWidth(Integer.toString((int) getPosition())) / 2));
 	}
 
 	public void updatePosition(double mouseX, double mouseY) {
@@ -94,15 +109,15 @@ public class WSlider extends WWidget {
 
 	@Override
 	public void drawWidget() {
-		BaseRenderer.getTextRenderer().draw(slidTotal, slidStringPosition, (int) (getPositionY() + getSizeY()) + 4, 16);
+		BaseRenderer.getTextRenderer().draw(getSlidTotal(), getSlidStringPosition(), (int) (getPositionY() + getSizeY()) + 4, 16);
 
-		BaseRenderer.drawRectangle(positionX, positionY, positionZ, sizeX, 1, 0xFF373737);
-		BaseRenderer.drawRectangle(positionX, positionY, positionZ, 1, sizeY, 0xFF373737);
-		BaseRenderer.drawRectangle(positionX + 1, positionY + 1, positionZ, (sizeX / limit) * position, sizeY - 1, 0xFF00C116);
-		BaseRenderer.drawRectangle(positionX + (sizeX / limit) * position, positionY + 1, positionZ, sizeX - (sizeX / limit) * position, sizeY - 1, 0xFF8b8b8b);
-		BaseRenderer.drawRectangle(positionX, positionY + sizeY, positionZ, sizeX, 1, 0xFFFFFFFF);
-		BaseRenderer.drawRectangle(positionX + sizeX, positionY, positionZ, 1, sizeY + 1, 0xFFFFFFFF);
+		BaseRenderer.drawRectangle(getPositionX(), getPositionY(), getPositionZ(), getSizeX(), 1, 0xFF373737);
+		BaseRenderer.drawRectangle(getPositionX(), getPositionY(), getPositionZ(), 1, getSizeY(), 0xFF373737);
+		BaseRenderer.drawRectangle(getPositionX() + 1, getPositionY() + 1, getPositionZ(), (getSizeX() / getLimit()) * getPosition(), getSizeY() - 1, 0xFF00C116);
+		BaseRenderer.drawRectangle(getPositionX() + (getSizeX() / getLimit()) * getPosition(), getPositionY() + 1, getPositionZ(), getSizeX() - (getSizeX() / getLimit()) * getPosition(), getSizeY() - 1, 0xFF8b8b8b);
+		BaseRenderer.drawRectangle(getPositionX(), getPositionY() + getSizeY(), getPositionZ(), getSizeX(), 1, 0xFFFFFFFF);
+		BaseRenderer.drawRectangle(getPositionX() + getSizeX(), getPositionY(), getPositionZ(), 1, getSizeY() + 1, 0xFFFFFFFF);
 
-		BaseRenderer.drawBeveledPanel(getPositionX() + (getSizeX() / getLimit()) * getPosition(), getPositionY() - 1, getPositionZ(), 8, sizeY + 3, 0xFFFFFFFF, 0xFF8b8b8b, 0xFF373737);
+		BaseRenderer.drawBeveledPanel(getPositionX() + (getSizeX() / getLimit()) * getPosition(), getPositionY() - 1, getPositionZ(), 8, getSizeY() + 3, 0xFFFFFFFF, 0xFF8b8b8b, 0xFF373737);
 	}
 }

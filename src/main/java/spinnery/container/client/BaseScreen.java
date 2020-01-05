@@ -1,21 +1,17 @@
 package spinnery.container.client;
 
-import net.minecraft.block.BarrelBlock;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.item.ItemStack;
 import org.lwjgl.glfw.GLFW;
 import spinnery.container.common.BaseContainer;
+import spinnery.container.common.widget.WList;
 import spinnery.container.common.widget.WSlot;
-import spinnery.container.common.widget.WSlotList;
 import net.minecraft.client.gui.screen.ingame.AbstractContainerScreen;
 import net.minecraft.container.Slot;
 import net.minecraft.container.SlotActionType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class BaseScreen<T extends BaseContainer> extends AbstractContainerScreen<T> {
 	double tooltipX = 0;
@@ -30,7 +26,31 @@ public class BaseScreen<T extends BaseContainer> extends AbstractContainerScreen
 	}
 
 	public T getLinkedContainer() {
-		return getContainer();
+		return super.container;
+	}
+
+	public void setDrawSlot(WSlot drawSlot) {
+		this.drawSlot = drawSlot;
+	}
+
+	public WSlot getDrawSlot() {
+		return drawSlot;
+	}
+
+	public void setTooltipX(double tooltipX) {
+		this.tooltipX = tooltipX;
+	}
+
+	public double getTooltipX() {
+		return tooltipX;
+	}
+
+	public void setTooltipY(double tooltipY) {
+		this.tooltipY = tooltipY;
+	}
+
+	public double getTooltipY() {
+		return tooltipY;
 	}
 
 	public void resizeAll() {
@@ -40,24 +60,14 @@ public class BaseScreen<T extends BaseContainer> extends AbstractContainerScreen
 		super.height = containerHeight;
 		super.left = (int) ((getLinkedContainer().getLinkedPanel().getPositionX()));
 		super.top = (int) ((getLinkedContainer().getLinkedPanel().getPositionY()));
-		getLinkedContainer().left = super.left;
-		getLinkedContainer().top = super.top;
+		getLinkedContainer().setPositionX(super.left);
+		getLinkedContainer().setPositionY(super.top);
 	}
 
 	@Override
 	public boolean isPauseScreen() {
 		return false;
 	}
-
-//	@Override
-//	protected boolean isPointWithinBounds(int slotX, int slotY, int defaultSizeX, int defaultSizeY, double mouseX, double mouseY) {
-//		return drawSlot != null
-//		    && drawSlot.isWithinBounds(mouseX, mouseY)
-//		    && slotX > drawSlot.internalSlot.xPosition - 8
-//		    && slotX < drawSlot.internalSlot.xPosition + 8
-//		    && slotY > drawSlot.internalSlot.yPosition - 8
-//		    && slotY < drawSlot.internalSlot.yPosition + 8;
-//	}
 
 	@Override
 	protected boolean isClickOutsideBounds(double mouseX, double mouseY, int int_1, int int_2, int int_3) {
@@ -105,7 +115,7 @@ public class BaseScreen<T extends BaseContainer> extends AbstractContainerScreen
 						((WSlot) widget).getStack().increment(quantityB);
 						stackA[0].decrement(quantityB);
 					}
-					((WSlot) widget).previewStack = ItemStack.EMPTY;
+					((WSlot) widget).setPreviewStack(ItemStack.EMPTY);
 				}
 			});
 			isMouseHovering = false;
@@ -149,11 +159,11 @@ public class BaseScreen<T extends BaseContainer> extends AbstractContainerScreen
 			getLinkedContainer().dragSlots.forEach(widgetA -> {
 				if ((widgetA.getStack().getCount() !=  widgetA.getStack().getMaxCount())) {
 					if (widgetA.getStack().isEmpty()) {
-						widgetA.previewStack = new ItemStack(stackA.getItem(), quantityA);
+						widgetA.setPreviewStack(new ItemStack(stackA.getItem(), quantityA));
 					} else if (widgetA.getStack().isItemEqualIgnoreDamage(stackA)) {
 						int quantityB = Math.min(quantityA, widgetA.getStack().getMaxCount() - widgetA.getStack().getCount());
-						widgetA.previewStack = widgetA.getStack().copy();
-						widgetA.previewStack.increment(quantityB);
+						widgetA.setPreviewStack(widgetA.getStack().copy());
+						widgetA.getPreviewStack().increment(quantityB);
 					}
 				}
 			});
@@ -173,25 +183,25 @@ public class BaseScreen<T extends BaseContainer> extends AbstractContainerScreen
 	}
 
 	public void renderTooltip() {
-		if (drawSlot != null && playerInventory.getCursorStack().isEmpty() && !drawSlot.getStack().isEmpty()) {
-			this.renderTooltip(drawSlot.getStack(), (int) tooltipX, (int) tooltipY);
+		if (getDrawSlot() != null && getLinkedContainer().getLinkedPlayerInventory().getCursorStack().isEmpty() && !getDrawSlot().getStack().isEmpty()) {
+			this.renderTooltip(getDrawSlot().getStack(), (int) getTooltipX(), (int) getTooltipY());
 		}
 	}
 
 	public void updateTooltip(double mouseX, double mouseY) {
-		drawSlot = null;
+		setDrawSlot(null);
 
-		getLinkedContainer().getLinkedPanel().getLinkedWidgets().forEach(widget -> {
-			if (widget.getFocus() && widget instanceof WSlot) {
-				drawSlot = ((WSlot) widget);
-				tooltipX = mouseX;
-				tooltipY = mouseY;
-			} else if (widget.getFocus() && widget instanceof WSlotList) {
-				((WSlotList) widget).listWidgets.forEach(slots -> slots.forEach(slot -> {
-					if (slot.isWithinBounds(mouseX, mouseY)) {
-						drawSlot = ((WSlot) slot);
-						tooltipX = mouseX;
-						tooltipY = mouseY;
+		getLinkedContainer().getLinkedPanel().getLinkedWidgets().forEach(widgetA -> {
+			if (widgetA.getFocus() && widgetA instanceof WSlot) {
+				setDrawSlot((WSlot) widgetA);
+				setTooltipX(mouseX);
+				setTooltipY(mouseY);
+			} else if (widgetA.getFocus() && widgetA instanceof WList) {
+				((WList) widgetA).listWidgets.forEach(widgets -> widgets.forEach(widgetB -> {
+					if (widgetB.isWithinBounds(mouseX, mouseY)) {
+						setDrawSlot((WSlot) widgetB);
+						setTooltipX(mouseX);
+						setTooltipY(mouseY);
 					}
 				}));
 			}
