@@ -31,22 +31,31 @@
 
 	},
 	"WVerticalSlider": {
-		"top_left": "0xff373737",
-		"bottom_right": "0xffffffff",
-		"foreground": "0xff00c116",
-		"background": "0xff8b8b8b"
+		"top_left_background": "0xff373737",
+		"bottom_right_background": "0xffffffff",
+		"background_on": "0xff00c116",
+		"background_off": "0xff8b8b8b",
+		"top_left_foreground": "0xffffffff",
+		"bottom_right_foreground": "0xff373737",
+		"foreground": "0xff6b6b6b"
 	},
 	"WHorizontalSlider": {
-		"top_left": "0xff373737",
-		"bottom_right": "0xffffffff",
-		"foreground": "0xff00c116",
-		"background": "0xff8b8b8b"
+		"top_left_background": "0xff373737",
+		"bottom_right_background": "0xffffffff",
+		"background_on": "0xff00c116",
+		"background_off": "0xff8b8b8b",
+		"top_left_foreground": "0xffffffff",
+		"bottom_right_foreground": "0xff373737",
+		"foreground": "0xff6b6b6b"
 	},
 	"WToggle": {
-		"top_left": "0xff373737",
-		"bottom_right": "0xffffffff",
-		"on": "0xff00c116",
-		"off": "0xff8b8b8b"
+		"top_left_background": "0xff373737",
+		"bottom_right_background": "0xffffffff",
+		"background_on": "0xff00c116",
+		"background_off": "0xff8b8b8b",
+		"top_left_foreground": "0xffffffff",
+		"bottom_right_foreground": "0xff373737",
+		"foreground": "0xff6b6b6b"
 	},
 	"WSlot": {
 		"top_left": "0xff373737",

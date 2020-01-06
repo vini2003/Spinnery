@@ -41,7 +41,7 @@ public class Theme {
 	private WHorizontalSlider.Theme WHorizontalSliderTheme;
 
 	@SerializedName("WToggle")
-	transient WToggle.Theme WToggleTheme;
+	private WToggle.Theme WToggleTheme;
 
 	@SerializedName("WSlot")
 	private WSlot.Theme WSlotTheme;

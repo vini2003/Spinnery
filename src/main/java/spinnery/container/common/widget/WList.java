@@ -69,7 +69,7 @@ public class WList extends WWidget {
 
 	@Override
 	public void onMouseScrolled(double mouseX, double mouseY, double scrollOffsetY) {
-		if (!isWithinBounds(mouseX, mouseY)) {
+		if (!isWithinBounds(mouseX, mouseY) || getListWidgets().size() == 0) {
 			return;
 		}
 

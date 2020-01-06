@@ -1,5 +1,9 @@
-# Glib
+# Spinnery, ahoy!
 
-Glib, a complete GUI library for your needs.
+Spinnery is a modern, feature-complete GUI library for Minecraft 1.14 and onwards, with a focus on making the GUI design and user experience significantly smoother and less nonsensic.
 
-Repository contains usage example, given this is not ready for actual usage yet.
+Currently, we have:
+
+- All sorts of widgets; and creating new ones is trivial;
+- JSON-driven themes, with support for custom ones and resource reloading;
+- That wraps up a GUI library, I'm afraid?

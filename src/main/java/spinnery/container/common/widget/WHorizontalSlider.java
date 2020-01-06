@@ -9,48 +9,53 @@ import java.util.Optional;
 
 public class WHorizontalSlider extends WWidget {
 	public class Theme {
-		@SerializedName("top_left")
-		private String topLeft;
+		@SerializedName("top_left_background")
+		private String topLeftBackground;
 
-		@SerializedName("bottom_right")
-		private String bottomRight;
+		@SerializedName("bottom_right_background")
+		private String bottomRightBackground;
 
-		@SerializedName("background")
-		private String background;
+		@SerializedName("background_on")
+		private String backgroundOn;
+
+		@SerializedName("background_off")
+		private String backgroundOff;
+
+		@SerializedName("top_left_foreground")
+		private String topLeftForeground;
+
+		@SerializedName("bottom_right_foreground")
+		private String bottomRightForeground;
 
 		@SerializedName("foreground")
 		private String foreground;
 
-		public String getTopLeft() {
-			return topLeft;
+		public String getTopLeftBackground() {
+			return topLeftBackground;
 		}
 
-		public void setTopLeft(String topLeft) {
-			this.topLeft = topLeft;
+		public String getBottomRightBackground() {
+			return bottomRightBackground;
 		}
 
-		public String getBottomRight() {
-			return bottomRight;
+		public String getBackgroundOn() {
+			return backgroundOn;
 		}
 
-		public void setBottomRight(String bottomRight) {
-			this.bottomRight = bottomRight;
+		public String getBackgroundOff() {
+			return backgroundOff;
 		}
 
-		public String getBackground() {
-			return background;
+		public String getTopLeftForeground() {
+			return topLeftForeground;
 		}
 
-		public void setBackground(String background) {
-			this.background = background;
+		public String getBottomRightForeground() {
+			return bottomRightForeground;
 		}
 
 		public String getForeground() {
 			return foreground;
-		}
-
-		public void setForeground(String foreground) {
-			this.foreground = foreground;
 		}
 	}
 
@@ -106,7 +111,7 @@ public class WHorizontalSlider extends WWidget {
 	public void setPosition(double position) {
 		this.position = position;
 		setSlidTotal(Integer.toString((int) Math.round(getPosition())));
-		setSlidStringPosition((int) (getPositionX() + getSizeX() / 2 - BaseRenderer.getTextRenderer().getStringWidth(Integer.toString((int) getPosition())) / 2));
+		setSlidStringPosition((int) (getPositionX() + (getSizeX() + 7) / 2 - BaseRenderer.getTextRenderer().getStringWidth(Integer.toString((int) getPosition())) / 2));
 	}
 
 	public void updatePosition(double mouseX, double mouseY) {
@@ -139,36 +144,20 @@ public class WHorizontalSlider extends WWidget {
 	}
 
 	@Override
-	public boolean isWithinBounds(double positionX, double positionY) {
-		return (positionX >= getPositionX()
-			 && positionX <= getPositionX() + getSizeX() - 7
-			 && positionY >= getPositionY()
-			 && positionY <= getPositionY() + getSizeY());
-	}
-
-	@Override
-	public boolean scanFocus(double mouseX, double mouseY) {
-		Optional<? extends WWidget> isBelowOtherWidget = linkedWPanel.getLinkedWidgets().stream().filter((widget) ->
-			   widget.getPositionZ() > getPositionZ() && widget.isWithinBounds(mouseX, mouseY)
-		).findAny();
-		return setFocus(!isBelowOtherWidget.isPresent() && isWithinBounds(mouseX, mouseY));
-	}
-
-	@Override
 	public void drawWidget() {
 		WHorizontalSlider.Theme drawTheme = ResourceRegistry.get(getTheme()).getWHorizontalSliderTheme();
 
 		BaseRenderer.getTextRenderer().draw(getSlidTotal(), getSlidStringPosition(), (int) (getPositionY() + getSizeY()) + 4, 16);
 
-		BaseRenderer.drawRectangle(getPositionX(), getPositionY(), getPositionZ(), getSizeX(), 1, drawTheme.getTopLeft());
-		BaseRenderer.drawRectangle(getPositionX(), getPositionY(), getPositionZ(), 1, getSizeY(), drawTheme.getTopLeft());
+		BaseRenderer.drawRectangle(getPositionX(), getPositionY(), getPositionZ(), (getSizeX() + 7), 1, drawTheme.getTopLeftBackground());
+		BaseRenderer.drawRectangle(getPositionX(), getPositionY(), getPositionZ(), 1, getSizeY(), drawTheme.getTopLeftBackground());
 
-		BaseRenderer.drawRectangle(getPositionX(), getPositionY() + getSizeY(), getPositionZ(), getSizeX(), 1, drawTheme.getBottomRight());
-		BaseRenderer.drawRectangle(getPositionX() + getSizeX(), getPositionY(), getPositionZ(), 1, getSizeY() + 1, drawTheme.getBottomRight());
+		BaseRenderer.drawRectangle(getPositionX(), getPositionY() + getSizeY(), getPositionZ(), (getSizeX() + 7), 1, drawTheme.getBottomRightBackground());
+		BaseRenderer.drawRectangle(getPositionX() + (getSizeX() + 7), getPositionY(), getPositionZ(), 1, getSizeY() + 1, drawTheme.getBottomRightBackground());
 
-		BaseRenderer.drawRectangle(getPositionX() + 1, getPositionY() + 1, getPositionZ(), (getSizeX() / getLimit()) * getPosition(), getSizeY() - 1, drawTheme.getForeground());
-		BaseRenderer.drawRectangle(getPositionX() + (getSizeX() / getLimit()) * getPosition(), getPositionY() + 1, getPositionZ(), getSizeX() - (getSizeX() / getLimit()) * getPosition(), getSizeY() - 1, drawTheme.getBackground());
+		BaseRenderer.drawRectangle(getPositionX() + 1, getPositionY() + 1, getPositionZ(), ((getSizeX() + 7) / getLimit()) * getPosition() - 1, getSizeY() - 1, drawTheme.getBackgroundOn());
+		BaseRenderer.drawRectangle(getPositionX() + ((getSizeX() + 7) / getLimit()) * getPosition(), getPositionY() + 1, getPositionZ(), (getSizeX() + 7) - ((getSizeX() + 7) / getLimit()) * getPosition(), getSizeY() - 1, drawTheme.getBackgroundOff());
 
-		BaseRenderer.drawBeveledPanel(getPositionX() + (getSizeX() / getLimit()) * getPosition(), getPositionY() - 1, getPositionZ(), 8, getSizeY() + 3, drawTheme.getTopLeft(), drawTheme.getBackground(), drawTheme.getBottomRight());
+		BaseRenderer.drawBeveledPanel(getPositionX() + (getSizeX() / getLimit()) * getPosition(), getPositionY() - 1, getPositionZ(), 8, getSizeY() + 3, drawTheme.getTopLeftForeground(), drawTheme.getForeground(), drawTheme.getBottomRightForeground());
 	}
 }

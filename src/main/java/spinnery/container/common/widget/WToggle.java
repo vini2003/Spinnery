@@ -6,35 +6,57 @@ import spinnery.registry.ResourceRegistry;
 
 public class WToggle extends WWidget {
 	public class Theme {
-		@SerializedName("top_left")
-		private String topleft;
+		@SerializedName("top_left_background")
+		private String topLeftBackground;
 
-		@SerializedName("bottom_right")
-		private String bottomright;
+		@SerializedName("bottom_right_background")
+		private String bottomRightBackground;
 
-		@SerializedName("on")
-		private String on;
+		@SerializedName("background_on")
+		private String backgroundOn;
 
-		@SerializedName("off")
-		private String off;
+		@SerializedName("background_off")
+		private String backgroundOff;
 
-		public String getTopleft() {
-			return topleft;
+		@SerializedName("top_left_foreground")
+		private String topLeftForeground;
+
+		@SerializedName("bottom_right_foreground")
+		private String bottomRightForeground;
+
+		@SerializedName("foreground")
+		private String foreground;
+
+		public String getTopLeftBackground() {
+			return topLeftBackground;
 		}
 
-		public String getBottomright() {
-			return bottomright;
+		public String getBottomRightBackground() {
+			return bottomRightBackground;
 		}
 
-		public String getOn() {
-			return on;
+		public String getBackgroundOn() {
+			return backgroundOn;
 		}
 
-		public String getOff() {
-			return off;
+		public String getBackgroundOff() {
+			return backgroundOff;
+		}
+
+		public String getTopLeftForeground() {
+			return topLeftForeground;
+		}
+
+		public String getBottomRightForeground() {
+			return bottomRightForeground;
+		}
+
+		public String getForeground() {
+			return foreground;
 		}
 	}
-	protected boolean state = false;
+
+	protected boolean toggleState = false;
 
 	public WToggle(WAnchor anchor, int positionX, int positionY, int positionZ, double sizeX, double sizeY, WPanel linkedWPanel) {
 		setLinkedPanel(linkedWPanel);
@@ -52,33 +74,35 @@ public class WToggle extends WWidget {
 	@Override
 	public void onMouseClicked(double mouseX, double mouseY, int mouseButton) {
 		if (scanFocus(mouseX, mouseY)) {
-			setState(!getState());
+			setToggleState(!getToggleState());
 		}
 		super.onMouseClicked(mouseX, mouseY, mouseButton);
 	}
 
-	public boolean getState() {
-		return state;
+	public boolean getToggleState() {
+		return toggleState;
 	}
 
-	public void setState(boolean state) {
-		this.state = state;
+	public void setToggleState(boolean toggleState) {
+		this.toggleState = toggleState;
 	}
 
 	@Override
 	public void drawWidget() {
 		WToggle.Theme drawTheme = ResourceRegistry.get(getTheme()).getWToggleTheme();
 
-		BaseRenderer.drawRectangle(getPositionX(), getPositionY(), getPositionZ(), getSizeX(), 1, drawTheme.getTopleft());
-		BaseRenderer.drawRectangle(getPositionX(), getPositionY(), getPositionZ(), 1, getSizeY(), drawTheme.getTopleft());
-		BaseRenderer.drawRectangle(getPositionX() + 1, getPositionY() + 1, getPositionZ(), getSizeX() - 1, getSizeY() - 1, getState() ? drawTheme.getOn() : drawTheme.getOff());
-		BaseRenderer.drawRectangle(getPositionX(), getPositionY() + getSizeY(), getPositionZ(), getSizeX(), 1, drawTheme.getBottomright());
-		BaseRenderer.drawRectangle(getPositionX() + getSizeX(), getPositionY(), getPositionZ(), 1, getSizeY() + 1, drawTheme.getBottomright());
+		BaseRenderer.drawRectangle(getPositionX(), getPositionY(), getPositionZ(), getSizeX(), 1, drawTheme.getTopLeftBackground());
+		BaseRenderer.drawRectangle(getPositionX(), getPositionY(), getPositionZ(), 1, getSizeY(), drawTheme.getTopLeftBackground());
 
-		if (getState()) {
-			BaseRenderer.drawBeveledPanel(getPositionX() + getSizeX() - 8, getPositionY() - 1, getPositionZ(), 8, getSizeY() + 3, drawTheme.getOn(), drawTheme.getOff(), drawTheme.getTopleft());
+		BaseRenderer.drawRectangle(getPositionX(), getPositionY() + getSizeY(), getPositionZ(), getSizeX(), 1, drawTheme.getBottomRightBackground());
+		BaseRenderer.drawRectangle(getPositionX() + getSizeX(), getPositionY(), getPositionZ(), 1, getSizeY() + 1, drawTheme.getBottomRightBackground());
+
+		BaseRenderer.drawRectangle(getPositionX() + 1, getPositionY() + 1, getPositionZ(), getSizeX() - 1, getSizeY() - 1, getToggleState() ? drawTheme.getBackgroundOn() : drawTheme.getBackgroundOff());
+
+		if (getToggleState()) {
+			BaseRenderer.drawBeveledPanel(getPositionX() + getSizeX() - 8, getPositionY() - 1, getPositionZ(), 8, getSizeY() + 3, drawTheme.getTopLeftForeground(), drawTheme.getForeground(), drawTheme.getBottomRightForeground());
 		} else {
-			BaseRenderer.drawBeveledPanel(getPositionX() + 1, getPositionY() - 1, getPositionZ(), 8, getSizeY() + 3, drawTheme.getOn(), drawTheme.getOff(), drawTheme.getTopleft());
+			BaseRenderer.drawBeveledPanel(getPositionX() + 1, getPositionY() - 1, getPositionZ(), 8, getSizeY() + 3, drawTheme.getTopLeftForeground(), drawTheme.getForeground(), drawTheme.getBottomRightForeground());
 		}
 	}
 }

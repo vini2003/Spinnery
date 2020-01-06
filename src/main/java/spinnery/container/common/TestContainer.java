@@ -9,6 +9,7 @@ import spinnery.container.common.widget.WHorizontalSlider;
 import spinnery.container.common.widget.WSlot;
 import spinnery.container.common.widget.WPanel;
 import net.minecraft.entity.player.PlayerInventory;
+import spinnery.container.common.widget.WToggle;
 import spinnery.container.common.widget.WVerticalSlider;
 
 
@@ -29,22 +30,28 @@ public class TestContainer extends BaseContainer {
 
 		//getLinkedPanel().add(new WToggle(WAnchor.MC_ORIGIN, 8, 24, 0, 18, 9, linkedWPanel));
 
-		WDropdown dropdown = new WDropdown(WAnchor.MC_ORIGIN, -30, 0, 0, 26, 12, 26, 76, linkedWPanel);
+		WDropdown dropdownA = new WDropdown(WAnchor.MC_ORIGIN, -30, 0, 0, 26, 12, 26, 76, linkedWPanel);
 
-		dropdown.add(new WSlot(WAnchor.MC_ORIGIN, 0, 0, 3, 18, 18, 1, linkedInventory, linkedWPanel));
-		dropdown.add(new WSlot(WAnchor.MC_ORIGIN, 0, 0, 3, 18, 18, 2, linkedInventory, linkedWPanel));
-		dropdown.add(new WSlot(WAnchor.MC_ORIGIN, 0, 0, 3, 18, 18, 3, linkedInventory, linkedWPanel));
+		WList listA = new WList(WAnchor.MC_ORIGIN, 174, 0, 0, 66, 170, linkedWPanel);
 
-		WList list = new WList(WAnchor.MC_ORIGIN, 174, 0, 0, 66, 76, linkedWPanel);
 
-		for (int i = 0; i < 27; ++i) {
-			list.add(new WSlot(WAnchor.MC_ORIGIN, 0, 0, 3, 18, 18, ++i, linkedInventory, linkedWPanel), new WSlot(WAnchor.MC_ORIGIN, 0, 0, 3, 18, 18, ++i, linkedInventory, linkedWPanel), new WSlot(WAnchor.MC_ORIGIN, 0, 0, 3, 18, 18, ++i, linkedInventory, linkedWPanel));
+		for (int i = 0; i < 54; ++i) {
+			WSlot slotA = new WSlot(WAnchor.MC_ORIGIN, 0, 0, 3, 18, 18, ++i, linkedInventory, linkedWPanel);
+			WSlot slotB = new WSlot(WAnchor.MC_ORIGIN, 0, 0, 3, 18, 18, ++i, linkedInventory, linkedWPanel);
+			WSlot slotC = new WSlot(WAnchor.MC_ORIGIN, 0, 0, 3, 18, 18, ++i, linkedInventory, linkedWPanel);
+
+			listA.add(slotA, slotB, slotC);
 		}
 
-		WVerticalSlider slider = new WVerticalSlider(WAnchor.MC_ORIGIN, 240, 8, 0, 18, 72, 38, linkedWPanel);
+		WVerticalSlider sliderB = new WVerticalSlider(WAnchor.MC_ORIGIN, 80, 24, 0, 18, 72, 38, linkedWPanel);
 
-		WHorizontalSlider horizontalSlider = new WHorizontalSlider(WAnchor.MC_ORIGIN, 220, 8, 0, 72, 18, 38, linkedWPanel);
+		WHorizontalSlider sliderA = new WHorizontalSlider(WAnchor.MC_ORIGIN, 30, 25, 0, 36, 18, 40, linkedWPanel);
 
-		getLinkedPanel().add(list);
+		WToggle toggleA = new WToggle(WAnchor.MC_ORIGIN, 30, 70, 0, 18, 9, linkedWPanel);
+		WToggle toggleB = new WToggle(WAnchor.MC_ORIGIN, 30, 90, 0, 36, 9, linkedWPanel);
+		WToggle toggleC = new WToggle(WAnchor.MC_ORIGIN, 30, 110, 0, 54, 9, linkedWPanel);
+
+
+		getLinkedPanel().add(listA, sliderA, sliderB, toggleA, toggleB, toggleC, dropdownA);
 	}
 }
