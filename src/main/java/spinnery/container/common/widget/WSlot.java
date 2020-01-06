@@ -1,30 +1,104 @@
 package spinnery.container.common.widget;
 
-import spinnery.container.client.BaseRenderer;
+import com.google.gson.annotations.SerializedName;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.container.Slot;
+import net.minecraft.client.render.GuiLighting;
+import net.minecraft.client.render.item.ItemRenderer;
+import net.minecraft.client.util.InputUtil;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
+import net.minecraft.item.ItemStack;
+import org.apache.logging.log4j.Level;
+import org.lwjgl.glfw.GLFW;
+import spinnery.SpinneryMod;
+import spinnery.container.client.BaseRenderer;
+import spinnery.registry.ResourceRegistry;
+
+import java.util.List;
 
 public class WSlot extends WWidget {
-	public Slot internalSlot;
+	public static class Theme {
+		@SerializedName("top_left")
+		private String topLeft;
 
-	public static void addSingle(WAlignment alignment, int positionX, int positionY, int positionZ, double sizeX, double sizeY, int slotNumber, Inventory linkedInventory, WPanel linkedWPanel) {
-		linkedWPanel.addWidget(new WSlot(alignment, positionX, positionY, positionZ, sizeX, sizeY, slotNumber, linkedInventory, linkedWPanel));
+		@SerializedName("bottom_right")
+		private String bottomRight;
+
+		@SerializedName("background_focused")
+		private String backgroundFocused;
+
+		@SerializedName("background_unfocused")
+		private String backgroundUnfocused;
+
+		public void setTopLeft(String topLeft){
+			this.topLeft = topLeft;
+		}
+
+		public String getTopLeft(){
+			return this.topLeft;
+		}
+
+		public void setBottomRight(String bottomRight){
+			this.bottomRight = bottomRight;
+		}
+
+		public String getBottomRight(){
+			return this.bottomRight;
+		}
+
+		public void setBackgroundFocused(String backgroundFocused){
+			this.backgroundFocused = backgroundFocused;
+		}
+
+		public String getBackgroundFocused(){
+			return this.backgroundFocused;
+		}
+
+		public void setBackgroundUnfocused(String backgroundUnfocused){
+			this.backgroundUnfocused = backgroundUnfocused;
+		}
+
+		public String getBackgroundUnfocused(){
+			return this.backgroundUnfocused;
+		}
 	}
 
-	public static void addArray(WAlignment alignment, int arrayX, int arrayY, int positionX, int positionY, int positionZ, double sizeX, double sizeY, int slotNumber, Inventory linkedInventory, WPanel linkedWPanel) {
+	private int slotNumber;
+	private ItemStack previewStack = ItemStack.EMPTY;
+	private Inventory linkedInventory;
+
+	public WSlot(WAnchor anchor, int positionX, int positionY, int positionZ, double sizeX, double sizeY, int slotNumber, Inventory linkedInventory, WPanel linkedWPanel) {
+		setLinkedPanel(linkedWPanel);
+
+		setAnchor(anchor);
+
+		setPositionX(positionX + (getAnchor() == WAnchor.MC_ORIGIN ? getLinkedPanel().getPositionX() : 0));
+		setPositionY(positionY + (getAnchor() == WAnchor.MC_ORIGIN ? getLinkedPanel().getPositionY() : 0));
+		setPositionZ(positionZ);
+
+		setSizeX(sizeX);
+		setSizeY(sizeY);
+
+		setSlotNumber(slotNumber);
+		setLinkedInventory(linkedInventory);
+	}
+
+	public static void addSingle(WAnchor anchor, int positionX, int positionY, int positionZ, double sizeX, double sizeY, int slotNumber, Inventory linkedInventory, WPanel linkedWPanel) {
+		linkedWPanel.add(new WSlot(anchor, positionX, positionY, positionZ, sizeX, sizeY, slotNumber, linkedInventory, linkedWPanel));
+	}
+
+	public static void addArray(WAnchor anchor, int arrayX, int arrayY, int positionX, int positionY, int positionZ, double sizeX, double sizeY, int slotNumber, Inventory linkedInventory, WPanel linkedWPanel) {
 		for (int y = 0; y < arrayY; ++y) {
 			for (int x = 0; x < arrayX; ++x) {
-				WSlot.addSingle(alignment, positionX + (int) (sizeX * x), positionY + (int) (sizeY * y), positionZ, sizeX, sizeY, slotNumber++, linkedInventory, linkedWPanel);
+				WSlot.addSingle(anchor, positionX + (int) (sizeX * x), positionY + (int) (sizeY * y), positionZ, sizeX, sizeY, slotNumber++, linkedInventory, linkedWPanel);
 			}
 		}
 	}
 
 	public static void addPlayerInventory(int positionZ, double sizeX, double sizeY, PlayerInventory linkedInventory, WPanel linkedWPanel) {
-		int slotN = 0;
+		int temporarySlotNumber = 0;
 		addArray(
-				WAlignment.PANEL_TOP_LEFT,
+				WAnchor.MC_ORIGIN,
 				9,
 				1,
 				4,
@@ -32,94 +106,191 @@ public class WSlot extends WWidget {
 				positionZ,
 				sizeX,
 				sizeY,
-				slotN,
+				temporarySlotNumber,
 				linkedInventory,
 				linkedWPanel);
-		slotN = 9;
+		temporarySlotNumber = 9;
 		addArray(
-				 WAlignment.PANEL_TOP_LEFT,
-				 9,
-				 3,
-				 4,
+				WAnchor.MC_ORIGIN,
+				9,
+				3,
+				4,
 				(int) linkedWPanel.getSizeY() - 72 - 6,
-				 positionZ,
-				 sizeX,
-				 sizeY,
-				 slotN,
-				 linkedInventory,
-				 linkedWPanel);
+				positionZ,
+				sizeX,
+				sizeY,
+				temporarySlotNumber,
+				linkedInventory,
+				linkedWPanel);
 	}
 
-	public WSlot(WAlignment alignment, int positionX, int positionY, int positionZ, double sizeX, double sizeY, int slotNumber, Inventory linkedInventory, WPanel linkedWPanel) {
-		setLinkedPanel(linkedWPanel);
+	public ItemStack getStack() {
+		try {
+			return getLinkedInventory().getInvStack(getSlotNumber());
+		} catch (ArrayIndexOutOfBoundsException exception) {
+			SpinneryMod.logger.log(Level.ERROR, "Cannot access slot " + getSlotNumber() + ", as it does exist in the inventory!");
+			return ItemStack.EMPTY;
+		}
+	}
 
-		setAlignment(alignment);
+	public void setStack(ItemStack stack) {
+		try {
+			getLinkedInventory().setInvStack(getSlotNumber(), stack);
+		} catch (ArrayIndexOutOfBoundsException exception) {
+			SpinneryMod.logger.log(Level.ERROR, "Cannot access slot " + getSlotNumber() + ", as it does exist in the inventory!");
+		}
+	}
 
-		getLinkedPanel().getLinkedContainer().addSlot(internalSlot = new Slot(linkedInventory, slotNumber, positionX + 1, positionY + 1));
+	public ItemStack getPreviewStack() {
+		return previewStack;
+	}
 
-		setPositionX(getPositionX() + positionX);
-		setPositionY(getPositionY() + positionY);
-		setPositionZ(positionZ);
+	public void setPreviewStack(ItemStack previewStack) {
+		this.previewStack = previewStack;
+	}
 
-		setSizeX(sizeX);
-		setSizeY(sizeY);
+	public int getSlotNumber() {
+		return slotNumber;
+	}
+
+	public void setSlotNumber(int slotNumber) {
+		this.slotNumber = slotNumber;
+	}
+
+	public Inventory getLinkedInventory() {
+		return linkedInventory;
+	}
+
+	public void setLinkedInventory(Inventory linkedInventory) {
+		this.linkedInventory = linkedInventory;
 	}
 
 	@Override
-	public void setPositionX(double positionX) {
-		if (!isHidden) {
-			super.setPositionX(positionX);
-			if (getSlot() != null) {
-				if (getPositionX() < MinecraftClient.getInstance().window.getScaledWidth() / 2f - linkedWPanel.getSizeX() / 2) {
-					getSlot().xPosition = (int) (-(Math.abs(positionX - (int) (MinecraftClient.getInstance().window.getScaledWidth() / 2 - linkedWPanel.getSizeX() / 2))) + 1);
-				} else {
-					getSlot().xPosition = (int) ((Math.abs(positionX - (int) (MinecraftClient.getInstance().window.getScaledWidth() / 2 - linkedWPanel.getSizeX() / 2))) + 1);
+	public void onMouseClicked(double mouseX, double mouseY, int mouseButton) {
+		super.onMouseClicked(mouseX, mouseY, mouseButton);
+		if (getFocus()) {
+			ItemStack stackA = getLinkedPanel().getLinkedContainer().getLinkedPlayerInventory().getCursorStack().copy();
+			ItemStack stackB = getStack().copy();
+
+			if (InputUtil.isKeyPressed(MinecraftClient.getInstance().window.getHandle(), GLFW.GLFW_KEY_LEFT_CONTROL)) {
+				if (mouseButton == 0) {
+					if (stackB.getCount() < stackB.getMaxCount()) {
+						for (WWidget widget : getLinkedPanel().getLinkedWidgets()) {
+							if (widget != this) {
+								if (widget instanceof WSlot) {
+									ItemStack stackC = ((WSlot) widget).getStack();
+
+									if (stackB.getCount() < stackB.getMaxCount() && stackB.getItem() == stackC.getItem()) {
+										int quantityA = stackB.getMaxCount() - stackB.getCount();
+
+										int quantityB = stackC.getCount() - quantityA;
+
+										if (quantityB <= 0) {
+											stackB.increment(stackC.getCount());
+											stackC.decrement(stackC.getCount());
+										} else {
+											stackB.increment(quantityA);
+											stackC.decrement(quantityA);
+										}
+									}
+								} else if (widget instanceof WList) {
+									for (List listWidget : ((WList) widget).getListWidgets()) {
+										for (Object internalWidget : listWidget) {
+											if (internalWidget instanceof WSlot) {
+												ItemStack stackC = ((WSlot) internalWidget).getStack();
+
+												if (stackB.getCount() < stackB.getMaxCount() && stackB.getItem() == stackC.getItem()) {
+													int quantityA = stackB.getMaxCount() - stackB.getCount();
+
+													int quantityB = stackC.getCount() - quantityA;
+
+													if (quantityB <= 0) {
+														stackB.increment(stackC.getCount());
+														stackC.decrement(stackC.getCount());
+													} else {
+														stackB.increment(quantityA);
+														stackC.decrement(quantityA);
+													}
+
+												} else {
+													setStack(stackB);
+													return;
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			} else {
+				if (mouseButton == 2) {
+					if (getLinkedPanel().getLinkedContainer().getLinkedPlayerInventory().player.isCreative()) {
+						getLinkedPanel().getLinkedContainer().getLinkedPlayerInventory().setCursorStack(new ItemStack(stackB.getItem(), stackB.getMaxCount()));
+						return;
+					}
+				} else if (stackA.isItemEqualIgnoreDamage(stackB)) {
+					if (mouseButton == 0) {
+						int quantityA = stackA.getCount(); // Cursor
+						int quantityB = stackB.getCount(); // WSlot
+
+						if (quantityA <= stackB.getMaxCount() - quantityB) {
+							stackB.increment(quantityA);
+							stackA.decrement(quantityA);
+						} else {
+							int quantityC = stackB.getMaxCount() - quantityB;
+
+							stackB.increment(quantityC);
+							stackA.decrement(quantityC);
+						}
+					} else if (mouseButton == 1) {
+						stackA.decrement(1);
+						stackB.increment(1);
+					}
+				} else if (!stackB.isEmpty() && stackA.isEmpty() && mouseButton == 1) {
+					int quantityA = (int) Math.ceil(stackB.getCount() / 2f);
+
+					stackA = new ItemStack(stackB.getItem(), quantityA);
+					stackB.decrement(quantityA);
+				} else if (stackB.isEmpty() && !stackA.isEmpty() && mouseButton == 1) {
+					stackB = new ItemStack(stackA.getItem(), 1);
+					stackA.decrement(1);
+				} else if (mouseButton == 0) {
+					if (stackA.isEmpty()) {
+						stackA = stackB.copy();
+						stackB = ItemStack.EMPTY;
+					} else {
+						stackB = stackA.copy();
+						stackA = ItemStack.EMPTY;
+					}
 				}
 			}
+			getLinkedPanel().getLinkedContainer().getLinkedPlayerInventory().setCursorStack(stackA);
+			setStack(stackB);
 		}
 	}
 
 	@Override
-	public void setPositionY(double positionY) {
-		if (!isHidden) {
-			super.setPositionY(positionY);
-			if (getSlot() != null) {
-				if (getPositionY() > MinecraftClient.getInstance().window.getScaledHeight() / 2f - linkedWPanel.getSizeX() / 2) {
-					getSlot().yPosition = (int) ((Math.abs(positionY + (MinecraftClient.getInstance().window.getScaledHeight() / 2f - linkedWPanel.getSizeY() / 2))) - 3);
-				} else {
-					getSlot().yPosition = (int) (-(Math.abs(positionY +(MinecraftClient.getInstance().window.getScaledHeight() / 2f - linkedWPanel.getSizeY() / 2))) + 1);
-				}
+	public void onMouseDragged(double mouseX, double mouseY, int mouseButton, double dragOffsetX, double dragOffsetY) {
+		if (isWithinBounds(mouseX, mouseY) && InputUtil.isKeyPressed(MinecraftClient.getInstance().window.getHandle(), GLFW.GLFW_KEY_LEFT_SHIFT)) {
+			if (!getLinkedPanel().getLinkedContainer().getDragSlots().contains(this)) {
+				getLinkedPanel().getLinkedContainer().getDragSlots().add(this);
 			}
 		}
-	}
-
-	@Override
-	public void setHidden(boolean isHidden) {
-		super.setHidden(isHidden);
-		if (isHidden) {
-			internalSlot.xPosition = Integer.MAX_VALUE;
-			internalSlot.yPosition = Integer.MAX_VALUE;
-		} else {
-			setPositionX(getPositionX());
-			setPositionY(getPositionY());
-		}
-	}
-
-	@Override
-	public boolean isFocused(double mouseX, double mouseY) {
-		return super.isFocused(mouseX, mouseY);
-	}
-
-	public Slot getSlot() {
-		return internalSlot;
-	}
-
-	public void setSlot(Slot internalSlot) {
-		this.internalSlot = internalSlot;
+		super.onMouseDragged(mouseX, mouseY, mouseButton, dragOffsetX, dragOffsetY);
 	}
 
 	@Override
 	public void drawWidget() {
-		BaseRenderer.drawSlot((int) getPositionX(), (int) getPositionY(), getPositionZ());
+		WSlot.Theme drawTheme = ResourceRegistry.get(getTheme()).getWSlotTheme();
+
+		BaseRenderer.drawBeveledPanel(getPositionX(), getPositionY(), getPositionZ(), getSizeX(), getSizeY(), drawTheme.getTopLeft(), getFocus() ? drawTheme.getBackgroundFocused() : drawTheme.getBackgroundUnfocused(), drawTheme.getBottomRight());
+
+		ItemRenderer itemRenderer = MinecraftClient.getInstance().getItemRenderer();
+		GuiLighting.enableForItems();
+		itemRenderer.renderGuiItem(getPreviewStack().isEmpty() ? getStack() : getPreviewStack(), 1 + (int) (getPositionX() + (getSizeX() - 18) / 2), 1 + (int) (getPositionY() + (getSizeY() - 18) / 2));
+		itemRenderer.renderGuiItemOverlay(MinecraftClient.getInstance().textRenderer, getPreviewStack().isEmpty() ? getStack() : getPreviewStack(), 1 + (int) (getPositionX() + (getSizeX() - 18) / 2), 1 + (int) (getPositionY() + (getSizeY() - 18) / 2));
+		GuiLighting.disable();
 	}
 }

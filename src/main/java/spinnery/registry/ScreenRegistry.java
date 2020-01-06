@@ -24,7 +24,7 @@ public class ScreenRegistry {
 
 	public static <I extends  Identifier> I register(I ID) {
 		ScreenProviderRegistry.INSTANCE.registerFactory(ID,
-				(syncId, identifier, player, buf) -> new BaseScreen(new LiteralText("test"), new TestContainer(syncId, null, player.inventory), player));
+				(syncId, identifier, player, buf) -> new BaseScreen(new LiteralText("test"), new TestContainer(syncId, buf.readBlockPos(), player.inventory), player));
 		return ID;
 	}
 }

@@ -1,5 +1,6 @@
 package spinnery.container.common;
 
+import spinnery.container.common.widget.WList;
 import spinnery.container.common.widget.WPanel;
 import net.minecraft.container.CraftingContainer;
 import net.minecraft.container.Slot;
@@ -14,25 +15,30 @@ import net.minecraft.recipe.RecipeFinder;
 import net.minecraft.recipe.RecipeInputProvider;
 import net.minecraft.util.Tickable;
 import net.minecraft.world.World;
+import spinnery.container.common.widget.WSlot;
+import spinnery.container.common.widget.WWidget;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class BaseContainer extends CraftingContainer<Inventory> implements Tickable {
 	protected PlayerInventory linkedPlayerInventory;
-	protected Inventory linkedInventory = new BasicInventory(9);
+	protected Inventory linkedInventory;
 	protected World linkedWorld;
 	protected WPanel linkedWPanel;
+	public List<WSlot> dragSlots = new ArrayList<>();
 
-	public int top = 0;
-	public int left = 0;
+	public int positionY = 0;
+	public int positionX = 0;
 
 	public Slot addSlot(Slot slot) {
 		return super.addSlot(slot);
 	}
 
-	public BaseContainer(int synchronizationID, Inventory linkedInventory, PlayerInventory linkedPlayerInventory) {
+	public BaseContainer(int synchronizationID, PlayerInventory newLinkedPlayerInventory) {
 		super(null, synchronizationID);
-		this.linkedInventory = linkedInventory;
-		this.linkedPlayerInventory = linkedPlayerInventory;
-		this.linkedWorld = linkedPlayerInventory.player.world;
+		setLinkedPlayerInventory(newLinkedPlayerInventory);
+		setLinkedWorld(newLinkedPlayerInventory.player.world);
 	}
 
 	/**
@@ -81,6 +87,38 @@ public class BaseContainer extends CraftingContainer<Inventory> implements Ticka
 	 */
 	public PlayerInventory getLinkedPlayerInventory() {
 		return linkedPlayerInventory;
+	}
+
+	public void setLinkedWorld(World linkedWorld) {
+		this.linkedWorld = linkedWorld;
+	}
+
+	public World getLinkedWorld() {
+		return linkedWorld;
+	}
+
+	public void setPositionX(int positionX) {
+		this.positionX = positionX;
+	}
+
+	public int getPositionX() {
+		return positionX;
+	}
+
+	public void setPositionY(int positionY) {
+		this.positionY = positionY;
+	}
+
+	public int getPositionY() {
+		return positionY;
+	}
+
+	public List<WSlot> getDragSlots() {
+		return dragSlots;
+	}
+
+	public void setDragSlots(List<WSlot> dragSlots) {
+		this.dragSlots = dragSlots;
 	}
 
 	/**
@@ -183,5 +221,14 @@ public class BaseContainer extends CraftingContainer<Inventory> implements Ticka
 	 */
 	@Override
 	public void tick() {
+		getLinkedPanel().getLinkedWidgets().forEach(widgetA -> {
+			if (!(widgetA instanceof WList)) {
+				widgetA.tick();
+			} else {
+				((WList) widgetA).getListWidgets().forEach(widgetB -> {
+					(widgetB).forEach(WWidget::tick);
+				});
+			}
+		});
 	}
 }

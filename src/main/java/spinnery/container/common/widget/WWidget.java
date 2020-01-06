@@ -10,10 +10,9 @@ import java.util.Optional;
 public class WWidget implements Tickable {
 	protected WPanel linkedWPanel;
 
-	protected WAlignment alignment;
+	protected WAnchor anchor;
 
-	protected double offsetX;
-	protected double offsetY;
+	private String theme = "default";
 
 	protected double positionX = 0;
 	protected double positionY = 0;
@@ -197,6 +196,14 @@ public class WWidget implements Tickable {
 		this.linkedRunnableOnDrawTooltip = linkedRunnableOnDrawTooltip;
 	}
 
+	public String getTheme() {
+		return theme;
+	}
+
+	public void setTheme(String theme) {
+		this.theme = theme;
+	}
+
 	public boolean getCanMove() {
 		return canMove;
 	}
@@ -253,22 +260,6 @@ public class WWidget implements Tickable {
 		this.positionZ = positionZ;
 	}
 
-	public double getOffsetX() {
-		return offsetX;
-	}
-
-	public void setOffsetX(double offsetX) {
-		this.offsetX = offsetX;
-	}
-
-	public double getOffsetY() {
-		return offsetY;
-	}
-
-	public void setOffsetY(double offsetY) {
-		this.offsetY = offsetY;
-	}
-
 	public boolean getFocus() {
 		return hasFocus;
 	}
@@ -293,13 +284,13 @@ public class WWidget implements Tickable {
 	}
 
 	public boolean isWithinBounds(double positionX, double positionY) {
-		return positionX > getPositionX() - 1
-			&& positionX < getPositionX() + getSizeX() - 2
-			&& positionY > getPositionY() - 1
-			&& positionY < getPositionY() + getSizeY() - 2;
+		return positionX > getPositionX()
+			&& positionX < getPositionX() + getSizeX()
+			&& positionY > getPositionY()
+			&& positionY < getPositionY() + getSizeY();
 	}
 
-	public boolean isFocused(double mouseX, double mouseY) {
+	public boolean scanFocus(double mouseX, double mouseY) {
 		if (isHidden) {
 			return false;
 		}
@@ -310,42 +301,18 @@ public class WWidget implements Tickable {
 		return getFocus();
 	}
 
-	public void alignWithContainerEdge() {
-		this.setPositionX(getPositionX() + MinecraftClient.getInstance().window.getScaledWidth() / 2D - getLinkedPanel().getSizeX() / 2);
-		this.setPositionY(getPositionY() + MinecraftClient.getInstance().window.getScaledHeight() / 2D - getLinkedPanel().getSizeY() / 2);
-	}
-
-	public void alignWithContainerCenter() {
-		setPositionX(getPositionX() + MinecraftClient.getInstance().window.getScaledWidth() / 2D - (this.getSizeX() / 2));
-	}
-
 	public void drawWidget() {
 		if (isHidden) {
 			return;
 		}
 	}
 
-	public void setAlignment(WAlignment alignment) {
-		this.alignment = alignment;
-		switch (alignment) {
-			case PANEL_TOP_LEFT:
-				setPositionX(MinecraftClient.getInstance().window.getScaledWidth() / 2f - getLinkedPanel().getSizeX() / 2f);
-				setPositionY(MinecraftClient.getInstance().window.getScaledHeight() / 2f - getLinkedPanel().getSizeY() / 2f);
-				break;
-			case SCREEN_TOP_LEFT:
-				setPositionX(0);
-				setPositionY(0);
-				break;
-			case SCREEN_MIDDLE:
-				setPositionX(MinecraftClient.getInstance().window.getScaledWidth() / 2f - getSizeX() / 2);
-				setPositionY(MinecraftClient.getInstance().window.getScaledHeight() / 2f - getSizeY() / 2);
-			case SCREEN_MIDDLE_HORIZONTAL:
-				setPositionX(MinecraftClient.getInstance().window.getScaledWidth() / 2f - getSizeX() / 2f);
-				break;
-			case SCREEN_MIDDLE_VERTICAL:
-				setPositionY(MinecraftClient.getInstance().window.getScaledHeight() / 2f - getSizeY() / 2f);
-				break;
-		}
+	public void setAnchor(WAnchor anchor) {
+		this.anchor = anchor;
+	}
+
+	public WAnchor getAnchor() {
+		return anchor;
 	}
 
 	@Override

@@ -1,5 +1,8 @@
 package spinnery.registry;
 
+import net.minecraft.block.InventoryProvider;
+import net.minecraft.util.math.BlockPos;
+import spinnery.block.TestBlock;
 import spinnery.container.common.BaseContainer;
 import spinnery.container.common.TestContainer;
 import net.fabricmc.fabric.api.client.screen.ScreenProviderRegistry;
@@ -20,8 +23,7 @@ public class ContainerRegistry {
 	public static final Identifier TEST_CONTAINER = register(new Identifier("test"));
 
 	public static <I extends  Identifier> I register(I ID) {
-		ContainerProviderRegistry.INSTANCE.registerFactory(ID,
-				(syncId, id, player, buf) -> new TestContainer(syncId, null, player.inventory));
+		ContainerProviderRegistry.INSTANCE.registerFactory(ID, (syncId, id, player, buffer) -> new TestContainer(syncId, buffer.readBlockPos(), player.inventory));
 		return ID;
 	}
 }

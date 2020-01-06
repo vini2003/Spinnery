@@ -1,14 +1,61 @@
 package spinnery.container.common.widget;
 
+import com.google.gson.annotations.SerializedName;
 import spinnery.container.client.BaseRenderer;
 import spinnery.container.common.BaseContainer;
-import net.minecraft.client.MinecraftClient;
 import org.lwjgl.glfw.GLFW;
+import spinnery.registry.ResourceRegistry;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class WPanel extends WWidget {
+	public class Theme {
+		@SerializedName("shadow")
+		private String shadow;
+
+		@SerializedName("background")
+		private String background;
+
+		@SerializedName("highlight")
+		private String highlight;
+
+		@SerializedName("outline")
+		private String outline;
+
+		public String getShadow() {
+			return shadow;
+		}
+
+		public void setShadow(String shadow) {
+			this.shadow = shadow;
+		}
+
+		public String getBackground() {
+			return background;
+		}
+
+		public void setBackground(String background) {
+			this.background = background;
+		}
+
+		public String getHighlight() {
+			return highlight;
+		}
+
+		public void setHighlight(String highlight) {
+			this.highlight = highlight;
+		}
+
+		public String getOutline() {
+			return outline;
+		}
+
+		public void setOutline(String outline) {
+			this.outline = outline;
+		}
+	}
+
 	protected BaseContainer linkedContainer;
 
 	protected List<WWidget> linkedWWidgets = new ArrayList<>();
@@ -53,7 +100,7 @@ public class WPanel extends WWidget {
 		this.linkedWWidgets = linkedWWidgets;
 	}
 
-	public void addWidget(WWidget... WWidgets) {
+	public void add(WWidget... WWidgets) {
 		for (WWidget WWidget : WWidgets) {
 			if (!this.getLinkedWidgets().contains(WWidget)) {
 				WWidget.setLinkedPanel(this);
@@ -62,17 +109,12 @@ public class WPanel extends WWidget {
 		}
 	}
 
-	public void removeWidget(WWidget... WWidgets) {
+	public void remove(WWidget... WWidgets) {
 		for (WWidget WWidget : WWidgets) {
 			if (this.getLinkedWidgets().contains(WWidget)) {
 				getLinkedWidgets().remove(WWidget);
 			}
 		}
-	}
-
-	public void alignWithContainerEdge() {
-		this.setPositionX(MinecraftClient.getInstance().window.getScaledWidth() / 2D - this.getSizeX() / 2);
-		this.setPositionY(MinecraftClient.getInstance().window.getScaledHeight() / 2D - this.getSizeY() / 2);
 	}
 
 	@Override
@@ -106,7 +148,9 @@ public class WPanel extends WWidget {
 	}
 
 	public void drawPanel() {
-		BaseRenderer.drawPanel(getPositionX(), getPositionY(), getPositionZ(), getSizeX(), getSizeY(), BaseRenderer.SHADOW_DEFAULT, BaseRenderer.PANEL_DEFAULT, BaseRenderer.HILIGHT_DEFUALT, BaseRenderer.OUTLINE_DEFAULT);
+		WPanel.Theme drawTheme = ResourceRegistry.get(getTheme()).getWPanelTheme();
+
+		BaseRenderer.drawPanel(getPositionX(), getPositionY(), getPositionZ(), getSizeX(), getSizeY(), drawTheme.getShadow(), drawTheme.getBackground(), drawTheme.getHighlight(), drawTheme.getOutline());
 	}
 
 	@Override
