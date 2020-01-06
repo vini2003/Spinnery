@@ -1,15 +1,50 @@
 package spinnery.container.common.widget;
 
+import com.google.gson.annotations.SerializedName;
 import net.minecraft.client.MinecraftClient;
+import org.apache.commons.lang3.mutable.MutableInt;
 import org.lwjgl.opengl.GL11;
 import spinnery.container.client.BaseRenderer;
+import spinnery.registry.ResourceRegistry;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class WList extends WWidget {
+	public class Theme {
+		@SerializedName("shadow")
+		private String shadow;
+
+		@SerializedName("background")
+		private String background;
+
+		@SerializedName("highlight")
+		private String highlight;
+
+		@SerializedName("outline")
+		private String outline;
+
+		public String getShadow() {
+			return shadow;
+		}
+
+		public String getBackground() {
+			return background;
+		}
+
+		public String getHighlight() {
+			return highlight;
+		}
+
+		public String getOutline() {
+			return outline;
+		}
+	}
+
 	public List<List<WWidget>> listWidgets = new ArrayList<>();
+	public MutableInt publicTotal = new MutableInt(0);
+	public MutableInt publicCurrent = new MutableInt(0);
 
 	public WList(WAnchor anchor, int positionX, int positionY, int positionZ, double sizeX, double sizeY, WPanel linkedWPanel) {
 		setLinkedPanel(linkedWPanel);
@@ -41,14 +76,14 @@ public class WList extends WWidget {
 		double scaledOffsetY = scrollOffsetY * 2.5;
 
 		boolean hitTop = getListWidgets().get(0).stream().anyMatch(widget ->
-				widget.getPositionY() + scaledOffsetY > getPositionY()
+				widget.getPositionY() + scaledOffsetY > getPositionY() + 4
 		);
 
 		boolean hitBottom = getListWidgets().get(getListWidgets().size() - 1).stream().anyMatch(widget ->
-				widget.getPositionY() + widget.getSizeY() + scaledOffsetY <= getPositionY() + getSizeY() - 3
+				widget.getPositionY() + widget.getSizeY() + scaledOffsetY <= getPositionY() + getSizeY() - 6
 		);
 
-		if (!hitTop && !hitBottom) {
+		if ((scaledOffsetY > 0 && !hitTop) || (scaledOffsetY < 0 && !hitBottom)) {
 			getListWidgets().forEach((widgets) -> {
 				widgets.forEach((widget) -> {
 					widget.setPositionY(widget.getPositionY() + scaledOffsetY);
@@ -126,13 +161,16 @@ public class WList extends WWidget {
 				widget.scanFocus(mouseX, mouseY);
 			});
 		});
-		return super.scanFocus(mouseX, mouseY);
+
+		setFocus(isWithinBounds(mouseX, mouseY) && !getListWidgets().stream().anyMatch((widgets) -> widgets.stream().anyMatch(WWidget::getFocus)));
+
+		return getFocus();
 	}
 
 	public void updatePositions() {
-		int y = 0;
+		int y = 4;
 		for (int i = 0; i <= getListWidgets().size() - 1; ++i) {
-			int x = (int) getPositionX() + 2;
+			int x = (int) getPositionX() + 4;
 			for (int k = 0; k <= getListWidgets().get(i).size() - 1; ++k) {
 				getListWidgets().get(i).get(k).setPositionX(x);
 				getListWidgets().get(i).get(k).setPositionY(y);
@@ -147,12 +185,14 @@ public class WList extends WWidget {
 	}
 
 	public void add(WWidget... widgetArray) {
+		publicTotal.add(widgetArray.length);
 		getListWidgets().add(Arrays.asList(widgetArray));
 		updateHidden();
 		updatePositions();
 	}
 
 	public void remove(WWidget... widgetArray) {
+		publicTotal.add(widgetArray.length);
 		getListWidgets().remove(Arrays.asList(widgetArray));
 		updateHidden();
 		updatePositions();
@@ -160,14 +200,16 @@ public class WList extends WWidget {
 
 	@Override
 	public void drawWidget() {
-		BaseRenderer.drawPanel(getPositionX() - 4, getPositionY() - 4, getPositionZ() - 1, getSizeX() + 8, getSizeY() + 8, BaseRenderer.SHADOW_DEFAULT, BaseRenderer.PANEL_DEFAULT, BaseRenderer.HILIGHT_DEFUALT, BaseRenderer.OUTLINE_DEFAULT);
+		WList.Theme drawTheme = ResourceRegistry.get(getTheme()).getWListTheme();
+
+		BaseRenderer.drawPanel(getPositionX(), getPositionY(), getPositionZ(), getSizeX(), getSizeY(), drawTheme.getShadow(), drawTheme.getBackground(), drawTheme.getHighlight(), drawTheme.getOutline());
 
 		int rawHeight = MinecraftClient.getInstance().window.getHeight();
 		double scale = MinecraftClient.getInstance().window.getScaleFactor();
 
 		GL11.glEnable(GL11.GL_SCISSOR_TEST);
 
-		GL11.glScissor((int) (getPositionX() * scale), (int) (rawHeight - (getPositionY() * scale) - (getSizeY() * scale)), (int) (getSizeX() * scale), (int) (getSizeY() * scale));
+		GL11.glScissor((int) (getPositionX() * scale), (int) (rawHeight - ((getPositionY() - 4) * scale) - (getSizeY() * scale)), (int) (getSizeX() * scale), (int) ((getSizeY() - 8) * scale));
 
 		getListWidgets().forEach((widgets) -> {
 			widgets.forEach(WWidget::drawWidget);

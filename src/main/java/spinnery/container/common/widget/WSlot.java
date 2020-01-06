@@ -1,5 +1,6 @@
 package spinnery.container.common.widget;
 
+import com.google.gson.annotations.SerializedName;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.GuiLighting;
 import net.minecraft.client.render.item.ItemRenderer;
@@ -11,10 +12,57 @@ import org.apache.logging.log4j.Level;
 import org.lwjgl.glfw.GLFW;
 import spinnery.SpinneryMod;
 import spinnery.container.client.BaseRenderer;
+import spinnery.registry.ResourceRegistry;
 
 import java.util.List;
 
 public class WSlot extends WWidget {
+	public static class Theme {
+		@SerializedName("top_left")
+		private String topLeft;
+
+		@SerializedName("bottom_right")
+		private String bottomRight;
+
+		@SerializedName("background_focused")
+		private String backgroundFocused;
+
+		@SerializedName("background_unfocused")
+		private String backgroundUnfocused;
+
+		public void setTopLeft(String topLeft){
+			this.topLeft = topLeft;
+		}
+
+		public String getTopLeft(){
+			return this.topLeft;
+		}
+
+		public void setBottomRight(String bottomRight){
+			this.bottomRight = bottomRight;
+		}
+
+		public String getBottomRight(){
+			return this.bottomRight;
+		}
+
+		public void setBackgroundFocused(String backgroundFocused){
+			this.backgroundFocused = backgroundFocused;
+		}
+
+		public String getBackgroundFocused(){
+			return this.backgroundFocused;
+		}
+
+		public void setBackgroundUnfocused(String backgroundUnfocused){
+			this.backgroundUnfocused = backgroundUnfocused;
+		}
+
+		public String getBackgroundUnfocused(){
+			return this.backgroundUnfocused;
+		}
+	}
+
 	private int slotNumber;
 	private ItemStack previewStack = ItemStack.EMPTY;
 	private Inventory linkedInventory;
@@ -151,18 +199,19 @@ public class WSlot extends WWidget {
 											if (internalWidget instanceof WSlot) {
 												ItemStack stackC = ((WSlot) internalWidget).getStack();
 
-												if (stackB.getCount() < stackB.getMaxCount() && stackB.isItemEqualIgnoreDamage(stackC)) {
+												if (stackB.getCount() < stackB.getMaxCount() && stackB.getItem() == stackC.getItem()) {
 													int quantityA = stackB.getMaxCount() - stackB.getCount();
 
-													stackC.decrement(quantityA);
+													int quantityB = stackC.getCount() - quantityA;
 
-													if (stackC.getCount() <= 0) {
+													if (quantityB <= 0) {
 														stackB.increment(stackC.getCount());
-														stackC = ItemStack.EMPTY;
+														stackC.decrement(stackC.getCount());
 													} else {
 														stackB.increment(quantityA);
 														stackC.decrement(quantityA);
 													}
+
 												} else {
 													setStack(stackB);
 													return;
@@ -234,7 +283,9 @@ public class WSlot extends WWidget {
 
 	@Override
 	public void drawWidget() {
-		BaseRenderer.drawBeveledPanel(getPositionX(), getPositionY(), getPositionZ(), getSizeX(), getSizeY(), 0xFF373737, getFocus() ? 0xFF00C116 : 0xFF8b8b8b, 0xFFFFFFFF);
+		WSlot.Theme drawTheme = ResourceRegistry.get(getTheme()).getWSlotTheme();
+
+		BaseRenderer.drawBeveledPanel(getPositionX(), getPositionY(), getPositionZ(), getSizeX(), getSizeY(), drawTheme.getTopLeft(), getFocus() ? drawTheme.getBackgroundFocused() : drawTheme.getBackgroundUnfocused(), drawTheme.getBottomRight());
 
 		ItemRenderer itemRenderer = MinecraftClient.getInstance().getItemRenderer();
 		GuiLighting.enableForItems();

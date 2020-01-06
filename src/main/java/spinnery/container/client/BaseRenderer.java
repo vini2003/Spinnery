@@ -13,16 +13,11 @@ import net.minecraft.util.Identifier;
 import org.lwjgl.opengl.GL11;
 
 public class BaseRenderer {
-	public static final int SHADOW_DEFAULT = 0xFF555555;
-	public static final int PANEL_DEFAULT = 0xFFC6C6C6;
-	public static final int HILIGHT_DEFUALT = 0xFFFFFFFF;
-	public static final int OUTLINE_DEFAULT = 0xFF000000;
-
-	public static void drawRectangle(double positionX, double positionY, double positionZ, double sizeX, double sizeY, int integerColor) {
-		float A = (integerColor >> 24 & 255) / 255.0F;
-		float R = (integerColor >> 16 & 255) / 255.0F;
-		float G = (integerColor >> 8 & 255) / 255.0F;
-		float B = (integerColor & 255) / 255.0F;
+	public static void drawRectangle(double positionX, double positionY, double positionZ, double sizeX, double sizeY, String ARGB) {
+		float A = Integer.decode("0x" + ARGB.substring(2, 4)) / 255f;
+		float R = Integer.decode("0x" + ARGB.substring(4, 6)) / 255f;
+		float G = Integer.decode("0x" + ARGB.substring(6, 8)) / 255f;
+		float B = Integer.decode("0x" + ARGB.substring(8, 10)) / 255f;
 
 		GlStateManager.enableBlend();
 		GlStateManager.disableTexture();
@@ -42,7 +37,7 @@ public class BaseRenderer {
 		GlStateManager.disableBlend();
 	}
 
-	public static void drawPanel(double positionX, double positionY, double positionZ, double sizeX, double sizeY, int shadow, int panel, int hilight, int outline) {
+	public static void drawPanel(double positionX, double positionY, double positionZ, double sizeX, double sizeY, String shadow, String panel, String hilight, String outline) {
 		drawRectangle(positionX + 3,         positionY + 3,          positionZ, sizeX - 6, sizeY - 6,  panel);
 
 		drawRectangle(positionX + 2,         positionY + 1,          positionZ, sizeX - 4, 2,          hilight);
@@ -64,7 +59,7 @@ public class BaseRenderer {
 		drawRectangle(positionX + sizeX - 2, positionY + sizeY - 2,  positionZ, 1,         1,          outline);
 	}
 
-	public static void drawBeveledPanel(double positionX, double positionY, double positionZ, double sizeX, double sizeY, int topleft, int panel, int bottomright) {
+	public static void drawBeveledPanel(double positionX, double positionY, double positionZ, double sizeX, double sizeY, String topleft, String panel, String bottomright) {
 		drawRectangle(positionX,             positionY,             positionZ, sizeX,     sizeY,     panel);
 		drawRectangle(positionX,             positionY,             positionZ, sizeX - 1, 1,         topleft);
 		drawRectangle(positionX,             positionY + 1,         positionZ, 1,         sizeY - 2, topleft);

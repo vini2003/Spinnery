@@ -1,16 +1,45 @@
 package spinnery.container.common.widget;
 
-import net.minecraft.util.Pair;
+import com.google.gson.annotations.SerializedName;
 import spinnery.container.client.BaseRenderer;
-import net.minecraft.client.MinecraftClient;
 import org.lwjgl.glfw.GLFW;
+import spinnery.registry.ResourceRegistry;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 public class WDropdown extends WWidget {
+	public class Theme {
+		@SerializedName("shadow")
+		private String shadow;
+
+		@SerializedName("background")
+		private String background;
+
+		@SerializedName("highlight")
+		private String highlight;
+
+		@SerializedName("outline")
+		private String outline;
+
+		public String getShadow() {
+			return shadow;
+		}
+
+		public String getBackground() {
+			return background;
+		}
+
+		public String getHighlight() {
+			return highlight;
+		}
+
+		public String getOutline() {
+			return outline;
+		}
+	}
+
 	public List<List<WWidget>> dropdownWidgets = new ArrayList<>();
 	int[][] sizes = new int[2][2];
 
@@ -170,7 +199,9 @@ public class WDropdown extends WWidget {
 
 	@Override
 	public void drawWidget() {
-		BaseRenderer.drawPanel(getPositionX(), getPositionY(), getPositionZ(), getSizeX(), getSizeY(), BaseRenderer.SHADOW_DEFAULT, BaseRenderer.PANEL_DEFAULT, BaseRenderer.HILIGHT_DEFUALT, BaseRenderer.OUTLINE_DEFAULT);
+		WDropdown.Theme drawTheme = ResourceRegistry.get(getTheme()).getWDropdownTheme();
+
+		BaseRenderer.drawPanel(getPositionX(), getPositionY(), getPositionZ(), getSizeX(), getSizeY(), drawTheme.getShadow(), drawTheme.getBackground(), drawTheme.getHighlight(), drawTheme.getOutline());
 		if (getState()) {
 			getDropdownWidgets().forEach(widgets -> widgets.forEach(WWidget::drawWidget));
 		}

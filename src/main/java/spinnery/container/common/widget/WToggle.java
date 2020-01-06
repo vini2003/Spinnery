@@ -1,8 +1,39 @@
 package spinnery.container.common.widget;
 
+import com.google.gson.annotations.SerializedName;
 import spinnery.container.client.BaseRenderer;
+import spinnery.registry.ResourceRegistry;
 
 public class WToggle extends WWidget {
+	public class Theme {
+		@SerializedName("top_left")
+		private String topleft;
+
+		@SerializedName("bottom_right")
+		private String bottomright;
+
+		@SerializedName("on")
+		private String on;
+
+		@SerializedName("off")
+		private String off;
+
+		public String getTopleft() {
+			return topleft;
+		}
+
+		public String getBottomright() {
+			return bottomright;
+		}
+
+		public String getOn() {
+			return on;
+		}
+
+		public String getOff() {
+			return off;
+		}
+	}
 	protected boolean state = false;
 
 	public WToggle(WAnchor anchor, int positionX, int positionY, int positionZ, double sizeX, double sizeY, WPanel linkedWPanel) {
@@ -36,16 +67,18 @@ public class WToggle extends WWidget {
 
 	@Override
 	public void drawWidget() {
-		BaseRenderer.drawRectangle(getPositionX(), getPositionY(), getPositionZ(), getSizeX(), 1, 0xFF373737);
-		BaseRenderer.drawRectangle(getPositionX(), getPositionY(), getPositionZ(), 1, getSizeY(), 0xFF373737);
-		BaseRenderer.drawRectangle(getPositionX() + 1, getPositionY() + 1, getPositionZ(), getSizeX() - 1, getSizeY() - 1, getState() ? 0xFF00C116 : 0xFF8b8b8b);
-		BaseRenderer.drawRectangle(getPositionX(), getPositionY() + getSizeY(), getPositionZ(), getSizeX(), 1, 0xFFFFFFFF);
-		BaseRenderer.drawRectangle(getPositionX() + getSizeX(), getPositionY(), getPositionZ(), 1, getSizeY() + 1, 0xFFFFFFFF);
+		WToggle.Theme drawTheme = ResourceRegistry.get(getTheme()).getWToggleTheme();
+
+		BaseRenderer.drawRectangle(getPositionX(), getPositionY(), getPositionZ(), getSizeX(), 1, drawTheme.getTopleft());
+		BaseRenderer.drawRectangle(getPositionX(), getPositionY(), getPositionZ(), 1, getSizeY(), drawTheme.getTopleft());
+		BaseRenderer.drawRectangle(getPositionX() + 1, getPositionY() + 1, getPositionZ(), getSizeX() - 1, getSizeY() - 1, getState() ? drawTheme.getOn() : drawTheme.getOff());
+		BaseRenderer.drawRectangle(getPositionX(), getPositionY() + getSizeY(), getPositionZ(), getSizeX(), 1, drawTheme.getBottomright());
+		BaseRenderer.drawRectangle(getPositionX() + getSizeX(), getPositionY(), getPositionZ(), 1, getSizeY() + 1, drawTheme.getBottomright());
 
 		if (getState()) {
-			BaseRenderer.drawBeveledPanel(getPositionX() + getSizeX() - 8, getPositionY() - 1, getPositionZ(), 8, getSizeY() + 3, 0xFFFFFFFF, 0xFF8b8b8b, 0xFF373737);
+			BaseRenderer.drawBeveledPanel(getPositionX() + getSizeX() - 8, getPositionY() - 1, getPositionZ(), 8, getSizeY() + 3, drawTheme.getOn(), drawTheme.getOff(), drawTheme.getTopleft());
 		} else {
-			BaseRenderer.drawBeveledPanel(getPositionX() + 1, getPositionY() - 1, getPositionZ(), 8, getSizeY() + 3, 0xFFFFFFFF, 0xFF8b8b8b, 0xFF373737);
+			BaseRenderer.drawBeveledPanel(getPositionX() + 1, getPositionY() - 1, getPositionZ(), 8, getSizeY() + 3, drawTheme.getOn(), drawTheme.getOff(), drawTheme.getTopleft());
 		}
 	}
 }

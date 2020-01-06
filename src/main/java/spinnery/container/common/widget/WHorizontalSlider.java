@@ -1,19 +1,66 @@
 package spinnery.container.common.widget;
 
+import com.google.gson.annotations.SerializedName;
 import spinnery.container.client.BaseRenderer;
-import net.minecraft.util.Identifier;
 import org.lwjgl.glfw.GLFW;
+import spinnery.registry.ResourceRegistry;
 
 import java.util.Optional;
 
-public class WSlider extends WWidget {
+public class WHorizontalSlider extends WWidget {
+	public class Theme {
+		@SerializedName("top_left")
+		private String topLeft;
+
+		@SerializedName("bottom_right")
+		private String bottomRight;
+
+		@SerializedName("background")
+		private String background;
+
+		@SerializedName("foreground")
+		private String foreground;
+
+		public String getTopLeft() {
+			return topLeft;
+		}
+
+		public void setTopLeft(String topLeft) {
+			this.topLeft = topLeft;
+		}
+
+		public String getBottomRight() {
+			return bottomRight;
+		}
+
+		public void setBottomRight(String bottomRight) {
+			this.bottomRight = bottomRight;
+		}
+
+		public String getBackground() {
+			return background;
+		}
+
+		public void setBackground(String background) {
+			this.background = background;
+		}
+
+		public String getForeground() {
+			return foreground;
+		}
+
+		public void setForeground(String foreground) {
+			this.foreground = foreground;
+		}
+	}
+
 	protected double limit = 0;
 	protected double position = 0;
 
 	protected String slidTotal;
 	protected int slidStringPosition;
 
-	public WSlider(WAnchor anchor, int positionX, int positionY, int positionZ, double sizeX, double sizeY, int limit, WPanel linkedWPanel) {
+	public WHorizontalSlider(WAnchor anchor, int positionX, int positionY, int positionZ, double sizeX, double sizeY, int limit, WPanel linkedWPanel) {
 		setLinkedPanel(linkedWPanel);
 
 		setAnchor(anchor);
@@ -109,15 +156,19 @@ public class WSlider extends WWidget {
 
 	@Override
 	public void drawWidget() {
+		WHorizontalSlider.Theme drawTheme = ResourceRegistry.get(getTheme()).getWHorizontalSliderTheme();
+
 		BaseRenderer.getTextRenderer().draw(getSlidTotal(), getSlidStringPosition(), (int) (getPositionY() + getSizeY()) + 4, 16);
 
-		BaseRenderer.drawRectangle(getPositionX(), getPositionY(), getPositionZ(), getSizeX(), 1, 0xFF373737);
-		BaseRenderer.drawRectangle(getPositionX(), getPositionY(), getPositionZ(), 1, getSizeY(), 0xFF373737);
-		BaseRenderer.drawRectangle(getPositionX() + 1, getPositionY() + 1, getPositionZ(), (getSizeX() / getLimit()) * getPosition(), getSizeY() - 1, 0xFF00C116);
-		BaseRenderer.drawRectangle(getPositionX() + (getSizeX() / getLimit()) * getPosition(), getPositionY() + 1, getPositionZ(), getSizeX() - (getSizeX() / getLimit()) * getPosition(), getSizeY() - 1, 0xFF8b8b8b);
-		BaseRenderer.drawRectangle(getPositionX(), getPositionY() + getSizeY(), getPositionZ(), getSizeX(), 1, 0xFFFFFFFF);
-		BaseRenderer.drawRectangle(getPositionX() + getSizeX(), getPositionY(), getPositionZ(), 1, getSizeY() + 1, 0xFFFFFFFF);
+		BaseRenderer.drawRectangle(getPositionX(), getPositionY(), getPositionZ(), getSizeX(), 1, drawTheme.getTopLeft());
+		BaseRenderer.drawRectangle(getPositionX(), getPositionY(), getPositionZ(), 1, getSizeY(), drawTheme.getTopLeft());
 
-		BaseRenderer.drawBeveledPanel(getPositionX() + (getSizeX() / getLimit()) * getPosition(), getPositionY() - 1, getPositionZ(), 8, getSizeY() + 3, 0xFFFFFFFF, 0xFF8b8b8b, 0xFF373737);
+		BaseRenderer.drawRectangle(getPositionX(), getPositionY() + getSizeY(), getPositionZ(), getSizeX(), 1, drawTheme.getBottomRight());
+		BaseRenderer.drawRectangle(getPositionX() + getSizeX(), getPositionY(), getPositionZ(), 1, getSizeY() + 1, drawTheme.getBottomRight());
+
+		BaseRenderer.drawRectangle(getPositionX() + 1, getPositionY() + 1, getPositionZ(), (getSizeX() / getLimit()) * getPosition(), getSizeY() - 1, drawTheme.getForeground());
+		BaseRenderer.drawRectangle(getPositionX() + (getSizeX() / getLimit()) * getPosition(), getPositionY() + 1, getPositionZ(), getSizeX() - (getSizeX() / getLimit()) * getPosition(), getSizeY() - 1, drawTheme.getBackground());
+
+		BaseRenderer.drawBeveledPanel(getPositionX() + (getSizeX() / getLimit()) * getPosition(), getPositionY() - 1, getPositionZ(), 8, getSizeY() + 3, drawTheme.getTopLeft(), drawTheme.getBackground(), drawTheme.getBottomRight());
 	}
 }

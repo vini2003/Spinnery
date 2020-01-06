@@ -1,0 +1,57 @@
+{
+	"Identifier": "default",
+	"WPanel": {
+		"shadow": "0xff555555",
+		"background": "0xffc6c6c6",
+		"highlight": "0xffffffff",
+		"outline": "0xff000000"
+	},
+	"WList": {
+		"shadow": "0xff555555",
+		"background": "0xffc6c6c6",
+		"highlight": "0xffffffff",
+		"outline": "0xff000000"
+	},
+	"WDropdown": {
+		"shadow": "0xff555555",
+		"background": "0xffc6c6c6",
+		"highlight": "0xffffffff",
+		"outline": "0xff000000"
+	},
+	"WStaticImage": {
+
+	},
+	"WDynamicImage": {
+
+	},
+	"WStaticText": {
+
+	},
+	"WDynamicText": {
+
+	},
+	"WVerticalSlider": {
+		"top_left": "0xff373737",
+		"bottom_right": "0xffffffff",
+		"foreground": "0xff00c116",
+		"background": "0xff8b8b8b"
+	},
+	"WHorizontalSlider": {
+		"top_left": "0xff373737",
+		"bottom_right": "0xffffffff",
+		"foreground": "0xff00c116",
+		"background": "0xff8b8b8b"
+	},
+	"WToggle": {
+		"top_left": "0xff373737",
+		"bottom_right": "0xffffffff",
+		"on": "0xff00c116",
+		"off": "0xff8b8b8b"
+	},
+	"WSlot": {
+		"top_left": "0xff373737",
+		"bottom_right": "0xffffffff",
+		"background_focused": "0xff00c116",
+		"background_unfocused": "0xff8b8b8b"
+	}
+}

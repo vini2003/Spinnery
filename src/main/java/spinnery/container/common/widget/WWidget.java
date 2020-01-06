@@ -12,6 +12,8 @@ public class WWidget implements Tickable {
 
 	protected WAnchor anchor;
 
+	private String theme = "default";
+
 	protected double positionX = 0;
 	protected double positionY = 0;
 	protected double positionZ = 0;
@@ -192,6 +194,14 @@ public class WWidget implements Tickable {
 
 	public void setOnDrawTooltip(Runnable linkedRunnableOnDrawTooltip) {
 		this.linkedRunnableOnDrawTooltip = linkedRunnableOnDrawTooltip;
+	}
+
+	public String getTheme() {
+		return theme;
+	}
+
+	public void setTheme(String theme) {
+		this.theme = theme;
 	}
 
 	public boolean getCanMove() {
