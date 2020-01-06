@@ -17,14 +17,22 @@ public class WPanel extends WWidget {
 		setLinkedContainer(linkedContainer);
 	}
 
-	public WPanel(int positionX, int positionY, int positionZ, double sizeX, double sizeY) {
-		setPosition(positionX, positionY, positionZ);
-		setSize(sizeX, sizeY);
+	public WPanel(int positionX, int positionY, int positionZ, int sizeX, int sizeY) {
+		setPositionX(positionX);
+		setPositionY(positionY);
+		setPositionZ(positionZ);
+
+		setSizeX(sizeX);
+		setSizeY(sizeY);
 	}
 
-	public WPanel(BaseContainer linkedContainer, int positionX, int positionY, int positionZ,
-				  double sizeX, double sizeY) {
-		this(positionX, positionY, positionZ, sizeX, sizeY);
+	public WPanel(int positionX, int positionY, int positionZ, int sizeX, int sizeY, BaseContainer linkedContainer) {
+		setPositionX(positionX);
+		setPositionY(positionY);
+		setPositionZ(positionZ);
+
+		setSizeX(sizeX);
+		setSizeY(sizeY);
 
 		setLinkedContainer(linkedContainer);
 	}
@@ -41,7 +49,7 @@ public class WPanel extends WWidget {
 		return linkedWWidgets;
 	}
 
-	public void setLinkedWidgets(List<WWidget> linkedWWidgets) {
+	public void setLinkedWWidgets(List<WWidget> linkedWWidgets) {
 		this.linkedWWidgets = linkedWWidgets;
 	}
 
@@ -90,7 +98,7 @@ public class WPanel extends WWidget {
 
 	@Override
 	public void onMouseDragged(double mouseX, double mouseY, int mouseButton, double dragOffsetX, double dragOffsetY) {
-		if (isMovable() && getFocus() && mouseButton == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
+		if (getCanMove() && getFocus() && mouseButton == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
 			setPositionX(getPositionX() + dragOffsetX);
 			setPositionY(getPositionY() + dragOffsetY);
 		}
