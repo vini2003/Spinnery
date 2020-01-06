@@ -14,24 +14,17 @@ public class WSlider extends WWidget {
 	protected double limit = 0;
 	protected double position = 0;
 
-	protected Identifier barTexture;
-	protected Identifier pickerTexture;
+	public WSlider(int positionX, int positionY, int positionZ, double sizeX, double sizeY, int limit, Identifier texture, WPanel linkedWPanel) {
+		setPositionX(positionX);
+		setPositionY(positionY);
+		setPositionZ(positionZ);
 
-	public WSlider(WPanel linkedWPanel, int positionX, int positionY, int positionZ,
-					 double sizeX, double sizeY, int limit) {
-		this(linkedWPanel, positionX, positionY, positionZ, sizeX, sizeY, limit, DEFAULT_PICKER, DEFAULT_BAR);
-	}
-
-	public WSlider(WPanel linkedWPanel, int positionX, int positionY, int positionZ, double sizeX, double sizeY, int limit, Identifier barTexture, Identifier pickerTexture) {
-		setPosition(positionX, positionY, positionZ);
-		setSize(sizeX, sizeY);
+		setSizeX(sizeX);
+		setSizeY(sizeY);
 
 		setLimit(limit);
 
 		setLinkedPanel(linkedWPanel);
-
-		setBarTexture(barTexture);
-		setPickerTexture(pickerTexture);
 	}
 
 	public double getLimit() {
@@ -49,14 +42,6 @@ public class WSlider extends WWidget {
 	public void setPosition(double position) {
 		this.position = position;
 	}
-
-	public Identifier getBarTexture() { return this.barTexture; }
-
-	public void setBarTexture(Identifier tex) { this.barTexture = tex; }
-
-	public Identifier getPickerTexture() { return this.pickerTexture; }
-
-	public void setPickerTexture(Identifier tex) { this.pickerTexture = tex; }
 
 	public void updatePosition(double mouseX, double mouseY) {
 		if (isFocused(mouseX, mouseY)) {
@@ -107,7 +92,7 @@ public class WSlider extends WWidget {
 	public void drawWidget() {
 		MinecraftClient.getInstance().textRenderer.draw(Integer.toString((int) Math.round(getPosition())), (int) (getPositionX() + getSizeX() / 2 - BaseRenderer.textRenderer.getStringWidth(Integer.toString((int) getPosition())) / 2), (int) (getPositionY() + getSizeY()) + 4, 16);
 
-		BaseRenderer.drawImage(getPositionX(), getPositionY(), getPositionZ(), 100, 10, getBarTexture());
-		BaseRenderer.drawImage(getPositionX() + (getSizeX() / getLimit()) * getPosition(), getPositionY() - 1, getPositionZ(), 7, 12, getPickerTexture());
+		BaseRenderer.drawImage(getPositionX(), getPositionY(), getPositionZ(), 100, 10, DEFAULT_BAR);
+		BaseRenderer.drawImage(getPositionX() + (getSizeX() / getLimit()) * getPosition(), getPositionY() - 1, getPositionZ(), 7, 12, DEFAULT_PICKER);
 	}
 }

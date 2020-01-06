@@ -1,6 +1,5 @@
 package spinnery.container.common;
 
-import net.minecraft.text.LiteralText;
 import spinnery.container.common.widget.WAlignment;
 import spinnery.container.common.widget.WDropdown;
 import spinnery.container.common.widget.WDynamicImage;
@@ -26,7 +25,7 @@ public class TestContainer extends BaseContainer {
 		super(synchronizationID, linkedInventory, linkedPlayerInventory);
 		linkedInventory = new BasicInventory(9);
 
-		setLinkedPanel(new WPanel(this, 0, 0, -10, 150 + 32, 178 + 32));
+		setLinkedPanel(new WPanel(0, 0, -10, 150 + 32, 178 + 32, this));
 
 		getLinkedPanel().setSizeX(172);
 		getLinkedPanel().setSizeY(250);
@@ -35,16 +34,12 @@ public class TestContainer extends BaseContainer {
 
 		getLinkedPanel().alignWithContainerEdge();
 
-		WStaticImage exampleWStaticImage = new WStaticImage(linkedWPanel, 0, 20, 137, 236.8, 292, new Identifier("spinnery:textures/widget/cattegirl.png"));
+		WStaticImage exampleWStaticImage = new WStaticImage(0, 20, 137, 236.8, 292, new Identifier("spinnery:textures/widget/cattegirl.png"), linkedWPanel);
 
-		WSlider exampleWSlider = new WSlider(linkedWPanel, 0, 110, -5, 100, 12, 16);
+		WSlider exampleWSlider = new WSlider(0, 110, -5, 100, 12, 16, new Identifier("spinnery:textures/widget/test.png"), linkedWPanel);
 
-		WDropdown exampleWDropdown1 = new WDropdown(linkedWPanel, 331, 143, -3, 96, 18,
-				new LiteralText("OwO who dis?")
-		);
-		WDropdown exampleWDropdown2 = new WDropdown(linkedWPanel, 331, 22, -3, 96, 18,
-				new LiteralText("Whoms't ze fuck?")
-		);
+		WDropdown exampleWDropdown1 = new WDropdown(331, 143, -3, 96, 18, "OwO who dis?", linkedWPanel);
+		WDropdown exampleWDropdown2 = new WDropdown(331, 22, -3, 96, 18, "Whoms't ze fuck?", linkedWPanel);
 
 		//WSlot exampleSlot1 = new WSlot(54, 140, -3, 18, 18, 0, linkedInventory, linkedWPanel);
 		//WSlot exampleSlot2 = new WSlot(72, 140, -3, 18, 18, 1, linkedInventory, linkedWPanel);
@@ -52,17 +47,17 @@ public class TestContainer extends BaseContainer {
 
 		exampleWDropdown2.addWidget(exampleWStaticImage);
 
-		WDynamicImage exampleWDynamicImage = new WDynamicImage(linkedWPanel, 0, 161, 170, 10, 10,
+		WDynamicImage exampleWDynamicImage = new WDynamicImage(0, 161, 170, 10, 10, linkedWPanel,
 
-			new Identifier("spinnery:textures/widget/0.png"),
-			new Identifier("spinnery:textures/widget/1.png"),
-			new Identifier("spinnery:textures/widget/2.png"),
-			new Identifier("spinnery:textures/widget/3.png"),
-			new Identifier("spinnery:textures/widget/4.png"),
-			new Identifier("spinnery:textures/widget/5.png"),
-			new Identifier("spinnery:textures/widget/6.png"),
-			new Identifier("spinnery:textures/widget/7.png")
-		);
+
+		new Identifier("spinnery:textures/widget/0.png"),
+		new Identifier("spinnery:textures/widget/1.png"),
+		new Identifier("spinnery:textures/widget/2.png"),
+		new Identifier("spinnery:textures/widget/3.png"),
+		new Identifier("spinnery:textures/widget/4.png"),
+		new Identifier("spinnery:textures/widget/5.png"),
+		new Identifier("spinnery:textures/widget/6.png"),
+		new Identifier("spinnery:textures/widget/7.png"));
 
 		exampleWDropdown1.setMovable(true);
 		exampleWDropdown2.setMovable(true);
@@ -94,9 +89,9 @@ public class TestContainer extends BaseContainer {
 		exampleWSlider.alignWithContainerCenter();
 		exampleWDynamicImage.alignWithContainerCenter();
 
-		WSlot.addPlayerInventory(linkedWPanel, 0, 18, 18, linkedPlayerInventory);
+		WSlot.addPlayerInventory(0, 18, 18, linkedPlayerInventory, linkedWPanel);
 
-		WList exampleList = new WList(linkedWPanel,154, 10, -5, 96, 96, 3, 5, 18, 18);
+		WList exampleList = new WList(154, 10, -5, 96, 96, 3, 5, 18, 18, linkedWPanel);
 		//exampleList.addWidget(new WStaticImage(0, 0, 137, 18, 18, new Identifier("spinnery:textures/widget/cattegirl.png"), linkedWPanel), new WStaticImage(0, 0, 137, 18, 18, new Identifier("spinnery:textures/widget/cattegirl.png"), linkedWPanel), new WStaticImage(0, 0, 137, 18, 18, new Identifier("spinnery:textures/widget/cattegirl.png"), linkedWPanel));
 
 		for (int i = 0; i < 9; ++i) {
@@ -111,7 +106,7 @@ public class TestContainer extends BaseContainer {
 
 		//exampleList.addWidget(new WStaticImage(0, 0, 137, 18, 18, new Identifier("spinnery:textures/widget/catgirl.png"), linkedWPanel), new WStaticImage(0, 0, 137, 18, 18, new Identifier("spinnery:textures/widget/catgirl.png"), linkedWPanel), new WStaticImage(0, 0, 137, 18, 18, new Identifier("spinnery:textures/widget/catgirl.png"), linkedWPanel));
 
-		WSlot exampleDumpsterFire = new WSlot(linkedWPanel, WAlignment.SCREEN_MIDDLE, 0, 0, -3, 18, 18, 0,	linkedInventory);
+		WSlot exampleDumpsterFire = new WSlot(WAlignment.SCREEN_MIDDLE, 0, 0, -3, 18, 18, 0, linkedInventory, linkedWPanel);
 
 		//getLinkedPanel().addWidget(exampleDumpsterFire);
 

@@ -40,17 +40,17 @@ public class BaseScreen<T extends BaseContainer> extends AbstractContainerScreen
 		if (focusedWidget.isPresent()) {
 			List<WWidget> checkWidgets = new ArrayList<>();
 			if (focusedWidget.get() instanceof WList) {
-				List<List<WWidget>> verticalArray = (((WList) focusedWidget.get()).getListWidgets());
+				List<List<WWidget>> verticalArray = (((WList) focusedWidget.get()).listWidgets);
 				verticalArray.forEach(checkWidgets::addAll);
 			}
 			if (focusedWidget.get() instanceof WDropdown) {
 				checkWidgets.addAll(((WDropdown) focusedWidget.get()).getDropdownPanel().getLinkedWidgets());
 			}
 			return checkWidgets.stream().anyMatch(widget -> widget instanceof WSlot
-										  && slotX > ((WSlot) widget).getSlot().xPosition - 8
-										  && slotX < ((WSlot) widget).getSlot().xPosition + 8
-										  && slotY > ((WSlot) widget).getSlot().xPosition - 8
-										  && slotY < ((WSlot) widget).getSlot().xPosition + 8);
+										  && slotX > ((WSlot) widget).internalSlot.xPosition - 8
+										  && slotX < ((WSlot) widget).internalSlot.xPosition + 8
+										  && slotY > ((WSlot) widget).internalSlot.xPosition - 8
+										  && slotY < ((WSlot) widget).internalSlot.xPosition + 8);
 
 		} else {
 			return false;

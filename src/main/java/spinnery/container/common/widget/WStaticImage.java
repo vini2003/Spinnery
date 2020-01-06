@@ -3,15 +3,16 @@ package spinnery.container.common.widget;
 import spinnery.container.client.BaseRenderer;
 import net.minecraft.util.Identifier;
 
-/**
- * Represents a static (i.e. unchanging) image widget.
- */
 public class WStaticImage extends WWidget {
 	protected Identifier texture;
 
-	public WStaticImage(WPanel linkedWPanel, double positionX, double positionY, double positionZ, double sizeX, double sizeY, Identifier texture) {
-		setPosition(positionX, positionY, positionZ);
-		setSize(sizeX, sizeY);
+	public WStaticImage(double positionX, double positionY, double positionZ, double sizeX, double sizeY, Identifier texture, WPanel linkedWPanel) {
+		setPositionX(positionX);
+		setPositionY(positionY);
+		setPositionZ(positionZ);
+
+		setSizeX(sizeX);
+		setSizeY(sizeY);
 
 		setTexture(texture);
 
