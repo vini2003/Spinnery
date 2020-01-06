@@ -57,6 +57,14 @@
 		"bottom_right_foreground": "0xff373737",
 		"foreground": "0xff6b6b6b"
 	},
+	"WButton": {
+		"top_left_on": "0xff373737",
+		"bottom_right_on": "0xffffffff",
+		"background_on": "0xff686868",
+		"top_left_off": "0xffffffff",
+		"bottom_right_off": "0xff373737",
+		"background_off": "0xff8b8b8b"
+	},
 	"WSlot": {
 		"top_left": "0xff373737",
 		"bottom_right": "0xffffffff",

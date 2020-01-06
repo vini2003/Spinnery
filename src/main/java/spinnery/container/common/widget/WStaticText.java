@@ -1,15 +1,26 @@
 package spinnery.container.common.widget;
 
+import com.google.gson.annotations.SerializedName;
 import spinnery.container.client.BaseRenderer;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import spinnery.registry.ResourceRegistry;
 
 public class WStaticText extends WWidget {
-	protected Identifier texture;
+	public class Theme {
+		@SerializedName("text")
+		private String textColor;
+
+		public String getTextColor() {
+			return textColor;
+		}
+	}
+
+	protected int hexColor;
 
 	protected Text text;
 
-	public WStaticText(WAnchor anchor, int positionX, int positionY, int positionZ, double sizeX, double sizeY, Text text, WPanel linkedWPanel) {
+	public WStaticText(WAnchor anchor, int positionX, int positionY, int positionZ, double sizeX, Text text, WPanel linkedWPanel) {
 		setLinkedPanel(linkedWPanel);
 
 		setAnchor(anchor);
@@ -19,7 +30,6 @@ public class WStaticText extends WWidget {
 		setPositionZ(positionZ);
 
 		setSizeX(sizeX);
-		setSizeY(sizeY);
 
 		setText(text);
 	}
@@ -34,6 +44,8 @@ public class WStaticText extends WWidget {
 
 	@Override
 	public void drawWidget() {
-		BaseRenderer.getTextRenderer().drawStringBounded(getText().getString(), (int) getPositionX(), (int) getPositionY(), (int) getSizeX(), (int) getSizeY());
+		WStaticText.Theme drawTheme = ResourceRegistry.get(getTheme()).getWStaticTextTheme();
+
+		BaseRenderer.getTextRenderer().drawStringBounded(getText().getString(), (int) getPositionX(), (int) getPositionY(), (int) getSizeX(), Integer.decode(drawTheme.getTextColor()));
 	}
 }

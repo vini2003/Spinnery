@@ -41,7 +41,6 @@ public class TestBlock extends Block implements BlockEntityProvider {
 	}
 
 	public Inventory getInventory() {
-		System.out.println(testInventory == null);
 		return testInventory;
 	}
 

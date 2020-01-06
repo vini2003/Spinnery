@@ -1,11 +1,14 @@
 package spinnery.theme;
 
 import com.google.gson.annotations.SerializedName;
+import spinnery.container.common.widget.WButton;
 import spinnery.container.common.widget.WDropdown;
+import spinnery.container.common.widget.WDynamicText;
 import spinnery.container.common.widget.WHorizontalSlider;
 import spinnery.container.common.widget.WList;
 import spinnery.container.common.widget.WPanel;
 import spinnery.container.common.widget.WSlot;
+import spinnery.container.common.widget.WStaticText;
 import spinnery.container.common.widget.WToggle;
 import spinnery.container.common.widget.WVerticalSlider;
 
@@ -29,10 +32,10 @@ public class Theme {
 	transient Object WDynamicImageTheme;
 
 	@SerializedName("WStaticText")
-	transient Object WStaticTextTheme;
+	private WStaticText.Theme WStaticTextTheme;
 
 	@SerializedName("WDynamicText")
-	transient Object WDynamicTextTheme;
+	private WDynamicText.Theme WDynamicTextTheme;
 
 	@SerializedName("WVerticalSlider")
 	private WVerticalSlider.Theme WVerticalSliderTheme;
@@ -42,6 +45,9 @@ public class Theme {
 
 	@SerializedName("WToggle")
 	private WToggle.Theme WToggleTheme;
+
+	@SerializedName("WButton")
+	private WButton.Theme WButtonTheme;
 
 	@SerializedName("WSlot")
 	private WSlot.Theme WSlotTheme;
@@ -74,11 +80,11 @@ public class Theme {
 		return WDynamicImageTheme;
 	}
 
-	public Object getWStaticTextTheme() {
+	public WStaticText.Theme getWStaticTextTheme() {
 		return WStaticTextTheme;
 	}
 
-	public Object getWDynamicTextTheme() {
+	public WDynamicText.Theme getWDynamicTextTheme() {
 		return WDynamicTextTheme;
 	}
 
@@ -93,6 +99,8 @@ public class Theme {
 	public WToggle.Theme getWToggleTheme() {
 		return WToggleTheme;
 	}
+
+	public WButton.Theme getWButtonTheme() { return WButtonTheme; }
 
 	public WSlot.Theme getWSlotTheme() {
 		return WSlotTheme;

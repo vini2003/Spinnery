@@ -1,14 +1,17 @@
 package spinnery.container.common;
 
+import net.minecraft.text.LiteralText;
 import net.minecraft.util.math.BlockPos;
 import spinnery.block.TestBlock;
 import spinnery.container.common.widget.WAnchor;
+import spinnery.container.common.widget.WButton;
 import spinnery.container.common.widget.WDropdown;
 import spinnery.container.common.widget.WList;
 import spinnery.container.common.widget.WHorizontalSlider;
 import spinnery.container.common.widget.WSlot;
 import spinnery.container.common.widget.WPanel;
 import net.minecraft.entity.player.PlayerInventory;
+import spinnery.container.common.widget.WStaticText;
 import spinnery.container.common.widget.WToggle;
 import spinnery.container.common.widget.WVerticalSlider;
 
@@ -51,7 +54,10 @@ public class TestContainer extends BaseContainer {
 		WToggle toggleB = new WToggle(WAnchor.MC_ORIGIN, 30, 90, 0, 36, 9, linkedWPanel);
 		WToggle toggleC = new WToggle(WAnchor.MC_ORIGIN, 30, 110, 0, 54, 9, linkedWPanel);
 
+		WButton buttonA = new WButton(WAnchor.MC_ORIGIN, 90, 110, 20, 18, 18, linkedWPanel);
 
-		getLinkedPanel().add(listA, sliderA, sliderB, toggleA, toggleB, toggleC, dropdownA);
+		WStaticText textA = new WStaticText(WAnchor.MC_ORIGIN, 110, 90, 20, 40, new LiteralText("Hey there, Cringewalker"), linkedWPanel);
+
+		getLinkedPanel().add(listA, sliderA, sliderB, toggleA, toggleB, toggleC, dropdownA, buttonA, textA);
 	}
 }
