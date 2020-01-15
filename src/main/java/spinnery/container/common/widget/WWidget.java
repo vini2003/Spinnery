@@ -27,6 +27,7 @@ public class WWidget implements Tickable {
 
 	protected boolean canMove = false;
 
+	protected Runnable linkedRunnableOnCharTyped;
 	protected Runnable linkedRunnableOnMouseClicekd;
 	protected Runnable linkedRunnableOnKeyPressed;
 	protected Runnable linkedRunnableOnKeyReleased;
@@ -42,7 +43,13 @@ public class WWidget implements Tickable {
 	public WWidget() {
 	}
 
-	public void onKeyPressed(int keyPressed) {
+	public void onCharTyped(char character) {
+		if (linkedRunnableOnCharTyped != null) {
+			linkedRunnableOnCharTyped.run();
+		}
+	}
+
+	public void onKeyPressed(int keyPressed, int character, int keyModifier) {
 		if (linkedRunnableOnKeyPressed != null) {
 			linkedRunnableOnKeyPressed.run();
 		}

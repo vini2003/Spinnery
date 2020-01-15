@@ -135,13 +135,13 @@ public class WList extends WWidget {
 	}
 
 	@Override
-	public void onKeyPressed(int keyPressed) {
+	public void onKeyPressed(int keyPressed, int character, int keyModifier) {
 		getListWidgets().forEach((widgets) -> {
 			widgets.forEach((widget) -> {
-				widget.onKeyPressed(keyPressed);
+				widget.onKeyPressed(keyPressed, character, keyModifier);
 			});
 		});
-		super.onKeyPressed(keyPressed);
+		super.onKeyPressed(keyPressed, character, keyModifier);
 	}
 
 	@Override

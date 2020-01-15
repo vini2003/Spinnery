@@ -118,7 +118,7 @@ public class WPanel extends WWidget {
 	}
 
 	@Override
-	public void onKeyPressed(int keyPressed) {
+	public void onKeyPressed(int keyPressed, int character, int keyModifier) {
 		if (getFocus()) {
 			switch (keyPressed) {
 				case GLFW.GLFW_KEY_KP_SUBTRACT:
@@ -135,7 +135,7 @@ public class WPanel extends WWidget {
 					break;
 			}
 		}
-		super.onKeyPressed(keyPressed);
+		super.onKeyPressed(keyPressed, character, keyModifier);
 	}
 
 	@Override

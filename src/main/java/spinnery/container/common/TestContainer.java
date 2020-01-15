@@ -6,6 +6,7 @@ import spinnery.block.TestBlock;
 import spinnery.container.common.widget.WAnchor;
 import spinnery.container.common.widget.WButton;
 import spinnery.container.common.widget.WDropdown;
+import spinnery.container.common.widget.WDynamicText;
 import spinnery.container.common.widget.WList;
 import spinnery.container.common.widget.WHorizontalSlider;
 import spinnery.container.common.widget.WSlot;
@@ -58,6 +59,8 @@ public class TestContainer extends BaseContainer {
 
 		WStaticText textA = new WStaticText(WAnchor.MC_ORIGIN, 110, 90, 20, 40, new LiteralText("Hey there, Cringewalker"), linkedWPanel);
 
-		getLinkedPanel().add(listA, sliderA, sliderB, toggleA, toggleB, toggleC, dropdownA, buttonA, textA);
+		WDynamicText textB = new WDynamicText(WAnchor.MC_ORIGIN, 300, 90, 0, 100, 18, linkedWPanel);
+
+		getLinkedPanel().add(listA, sliderA, sliderB, toggleA, toggleB, toggleC, dropdownA, buttonA, textA, textB);
 	}
 }

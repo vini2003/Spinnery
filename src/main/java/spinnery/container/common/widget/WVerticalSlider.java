@@ -121,14 +121,14 @@ public class WVerticalSlider extends WWidget {
 	}
 
 	@Override
-	public void onKeyPressed(int keyPressed) {
+	public void onKeyPressed(int keyPressed, int character, int keyModifier) {
 		if (getFocus() && keyPressed == GLFW.GLFW_KEY_KP_SUBTRACT) {
 			setPosition(Math.min(getPosition() + 1, getLimit() - 1));
 		}
 		if (getFocus() && keyPressed == GLFW.GLFW_KEY_KP_DIVIDE) {
 			setPosition(getPosition() - 1 >= 0 ? getPosition() - 1 : 0);
 		}
-		super.onKeyPressed(keyPressed);
+		super.onKeyPressed(keyPressed, character, keyModifier);
 	}
 
 	@Override

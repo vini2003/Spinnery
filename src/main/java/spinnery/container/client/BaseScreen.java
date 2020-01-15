@@ -82,14 +82,19 @@ public class BaseScreen<T extends BaseContainer> extends AbstractContainerScreen
 
 	@Override
 	public boolean keyPressed(int character, int keyCode, int keyModifier) {
-		getLinkedContainer().getLinkedPanel().getLinkedWidgets().forEach((widget) -> widget.onKeyPressed(keyCode));
-		return super.keyPressed(character, keyCode, keyModifier);
+		getLinkedContainer().getLinkedPanel().getLinkedWidgets().forEach((widget) -> widget.onKeyPressed(keyCode, character, keyModifier));
+		if (character == GLFW.GLFW_KEY_ESCAPE) {
+			minecraft.player.closeContainer();
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	@Override
 	public boolean keyReleased(int character, int keyCode, int keyModifier) {
 		getLinkedContainer().getLinkedPanel().getLinkedWidgets().forEach((widget) -> widget.onKeyReleased(keyCode));
-		return super.keyPressed(character, keyCode, keyModifier);
+		return super.keyReleased(character, keyCode, keyModifier);
 	}
 
 	@Override
@@ -106,16 +111,16 @@ public class BaseScreen<T extends BaseContainer> extends AbstractContainerScreen
 			ItemStack[] stackA = { MinecraftClient.getInstance().player.inventory.getCursorStack() };
 			int quantityA = mouseButton == 0 ? (int) Math.floor((float) stackA[0].getCount() / getLinkedContainer().dragSlots.size()) : mouseButton == 1 ? 1 : 0;
 			getLinkedContainer().dragSlots.forEach(widget -> {
-				if (((WSlot) widget).getStack().getCount() != ((WSlot) widget).getStack().getMaxCount()) {
-					if (((WSlot) widget).getStack().isEmpty()) {
-						((WSlot) widget).setStack(new ItemStack(stackA[0].getItem(), quantityA));
+				if (widget.getStack().getCount() != widget.getStack().getMaxCount()) {
+					if (widget.getStack().isEmpty()) {
+						widget.setStack(new ItemStack(stackA[0].getItem(), quantityA));
 						stackA[0].decrement(quantityA);
-					} else if (((WSlot) widget).getStack().isItemEqualIgnoreDamage(stackA[0])) {
-						int quantityB = Math.min(quantityA, ((WSlot) widget).getStack().getMaxCount() - ((WSlot) widget).getStack().getCount());
-						((WSlot) widget).getStack().increment(quantityB);
+					} else if (widget.getStack().isItemEqualIgnoreDamage(stackA[0])) {
+						int quantityB = Math.min(quantityA, widget.getStack().getMaxCount() - widget.getStack().getCount());
+						widget.getStack().increment(quantityB);
 						stackA[0].decrement(quantityB);
 					}
-					((WSlot) widget).setPreviewStack(ItemStack.EMPTY);
+					widget.setPreviewStack(ItemStack.EMPTY);
 				}
 			});
 			isMouseHovering = false;
@@ -148,6 +153,12 @@ public class BaseScreen<T extends BaseContainer> extends AbstractContainerScreen
 	protected void onMouseClick(Slot slot, int slotX, int slotY, SlotActionType slotActionType) {
 		getLinkedContainer().getLinkedPanel().getLinkedWidgets().forEach((widget) -> widget.onSlotClicked(slot, slotX, slotY, slotActionType));
 		super.onMouseClick(slot, slotX, slotY, slotActionType);
+	}
+
+	@Override
+	public boolean charTyped(char character, int keyCode) {
+		getLinkedContainer().getLinkedPanel().getLinkedWidgets().forEach((widget) -> widget.onCharTyped(character));
+		return super.charTyped(character, keyCode);
 	}
 
 	@Override
