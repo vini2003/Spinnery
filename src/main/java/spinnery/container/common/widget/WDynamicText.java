@@ -3,6 +3,7 @@ package spinnery.container.common.widget;
 import com.google.gson.annotations.SerializedName;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.InputUtil;
+import net.minecraft.text.LiteralText;
 import org.lwjgl.glfw.GLFW;
 import spinnery.container.client.BaseRenderer;
 import spinnery.registry.ResourceRegistry;
@@ -62,15 +63,17 @@ public class WDynamicText extends WWidget {
 
 	int cursorX = 0;
 
-	int selectedLeft = 0;
-	int selectedRight = 0;
+	int selLeftPos = 0;
+	int selRightPos = 0;
 
 	int textPositionX = 0;
 
 	int textPositionY = 0;
 
-	int fooX = 0;
+	int offsetPos = 0;
 	int fooY = 0;
+
+	int i = 0, dSP = 0, dEP = 0;
 
 	public WDynamicText(WAnchor anchor, int positionX, int positionY, int positionZ, double sizeX, double sizeY, WPanel linkedWPanel) {
 		setLinkedPanel(linkedWPanel);
@@ -96,7 +99,7 @@ public class WDynamicText extends WWidget {
 
 	int getCursorX() {
 		int offset = text.length() - visible.length();
-		return MinecraftClient.getInstance().textRenderer.getStringWidth(new StringBuilder(visible).substring(0, Math.max(position - fooX, 0)));
+		return MinecraftClient.getInstance().textRenderer.getStringWidth(new StringBuilder(visible).substring(0, Math.max(position - offsetPos, 0)));
 	}
 
 	void recalculateVisible() {
@@ -108,22 +111,33 @@ public class WDynamicText extends WWidget {
 			int i = 0;
 			if (position > fooY) {
 				for (i = position; i > 0 && MinecraftClient.getInstance().textRenderer.getStringWidth(text.substring(i, position)) < sizeX - 12; --i);
-				fooX = i;
+				offsetPos = i;
 
 				visible = text.substring(i, position);
 			} else {
 				visible = text.substring(0, h);
 			}
 
-
 			cursorX = getCursorX();
 		} else {
-			fooX = 0;
+			offsetPos = 0;
 
 			visible = text;
 			cursorX = getCursorX();
 		}
+	}
 
+	void clearSelection() {
+		selRightPos = -1;
+		selLeftPos = -1;
+	}
+
+	boolean hasSelection() {
+		return selRightPos != -1 && selLeftPos != -1;
+	}
+
+	void clearCopied() {
+		clip = "";
 	}
 
 	@Override
@@ -135,6 +149,7 @@ public class WDynamicText extends WWidget {
 		text = new StringBuilder(text).insert(position, character).toString();
 		++position;
 
+		clearSelection();
 		recalculateVisible();
 	}
 
@@ -147,35 +162,57 @@ public class WDynamicText extends WWidget {
 		long handle = MinecraftClient.getInstance().window.getHandle();
 
 		if (keyPressed == 30 && InputUtil.isKeyPressed(handle, GLFW.GLFW_KEY_LEFT_CONTROL)) { // Ctrl w. A
-			selectedLeft = 0;
-			selectedRight = text.length() - 1;
+			selLeftPos = 0;
+			selRightPos = text.length() - 1;
+			recalculateVisible();
 		} else if (keyPressed == 32 && InputUtil.isKeyPressed(handle, GLFW.GLFW_KEY_LEFT_CONTROL)) { // Ctrl w. D
-			selectedLeft = -1;
-			selectedRight = -1;
+			clearSelection();
+			clearCopied();
+			recalculateVisible();
 		} else if (keyPressed == 46 && InputUtil.isKeyPressed(handle, GLFW.GLFW_KEY_LEFT_CONTROL)) { // Ctrl w. C
-			clip = text.substring(selected[0], selected[1]);
+			if (selLeftPos >= 0 && selRightPos >= 0 && selRightPos <= text.length()) {
+				clip = text.substring(selLeftPos, selRightPos);
+				clearSelection();
+			}
 		} else if (keyPressed == 47 && InputUtil.isKeyPressed(handle, GLFW.GLFW_KEY_LEFT_CONTROL)) { // Ctrl w. V
 			text = new StringBuilder(text).insert(position, clip).toString();
-		} else if (keyPressed == GLFW.GLFW_KEY_KP_SUBTRACT && InputUtil.isKeyPressed(handle, GLFW.GLFW_KEY_LEFT_SHIFT)) { // Right Arrow w. Shift
+			recalculateVisible();
+		} else if (keyPressed == GLFW.GLFW_KEY_KP_SUBTRACT && InputUtil.isKeyPressed(handle, GLFW.GLFW_KEY_LEFT_SHIFT) && position < text.length()) { // Right Arrow w. Shift
+			selLeftPos = selLeftPos == -1 ? position : selLeftPos;
 			++position;
-			selectedRight = position;
-			selectedLeft = selectedLeft == -1 ? position : selectedLeft;
-		} else if (keyPressed == GLFW.GLFW_KEY_KP_DIVIDE && InputUtil.isKeyPressed(handle, GLFW.GLFW_KEY_LEFT_SHIFT) && position - 1 >= 0) { // Left Arrow w. Shift
+			selRightPos = position;
+			recalculateVisible();
+		} else if (keyPressed == GLFW.GLFW_KEY_KP_DIVIDE && InputUtil.isKeyPressed(handle, GLFW.GLFW_KEY_LEFT_SHIFT) && position > 0) { // Left Arrow w. Shift
+			selRightPos = selRightPos == -1 ? position : selRightPos;
 			--position;
-			selectedLeft = position;
-			selectedRight = selectedRight == -1 ? position : selectedRight;
+			selLeftPos = position;
+			recalculateVisible();
 		} else if (keyPressed == GLFW.GLFW_KEY_KP_SUBTRACT && position <= text.length() - 1) { // Right Arrow
 			++position;
+			clearSelection();
 			recalculateVisible();
 		} else if (keyPressed == GLFW.GLFW_KEY_KP_DIVIDE && position > 0) { // Left Arrow
 			--position;
+			clearSelection();
 			recalculateVisible();
 		} else if (keyPressed == 14 && position > 0 && text.length() > 0) { // Backspace
 			--position;
-			text = new StringBuilder(text).deleteCharAt(position).toString();
+			if (hasSelection()) {
+				text = text.substring(0, selLeftPos) + text.substring(selRightPos, text.length() - 1);
+				position = selLeftPos;
+				clearSelection();
+			} else {
+				text = new StringBuilder(text).deleteCharAt(position).toString();
+			}
 			recalculateVisible();
 		} else if (keyPressed == 339 && position < text.length()) { // Delete
-			text = new StringBuilder(text).deleteCharAt(position).toString();
+			if (hasSelection()) {
+				text = text.substring(0, selLeftPos) + text.substring(selRightPos, text.length() - 1);
+				position = selLeftPos;
+				clearSelection();
+			} else {
+				text = new StringBuilder(text).deleteCharAt(position).toString();
+			}
 			recalculateVisible();
 		}
 	}
@@ -188,24 +225,28 @@ public class WDynamicText extends WWidget {
 		BaseRenderer.drawRectangle(getPositionX() - 4, getPositionY(), getPositionZ() - 3, getSizeX() + 7 , 1, "0xff373737");
 		BaseRenderer.drawRectangle(getPositionX() - 4, getPositionY() + 1, getPositionZ() - 3, 1, getSizeY(), "0xff373737");
 
-		BaseRenderer.drawBeveledPanel(getPositionX() - 3, getPositionY() + 1, getPositionZ() - 3, getSizeX() + 7, getSizeY(), "0xffe0Ca9f", "0xffa09172", "0xff544c3b");
+		BaseRenderer.drawBeveledPanel(getPositionX() - 3, getPositionY() + 1, getPositionZ() - 3, getSizeX() + 7, getSizeY(), "0xff000000", "0xff000000", "0xff000000");
 
 		BaseRenderer.drawRectangle(getPositionX() + getSizeX() + 4, getPositionY() + 1, getPositionZ() - 3, 1, getSizeY(), "0xffffffff");
 		BaseRenderer.drawRectangle(getPositionX() - 3, getPositionY() + getSizeY() + 1, getPositionZ() - 3, getSizeX() + 8, 1, "0xffffffff");
 
-		//GlStateManager.enableBlend();
-		//GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		BaseRenderer.drawRectangle(positionX + dSP, getPositionY() + getSizeY() - 12, getPositionZ(), dEP, 12, "0xB21407FF");
 
-		//int sizeA = MinecraftClient.getInstance().textRenderer.getStringWidth(rawText.getRawString().substring(Math.max(selected[0], 0), selected[1]));
-		//int sizeB = MinecraftClient.getInstance().textRenderer.getStringWidth(rawText.getRawString().substring(0, Math.max(selected[0], 0)));
+		double pP = positionX, pC = offsetPos;
+		for (char c : visible.toCharArray()) {
+			double cW = BaseRenderer.getTextRenderer().getCharWidth(c);
+			BaseRenderer.getTextRenderer().drawWithShadow(String.valueOf(c), (float) pP, (float) (positionY + sizeY - 10), Integer.decode("0xffffff"));
 
-		//BaseRenderer.drawRectangle(getTextPositionX() + sizeB, getPositionY() + getSizeY() - 10, getPositionZ(), sizeA, 12, "0xA00000FF");
+			if (pC >= selLeftPos && (pC < selRightPos || pC == text.length() - 1 && pC <= selRightPos) && (selLeftPos - selRightPos != 0)) {
+				BaseRenderer.drawRectangle(pP, getPositionY() + getSizeY() - 12, 10, cW, 12, "0xB30400FF");
+			}
 
-		//StringBuilder stringBuilder = new StringBuilder();
-		//stringBuilder.append(rawText.getRawString(), 0, position);
-		//BaseRenderer.drawRectangle(getTextPositionX() + MinecraftClient.getInstance().textRenderer.getStringWidth(stringBuilder.toString()) + 0.5, getPositionY() + getSizeY() - 12, getPositionZ(), 1.5, getSizeY() - 6, "0xff000000");
+			if (pC == position || pC == position - 1) {
+				BaseRenderer.getTextRenderer().drawWithShadow("|", (float) positionX + cursorX, (float) positionY + (float) sizeY - 10, Integer.decode("0xffffff"));
+			}
 
-		BaseRenderer.getTextRenderer().drawWithShadow(visible, (float) positionX, (float) positionY + (float) sizeY - 10, Integer.decode("0xffffff"));
-		BaseRenderer.getTextRenderer().drawWithShadow("|", (float) positionX + cursorX, (float) positionY + (float) sizeY - 10, Integer.decode("0xffffff"));
+			pP += cW;
+			++pC;
+		}
 	}
 }
