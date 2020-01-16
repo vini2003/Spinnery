@@ -60,10 +60,10 @@ public class BaseScreen<T extends BaseContainer> extends AbstractContainerScreen
 		super.containerHeight = (int) getLinkedContainer().getLinkedPanel().getSizeY();
 		super.width = containerWidth;
 		super.height = containerHeight;
-		super.left = (int) ((getLinkedContainer().getLinkedPanel().getPositionX()));
-		super.top = (int) ((getLinkedContainer().getLinkedPanel().getPositionY()));
-		getLinkedContainer().setPositionX(super.left);
-		getLinkedContainer().setPositionY(super.top);
+		super.x = (int) ((getLinkedContainer().getLinkedPanel().getPositionX()));
+		super.y = (int) ((getLinkedContainer().getLinkedPanel().getPositionY()));
+		getLinkedContainer().setPositionX(super.x);
+		getLinkedContainer().setPositionY(super.y);
 	}
 
 	@Override
@@ -154,7 +154,7 @@ public class BaseScreen<T extends BaseContainer> extends AbstractContainerScreen
 
 	@Override
 	public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
-		if (! InputUtil.isKeyPressed(MinecraftClient.getInstance().window.getHandle(), GLFW.GLFW_KEY_LEFT_SHIFT)) {
+		if (! InputUtil.isKeyPressed(MinecraftClient.getInstance().getWindow().getHandle(), GLFW.GLFW_KEY_LEFT_SHIFT)) {
 			for (WWidget widget : getLinkedContainer().getLinkedPanel().getLinkedWidgets()) {
 				widget.onMouseClicked(mouseX, mouseY, mouseButton);
 			}
@@ -169,7 +169,7 @@ public class BaseScreen<T extends BaseContainer> extends AbstractContainerScreen
 
 	@Override
 	public boolean mouseDragged(double slotX, double slotY, int mouseButton, double mouseX, double mouseY) {
-		if (InputUtil.isKeyPressed(MinecraftClient.getInstance().window.getHandle(), GLFW.GLFW_KEY_LEFT_SHIFT)) {
+		if (InputUtil.isKeyPressed(MinecraftClient.getInstance().getWindow().getHandle(), GLFW.GLFW_KEY_LEFT_SHIFT)) {
 			ItemStack stackA = MinecraftClient.getInstance().player.inventory.getCursorStack();
 			int quantityA = mouseButton == 0 ? (int) Math.floor((float) stackA.getCount() / getLinkedContainer().getDragSlots().size()) : mouseButton == 1 ? 1 : 0;
 			for (WSlot widgetA : getLinkedContainer().getDragSlots()) {
@@ -194,7 +194,7 @@ public class BaseScreen<T extends BaseContainer> extends AbstractContainerScreen
 
 	@Override
 	public boolean mouseReleased(double mouseX, double mouseY, int mouseButton) {
-		if (InputUtil.isKeyPressed(MinecraftClient.getInstance().window.getHandle(), GLFW.GLFW_KEY_LEFT_SHIFT)) {
+		if (InputUtil.isKeyPressed(MinecraftClient.getInstance().getWindow().getHandle(), GLFW.GLFW_KEY_LEFT_SHIFT)) {
 			ItemStack[] stackA = {MinecraftClient.getInstance().player.inventory.getCursorStack()};
 			int quantityA = mouseButton == 0 ? (int) Math.floor((float) stackA[0].getCount() / getLinkedContainer().getDragSlots().size()) : mouseButton == 1 ? 1 : 0;
 			for (WSlot widget : getLinkedContainer().getDragSlots()) {

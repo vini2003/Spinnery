@@ -1,6 +1,6 @@
 package spinnery.client;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.BufferBuilder;
@@ -14,10 +14,10 @@ import spinnery.widget.WColor;
 
 public class BaseRenderer {
 	public static void drawRectangle(double x, double y, double z, double sX, double sY, WColor color) {
-		GlStateManager.enableBlend();
-		GlStateManager.disableTexture();
-		GlStateManager.blendFuncSeparate(770, 771, 1, 0);
-		GlStateManager.color4f(color.R, color.G, color.B, color.A);
+		RenderSystem.enableBlend();
+		RenderSystem.disableTexture();
+		RenderSystem.blendFuncSeparate(770, 771, 1, 0);
+		RenderSystem.color4f(color.R, color.G, color.B, color.A);
 
 		getBufferBuilder().begin(GL11.GL_TRIANGLES, VertexFormats.POSITION);
 
@@ -31,8 +31,8 @@ public class BaseRenderer {
 
 		getTesselator().draw();
 
-		GlStateManager.enableTexture();
-		GlStateManager.disableBlend();
+		RenderSystem.enableTexture();
+		RenderSystem.disableBlend();
 	}
 
 	public static void drawPanel(double x, double y, double z, double sX, double sY, WColor shadow, WColor panel, WColor hilight, WColor outline) {
@@ -68,11 +68,11 @@ public class BaseRenderer {
 	public static void drawImage(double x, double y, double z, double sX, double sY, Identifier texture) {
 		getTextureManager().bindTexture(texture);
 
-		GlStateManager.enableBlend();
-		GlStateManager.blendFuncSeparate(770, 771, 1, 0);
-		GlStateManager.color4f(255, 255, 255, 255);
+		RenderSystem.enableBlend();
+		RenderSystem.blendFuncSeparate(770, 771, 1, 0);
+		RenderSystem.color4f(255, 255, 255, 255);
 
-		getBufferBuilder().begin(GL11.GL_QUADS, VertexFormats.POSITION_UV);
+		getBufferBuilder().begin(GL11.GL_QUADS, VertexFormats.POSITION);
 
 		getBufferBuilder().vertex(x, y + sY, z).texture(0, 1).next();
 		getBufferBuilder().vertex(x + sX, y + sY, z).texture(1, 1).next();
@@ -81,7 +81,7 @@ public class BaseRenderer {
 
 		getTesselator().draw();
 
-		GlStateManager.disableBlend();
+		RenderSystem.disableBlend();
 	}
 
 	public static TextRenderer getTextRenderer() {
@@ -97,7 +97,7 @@ public class BaseRenderer {
 	}
 
 	public static BufferBuilder getBufferBuilder() {
-		return getTesselator().getBufferBuilder();
+		return getTesselator().getBuffer();
 	}
 
 	public static TextureManager getTextureManager() {

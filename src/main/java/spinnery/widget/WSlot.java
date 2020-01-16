@@ -1,8 +1,9 @@
 package spinnery.widget;
 
 import com.google.gson.annotations.SerializedName;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.GuiLighting;
+import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
@@ -20,6 +21,7 @@ public class WSlot extends WWidget {
 	private int slotNumber;
 	private ItemStack previewStack = ItemStack.EMPTY;
 	private Inventory linkedInventory;
+
 	public WSlot(WAnchor anchor, int positionX, int positionY, int positionZ, double sizeX, double sizeY, int slotNumber, Inventory linkedInventory, WPanel linkedWPanel) {
 		setLinkedPanel(linkedWPanel);
 
@@ -126,7 +128,7 @@ public class WSlot extends WWidget {
 			ItemStack stackA = getLinkedPanel().getLinkedContainer().getLinkedPlayerInventory().getCursorStack().copy();
 			ItemStack stackB = getStack().copy();
 
-			if (InputUtil.isKeyPressed(MinecraftClient.getInstance().window.getHandle(), GLFW.GLFW_KEY_LEFT_CONTROL)) {
+			if (InputUtil.isKeyPressed(MinecraftClient.getInstance().getWindow().getHandle(), GLFW.GLFW_KEY_LEFT_CONTROL)) {
 				if (mouseButton == 0) {
 					if (stackB.getCount() < stackB.getMaxCount()) {
 						for (WWidget widget : getLinkedPanel().getLinkedWidgets()) {
@@ -229,7 +231,7 @@ public class WSlot extends WWidget {
 
 	@Override
 	public void onMouseDragged(double mouseX, double mouseY, int mouseButton, double dragOffsetX, double dragOffsetY) {
-		if (isWithinBounds(mouseX, mouseY) && InputUtil.isKeyPressed(MinecraftClient.getInstance().window.getHandle(), GLFW.GLFW_KEY_LEFT_SHIFT)) {
+		if (isWithinBounds(mouseX, mouseY) && InputUtil.isKeyPressed(MinecraftClient.getInstance().getWindow().getHandle(), GLFW.GLFW_KEY_LEFT_SHIFT)) {
 			if (!getLinkedPanel().getLinkedContainer().getDragSlots().contains(this)) {
 				getLinkedPanel().getLinkedContainer().getDragSlots().add(this);
 			}
@@ -254,12 +256,12 @@ public class WSlot extends WWidget {
 
 		BaseRenderer.drawBeveledPanel(x, y, z, sX, sY, drawTheme.getTopLeft(), getFocus() ? drawTheme.getBackgroundFocused() : drawTheme.getBackgroundUnfocused(), drawTheme.getBottomRight());
 
-		GuiLighting.enableForItems();
+		RenderSystem.enableLighting();
 
 		BaseRenderer.getItemRenderer().renderGuiItem(getPreviewStack().isEmpty() ? getStack() : getPreviewStack(), 1 + (int) (x + (sX - 18) / 2), 1 + (int) (y + (sY - 18) / 2));
 		BaseRenderer.getItemRenderer().renderGuiItemOverlay(MinecraftClient.getInstance().textRenderer, getPreviewStack().isEmpty() ? getStack() : getPreviewStack(), 1 + (int) (x + (sX - 18) / 2), 1 + (int) (y + (sY - 18) / 2));
 
-		GuiLighting.disable();
+		RenderSystem.disableLighting();
 	}
 
 	public static class Theme {

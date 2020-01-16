@@ -174,8 +174,8 @@ public class WList extends WWidget {
 			BaseRenderer.drawRectangle(positionX + 1, positionY + 17, positionZ, sizeX - 2, 0.75, drawTheme.getShadow());
 		}
 
-		int rawHeight = MinecraftClient.getInstance().window.getHeight();
-		double scale = MinecraftClient.getInstance().window.getScaleFactor();
+		int rawHeight = MinecraftClient.getInstance().getWindow().getHeight();
+		double scale = MinecraftClient.getInstance().getWindow().getScaleFactor();
 
 		GL11.glEnable(GL11.GL_SCISSOR_TEST);
 

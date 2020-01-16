@@ -85,7 +85,7 @@ public class WDynamicText extends WWidget {
 			return;
 		}
 
-		long handle = MinecraftClient.getInstance().window.getHandle();
+		long handle = MinecraftClient.getInstance().getWindow().getHandle();
 
 		if (keyPressed == 30 && InputUtil.isKeyPressed(handle, GLFW.GLFW_KEY_LEFT_CONTROL)) { // Ctrl w. A
 			selLeftPos = 0;
