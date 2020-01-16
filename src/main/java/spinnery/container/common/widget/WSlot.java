@@ -257,12 +257,13 @@ public class WSlot extends WWidget {
 					stackB = new ItemStack(stackA.getItem(), 1);
 					stackA.decrement(1);
 				} else if (mouseButton == 0) {
-					if (stackA.isEmpty()) {
-						stackA = stackB.copy();
-						stackB = ItemStack.EMPTY;
-					} else {
+					if (stackB.isEmpty()) {
 						stackB = stackA.copy();
 						stackA = ItemStack.EMPTY;
+					} else {
+						ItemStack stackC = stackB.copy();
+						stackB = stackA.copy();
+						stackA = stackC.copy();
 					}
 				}
 			}
