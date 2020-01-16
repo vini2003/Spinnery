@@ -290,12 +290,21 @@ public class WSlot extends WWidget {
 	}
 
 	@Override
-	public void drawWidget() {
-		BaseRenderer.drawBeveledPanel(getPositionX(), getPositionY(), getPositionZ(), getSizeX(), getSizeY(), drawTheme.getTopLeft(), getFocus() ? drawTheme.getBackgroundFocused() : drawTheme.getBackgroundUnfocused(), drawTheme.getBottomRight());
+	public void draw() {
+		double x = getPositionX();
+		double y = getPositionY();
+		double z = getPositionZ();
+
+		double sX = getSizeX();
+		double sY = getSizeY();
+
+		BaseRenderer.drawBeveledPanel(x, y, z, sX, sY, drawTheme.getTopLeft(), getFocus() ? drawTheme.getBackgroundFocused() : drawTheme.getBackgroundUnfocused(), drawTheme.getBottomRight());
 
 		GuiLighting.enableForItems();
-		BaseRenderer.getItemRenderer().renderGuiItem(getPreviewStack().isEmpty() ? getStack() : getPreviewStack(), 1 + (int) (getPositionX() + (getSizeX() - 18) / 2), 1 + (int) (getPositionY() + (getSizeY() - 18) / 2));
-		BaseRenderer.getItemRenderer().renderGuiItemOverlay(MinecraftClient.getInstance().textRenderer, getPreviewStack().isEmpty() ? getStack() : getPreviewStack(), 1 + (int) (getPositionX() + (getSizeX() - 18) / 2), 1 + (int) (getPositionY() + (getSizeY() - 18) / 2));
+
+		BaseRenderer.getItemRenderer().renderGuiItem(getPreviewStack().isEmpty() ? getStack() : getPreviewStack(), 1 + (int) (x + (sX - 18) / 2), 1 + (int) (y + (sY - 18) / 2));
+		BaseRenderer.getItemRenderer().renderGuiItemOverlay(MinecraftClient.getInstance().textRenderer, getPreviewStack().isEmpty() ? getStack() : getPreviewStack(), 1 + (int) (x + (sX - 18) / 2), 1 + (int) (y + (sY - 18) / 2));
+
 		GuiLighting.disable();
 	}
 }

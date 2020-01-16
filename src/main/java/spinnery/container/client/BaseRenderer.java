@@ -14,7 +14,7 @@ import org.lwjgl.opengl.GL11;
 import spinnery.container.common.widget.WColor;
 
 public class BaseRenderer {
-	public static void drawRectangle(double positionX, double positionY, double positionZ, double sizeX, double sizeY, WColor color) {
+	public static void drawRectangle(double x, double y, double z, double sX, double sY, WColor color) {
 		GlStateManager.enableBlend();
 		GlStateManager.disableTexture();
 		GlStateManager.blendFuncSeparate(770, 771, 1, 0);
@@ -22,13 +22,13 @@ public class BaseRenderer {
 
 		getBufferBuilder().begin(GL11.GL_TRIANGLES, VertexFormats.POSITION);
 
-		getBufferBuilder().vertex(positionX,         positionY,         positionZ).next();
-		getBufferBuilder().vertex(positionX,         positionY + sizeY, positionZ).next();
-		getBufferBuilder().vertex(positionX + sizeX, positionY,         positionZ).next();
+		getBufferBuilder().vertex(x,         y,         z).next();
+		getBufferBuilder().vertex(x,         y + sY, z).next();
+		getBufferBuilder().vertex(x + sX, y,         z).next();
 
-		getBufferBuilder().vertex(positionX,         positionY + sizeY, positionZ).next();
-		getBufferBuilder().vertex(positionX + sizeX, positionY + sizeY, positionZ).next();
-		getBufferBuilder().vertex(positionX + sizeX, positionY,         positionZ).next();
+		getBufferBuilder().vertex(x,         y + sY, z).next();
+		getBufferBuilder().vertex(x + sX, y + sY, z).next();
+		getBufferBuilder().vertex(x + sX, y,         z).next();
 
 		getTesselator().draw();
 
@@ -36,37 +36,37 @@ public class BaseRenderer {
 		GlStateManager.disableBlend();
 	}
 
-	public static void drawPanel(double positionX, double positionY, double positionZ, double sizeX, double sizeY, WColor shadow, WColor panel, WColor hilight, WColor outline) {
-		drawRectangle(positionX + 3,         positionY + 3,          positionZ, sizeX - 6, sizeY - 6,  panel);
+	public static void drawPanel(double x, double y, double z, double sX, double sY, WColor shadow, WColor panel, WColor hilight, WColor outline) {
+		drawRectangle(x + 3,         y + 3,          z, sX - 6, sY - 6,  panel);
 
-		drawRectangle(positionX + 2,         positionY + 1,          positionZ, sizeX - 4, 2,          hilight);
-		drawRectangle(positionX + 2,         positionY + sizeY - 3,  positionZ, sizeX - 4, 2,          shadow);
-		drawRectangle(positionX + 1,         positionY + 2,          positionZ, 2,         sizeY - 4,  hilight);
-		drawRectangle(positionX + sizeX - 3, positionY + 2,          positionZ, 2,         sizeY - 4,  shadow);
-		drawRectangle(positionX + sizeX - 3, positionY + 2,          positionZ, 1,         1,          panel);
-		drawRectangle(positionX + 2,         positionY + sizeY - 3,  positionZ, 1,         1,          panel);
-		drawRectangle(positionX + 3,         positionY + 3,          positionZ, 1,         1,          hilight);
-		drawRectangle(positionX + sizeX - 4, positionY + sizeY - 4,  positionZ, 1,         1,          shadow);
+		drawRectangle(x + 2,         y + 1,          z, sX - 4, 2,          hilight);
+		drawRectangle(x + 2,         y + sY - 3,  z, sX - 4, 2,          shadow);
+		drawRectangle(x + 1,         y + 2,          z, 2,         sY - 4,  hilight);
+		drawRectangle(x + sX - 3, y + 2,          z, 2,         sY - 4,  shadow);
+		drawRectangle(x + sX - 3, y + 2,          z, 1,         1,          panel);
+		drawRectangle(x + 2,         y + sY - 3,  z, 1,         1,          panel);
+		drawRectangle(x + 3,         y + 3,          z, 1,         1,          hilight);
+		drawRectangle(x + sX - 4, y + sY - 4,  z, 1,         1,          shadow);
 
-		drawRectangle(positionX + 2,         positionY,              positionZ, sizeX - 4, 1,          outline);
-		drawRectangle(positionX,             positionY + 2,          positionZ, 1,         sizeY - 4,  outline);
-		drawRectangle(positionX + sizeX - 1, positionY + 2,          positionZ, 1,         sizeY - 4,  outline);
-		drawRectangle(positionX + 2,         positionY + sizeY - 1,  positionZ, sizeX - 4, 1,          outline);
-		drawRectangle(positionX + 1,         positionY + 1,          positionZ, 1,         1,          outline);
-		drawRectangle(positionX + 1,         positionY + sizeY - 2,  positionZ, 1,         1,          outline);
-		drawRectangle(positionX + sizeX - 2, positionY + 1,          positionZ, 1,         1,          outline);
-		drawRectangle(positionX + sizeX - 2, positionY + sizeY - 2,  positionZ, 1,         1,          outline);
+		drawRectangle(x + 2,         y,              z, sX - 4, 1,          outline);
+		drawRectangle(x,             y + 2,          z, 1,         sY - 4,  outline);
+		drawRectangle(x + sX - 1, y + 2,          z, 1,         sY - 4,  outline);
+		drawRectangle(x + 2,         y + sY - 1,  z, sX - 4, 1,          outline);
+		drawRectangle(x + 1,         y + 1,          z, 1,         1,          outline);
+		drawRectangle(x + 1,         y + sY - 2,  z, 1,         1,          outline);
+		drawRectangle(x + sX - 2, y + 1,          z, 1,         1,          outline);
+		drawRectangle(x + sX - 2, y + sY - 2,  z, 1,         1,          outline);
 	}
 
-	public static void drawBeveledPanel(double positionX, double positionY, double positionZ, double sizeX, double sizeY, WColor topleft, WColor panel, WColor bottomright) {
-		drawRectangle(positionX,             positionY,             positionZ, sizeX,     sizeY,     panel);
-		drawRectangle(positionX,             positionY,             positionZ, sizeX - 1, 1,         topleft);
-		drawRectangle(positionX,             positionY + 1,         positionZ, 1,         sizeY - 2, topleft);
-		drawRectangle(positionX + sizeX - 1, positionY + 1,         positionZ, 1,         sizeY - 1, bottomright);
-		drawRectangle(positionX + 1,         positionY + sizeY - 1, positionZ, sizeX - 1, 1,         bottomright);
+	public static void drawBeveledPanel(double x, double y, double z, double sX, double sY, WColor topleft, WColor panel, WColor bottomright) {
+		drawRectangle(x,             y,             z, sX,     sY,     panel);
+		drawRectangle(x,             y,             z, sX - 1, 1,         topleft);
+		drawRectangle(x,             y + 1,         z, 1,         sY - 2, topleft);
+		drawRectangle(x + sX - 1, y + 1,         z, 1,         sY - 1, bottomright);
+		drawRectangle(x + 1,         y + sY - 1, z, sX - 1, 1,         bottomright);
 	}
 
-	public static void drawImage(double positionX, double positionY, double positionZ, double sizeX, double sizeY, Identifier texture) {
+	public static void drawImage(double x, double y, double z, double sX, double sY, Identifier texture) {
 		getTextureManager().bindTexture(texture);
 
 		GlStateManager.enableBlend();
@@ -75,10 +75,10 @@ public class BaseRenderer {
 
 		getBufferBuilder().begin(GL11.GL_QUADS, VertexFormats.POSITION_UV);
 
-		getBufferBuilder().vertex(positionX,         positionY + sizeY,  positionZ).texture(0, 1).next();
-		getBufferBuilder().vertex(positionX + sizeX, positionY + sizeY,  positionZ).texture(1, 1).next();
-		getBufferBuilder().vertex(positionX + sizeX, positionY,          positionZ).texture(1, 0).next();
-		getBufferBuilder().vertex(positionX,         positionY,          positionZ).texture(0, 0).next();
+		getBufferBuilder().vertex(x,         y + sY,  z).texture(0, 1).next();
+		getBufferBuilder().vertex(x + sX, y + sY,  z).texture(1, 1).next();
+		getBufferBuilder().vertex(x + sX, y,          z).texture(1, 0).next();
+		getBufferBuilder().vertex(x,         y,          z).texture(0, 0).next();
 
 		getTesselator().draw();
 

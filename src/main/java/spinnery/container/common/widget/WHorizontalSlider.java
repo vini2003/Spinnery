@@ -5,8 +5,6 @@ import spinnery.container.client.BaseRenderer;
 import org.lwjgl.glfw.GLFW;
 import spinnery.registry.ResourceRegistry;
 
-import java.util.Optional;
-
 public class WHorizontalSlider extends WWidget {
 	public class Theme extends WWidget.Theme {
 		transient private WColor topLeftBackground;
@@ -16,6 +14,7 @@ public class WHorizontalSlider extends WWidget {
 		transient private WColor topLeftForeground;
 		transient private WColor bottomRightForeground;
 		transient private WColor foreground;
+		transient private WColor text;
 
 		@SerializedName("top_left_background")
 		private String rawTopLeftBackground;
@@ -38,6 +37,9 @@ public class WHorizontalSlider extends WWidget {
 		@SerializedName("foreground")
 		private String rawForeground;
 
+		@SerializedName("text")
+		private String rawText;
+
 		public void build() {
 			topLeftBackground = new WColor(rawTopLeftBackground);
 			bottomRightBackground = new WColor(rawBottomRightBackground);
@@ -46,6 +48,7 @@ public class WHorizontalSlider extends WWidget {
 			topLeftForeground = new WColor(rawTopLeftForeground);
 			bottomRightForeground = new WColor(rawBottomRightForeground);
 			foreground = new WColor(rawForeground);
+			text = new WColor(rawText);
 		}
 
 		public WColor getTopLeftBackground() {
@@ -75,6 +78,8 @@ public class WHorizontalSlider extends WWidget {
 		public WColor getForeground() {
 			return foreground;
 		}
+
+		public WColor getText() { return text; }
 	}
 
 	WHorizontalSlider.Theme drawTheme;
@@ -82,8 +87,8 @@ public class WHorizontalSlider extends WWidget {
 	protected double limit = 0;
 	protected double position = 0;
 
-	protected String slidTotal;
-	protected int slidStringPosition;
+	protected String total;
+	protected int tX;
 
 	public WHorizontalSlider(WAnchor anchor, int positionX, int positionY, int positionZ, double sizeX, double sizeY, int limit, WPanel linkedWPanel) {
 		setLinkedPanel(linkedWPanel);
@@ -110,30 +115,14 @@ public class WHorizontalSlider extends WWidget {
 		this.limit = limit;
 	}
 
-	public void setSlidTotal(String slidTotal) {
-		this.slidTotal = slidTotal;
-	}
-
-	public String getSlidTotal() {
-		return slidTotal;
-	}
-
-	public void setSlidStringPosition(int slidStringPosition) {
-		this.slidStringPosition = slidStringPosition;
-	}
-
-	public int getSlidStringPosition() {
-		return slidStringPosition;
-	}
-
 	public double getPosition() {
 		return position;
 	}
 
 	public void setPosition(double position) {
 		this.position = position;
-		setSlidTotal(Integer.toString((int) Math.round(getPosition())));
-		setSlidStringPosition((int) (getPositionX() + (getSizeX() + 7) / 2 - BaseRenderer.getTextRenderer().getStringWidth(Integer.toString((int) getPosition())) / 2));
+		total = Integer.toString((int) Math.round(getPosition()));
+		tX = (int) (getPositionX() + (getSizeX() + 7) / 2 - BaseRenderer.getTextRenderer().getStringWidth(Integer.toString((int) getPosition())) / 2);
 	}
 
 	public void updatePosition(double mouseX, double mouseY) {
@@ -171,18 +160,28 @@ public class WHorizontalSlider extends WWidget {
 	}
 
 	@Override
-	public void drawWidget() {
-		BaseRenderer.getTextRenderer().draw(getSlidTotal(), getSlidStringPosition(), (int) (getPositionY() + getSizeY()) + 4, 16);
+	public void draw() {
+		double l = getLimit();
+		double p = getPosition();
 
-		BaseRenderer.drawRectangle(getPositionX(), getPositionY(), getPositionZ(), (getSizeX() + 7), 1, drawTheme.getTopLeftBackground());
-		BaseRenderer.drawRectangle(getPositionX(), getPositionY(), getPositionZ(), 1, getSizeY(), drawTheme.getTopLeftBackground());
+		double x = getPositionX();
+		double y = getPositionY();
+		double z = getPositionZ();
 
-		BaseRenderer.drawRectangle(getPositionX(), getPositionY() + getSizeY(), getPositionZ(), (getSizeX() + 7), 1, drawTheme.getBottomRightBackground());
-		BaseRenderer.drawRectangle(getPositionX() + (getSizeX() + 7), getPositionY(), getPositionZ(), 1, getSizeY() + 1, drawTheme.getBottomRightBackground());
+		double sX = getSizeX();
+		double sY = getSizeY();
 
-		BaseRenderer.drawRectangle(getPositionX() + 1, getPositionY() + 1, getPositionZ(), ((getSizeX() + 7) / getLimit()) * getPosition() - 1, getSizeY() - 1, drawTheme.getBackgroundOn());
-		BaseRenderer.drawRectangle(getPositionX() + ((getSizeX() + 7) / getLimit()) * getPosition(), getPositionY() + 1, getPositionZ(), (getSizeX() + 7) - ((getSizeX() + 7) / getLimit()) * getPosition(), getSizeY() - 1, drawTheme.getBackgroundOff());
+		BaseRenderer.getTextRenderer().drawWithShadow(total, tX, (int) (y + sY) + 4, drawTheme.getText().RGB);
 
-		BaseRenderer.drawBeveledPanel(getPositionX() + (getSizeX() / getLimit()) * getPosition(), getPositionY() - 1, getPositionZ(), 8, getSizeY() + 3, drawTheme.getTopLeftForeground(), drawTheme.getForeground(), drawTheme.getBottomRightForeground());
+		BaseRenderer.drawRectangle(x, y, z, (sX + 7), 1, drawTheme.getTopLeftBackground());
+		BaseRenderer.drawRectangle(x, y, z, 1, sY, drawTheme.getTopLeftBackground());
+
+		BaseRenderer.drawRectangle(x, y + sY, z, (sX + 7), 1, drawTheme.getBottomRightBackground());
+		BaseRenderer.drawRectangle(x + (sX + 7), y, z, 1, sY + 1, drawTheme.getBottomRightBackground());
+
+		BaseRenderer.drawRectangle(x + 1, y + 1, z, ((sX + 7) / l) * p - 1, sY - 1, drawTheme.getBackgroundOn());
+		BaseRenderer.drawRectangle(x + ((sX + 7) / l) * p, y + 1, z, (sX + 7) - ((sX + 7) / l) * p, sY - 1, drawTheme.getBackgroundOff());
+
+		BaseRenderer.drawBeveledPanel(x + (sX / l) * p, y - 1, z, 8, sY + 3, drawTheme.getTopLeftForeground(), drawTheme.getForeground(), drawTheme.getBottomRightForeground());
 	}
 }

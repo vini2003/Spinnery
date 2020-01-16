@@ -238,7 +238,7 @@ public class WDropdown extends WWidget {
 	}
 
 	@Override
-	public void drawWidget() {
+	public void draw() {
 		BaseRenderer.drawPanel(getPositionX(), getPositionY(), getPositionZ(), getSizeX(), getSizeY() + 1.75, drawTheme.getShadow(), drawTheme.getBackground(), drawTheme.getHighlight(), drawTheme.getOutline());
 
 		if (hasLabel()) {
@@ -246,10 +246,11 @@ public class WDropdown extends WWidget {
 			BaseRenderer.drawRectangle(positionX, positionY + 16, positionZ, getSizeX(), 1, drawTheme.getOutline());
 			BaseRenderer.drawRectangle(positionX + 1, positionY + 17, positionZ, getSizeX() - 2, 0.75, drawTheme.getShadow());
 		}
+
 		if (getState()) {
 			for (List<WWidget> widgetB : getDropdownWidgets()) {
 				for (WWidget widgetC : widgetB) {
-					widgetC.drawWidget();
+					widgetC.draw();
 				}
 			}
 		}

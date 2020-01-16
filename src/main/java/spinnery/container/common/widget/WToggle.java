@@ -123,19 +123,26 @@ public class WToggle extends WWidget {
 	}
 
 	@Override
-	public void drawWidget() {
-		BaseRenderer.drawRectangle(getPositionX(), getPositionY(), getPositionZ(), getSizeX(), 1, drawTheme.getTopLeftBackground());
-		BaseRenderer.drawRectangle(getPositionX(), getPositionY(), getPositionZ(), 1, getSizeY(), drawTheme.getTopLeftBackground());
+	public void draw() {
+		double x = getPositionX();
+		double y = getPositionY();
+		double z = getPositionZ();
 
-		BaseRenderer.drawRectangle(getPositionX(), getPositionY() + getSizeY(), getPositionZ(), getSizeX(), 1, drawTheme.getBottomRightBackground());
-		BaseRenderer.drawRectangle(getPositionX() + getSizeX(), getPositionY(), getPositionZ(), 1, getSizeY() + 1, drawTheme.getBottomRightBackground());
+		double sX = getSizeX();
+		double sY = getSizeY();
+		
+		BaseRenderer.drawRectangle(x, y, z, sX, 1, drawTheme.getTopLeftBackground());
+		BaseRenderer.drawRectangle(x, y, z, 1, sY, drawTheme.getTopLeftBackground());
 
-		BaseRenderer.drawRectangle(getPositionX() + 1, getPositionY() + 1, getPositionZ(), getSizeX() - 1, getSizeY() - 1, getToggleState() ? drawTheme.getBackgroundOn() : drawTheme.getBackgroundOff());
+		BaseRenderer.drawRectangle(x, y + sY, z, sX, 1, drawTheme.getBottomRightBackground());
+		BaseRenderer.drawRectangle(x + sX, y, z, 1, sY + 1, drawTheme.getBottomRightBackground());
+
+		BaseRenderer.drawRectangle(x + 1, y + 1, z, sX - 1, sY - 1, getToggleState() ? drawTheme.getBackgroundOn() : drawTheme.getBackgroundOff());
 
 		if (getToggleState()) {
-			BaseRenderer.drawBeveledPanel(getPositionX() + getSizeX() - 8, getPositionY() - 1, getPositionZ(), 8, getSizeY() + 3, drawTheme.getTopLeftForeground(), drawTheme.getForeground(), drawTheme.getBottomRightForeground());
+			BaseRenderer.drawBeveledPanel(x + sX - 8, y - 1, z, 8, sY + 3, drawTheme.getTopLeftForeground(), drawTheme.getForeground(), drawTheme.getBottomRightForeground());
 		} else {
-			BaseRenderer.drawBeveledPanel(getPositionX() + 1, getPositionY() - 1, getPositionZ(), 8, getSizeY() + 3, drawTheme.getTopLeftForeground(), drawTheme.getForeground(), drawTheme.getBottomRightForeground());
+			BaseRenderer.drawBeveledPanel(x + 1, y - 1, z, 8, sY + 3, drawTheme.getTopLeftForeground(), drawTheme.getForeground(), drawTheme.getBottomRightForeground());
 		}
 
 		if (hasLabel()) {

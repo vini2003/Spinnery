@@ -172,18 +172,28 @@ public class WVerticalSlider extends WWidget {
 	}
 
 	@Override
-	public void drawWidget() {
-		BaseRenderer.getTextRenderer().draw(getSlidTotal(), (int) (getPositionX() + getSizeX() + 4), (int) (getPositionY() + getSizeY() / 2), 16);
+	public void draw() {
+		double l = getLimit();
+		double p = getPosition();
+		
+		double x = getPositionX();
+		double y = getPositionY();
+		double z = getPositionZ();
 
-		BaseRenderer.drawRectangle(getPositionX(), getPositionY(), getPositionZ(), getSizeX(), 1, drawTheme.getTopLeftBackground());
-		BaseRenderer.drawRectangle(getPositionX(), getPositionY(), getPositionZ(), 1, (getSizeY() + 7), drawTheme.getTopLeftBackground());
+		double sX = getSizeX();
+		double sY = getSizeY();
+		
+		BaseRenderer.getTextRenderer().draw(getSlidTotal(), (int) (x + sX + 4), (int) (y + sY / 2), 16);
 
-		BaseRenderer.drawRectangle(getPositionX(), getPositionY() + (getSizeY() + 7) - 1, getPositionZ(), getSizeX(), 1, drawTheme.getBottomRightBackground());
-		BaseRenderer.drawRectangle(getPositionX() + getSizeX(), getPositionY(), getPositionZ(), 1, (getSizeY() + 7), drawTheme.getBottomRightBackground());
+		BaseRenderer.drawRectangle(x, y, z, sX, 1, drawTheme.getTopLeftBackground());
+		BaseRenderer.drawRectangle(x, y, z, 1, (sY + 7), drawTheme.getTopLeftBackground());
 
-		BaseRenderer.drawRectangle(getPositionX() + 1, getPositionY() + 1, getPositionZ(), getSizeX() - 1, ((getSizeY() + 7) / getLimit()) * getPosition() - 2, drawTheme.getBackgroundOn());
-		BaseRenderer.drawRectangle(getPositionX() + 1, getPositionY() + ((getSizeY() + 7) / getLimit()) * getPosition() - 1, getPositionZ(), getSizeX() - 1, (getSizeY() + 7) - ((getSizeY() + 7) / getLimit()) * getPosition(), drawTheme.getBackgroundOff());
+		BaseRenderer.drawRectangle(x, y + (sY + 7) - 1, z, sX, 1, drawTheme.getBottomRightBackground());
+		BaseRenderer.drawRectangle(x + sX, y, z, 1, (sY + 7), drawTheme.getBottomRightBackground());
 
-		BaseRenderer.drawBeveledPanel(getPositionX() - 1, getPositionY() + (getSizeY() / getLimit()) * getPosition() - 1, getPositionZ(), getSizeX() + 3, 8, drawTheme.getTopLeftForeground(), drawTheme.getForeground(), drawTheme.getBottomRightForeground());
+		BaseRenderer.drawRectangle(x + 1, y + 1, z, sX - 1, ((sY + 7) / l) * p - 2, drawTheme.getBackgroundOn());
+		BaseRenderer.drawRectangle(x + 1, y + ((sY + 7) / l) * p - 1, z, sX - 1, (sY + 7) - ((sY + 7) / l) * p, drawTheme.getBackgroundOff());
+
+		BaseRenderer.drawBeveledPanel(x - 1, y + (sY / l) * p - 1, z, sX + 3, 8, drawTheme.getTopLeftForeground(), drawTheme.getForeground(), drawTheme.getBottomRightForeground());
 	}
 }

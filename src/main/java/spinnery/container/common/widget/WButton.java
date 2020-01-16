@@ -100,6 +100,7 @@ public class WButton extends WWidget {
 			setToggleState(!getToggleState());
 			setToggleTicks(1);
 		}
+
 		super.onMouseClicked(mouseX, mouseY, mouseButton);
 	}
 
@@ -134,14 +135,14 @@ public class WButton extends WWidget {
 	}
 
 	@Override
-	public void drawWidget() {
+	public void draw() {
 		if (getToggleState()) {
 			BaseRenderer.drawBeveledPanel(getPositionX(), getPositionY(), getPositionZ(), getSizeX(), getSizeY(), drawTheme.getTopLeftOn(), drawTheme.getBackgroundOn(), drawTheme.getBottomRightOn());
 		} else {
 			BaseRenderer.drawBeveledPanel(getPositionX(), getPositionY(), getPositionZ(), getSizeX(), getSizeY(), drawTheme.getTopLeftOff(), drawTheme.getBackgroundOff(), drawTheme.getBottomRightOff());
 		}
 		if (hasLabel()) {
-			BaseRenderer.getTextRenderer().drawWithShadow(getLabel(), (float) (positionX + sizeX + 2), (float) (positionY + sizeY / 2 - 4.5), drawTheme.getLabel().RGB);
+			BaseRenderer.getTextRenderer().drawWithShadow(getLabel(), (float) (getPositionX() + getSizeX() + 2), (float) (getPositionY() + getSizeY() / 2 - 4.5), drawTheme.getLabel().RGB);
 		}
 	}
 

@@ -46,7 +46,8 @@
 		"background_off": "0xff8b8b8b",
 		"top_left_foreground": "0xffffffff",
 		"bottom_right_foreground": "0xff373737",
-		"foreground": "0xff6b6b6b"
+		"foreground": "0xff6b6b6b",
+		"text": "0xffffff"
 	},
 	"WHorizontalSlider": {
 		"top_left_background": "0xff373737",
@@ -55,7 +56,8 @@
 		"background_off": "0xff8b8b8b",
 		"top_left_foreground": "0xffffffff",
 		"bottom_right_foreground": "0xff373737",
-		"foreground": "0xff6b6b6b"
+		"foreground": "0xff6b6b6b",
+		"text": "0xffffff"
 	},
 	"WToggle": {
 		"top_left_background": "0xff373737",

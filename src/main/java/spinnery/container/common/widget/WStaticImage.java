@@ -30,7 +30,14 @@ public class WStaticImage extends WWidget {
 	}
 
 	@Override
-	public void drawWidget() {
-		BaseRenderer.drawImage(getPositionX(), getPositionY(), getPositionZ(), getSizeX(), getSizeY(), getTexture());
+	public void draw() {
+		double x = getPositionX();
+		double y = getPositionY();
+		double z = getPositionZ();
+
+		double sX = getSizeX();
+		double sY = getSizeY();
+
+		BaseRenderer.drawImage(x, y, z, sX, sY, getTexture());
 	}
 }

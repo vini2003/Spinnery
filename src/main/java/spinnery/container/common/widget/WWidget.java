@@ -327,12 +327,6 @@ public class WWidget implements Tickable {
 		return getFocus();
 	}
 
-	public void drawWidget() {
-		if (isHidden) {
-			return;
-		}
-	}
-
 	public void setAnchor(WAnchor anchor) {
 		this.anchor = anchor;
 	}
@@ -344,6 +338,9 @@ public class WWidget implements Tickable {
 	public void center() {
 		this.positionX = MinecraftClient.getInstance().window.getScaledWidth() / 2f  - sizeX / 2;
 		this.positionY = MinecraftClient.getInstance().window.getScaledHeight() / 2f - sizeY / 2;
+	}
+
+	public void draw() {
 	}
 
 	@Override

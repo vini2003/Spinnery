@@ -58,7 +58,10 @@ public class WStaticText extends WWidget {
 	}
 
 	@Override
-	public void drawWidget() {
-		BaseRenderer.getTextRenderer().drawWithShadow(getText(), (int) getPositionX(), (int) getPositionY(), drawTheme.getText().RGB);
+	public void draw() {
+		double x = getPositionX();
+		double y = getPositionY();
+
+		BaseRenderer.getTextRenderer().drawWithShadow(getText(), (int) x, (int) y, drawTheme.getText().RGB);
 	}
 }

@@ -7,7 +7,6 @@ import net.minecraft.container.Slot;
 import net.minecraft.container.SlotActionType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.BasicInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.Recipe;
@@ -25,7 +24,7 @@ public class BaseContainer extends CraftingContainer<Inventory> implements Ticka
 	protected PlayerInventory linkedPlayerInventory;
 	protected Inventory linkedInventory;
 	protected World linkedWorld;
-	protected WPanel linkedWPanel;
+	protected WPanel linkedPanel;
 	public List<WSlot> dragSlots = new ArrayList<>();
 
 	public int positionY = 0;
@@ -46,7 +45,7 @@ public class BaseContainer extends CraftingContainer<Inventory> implements Ticka
 	 * @param linkedWPanel WPanel to bet set.
 	 */
 	public void setLinkedPanel(WPanel linkedWPanel) {
-		this.linkedWPanel = linkedWPanel;
+		this.linkedPanel = linkedWPanel;
 	}
 
 	/**
@@ -54,7 +53,7 @@ public class BaseContainer extends CraftingContainer<Inventory> implements Ticka
 	 * @return Retrieved WPanel.
 	 */
 	public WPanel getLinkedPanel() {
-		return linkedWPanel;
+		return linkedPanel;
 	}
 
 	/**

@@ -140,10 +140,6 @@ public class WDynamicText extends WWidget {
 		return selRightPos != -1 && selLeftPos != -1;
 	}
 
-	void clearCopied() {
-		clip = "";
-	}
-
 	@Override
 	public void onCharTyped(char character) {
 		if (!isSelected) {
@@ -171,7 +167,7 @@ public class WDynamicText extends WWidget {
 			recalculateVisible();
 		} else if (keyPressed == 32 && InputUtil.isKeyPressed(handle, GLFW.GLFW_KEY_LEFT_CONTROL)) { // Ctrl w. D
 			clearSelection();
-			clearCopied();
+			clip = "";
 			recalculateVisible();
 		} else if (keyPressed == 46 && InputUtil.isKeyPressed(handle, GLFW.GLFW_KEY_LEFT_CONTROL)) { // Ctrl w. C
 			if (selLeftPos >= 0 && selRightPos >= 0 && selRightPos <= text.length()) {
@@ -229,30 +225,36 @@ public class WDynamicText extends WWidget {
 	}
 
 	@Override
-	public void drawWidget() {
-		BaseRenderer.drawBeveledPanel(getPositionX(), getPositionY(), getPositionZ(), getSizeX(), getSizeY(), drawTheme.getTopLeft(), drawTheme.getBackground(), drawTheme.getBottomRight());
+	public void draw() {
+		double x = getPositionX();
+		double y = getPositionY();
+		double z = getPositionZ();
+
+		double sX = getSizeX();
+		double sY = getSizeY();
+
+		BaseRenderer.drawBeveledPanel(x, y, z, sX, sY, drawTheme.getTopLeft(), drawTheme.getBackground(), drawTheme.getBottomRight());
 
 		if (text.isEmpty() && !isSelected) {
 			BaseRenderer.getTextRenderer().drawWithShadow(getLabel(), (float) (positionX + 4), (float) (positionY + sizeY - 10), drawTheme.getLabel().RGB);
 		} else {
-			double pP = positionX + 4, pC = offsetPos;
+			double pP = x + 4, pC = offsetPos;
 			for (char c : visible.toCharArray()) {
 				double cW = BaseRenderer.getTextRenderer().getCharWidth(c);
-				BaseRenderer.getTextRenderer().drawWithShadow(String.valueOf(c), (float) pP, (float) (positionY + sizeY - 10), drawTheme.getText().RGB);
+				BaseRenderer.getTextRenderer().drawWithShadow(String.valueOf(c), (float) pP, (float) (y + sY - 10), drawTheme.getText().RGB);
 
 				if (pC >= selLeftPos && (pC < selRightPos || pC == text.length() - 1 && pC <= selRightPos) && (selLeftPos - selRightPos != 0)) {
-					BaseRenderer.drawRectangle(pP, getPositionY() + getSizeY() - 12, 10, cW, 12, drawTheme.getHighlight());
+					BaseRenderer.drawRectangle(pP, y + sY - 12, 10, cW, 12, drawTheme.getHighlight());
 				}
 
 				pP += cW;
 
 				if (pC == cursorPos || pC == cursorPos - 1) {
-					BaseRenderer.getTextRenderer().drawWithShadow("|", (float) pP , (float) positionY + (float) sizeY - 10, drawTheme.getCursor().RGB);
+					BaseRenderer.getTextRenderer().drawWithShadow("|", (float) pP , (float) y + (float) sY - 10, drawTheme.getCursor().RGB);
 				}
 
 				++pC;
 			}
 		}
-
 	}
 }

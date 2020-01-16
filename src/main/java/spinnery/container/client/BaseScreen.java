@@ -4,7 +4,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.item.ItemStack;
 import org.lwjgl.glfw.GLFW;
-import spinnery.SpinneryMod;
 import spinnery.container.common.BaseContainer;
 import spinnery.container.common.widget.WList;
 import spinnery.container.common.widget.WSlot;
@@ -15,7 +14,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
 import spinnery.container.common.widget.WWidget;
 
-import javax.sound.midi.SysexMessage;
 import java.util.List;
 
 public class BaseScreen<T extends BaseContainer> extends AbstractContainerScreen<T> {
@@ -249,7 +247,7 @@ public class BaseScreen<T extends BaseContainer> extends AbstractContainerScreen
 
 	@Override
 	public void render(int mouseX, int mouseY, float tick) {
-		getLinkedContainer().getLinkedPanel().drawWidget();
+		getLinkedContainer().getLinkedPanel().draw();
 
 		super.render(mouseX, mouseY, tick);
 

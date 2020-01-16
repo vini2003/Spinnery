@@ -63,7 +63,7 @@ public class WDynamicImage extends WWidget {
 	}
 
 	@Override
-	public void drawWidget() {
+	public void draw() {
 		BaseRenderer.drawImage(getPositionX(), getPositionY(), getPositionZ(), getSizeX(), getSizeY(), getTexture(next()));
 	}
 }
