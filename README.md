@@ -1,5 +1,7 @@
 # Spinnery, ahoy!
 
+![Spinnery](https://i.imgur.com/M35Bgbl.png)
+
 Spinnery is a modern, feature-complete GUI library for Minecraft 1.14 and onwards, with a focus on making the GUI design and user experience significantly smoother and less nonsensic.
 
 Currently, we have:
