@@ -12,6 +12,7 @@ public class WButton extends WWidget {
 		transient private WColor topLeftOff;
 		transient private WColor bottomRightOff;
 		transient private WColor backgroundOff;
+		transient private WColor label;
 
 		@SerializedName("top_left_on")
 		private String rawTopLeftOn;
@@ -31,6 +32,9 @@ public class WButton extends WWidget {
 		@SerializedName("background_off")
 		private String rawBackgroundOff;
 
+		@SerializedName("label")
+		private String rawLabel;
+
 		public void build() {
 			topLeftOn = new WColor(rawTopLeftOn);
 			bottomRightOn = new WColor(rawBottomRightOn);
@@ -38,6 +42,7 @@ public class WButton extends WWidget {
 			topLeftOff  = new WColor(rawTopLeftOff);
 			bottomRightOff = new WColor(rawBottomRightOff);
 			backgroundOff = new WColor(rawBackgroundOff);
+			label = new WColor(rawLabel);
 		}
 
 		public WColor getTopLeftOn() {
@@ -63,7 +68,13 @@ public class WButton extends WWidget {
 		public WColor getBackgroundOff() {
 			return backgroundOff;
 		}
+
+		public WColor getLabel() {
+			return label;
+		}
 	}
+
+	WButton.Theme drawTheme;
 
 	protected boolean toggleState = false;
 	protected int toggleTicks = 0;
@@ -79,6 +90,8 @@ public class WButton extends WWidget {
 
 		setSizeX(sizeX);
 		setSizeY(sizeY);
+
+		setTheme("default");
 	}
 
 	@Override
@@ -115,13 +128,20 @@ public class WButton extends WWidget {
 	}
 
 	@Override
-	public void drawWidget() {
-		WButton.Theme drawTheme = ResourceRegistry.get(getTheme()).getWButtonTheme();
+	public void setTheme(String theme) {
+		super.setTheme(theme);
+		drawTheme = ResourceRegistry.get(getTheme()).getWButtonTheme();
+	}
 
+	@Override
+	public void drawWidget() {
 		if (getToggleState()) {
 			BaseRenderer.drawBeveledPanel(getPositionX(), getPositionY(), getPositionZ(), getSizeX(), getSizeY(), drawTheme.getTopLeftOn(), drawTheme.getBackgroundOn(), drawTheme.getBottomRightOn());
 		} else {
 			BaseRenderer.drawBeveledPanel(getPositionX(), getPositionY(), getPositionZ(), getSizeX(), getSizeY(), drawTheme.getTopLeftOff(), drawTheme.getBackgroundOff(), drawTheme.getBottomRightOff());
+		}
+		if (hasLabel()) {
+			BaseRenderer.getTextRenderer().drawWithShadow(getLabel(), (float) (positionX + sizeX + 2), (float) (positionY + sizeY / 2 - 4.5), drawTheme.getLabel().RGB);
 		}
 	}
 

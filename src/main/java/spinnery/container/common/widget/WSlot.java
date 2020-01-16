@@ -60,6 +60,8 @@ public class WSlot extends WWidget {
 		}
 	}
 
+	WSlot.Theme drawTheme;
+
 	private int slotNumber;
 	private ItemStack previewStack = ItemStack.EMPTY;
 	private Inventory linkedInventory;
@@ -75,6 +77,8 @@ public class WSlot extends WWidget {
 
 		setSizeX(sizeX);
 		setSizeY(sizeY);
+
+		setTheme("default");
 
 		setSlotNumber(slotNumber);
 		setLinkedInventory(linkedInventory);
@@ -280,15 +284,18 @@ public class WSlot extends WWidget {
 	}
 
 	@Override
-	public void drawWidget() {
-		WSlot.Theme drawTheme = ResourceRegistry.get(getTheme()).getWSlotTheme();
+	public void setTheme(String theme) {
+		super.setTheme(theme);
+		drawTheme = ResourceRegistry.get(getTheme()).getWSlotTheme();
+	}
 
+	@Override
+	public void drawWidget() {
 		BaseRenderer.drawBeveledPanel(getPositionX(), getPositionY(), getPositionZ(), getSizeX(), getSizeY(), drawTheme.getTopLeft(), getFocus() ? drawTheme.getBackgroundFocused() : drawTheme.getBackgroundUnfocused(), drawTheme.getBottomRight());
 
-		ItemRenderer itemRenderer = MinecraftClient.getInstance().getItemRenderer();
 		GuiLighting.enableForItems();
-		itemRenderer.renderGuiItem(getPreviewStack().isEmpty() ? getStack() : getPreviewStack(), 1 + (int) (getPositionX() + (getSizeX() - 18) / 2), 1 + (int) (getPositionY() + (getSizeY() - 18) / 2));
-		itemRenderer.renderGuiItemOverlay(MinecraftClient.getInstance().textRenderer, getPreviewStack().isEmpty() ? getStack() : getPreviewStack(), 1 + (int) (getPositionX() + (getSizeX() - 18) / 2), 1 + (int) (getPositionY() + (getSizeY() - 18) / 2));
+		BaseRenderer.getItemRenderer().renderGuiItem(getPreviewStack().isEmpty() ? getStack() : getPreviewStack(), 1 + (int) (getPositionX() + (getSizeX() - 18) / 2), 1 + (int) (getPositionY() + (getSizeY() - 18) / 2));
+		BaseRenderer.getItemRenderer().renderGuiItemOverlay(MinecraftClient.getInstance().textRenderer, getPreviewStack().isEmpty() ? getStack() : getPreviewStack(), 1 + (int) (getPositionX() + (getSizeX() - 18) / 2), 1 + (int) (getPositionY() + (getSizeY() - 18) / 2));
 		GuiLighting.disable();
 	}
 }

@@ -190,7 +190,7 @@ public class BaseScreen<T extends BaseContainer> extends AbstractContainerScreen
 			ItemStack stackA = MinecraftClient.getInstance().player.inventory.getCursorStack();
 			int quantityA = mouseButton == 0 ? (int) Math.floor((float) stackA.getCount() / getLinkedContainer().getDragSlots().size()) : mouseButton == 1 ? 1 : 0;
 			for (WSlot widgetA : getLinkedContainer().getDragSlots()) {
-				if ((widgetA.getStack().getCount() !=  widgetA.getStack().getMaxCount())) {
+				if ((widgetA.getStack().getCount() != widgetA.getStack().getMaxCount())) {
 					if (widgetA.getStack().isEmpty()) {
 						widgetA.setPreviewStack(new ItemStack(stackA.getItem(), quantityA));
 					} else if (widgetA.getStack().isItemEqualIgnoreDamage(stackA)) {
@@ -200,10 +200,10 @@ public class BaseScreen<T extends BaseContainer> extends AbstractContainerScreen
 					}
 				}
 			}
-		} else {
-			for (WWidget widget : getLinkedContainer().getLinkedPanel().getLinkedWidgets()) {
-				widget.onMouseDragged(slotX, slotY, mouseButton, mouseX, mouseY);
-			}
+		}
+
+		for (WWidget widget : getLinkedContainer().getLinkedPanel().getLinkedWidgets()) {
+			widget.onMouseDragged(slotX, slotY, mouseButton, mouseX, mouseY);
 		}
 
 		return super.mouseDragged(slotX, slotY, mouseButton, mouseX, mouseY);
@@ -249,7 +249,6 @@ public class BaseScreen<T extends BaseContainer> extends AbstractContainerScreen
 
 	@Override
 	public void render(int mouseX, int mouseY, float tick) {
-		getLinkedContainer().getLinkedPanel().drawPanel();
 		getLinkedContainer().getLinkedPanel().drawWidget();
 
 		super.render(mouseX, mouseY, tick);

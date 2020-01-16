@@ -20,12 +20,15 @@ public class BaseRenderer {
 		GlStateManager.blendFuncSeparate(770, 771, 1, 0);
 		GlStateManager.color4f(color.R, color.G, color.B, color.A);
 
-		getBufferBuilder().begin(GL11.GL_QUADS, VertexFormats.POSITION);
+		getBufferBuilder().begin(GL11.GL_TRIANGLES, VertexFormats.POSITION);
+
+		getBufferBuilder().vertex(positionX,         positionY,         positionZ).next();
+		getBufferBuilder().vertex(positionX,         positionY + sizeY, positionZ).next();
+		getBufferBuilder().vertex(positionX + sizeX, positionY,         positionZ).next();
 
 		getBufferBuilder().vertex(positionX,         positionY + sizeY, positionZ).next();
 		getBufferBuilder().vertex(positionX + sizeX, positionY + sizeY, positionZ).next();
 		getBufferBuilder().vertex(positionX + sizeX, positionY,         positionZ).next();
-		getBufferBuilder().vertex(positionX,         positionY,         positionZ).next();
 
 		getTesselator().draw();
 
@@ -84,6 +87,10 @@ public class BaseRenderer {
 
 	public static TextRenderer getTextRenderer() {
 		return MinecraftClient.getInstance().textRenderer;
+	}
+
+	public static ItemRenderer getItemRenderer() {
+		return MinecraftClient.getInstance().getItemRenderer();
 	}
 
 	public static Tessellator getTesselator() {

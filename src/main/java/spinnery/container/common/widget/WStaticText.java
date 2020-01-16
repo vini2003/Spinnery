@@ -21,11 +21,13 @@ public class WStaticText extends WWidget {
 		}
 	}
 
+	WStaticText.Theme drawTheme;
+
 	protected int hexColor;
 
-	protected Text text;
+	protected String text;
 
-	public WStaticText(WAnchor anchor, int positionX, int positionY, int positionZ, double sizeX, Text text, WPanel linkedWPanel) {
+	public WStaticText(WAnchor anchor, int positionX, int positionY, int positionZ, String text, WPanel linkedWPanel) {
 		setLinkedPanel(linkedWPanel);
 
 		setAnchor(anchor);
@@ -36,21 +38,27 @@ public class WStaticText extends WWidget {
 
 		setSizeX(sizeX);
 
+		setTheme("default");
+
 		setText(text);
 	}
 
-	public void setText(Text text) {
+	public void setText(String text) {
 		this.text = text;
 	}
 
-	public Text getText() {
+	public String getText() {
 		return text;
 	}
 
 	@Override
-	public void drawWidget() {
-		WStaticText.Theme drawTheme = ResourceRegistry.get(getTheme()).getWStaticTextTheme();
+	public void setTheme(String theme) {
+		super.setTheme(theme);
+		drawTheme = ResourceRegistry.get(getTheme()).getWStaticTextTheme();
+	}
 
-		BaseRenderer.getTextRenderer().drawStringBounded(getText().getString(), (int) getPositionX(), (int) getPositionY(), (int) getSizeX(), drawTheme.getText().RGB);
+	@Override
+	public void drawWidget() {
+		BaseRenderer.getTextRenderer().drawWithShadow(getText(), (int) getPositionX(), (int) getPositionY(), drawTheme.getText().RGB);
 	}
 }

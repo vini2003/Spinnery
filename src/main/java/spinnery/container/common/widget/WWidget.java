@@ -12,11 +12,14 @@ public class WWidget implements Tickable {
 		public void build() {
 		}
 	}
+
 	protected WPanel linkedWPanel;
 
 	protected WAnchor anchor;
 
 	private String theme = "default";
+
+	private String label = null;
 
 	protected double positionX = 0;
 	protected double positionY = 0;
@@ -207,6 +210,18 @@ public class WWidget implements Tickable {
 		this.linkedRunnableOnDrawTooltip = linkedRunnableOnDrawTooltip;
 	}
 
+	public String getLabel() {
+		return label;
+	}
+
+	public void setLabel(String label) {
+		this.label = label;
+	}
+
+	public boolean hasLabel() {
+		return label != null;
+	}
+
 	public String getTheme() {
 		return theme;
 	}
@@ -324,6 +339,11 @@ public class WWidget implements Tickable {
 
 	public WAnchor getAnchor() {
 		return anchor;
+	}
+
+	public void center() {
+		this.positionX = MinecraftClient.getInstance().window.getScaledWidth() / 2f  - sizeX / 2;
+		this.positionY = MinecraftClient.getInstance().window.getScaledHeight() / 2f - sizeY / 2;
 	}
 
 	@Override

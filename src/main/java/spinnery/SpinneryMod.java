@@ -14,8 +14,6 @@ public class SpinneryMod implements ModInitializer {
 	public static Logger logger = LogManager.getLogger("Spinnery");
 	public static final String LOG_ID = "Spinnery";
 	public static final Identifier MOD_ID = new Identifier(LOG_ID.toLowerCase());
-	public static final boolean BENCHMARK = true;
-
 
 	@Override
 	public void onInitialize() {

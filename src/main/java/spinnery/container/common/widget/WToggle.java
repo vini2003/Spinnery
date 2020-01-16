@@ -13,6 +13,7 @@ public class WToggle extends WWidget {
 		transient private WColor topLeftForeground;
 		transient private WColor bottomRightForeground;
 		transient private WColor foreground;
+		transient private WColor label;
 
 		@SerializedName("top_left_background")
 		private String rawTopLeftBackground;
@@ -35,6 +36,9 @@ public class WToggle extends WWidget {
 		@SerializedName("foreground")
 		private String rawForeground;
 
+		@SerializedName("label")
+		private String rawLabel;
+
 		public void build() {
 			topLeftBackground = new WColor(rawTopLeftBackground);
 			bottomRightBackground = new WColor(rawBottomRightBackground);
@@ -43,6 +47,7 @@ public class WToggle extends WWidget {
 			topLeftForeground = new WColor(rawTopLeftForeground);
 			bottomRightForeground = new WColor(rawBottomRightForeground);
 			foreground = new WColor(rawForeground);
+			label = new WColor(rawLabel);
 		}
 
 		public WColor getTopLeftBackground() {
@@ -72,7 +77,11 @@ public class WToggle extends WWidget {
 		public WColor getForeground() {
 			return foreground;
 		}
+
+		public WColor getLabel() { return label; }
 	}
+
+	WToggle.Theme drawTheme;
 
 	protected boolean toggleState = false;
 
@@ -87,6 +96,8 @@ public class WToggle extends WWidget {
 
 		setSizeX(sizeX);
 		setSizeY(sizeY);
+
+		setTheme("default");
 	}
 
 	@Override
@@ -106,9 +117,13 @@ public class WToggle extends WWidget {
 	}
 
 	@Override
-	public void drawWidget() {
-		WToggle.Theme drawTheme = ResourceRegistry.get(getTheme()).getWToggleTheme();
+	public void setTheme(String theme) {
+		super.setTheme(theme);
+		drawTheme = ResourceRegistry.get(getTheme()).getWToggleTheme();
+	}
 
+	@Override
+	public void drawWidget() {
 		BaseRenderer.drawRectangle(getPositionX(), getPositionY(), getPositionZ(), getSizeX(), 1, drawTheme.getTopLeftBackground());
 		BaseRenderer.drawRectangle(getPositionX(), getPositionY(), getPositionZ(), 1, getSizeY(), drawTheme.getTopLeftBackground());
 
@@ -121,6 +136,10 @@ public class WToggle extends WWidget {
 			BaseRenderer.drawBeveledPanel(getPositionX() + getSizeX() - 8, getPositionY() - 1, getPositionZ(), 8, getSizeY() + 3, drawTheme.getTopLeftForeground(), drawTheme.getForeground(), drawTheme.getBottomRightForeground());
 		} else {
 			BaseRenderer.drawBeveledPanel(getPositionX() + 1, getPositionY() - 1, getPositionZ(), 8, getSizeY() + 3, drawTheme.getTopLeftForeground(), drawTheme.getForeground(), drawTheme.getBottomRightForeground());
+		}
+
+		if (hasLabel()) {
+			BaseRenderer.getTextRenderer().drawWithShadow(getLabel(), (float) (positionX + sizeX + 2), (float) (positionY + sizeY / 2 - 4.5), drawTheme.getLabel().RGB);
 		}
 	}
 }

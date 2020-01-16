@@ -15,6 +15,7 @@ public class WPanel extends WWidget {
 		transient private WColor background;
 		transient private WColor highlight;
 		transient private WColor outline;
+		transient private WColor label;
 
 		@SerializedName("shadow")
 		private String rawShadow;
@@ -28,11 +29,15 @@ public class WPanel extends WWidget {
 		@SerializedName("outline")
 		private String rawOutline;
 
+		@SerializedName("label")
+		private String rawLabel;
+
 		public void build() {
 			shadow = new WColor(rawShadow);
 			background = new WColor(rawBackground);
 			highlight = new WColor(rawHighlight);
 			outline = new WColor(rawOutline);
+			label = new WColor(rawLabel);
 		}
 
 		public WColor getShadow() {
@@ -50,7 +55,11 @@ public class WPanel extends WWidget {
 		public WColor getOutline() {
 			return outline;
 		}
+
+		public WColor getLabel() { return label; }
 	}
+
+	WPanel.Theme drawTheme;
 
 	protected BaseContainer linkedContainer;
 
@@ -67,6 +76,8 @@ public class WPanel extends WWidget {
 
 		setSizeX(sizeX);
 		setSizeY(sizeY);
+
+		setTheme("default");
 	}
 
 	public WPanel(int positionX, int positionY, int positionZ, int sizeX, int sizeY, BaseContainer linkedContainer) {
@@ -76,6 +87,8 @@ public class WPanel extends WWidget {
 
 		setSizeX(sizeX);
 		setSizeY(sizeY);
+
+		setTheme("default");
 
 		setLinkedContainer(linkedContainer);
 	}
@@ -143,14 +156,22 @@ public class WPanel extends WWidget {
 		super.onMouseDragged(mouseX, mouseY, mouseButton, dragOffsetX, dragOffsetY);
 	}
 
-	public void drawPanel() {
-		WPanel.Theme drawTheme = ResourceRegistry.get(getTheme()).getWPanelTheme();
-
-		BaseRenderer.drawPanel(getPositionX(), getPositionY(), getPositionZ(), getSizeX(), getSizeY(), drawTheme.getShadow(), drawTheme.getBackground(), drawTheme.getHighlight(), drawTheme.getOutline());
+	@Override
+	public void setTheme(String theme) {
+		super.setTheme(theme);
+		drawTheme = ResourceRegistry.get(getTheme()).getWPanelTheme();
 	}
 
 	@Override
 	public void drawWidget() {
+		BaseRenderer.drawPanel(getPositionX(), getPositionY(), getPositionZ(), getSizeX(), getSizeY(), drawTheme.getShadow(), drawTheme.getBackground(), drawTheme.getHighlight(), drawTheme.getOutline());
+
+		if (hasLabel()) {
+			BaseRenderer.getTextRenderer().drawWithShadow(getLabel(), (int) (getPositionX() + getSizeX() / 2 - BaseRenderer.getTextRenderer().getStringWidth(getLabel()) / 2), (int) (positionY + 6), drawTheme.getLabel().RGB);
+			BaseRenderer.drawRectangle(positionX, positionY + 16, positionZ, sizeX, 1, drawTheme.getOutline());
+			BaseRenderer.drawRectangle(positionX + 1, positionY + 17, positionZ, sizeX - 2, 0.75, drawTheme.getShadow());
+		}
+
 		for (WWidget widget : getLinkedWidgets()) {
 			widget.drawWidget();
 		}

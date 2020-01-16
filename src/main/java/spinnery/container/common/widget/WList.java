@@ -17,6 +17,7 @@ public class WList extends WWidget {
 		transient private WColor background;
 		transient private WColor highlight;
 		transient private WColor outline;
+		transient private WColor label;
 
 		@SerializedName("shadow")
 		private String rawShadow;
@@ -30,11 +31,15 @@ public class WList extends WWidget {
 		@SerializedName("outline")
 		private String rawOutline;
 
+		@SerializedName("label")
+		private String rawLabel;
+
 		public void build() {
 			shadow = new WColor(rawShadow);
 			background = new WColor(rawBackground);
 			highlight = new WColor(rawHighlight);
 			outline = new WColor(rawOutline);
+			label = new WColor(rawLabel);
 		}
 
 		public WColor getShadow() {
@@ -52,11 +57,13 @@ public class WList extends WWidget {
 		public WColor getOutline() {
 			return outline;
 		}
+
+		public WColor getLabel() { return label; }
 	}
 
+	WList.Theme drawTheme;
+
 	public List<List<WWidget>> listWidgets = new ArrayList<>();
-	public MutableInt publicTotal = new MutableInt(0);
-	public MutableInt publicCurrent = new MutableInt(0);
 
 	public WList(WAnchor anchor, int positionX, int positionY, int positionZ, double sizeX, double sizeY, WPanel linkedWPanel) {
 		setLinkedPanel(linkedWPanel);
@@ -69,6 +76,8 @@ public class WList extends WWidget {
 
 		setSizeX(sizeX);
 		setSizeY(sizeY);
+
+		setTheme("default");
 	}
 
 	public List<List<WWidget>> getListWidgets() {
@@ -187,7 +196,7 @@ public class WList extends WWidget {
 	}
 
 	public void updatePositions() {
-		int y = 4;
+		int y = hasLabel() ? (int) (positionY + 20) : 4;
 
 		for (List<WWidget> widgetA : getListWidgets()) {
 			int x = (int) getPositionX() + 4;
@@ -209,31 +218,39 @@ public class WList extends WWidget {
 	}
 
 	public void add(WWidget... widgetArray) {
-		publicTotal.add(widgetArray.length);
 		getListWidgets().add(Arrays.asList(widgetArray));
 		updateHidden();
 		updatePositions();
 	}
 
 	public void remove(WWidget... widgetArray) {
-		publicTotal.add(widgetArray.length);
 		getListWidgets().remove(Arrays.asList(widgetArray));
 		updateHidden();
 		updatePositions();
 	}
 
 	@Override
-	public void drawWidget() {
-		WList.Theme drawTheme = ResourceRegistry.get(getTheme()).getWListTheme();
+	public void setTheme(String theme) {
+		super.setTheme(theme);
+		drawTheme = ResourceRegistry.get(getTheme()).getWListTheme();
+	}
 
+	@Override
+	public void drawWidget() {
 		BaseRenderer.drawPanel(getPositionX(), getPositionY(), getPositionZ(), getSizeX(), getSizeY(), drawTheme.getShadow(), drawTheme.getBackground(), drawTheme.getHighlight(), drawTheme.getOutline());
+
+		if (hasLabel()) {
+			BaseRenderer.getTextRenderer().drawWithShadow(getLabel(), (int) (getPositionX() + getSizeX() / 2 - BaseRenderer.getTextRenderer().getStringWidth(getLabel()) / 2), (int) (positionY + 6), drawTheme.getLabel().RGB);
+			BaseRenderer.drawRectangle(positionX, positionY + 16, positionZ, sizeX, 1, drawTheme.getOutline());
+			BaseRenderer.drawRectangle(positionX + 1, positionY + 17, positionZ, sizeX - 2, 0.75, drawTheme.getShadow());
+		}
 
 		int rawHeight = MinecraftClient.getInstance().window.getHeight();
 		double scale = MinecraftClient.getInstance().window.getScaleFactor();
 
 		GL11.glEnable(GL11.GL_SCISSOR_TEST);
 
-		GL11.glScissor((int) (getPositionX() * scale), (int) (rawHeight - ((getPositionY() - 4) * scale) - (getSizeY() * scale)), (int) (getSizeX() * scale), (int) ((getSizeY() - 8) * scale));
+		GL11.glScissor((int) (getPositionX() * scale), (int) (rawHeight - ((getPositionY() - 4) * scale) - (getSizeY() * scale)), (int) (getSizeX() * scale), (int) ((getSizeY() - 8 - (hasLabel() ? 13.75 : 0)) * scale));
 
 		for (List<WWidget> widgetB : getListWidgets()) {
 			for (WWidget widgetC : widgetB) {

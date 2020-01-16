@@ -4,19 +4,22 @@
 		"shadow": "0xff555555",
 		"background": "0xffc6c6c6",
 		"highlight": "0xffffffff",
-		"outline": "0xff000000"
+		"outline": "0xff000000",
+		"label": "0xffffff"
 	},
 	"WList": {
 		"shadow": "0xff555555",
 		"background": "0xffc6c6c6",
 		"highlight": "0xffffffff",
-		"outline": "0xff000000"
+		"outline": "0xff000000",
+		"label": "0xffffff"
 	},
 	"WDropdown": {
 		"shadow": "0xff555555",
 		"background": "0xffc6c6c6",
 		"highlight": "0xffffffff",
-		"outline": "0xff000000"
+		"outline": "0xff000000",
+		"label": "0xffffff"
 	},
 	"WStaticImage": {
 
@@ -33,7 +36,8 @@
 		"background": "0xff000000",
 		"text": "0xffffff",
 		"highlight": "0xb30400ff",
-		"cursor": "0xffffff"
+		"cursor": "0xffffff",
+		"label": "0x808080"
 	},
 	"WVerticalSlider": {
 		"top_left_background": "0xff373737",
@@ -60,7 +64,8 @@
 		"background_off": "0xff8b8b8b",
 		"top_left_foreground": "0xffffffff",
 		"bottom_right_foreground": "0xff373737",
-		"foreground": "0xff6b6b6b"
+		"foreground": "0xff6b6b6b",
+		"label": "0xffffff"
 	},
 	"WButton": {
 		"top_left_on": "0xff373737",
@@ -68,7 +73,8 @@
 		"background_on": "0xff686868",
 		"top_left_off": "0xffffffff",
 		"bottom_right_off": "0xff373737",
-		"background_off": "0xff8b8b8b"
+		"background_off": "0xff8b8b8b",
+		"label": "0xffffff"
 	},
 	"WSlot": {
 		"top_left": "0xff373737",

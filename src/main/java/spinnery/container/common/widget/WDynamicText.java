@@ -15,6 +15,7 @@ public class WDynamicText extends WWidget {
 		transient private WColor text;
 		transient private WColor highlight;
 		transient private WColor cursor;
+		transient private WColor label;
 
 		@SerializedName("top_left")
 		private String rawTopLeft;
@@ -34,6 +35,9 @@ public class WDynamicText extends WWidget {
 		@SerializedName("cursor")
 		private String rawCursor;
 
+		@SerializedName("label")
+		private String rawLabel;
+
 		public void build() {
 			topLeft = new WColor(rawTopLeft);
 			bottomRight = new WColor(rawBottomRight);
@@ -41,6 +45,7 @@ public class WDynamicText extends WWidget {
 			text = new WColor(rawText);
 			highlight = new WColor(rawHighlight);
 			cursor = new WColor(rawCursor);
+			label = new WColor(rawLabel);
 		}
 
 		public WColor getTopLeft() {
@@ -66,7 +71,11 @@ public class WDynamicText extends WWidget {
 		public WColor getCursor() {
 			return cursor;
 		}
+
+		public WColor getLabel() { return label; }
 	}
+
+	WDynamicText.Theme drawTheme;
 
 	protected boolean isSelected;
 
@@ -92,6 +101,8 @@ public class WDynamicText extends WWidget {
 
 		setSizeX(sizeX);
 		setSizeY(sizeY);
+
+		setTheme("default");
 	}
 
 	@Override
@@ -211,29 +222,37 @@ public class WDynamicText extends WWidget {
 		}
 	}
 
+	@Override
+	public void setTheme(String theme) {
+		super.setTheme(theme);
+		drawTheme = ResourceRegistry.get(getTheme()).getWDynamicTextTheme();
+	}
 
 	@Override
 	public void drawWidget() {
-		WDynamicText.Theme drawTheme = ResourceRegistry.get(getTheme()).getWDynamicTextTheme();
-
 		BaseRenderer.drawBeveledPanel(getPositionX(), getPositionY(), getPositionZ(), getSizeX(), getSizeY(), drawTheme.getTopLeft(), drawTheme.getBackground(), drawTheme.getBottomRight());
 
-		double pP = positionX + 4, pC = offsetPos;
-		for (char c : visible.toCharArray()) {
-			double cW = BaseRenderer.getTextRenderer().getCharWidth(c);
-			BaseRenderer.getTextRenderer().drawWithShadow(String.valueOf(c), (float) pP, (float) (positionY + sizeY - 10), drawTheme.getText().RGB);
+		if (text.isEmpty() && !isSelected) {
+			BaseRenderer.getTextRenderer().drawWithShadow(getLabel(), (float) (positionX + 4), (float) (positionY + sizeY - 10), drawTheme.getLabel().RGB);
+		} else {
+			double pP = positionX + 4, pC = offsetPos;
+			for (char c : visible.toCharArray()) {
+				double cW = BaseRenderer.getTextRenderer().getCharWidth(c);
+				BaseRenderer.getTextRenderer().drawWithShadow(String.valueOf(c), (float) pP, (float) (positionY + sizeY - 10), drawTheme.getText().RGB);
 
-			if (pC >= selLeftPos && (pC < selRightPos || pC == text.length() - 1 && pC <= selRightPos) && (selLeftPos - selRightPos != 0)) {
-				BaseRenderer.drawRectangle(pP, getPositionY() + getSizeY() - 12, 10, cW, 12, drawTheme.getHighlight());
+				if (pC >= selLeftPos && (pC < selRightPos || pC == text.length() - 1 && pC <= selRightPos) && (selLeftPos - selRightPos != 0)) {
+					BaseRenderer.drawRectangle(pP, getPositionY() + getSizeY() - 12, 10, cW, 12, drawTheme.getHighlight());
+				}
+
+				pP += cW;
+
+				if (pC == cursorPos || pC == cursorPos - 1) {
+					BaseRenderer.getTextRenderer().drawWithShadow("|", (float) pP , (float) positionY + (float) sizeY - 10, drawTheme.getCursor().RGB);
+				}
+
+				++pC;
 			}
-
-			pP += cW;
-
-			if (pC == cursorPos || pC == cursorPos - 1) {
-				BaseRenderer.getTextRenderer().drawWithShadow("|", (float) pP , (float) positionY + (float) sizeY - 10, drawTheme.getCursor().RGB);
-			}
-
-			++pC;
 		}
+
 	}
 }

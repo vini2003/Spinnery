@@ -77,6 +77,8 @@ public class WHorizontalSlider extends WWidget {
 		}
 	}
 
+	WHorizontalSlider.Theme drawTheme;
+
 	protected double limit = 0;
 	protected double position = 0;
 
@@ -94,6 +96,8 @@ public class WHorizontalSlider extends WWidget {
 
 		setSizeX(sizeX);
 		setSizeY(sizeY);
+
+		setTheme("default");
 
 		setLimit(limit);
 	}
@@ -162,9 +166,12 @@ public class WHorizontalSlider extends WWidget {
 	}
 
 	@Override
-	public void drawWidget() {
-		WHorizontalSlider.Theme drawTheme = ResourceRegistry.get(getTheme()).getWHorizontalSliderTheme();
+	public void setTheme(String theme) {
+		drawTheme = ResourceRegistry.get(getTheme()).getWHorizontalSliderTheme();
+	}
 
+	@Override
+	public void drawWidget() {
 		BaseRenderer.getTextRenderer().draw(getSlidTotal(), getSlidStringPosition(), (int) (getPositionY() + getSizeY()) + 4, 16);
 
 		BaseRenderer.drawRectangle(getPositionX(), getPositionY(), getPositionZ(), (getSizeX() + 7), 1, drawTheme.getTopLeftBackground());

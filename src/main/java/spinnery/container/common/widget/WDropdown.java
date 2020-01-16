@@ -15,6 +15,7 @@ public class WDropdown extends WWidget {
 		transient private WColor background;
 		transient private WColor highlight;
 		transient private WColor outline;
+		transient private WColor label;
 
 		@SerializedName("shadow")
 		private String rawShadow;
@@ -28,11 +29,15 @@ public class WDropdown extends WWidget {
 		@SerializedName("outline")
 		private String rawOutline;
 
+		@SerializedName("label")
+		private String rawLabel;
+
 		public void build() {
 			shadow = new WColor(rawShadow);
 			background = new WColor(rawBackground);
 			highlight = new WColor(rawHighlight);
 			outline = new WColor(rawOutline);
+			label = new WColor(rawLabel);
 		}
 
 		public WColor getShadow() {
@@ -50,7 +55,11 @@ public class WDropdown extends WWidget {
 		public WColor getOutline() {
 			return outline;
 		}
+
+		public WColor getLabel() { return label; }
 	}
+
+	WDropdown.Theme drawTheme;
 
 	public List<List<WWidget>> dropdownWidgets = new ArrayList<>();
 	int[][] sizes = new int[2][2];
@@ -67,6 +76,8 @@ public class WDropdown extends WWidget {
 		setPositionZ(positionZ);
 
 		setSizes(sizeX1, sizeY1, sizeX2, sizeY2);
+
+		setTheme("default");
 
 		updateHidden();
 	}
@@ -187,7 +198,7 @@ public class WDropdown extends WWidget {
 	}
 
 	public void updatePositions() {
-		int y = sizes[0][1] + 2;
+		int y = (int) (positionY + sizes[0][1] + 4);
 
 		for (List<WWidget> widgetA : getDropdownWidgets()) {
 			int x = (int) getPositionX() + 4;
@@ -221,10 +232,20 @@ public class WDropdown extends WWidget {
 	}
 
 	@Override
-	public void drawWidget() {
-		WDropdown.Theme drawTheme = ResourceRegistry.get(getTheme()).getWDropdownTheme();
+	public void setTheme(String theme) {
+		super.setTheme(theme);
+		drawTheme = ResourceRegistry.get(getTheme()).getWDropdownTheme();
+	}
 
-		BaseRenderer.drawPanel(getPositionX(), getPositionY(), getPositionZ(), getSizeX(), getSizeY(), drawTheme.getShadow(), drawTheme.getBackground(), drawTheme.getHighlight(), drawTheme.getOutline());
+	@Override
+	public void drawWidget() {
+		BaseRenderer.drawPanel(getPositionX(), getPositionY(), getPositionZ(), getSizeX(), getSizeY() + 1.75, drawTheme.getShadow(), drawTheme.getBackground(), drawTheme.getHighlight(), drawTheme.getOutline());
+
+		if (hasLabel()) {
+			BaseRenderer.getTextRenderer().drawWithShadow(getLabel(), (int) (getPositionX() + getSizeX() / 2 - BaseRenderer.getTextRenderer().getStringWidth(getLabel()) / 2), (int) (positionY + 6), drawTheme.getLabel().RGB);
+			BaseRenderer.drawRectangle(positionX, positionY + 16, positionZ, getSizeX(), 1, drawTheme.getOutline());
+			BaseRenderer.drawRectangle(positionX + 1, positionY + 17, positionZ, getSizeX() - 2, 0.75, drawTheme.getShadow());
+		}
 		if (getState()) {
 			for (List<WWidget> widgetB : getDropdownWidgets()) {
 				for (WWidget widgetC : widgetB) {
