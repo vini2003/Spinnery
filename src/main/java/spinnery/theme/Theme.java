@@ -1,16 +1,16 @@
 package spinnery.theme;
 
 import com.google.gson.annotations.SerializedName;
-import spinnery.container.common.widget.WButton;
-import spinnery.container.common.widget.WDropdown;
-import spinnery.container.common.widget.WDynamicText;
-import spinnery.container.common.widget.WHorizontalSlider;
-import spinnery.container.common.widget.WList;
-import spinnery.container.common.widget.WPanel;
-import spinnery.container.common.widget.WSlot;
-import spinnery.container.common.widget.WStaticText;
-import spinnery.container.common.widget.WToggle;
-import spinnery.container.common.widget.WVerticalSlider;
+import spinnery.widget.WButton;
+import spinnery.widget.WDropdown;
+import spinnery.widget.WDynamicText;
+import spinnery.widget.WHorizontalSlider;
+import spinnery.widget.WList;
+import spinnery.widget.WPanel;
+import spinnery.widget.WSlot;
+import spinnery.widget.WStaticText;
+import spinnery.widget.WToggle;
+import spinnery.widget.WVerticalSlider;
 
 public class Theme {
 	@SerializedName("Identifier")
