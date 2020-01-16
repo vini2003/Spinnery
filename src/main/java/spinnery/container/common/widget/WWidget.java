@@ -8,6 +8,10 @@ import net.minecraft.util.Tickable;
 import java.util.Optional;
 
 public class WWidget implements Tickable {
+	public class Theme {
+		public void build() {
+		}
+	}
 	protected WPanel linkedWPanel;
 
 	protected WAnchor anchor;

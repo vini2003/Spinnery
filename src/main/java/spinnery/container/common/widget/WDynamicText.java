@@ -8,46 +8,62 @@ import spinnery.container.client.BaseRenderer;
 import spinnery.registry.ResourceRegistry;
 
 public class WDynamicText extends WWidget {
-	public class Theme {
+	public class Theme extends WWidget.Theme {
+		transient private WColor topLeft;
+		transient private WColor bottomRight;
+		transient private WColor background;
+		transient private WColor text;
+		transient private WColor highlight;
+		transient private WColor cursor;
+
 		@SerializedName("top_left")
-		private String topLeft;
+		private String rawTopLeft;
 
 		@SerializedName("bottom_right")
-		private String bottomRight;
+		private String rawBottomRight;
 
 		@SerializedName("background")
-		private String background;
+		private String rawBackground;
 
 		@SerializedName("text")
-		private String text;
+		private String rawText;
 
 		@SerializedName("highlight")
-		private String highlight;
+		private String rawHighlight;
 
 		@SerializedName("cursor")
-		private String cursor;
+		private String rawCursor;
 
-		public String getTopLeft() {
+		public void build() {
+			topLeft = new WColor(rawTopLeft);
+			bottomRight = new WColor(rawBottomRight);
+			background = new WColor(rawBackground);
+			text = new WColor(rawText);
+			highlight = new WColor(rawHighlight);
+			cursor = new WColor(rawCursor);
+		}
+
+		public WColor getTopLeft() {
 			return topLeft;
 		}
 
-		public String getBottomRight() {
+		public WColor getBottomRight() {
 			return bottomRight;
 		}
 
-		public String getBackground() {
+		public WColor getBackground() {
 			return background;
 		}
 
-		public String getText() {
+		public WColor getText() {
 			return text;
 		}
 
-		public String getHighlight() {
+		public WColor getHighlight() {
 			return highlight;
 		}
 
-		public String getCursor() {
+		public WColor getCursor() {
 			return cursor;
 		}
 	}
@@ -94,14 +110,12 @@ public class WDynamicText extends WWidget {
 			if (cursorPos > fooY) {
 				for (i = cursorPos; i > 0 && MinecraftClient.getInstance().textRenderer.getStringWidth(text.substring(i, cursorPos)) < sizeX - 12; --i);
 				offsetPos = i;
-
 				visible = text.substring(i, cursorPos);
 			} else {
 				visible = text.substring(0, h);
 			}
 		} else {
 			offsetPos = 0;
-
 			visible = text;
 		}
 	}
@@ -207,7 +221,7 @@ public class WDynamicText extends WWidget {
 		double pP = positionX + 4, pC = offsetPos;
 		for (char c : visible.toCharArray()) {
 			double cW = BaseRenderer.getTextRenderer().getCharWidth(c);
-			BaseRenderer.getTextRenderer().drawWithShadow(String.valueOf(c), (float) pP, (float) (positionY + sizeY - 10), Integer.decode(drawTheme.getText()));
+			BaseRenderer.getTextRenderer().drawWithShadow(String.valueOf(c), (float) pP, (float) (positionY + sizeY - 10), drawTheme.getText().RGB);
 
 			if (pC >= selLeftPos && (pC < selRightPos || pC == text.length() - 1 && pC <= selRightPos) && (selLeftPos - selRightPos != 0)) {
 				BaseRenderer.drawRectangle(pP, getPositionY() + getSizeY() - 12, 10, cW, 12, drawTheme.getHighlight());
@@ -216,7 +230,7 @@ public class WDynamicText extends WWidget {
 			pP += cW;
 
 			if (pC == cursorPos || pC == cursorPos - 1) {
-				BaseRenderer.getTextRenderer().drawWithShadow("|", (float) pP , (float) positionY + (float) sizeY - 10, Integer.decode(drawTheme.getCursor()));
+				BaseRenderer.getTextRenderer().drawWithShadow("|", (float) pP , (float) positionY + (float) sizeY - 10, drawTheme.getCursor().RGB);
 			}
 
 			++pC;

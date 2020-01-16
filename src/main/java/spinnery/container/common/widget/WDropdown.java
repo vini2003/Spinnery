@@ -10,32 +10,44 @@ import java.util.Arrays;
 import java.util.List;
 
 public class WDropdown extends WWidget {
-	public class Theme {
+	public class Theme extends WWidget.Theme {
+		transient private WColor shadow;
+		transient private WColor background;
+		transient private WColor highlight;
+		transient private WColor outline;
+
 		@SerializedName("shadow")
-		private String shadow;
+		private String rawShadow;
 
 		@SerializedName("background")
-		private String background;
+		private String rawBackground;
 
 		@SerializedName("highlight")
-		private String highlight;
+		private String rawHighlight;
 
 		@SerializedName("outline")
-		private String outline;
+		private String rawOutline;
 
-		public String getShadow() {
+		public void build() {
+			shadow = new WColor(rawShadow);
+			background = new WColor(rawBackground);
+			highlight = new WColor(rawHighlight);
+			outline = new WColor(rawOutline);
+		}
+
+		public WColor getShadow() {
 			return shadow;
 		}
 
-		public String getBackground() {
+		public WColor getBackground() {
 			return background;
 		}
 
-		public String getHighlight() {
+		public WColor getHighlight() {
 			return highlight;
 		}
 
-		public String getOutline() {
+		public WColor getOutline() {
 			return outline;
 		}
 	}
@@ -96,72 +108,78 @@ public class WDropdown extends WWidget {
 			setState(!getState());
 			updateHidden();
 		} else {
-			getDropdownWidgets().forEach((widgets) -> {
-				widgets.forEach((widget) -> {
-					widget.onMouseClicked(mouseX, mouseY, mouseButton);
-				});
-			});
+			for (List<WWidget> widgetB : getDropdownWidgets()) {
+				for (WWidget widgetC : widgetB) {
+					widgetC.onMouseClicked(mouseX, mouseY, mouseButton);
+				}
+			}
 		}
+
 		super.onMouseClicked(mouseX, mouseY, mouseButton);
 	}
 
 	@Override
 	public void onMouseReleased(double mouseX, double mouseY, int mouseButton) {
-		getDropdownWidgets().forEach((widgets) -> {
-			widgets.forEach((widget) -> {
-				widget.onMouseReleased(mouseX, mouseY, mouseButton);
-			});
-		});
+		for (List<WWidget> widgetB : getDropdownWidgets()) {
+			for (WWidget widgetC : widgetB) {
+				widgetC.onMouseReleased(mouseX, mouseY, mouseButton);
+			}
+		}
+
 		super.onMouseReleased(mouseX, mouseY, mouseButton);
 	}
 
 	@Override
 	public void onMouseDragged(double mouseX, double mouseY, int mouseButton, double dragOffsetX, double dragOffsetY) {
-		getDropdownWidgets().forEach((widgets) -> {
-			widgets.forEach((widget) -> {
-				widget.onMouseDragged(mouseX, mouseY, mouseButton, dragOffsetX, dragOffsetY);
-			});
-		});
+		for (List<WWidget> widgetB : getDropdownWidgets()) {
+			for (WWidget widgetC : widgetB) {
+				widgetC.onMouseDragged(mouseX, mouseY, mouseButton, dragOffsetX, dragOffsetY);
+			}
+		}
+
 		super.onMouseDragged(mouseX, mouseY, mouseButton, dragOffsetX, dragOffsetY);
 	}
 
 	@Override
 	public void onMouseMoved(double mouseX, double mouseY) {
-		getDropdownWidgets().forEach((widgets) -> {
-			widgets.forEach((widget) -> {
-				widget.onMouseMoved(mouseX, mouseY);
-			});
-		});
+		for (List<WWidget> widgetB : getDropdownWidgets()) {
+			for (WWidget widgetC : widgetB) {
+				widgetC.onMouseMoved(mouseX, mouseY);
+			}
+		}
+
 		super.onMouseMoved(mouseX, mouseY);
 	}
 
 	@Override
 	public void onKeyPressed(int keyPressed, int character, int keyModifier) {
-		getDropdownWidgets().forEach((widgets) -> {
-			widgets.forEach((widget) -> {
-				widget.onKeyPressed(keyPressed, character, keyModifier);
-			});
-		});
+		for (List<WWidget> widgetB : getDropdownWidgets()) {
+			for (WWidget widgetC : widgetB) {
+				widgetC.onKeyPressed(keyPressed, character, keyModifier);
+			}
+		}
+
 		super.onKeyPressed(keyPressed, character, keyModifier);
 	}
 
 	@Override
 	public void onKeyReleased(int keyReleased) {
-		getDropdownWidgets().forEach((widgets) -> {
-			widgets.forEach((widget) -> {
-				widget.onKeyReleased(keyReleased);
-			});
-		});
+		for (List<WWidget> widgetB : getDropdownWidgets()) {
+			for (WWidget widgetC : widgetB) {
+				widgetC.onKeyReleased(keyReleased);
+			}
+		}
+
 		super.onKeyReleased(keyReleased);
 	}
 
 	@Override
 	public boolean scanFocus(double mouseX, double mouseY) {
-		getDropdownWidgets().forEach((widgets) -> {
-			widgets.forEach((widget) -> {
-				widget.scanFocus(mouseX, mouseY);
-			});
-		});
+		for (List<WWidget> widgetB : getDropdownWidgets()) {
+			for (WWidget widgetC : widgetB) {
+				widgetC.scanFocus(mouseX, mouseY);
+			}
+		}
 
 		setFocus(isWithinBounds(mouseX, mouseY) && !getDropdownWidgets().stream().anyMatch((widgets) -> widgets.stream().anyMatch(WWidget::getFocus)));
 
@@ -170,19 +188,24 @@ public class WDropdown extends WWidget {
 
 	public void updatePositions() {
 		int y = sizes[0][1] + 2;
-		for (int i = 0; i <= getDropdownWidgets().size() - 1; ++i) {
+
+		for (List<WWidget> widgetA : getDropdownWidgets()) {
 			int x = (int) getPositionX() + 4;
-			for (int k = 0; k <= getDropdownWidgets().get(i).size() - 1; ++k) {
-				getDropdownWidgets().get(i).get(k).setPositionX(x);
-				getDropdownWidgets().get(i).get(k).setPositionY(y);
-				x += getDropdownWidgets().get(i).get(k).getSizeX() + 2;
+			for (WWidget widgetB : widgetA) {
+				widgetB.setPositionX(x);
+				widgetB.setPositionY(y);
+				x += widgetB.getSizeX() + 2;
 			}
-			y += getDropdownWidgets().get(i).get(0).getSizeY() + 2;
+			y += widgetA.get(0).getSizeY() + 2;
 		}
 	}
 
 	public void updateHidden() {
-		getDropdownWidgets().forEach(widgets -> widgets.forEach(widget -> widget.setHidden(!getState())));
+		for (List<WWidget> widgetB : getDropdownWidgets()) {
+			for (WWidget widgetC : widgetB) {
+				widgetC.setHidden(!getState());
+			}
+		}
 	}
 
 	public void add(WWidget... widgetArray) {
@@ -203,7 +226,11 @@ public class WDropdown extends WWidget {
 
 		BaseRenderer.drawPanel(getPositionX(), getPositionY(), getPositionZ(), getSizeX(), getSizeY(), drawTheme.getShadow(), drawTheme.getBackground(), drawTheme.getHighlight(), drawTheme.getOutline());
 		if (getState()) {
-			getDropdownWidgets().forEach(widgets -> widgets.forEach(WWidget::drawWidget));
+			for (List<WWidget> widgetB : getDropdownWidgets()) {
+				for (WWidget widgetC : widgetB) {
+					widgetC.drawWidget();
+				}
+			}
 		}
 	}
 }

@@ -16,6 +16,7 @@ import net.minecraft.text.Text;
 import spinnery.container.common.widget.WWidget;
 
 import javax.sound.midi.SysexMessage;
+import java.util.List;
 
 public class BaseScreen<T extends BaseContainer> extends AbstractContainerScreen<T> {
 	double tooltipX = 0;
@@ -233,13 +234,15 @@ public class BaseScreen<T extends BaseContainer> extends AbstractContainerScreen
 				setTooltipX(mouseX);
 				setTooltipY(mouseY);
 			} else if (widgetA.getFocus() && widgetA instanceof WList) {
-				((WList) widgetA).listWidgets.forEach(widgets -> widgets.forEach(widgetB -> {
-					if (widgetB.isWithinBounds(mouseX, mouseY)) {
-						setDrawSlot((WSlot) widgetB);
-						setTooltipX(mouseX);
-						setTooltipY(mouseY);
+				for (List<WWidget> widgetB : ((WList) widgetA).getListWidgets()) {
+					for (WWidget widgetC : widgetB) {
+						if (widgetC.isWithinBounds(mouseX, mouseY)) {
+							setDrawSlot((WSlot) widgetC);
+							setTooltipX(mouseX);
+							setTooltipY(mouseY);
+						}
 					}
-				}));
+				}
 			}
 		}
 	}

@@ -12,32 +12,44 @@ import java.util.Arrays;
 import java.util.List;
 
 public class WList extends WWidget {
-	public class Theme {
+	public class Theme extends WWidget.Theme {
+		transient private WColor shadow;
+		transient private WColor background;
+		transient private WColor highlight;
+		transient private WColor outline;
+
 		@SerializedName("shadow")
-		private String shadow;
+		private String rawShadow;
 
 		@SerializedName("background")
-		private String background;
+		private String rawBackground;
 
 		@SerializedName("highlight")
-		private String highlight;
+		private String rawHighlight;
 
 		@SerializedName("outline")
-		private String outline;
+		private String rawOutline;
 
-		public String getShadow() {
+		public void build() {
+			shadow = new WColor(rawShadow);
+			background = new WColor(rawBackground);
+			highlight = new WColor(rawHighlight);
+			outline = new WColor(rawOutline);
+		}
+
+		public WColor getShadow() {
 			return shadow;
 		}
 
-		public String getBackground() {
+		public WColor getBackground() {
 			return background;
 		}
 
-		public String getHighlight() {
+		public WColor getHighlight() {
 			return highlight;
 		}
 
-		public String getOutline() {
+		public WColor getOutline() {
 			return outline;
 		}
 	}
@@ -84,104 +96,116 @@ public class WList extends WWidget {
 		);
 
 		if ((scaledOffsetY > 0 && !hitTop) || (scaledOffsetY < 0 && !hitBottom)) {
-			getListWidgets().forEach((widgets) -> {
-				widgets.forEach((widget) -> {
-					widget.setPositionY(widget.getPositionY() + scaledOffsetY);
-					widget.setHidden(!(isWithinBounds(widget.getPositionX(), widget.getPositionY())));
-				});
-			});
+			for (List<WWidget> widgetB : getListWidgets()) {
+				for (WWidget widgetC : widgetB) {
+					widgetC.setPositionY(widgetC.getPositionY() + scaledOffsetY);
+					widgetC.setHidden(!(isWithinBounds(widgetC.getPositionX(), widgetC.getPositionY())));
+				}
+			}
 		}
+
 		super.onMouseScrolled(mouseX, mouseY, scrollOffsetY);
 	}
 
 	@Override
 	public void onMouseClicked(double mouseX, double mouseY, int mouseButton) {
-		getListWidgets().forEach((widgets) -> {
-			widgets.forEach((widget) -> {
-				widget.onMouseClicked(mouseX, mouseY, mouseButton);
-			});
-		});
+		for (List<WWidget> widgetB : getListWidgets()) {
+			for (WWidget widgetC : widgetB) {
+				widgetC.onMouseClicked(mouseX, mouseY, mouseButton);
+			}
+		}
+
 		super.onMouseClicked(mouseX, mouseY, mouseButton);
 	}
 
 	@Override
 	public void onMouseReleased(double mouseX, double mouseY, int mouseButton) {
-		getListWidgets().forEach((widgets) -> {
-			widgets.forEach((widget) -> {
-				widget.onMouseReleased(mouseX, mouseY, mouseButton);
-			});
-		});
+		for (List<WWidget> widgetB : getListWidgets()) {
+			for (WWidget widgetC : widgetB) {
+				widgetC.onMouseReleased(mouseX, mouseY, mouseButton);
+			}
+		}
+
 		super.onMouseReleased(mouseX, mouseY, mouseButton);
 	}
 
 	@Override
 	public void onMouseDragged(double mouseX, double mouseY, int mouseButton, double dragOffsetX, double dragOffsetY) {
-		getListWidgets().forEach((widgets) -> {
-			widgets.forEach((widget) -> {
-				widget.onMouseDragged(mouseX, mouseY, mouseButton, dragOffsetX, dragOffsetY);
-			});
-		});
+		for (List<WWidget> widgetB : getListWidgets()) {
+			for (WWidget widgetC : widgetB) {
+				widgetC.onMouseDragged(mouseX, mouseY, mouseButton, dragOffsetX, dragOffsetY);
+			}
+		}
+
 		super.onMouseDragged(mouseX, mouseY, mouseButton, dragOffsetX, dragOffsetY);
 	}
 
 	@Override
 	public void onMouseMoved(double mouseX, double mouseY) {
-		getListWidgets().forEach((widgets) -> {
-			widgets.forEach((widget) -> {
-				widget.onMouseMoved(mouseX, mouseY);
-			});
-		});
+		for (List<WWidget> widgetB : getListWidgets()) {
+			for (WWidget widgetC : widgetB) {
+				widgetC.onMouseMoved(mouseX, mouseY);
+			}
+		}
+
 		super.onMouseMoved(mouseX, mouseY);
 	}
 
 	@Override
 	public void onKeyPressed(int keyPressed, int character, int keyModifier) {
-		getListWidgets().forEach((widgets) -> {
-			widgets.forEach((widget) -> {
-				widget.onKeyPressed(keyPressed, character, keyModifier);
-			});
-		});
+		for (List<WWidget> widgetB : getListWidgets()) {
+			for (WWidget widgetC : widgetB) {
+				widgetC.onKeyPressed(keyPressed, character, keyModifier);
+			}
+		}
+
 		super.onKeyPressed(keyPressed, character, keyModifier);
 	}
 
 	@Override
 	public void onKeyReleased(int keyReleased) {
-		getListWidgets().forEach((widgets) -> {
-			widgets.forEach((widget) -> {
-				widget.onKeyReleased(keyReleased);
-			});
-		});
+		for (List<WWidget> widgetB : getListWidgets()) {
+			for (WWidget widgetC : widgetB) {
+				widgetC.onKeyReleased(keyReleased);
+			}
+		}
+
 		super.onKeyReleased(keyReleased);
 	}
 
 	@Override
 	public boolean scanFocus(double mouseX, double mouseY) {
-		getListWidgets().forEach((widgets) -> {
-			widgets.forEach((widget) -> {
-				widget.scanFocus(mouseX, mouseY);
-			});
-		});
+		for (List<WWidget> widgetB : getListWidgets()) {
+			for (WWidget widgetC : widgetB) {
+				widgetC.scanFocus(mouseX, mouseY);
+			}
+		}
 
-		setFocus(isWithinBounds(mouseX, mouseY) && !getListWidgets().stream().anyMatch((widgets) -> widgets.stream().anyMatch(WWidget::getFocus)));
+		setFocus(isWithinBounds(mouseX, mouseY) && getListWidgets().stream().noneMatch((widgets) -> widgets.stream().anyMatch(WWidget::getFocus)));
 
 		return getFocus();
 	}
 
 	public void updatePositions() {
 		int y = 4;
-		for (int i = 0; i <= getListWidgets().size() - 1; ++i) {
+
+		for (List<WWidget> widgetA : getListWidgets()) {
 			int x = (int) getPositionX() + 4;
-			for (int k = 0; k <= getListWidgets().get(i).size() - 1; ++k) {
-				getListWidgets().get(i).get(k).setPositionX(x);
-				getListWidgets().get(i).get(k).setPositionY(y);
-				x += getListWidgets().get(i).get(k).getSizeX() + 2;
+			for (WWidget widgetB : widgetA) {
+				widgetB.setPositionX(x);
+				widgetB.setPositionY(y);
+				x += widgetB.getSizeX() + 2;
 			}
-			y += getListWidgets().get(i).get(0).getSizeY() + 2;
+			y += widgetA.get(0).getSizeY() + 2;
 		}
 	}
 
 	public void updateHidden() {
-		getListWidgets().forEach(widgets -> widgets.forEach(widget -> widget.setHidden(!isWithinBounds(widget.getPositionX(), widget.getPositionY()))));
+		for (List<WWidget> widgetB : getListWidgets()) {
+			for (WWidget widgetC : widgetB) {
+				widgetC.setHidden(!isWithinBounds(widgetC.getPositionX(), widgetC.getPositionY()));
+			}
+		}
 	}
 
 	public void add(WWidget... widgetArray) {
@@ -211,9 +235,11 @@ public class WList extends WWidget {
 
 		GL11.glScissor((int) (getPositionX() * scale), (int) (rawHeight - ((getPositionY() - 4) * scale) - (getSizeY() * scale)), (int) (getSizeX() * scale), (int) ((getSizeY() - 8) * scale));
 
-		getListWidgets().forEach((widgets) -> {
-			widgets.forEach(WWidget::drawWidget);
-		});
+		for (List<WWidget> widgetB : getListWidgets()) {
+			for (WWidget widgetC : widgetB) {
+				widgetC.drawWidget();
+			}
+		}
 
 		GL11.glDisable(GL11.GL_SCISSOR_TEST);
 	}

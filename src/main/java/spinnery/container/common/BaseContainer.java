@@ -221,14 +221,16 @@ public class BaseContainer extends CraftingContainer<Inventory> implements Ticka
 	 */
 	@Override
 	public void tick() {
-		getLinkedPanel().getLinkedWidgets().forEach(widgetA -> {
+		for (WWidget widgetA : getLinkedPanel().getLinkedWidgets()) {
 			if (!(widgetA instanceof WList)) {
 				widgetA.tick();
 			} else {
-				((WList) widgetA).getListWidgets().forEach(widgetB -> {
-					(widgetB).forEach(WWidget::tick);
-				});
+				for (List<WWidget> widgetB : ((WList) widgetA).getListWidgets()) {
+					for (WWidget widgetC : widgetB) {
+						widgetC.tick();
+					}
+				}
 			}
-		});
+		}
 	}
 }

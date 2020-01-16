@@ -3,16 +3,21 @@ package spinnery.container.common.widget;
 import com.google.gson.annotations.SerializedName;
 import spinnery.container.client.BaseRenderer;
 import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
 import spinnery.registry.ResourceRegistry;
 
 public class WStaticText extends WWidget {
-	public class Theme {
-		@SerializedName("text")
-		private String textColor;
+	public class Theme extends WWidget.Theme {
+		transient private WColor text;
 
-		public String getTextColor() {
-			return textColor;
+		@SerializedName("text")
+		private String rawText;
+
+		public void build() {
+			text = new WColor(rawText);
+		}
+
+		public WColor getText() {
+			return text;
 		}
 	}
 
@@ -46,6 +51,6 @@ public class WStaticText extends WWidget {
 	public void drawWidget() {
 		WStaticText.Theme drawTheme = ResourceRegistry.get(getTheme()).getWStaticTextTheme();
 
-		BaseRenderer.getTextRenderer().drawStringBounded(getText().getString(), (int) getPositionX(), (int) getPositionY(), (int) getSizeX(), Integer.decode(drawTheme.getTextColor()));
+		BaseRenderer.getTextRenderer().drawStringBounded(getText().getString(), (int) getPositionX(), (int) getPositionY(), (int) getSizeX(), drawTheme.getText().RGB);
 	}
 }

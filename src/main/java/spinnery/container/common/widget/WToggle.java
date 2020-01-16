@@ -5,53 +5,71 @@ import spinnery.container.client.BaseRenderer;
 import spinnery.registry.ResourceRegistry;
 
 public class WToggle extends WWidget {
-	public class Theme {
+	public class Theme extends WWidget.Theme {
+		transient private WColor topLeftBackground;
+		transient private WColor bottomRightBackground;
+		transient private WColor backgroundOn;
+		transient private WColor backgroundOff;
+		transient private WColor topLeftForeground;
+		transient private WColor bottomRightForeground;
+		transient private WColor foreground;
+
 		@SerializedName("top_left_background")
-		private String topLeftBackground;
+		private String rawTopLeftBackground;
 
 		@SerializedName("bottom_right_background")
-		private String bottomRightBackground;
+		private String rawBottomRightBackground;
 
 		@SerializedName("background_on")
-		private String backgroundOn;
+		private String rawBackgroundOn;
 
 		@SerializedName("background_off")
-		private String backgroundOff;
+		private String rawBackgroundOff;
 
 		@SerializedName("top_left_foreground")
-		private String topLeftForeground;
+		private String rawTopLeftForeground;
 
 		@SerializedName("bottom_right_foreground")
-		private String bottomRightForeground;
+		private String rawBottomRightForeground;
 
 		@SerializedName("foreground")
-		private String foreground;
+		private String rawForeground;
 
-		public String getTopLeftBackground() {
+		public void build() {
+			topLeftBackground = new WColor(rawTopLeftBackground);
+			bottomRightBackground = new WColor(rawBottomRightBackground);
+			backgroundOn = new WColor(rawBackgroundOn);
+			backgroundOff = new WColor(rawBackgroundOff);
+			topLeftForeground = new WColor(rawTopLeftForeground);
+			bottomRightForeground = new WColor(rawBottomRightForeground);
+			foreground = new WColor(rawForeground);
+		}
+
+		public WColor getTopLeftBackground() {
 			return topLeftBackground;
 		}
 
-		public String getBottomRightBackground() {
+		public WColor getBottomRightBackground() {
 			return bottomRightBackground;
 		}
 
-		public String getBackgroundOn() {
+		public WColor getBackgroundOn() {
 			return backgroundOn;
 		}
 
-		public String getBackgroundOff() {
+		public WColor getBackgroundOff() {
 			return backgroundOff;
 		}
 
-		public String getTopLeftForeground() {
+		public WColor getTopLeftForeground() {
 			return topLeftForeground;
 		}
 
-		public String getBottomRightForeground() {
+		public WColor getBottomRightForeground() {
 			return bottomRightForeground;
 		}
 
-		public String getForeground() {
+		public WColor getForeground() {
 			return foreground;
 		}
 	}

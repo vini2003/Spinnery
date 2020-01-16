@@ -18,47 +18,44 @@ import java.util.List;
 
 public class WSlot extends WWidget {
 	public static class Theme {
+		transient private WColor topLeft;
+		transient private WColor bottomRight;
+		transient private WColor backgroundFocused;
+		transient private WColor backgroundUnfocused;
+
 		@SerializedName("top_left")
-		private String topLeft;
+		private String rawTopLeft;
 
 		@SerializedName("bottom_right")
-		private String bottomRight;
+		private String rawBottomRight;
 
 		@SerializedName("background_focused")
-		private String backgroundFocused;
+		private String rawBackgroundFocused;
 
 		@SerializedName("background_unfocused")
-		private String backgroundUnfocused;
+		private String rawBackgroundUnfocused;
 
-		public void setTopLeft(String topLeft){
-			this.topLeft = topLeft;
+		public void build() {
+			topLeft = new WColor(rawTopLeft);
+			bottomRight = new WColor(rawBottomRight);
+			backgroundFocused = new WColor(rawBackgroundFocused);
+			backgroundUnfocused = new WColor(rawBackgroundUnfocused);
 		}
 
-		public String getTopLeft(){
+
+		public WColor getTopLeft(){
 			return this.topLeft;
 		}
 
-		public void setBottomRight(String bottomRight){
-			this.bottomRight = bottomRight;
-		}
-
-		public String getBottomRight(){
+		public WColor getBottomRight(){
 			return this.bottomRight;
 		}
 
-		public void setBackgroundFocused(String backgroundFocused){
-			this.backgroundFocused = backgroundFocused;
-		}
-
-		public String getBackgroundFocused(){
+		public WColor getBackgroundFocused(){
 			return this.backgroundFocused;
 		}
 
-		public void setBackgroundUnfocused(String backgroundUnfocused){
-			this.backgroundUnfocused = backgroundUnfocused;
-		}
-
-		public String getBackgroundUnfocused(){
+		public WColor getBackgroundUnfocused(){
 			return this.backgroundUnfocused;
 		}
 	}

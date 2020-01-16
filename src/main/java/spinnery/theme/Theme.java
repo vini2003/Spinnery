@@ -52,6 +52,21 @@ public class Theme {
 	@SerializedName("WSlot")
 	private WSlot.Theme WSlotTheme;
 
+	public void buildAll() {
+		WPanelTheme.build();
+		WListTheme.build();
+		WDropdownTheme.build();
+
+
+		WStaticTextTheme.build();
+		WDynamicTextTheme.build();
+		WVerticalSliderTheme.build();
+		WHorizontalSliderTheme.build();
+		WToggleTheme.build();
+		WButtonTheme.build();
+		WSlotTheme.build();
+	}
+
 	public String getID() {
 		return ID;
 	}

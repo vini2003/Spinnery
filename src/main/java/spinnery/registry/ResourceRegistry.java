@@ -45,6 +45,7 @@ public class ResourceRegistry {
 
 	public static void register(InputStream inputStream) {
 		Theme theme = new Gson().fromJson(new InputStreamReader(inputStream), Theme.class);
+		theme.buildAll();
 		themes.put(theme.getID(), theme);
 	}
 

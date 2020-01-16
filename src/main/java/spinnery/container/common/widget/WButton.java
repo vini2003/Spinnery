@@ -5,46 +5,62 @@ import spinnery.container.client.BaseRenderer;
 import spinnery.registry.ResourceRegistry;
 
 public class WButton extends WWidget {
-	public class Theme {
+	public class Theme extends WWidget.Theme {
+		transient private WColor topLeftOn;
+		transient private WColor bottomRightOn;
+		transient private WColor backgroundOn;
+		transient private WColor topLeftOff;
+		transient private WColor bottomRightOff;
+		transient private WColor backgroundOff;
+
 		@SerializedName("top_left_on")
-		private String topLeftOn;
+		private String rawTopLeftOn;
 
 		@SerializedName("bottom_right_on")
-		private String bottomRightOn;
+		private String rawBottomRightOn;
 
 		@SerializedName("background_on")
-		private String backgroundOn;
+		private String rawBackgroundOn;
 
 		@SerializedName("top_left_off")
-		private String topLeftOff;
+		private String rawTopLeftOff;
 
 		@SerializedName("bottom_right_off")
-		private String bottomRightOff;
+		private String rawBottomRightOff;
 
 		@SerializedName("background_off")
-		private String backgroundOff;
+		private String rawBackgroundOff;
 
-		public String getTopLeftOn() {
+		public void build() {
+			topLeftOn = new WColor(rawTopLeftOn);
+			bottomRightOn = new WColor(rawBottomRightOn);
+			backgroundOn = new WColor(rawBackgroundOn);
+			topLeftOff  = new WColor(rawTopLeftOff);
+			bottomRightOff = new WColor(rawBottomRightOff);
+			backgroundOff = new WColor(rawBackgroundOff);
+		}
+
+		public WColor getTopLeftOn() {
 			return topLeftOn;
 		}
 
-		public String getBottomRightOn() {
+		public WColor getBottomRightOn() {
 			return bottomRightOn;
 		}
 
-		public String getBackgroundOn() {
+		public WColor getBackgroundOn() {
 			return backgroundOn;
 		}
 
-		public String getTopLeftOff() {
+		public WColor getTopLeftOff() {
 			return topLeftOff;
 		}
 
-		public String getBottomRightOff() {
+		public WColor getBottomRightOff() {
 			return bottomRightOff;
 		}
 
-		public String getBackgroundOff() {
+		public WColor getBackgroundOff() {
 			return backgroundOff;
 		}
 	}

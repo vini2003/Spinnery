@@ -10,49 +10,45 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WPanel extends WWidget {
-	public class Theme {
+	public class Theme extends WWidget.Theme {
+		transient private WColor shadow;
+		transient private WColor background;
+		transient private WColor highlight;
+		transient private WColor outline;
+
 		@SerializedName("shadow")
-		private String shadow;
+		private String rawShadow;
 
 		@SerializedName("background")
-		private String background;
+		private String rawBackground;
 
 		@SerializedName("highlight")
-		private String highlight;
+		private String rawHighlight;
 
 		@SerializedName("outline")
-		private String outline;
+		private String rawOutline;
 
-		public String getShadow() {
+		public void build() {
+			shadow = new WColor(rawShadow);
+			background = new WColor(rawBackground);
+			highlight = new WColor(rawHighlight);
+			outline = new WColor(rawOutline);
+		}
+
+		public WColor getShadow() {
 			return shadow;
 		}
 
-		public void setShadow(String shadow) {
-			this.shadow = shadow;
-		}
-
-		public String getBackground() {
+		public WColor getBackground() {
 			return background;
 		}
 
-		public void setBackground(String background) {
-			this.background = background;
-		}
-
-		public String getHighlight() {
+		public WColor getHighlight() {
 			return highlight;
 		}
 
-		public void setHighlight(String highlight) {
-			this.highlight = highlight;
-		}
-
-		public String getOutline() {
+		public WColor getOutline() {
 			return outline;
-		}
-
-		public void setOutline(String outline) {
-			this.outline = outline;
 		}
 	}
 
@@ -155,11 +151,15 @@ public class WPanel extends WWidget {
 
 	@Override
 	public void drawWidget() {
-		getLinkedWidgets().forEach(WWidget::drawWidget);
+		for (WWidget widget : getLinkedWidgets()) {
+			widget.drawWidget();
+		}
 	}
 
 	@Override
 	public void tick() {
-		linkedWWidgets.forEach(WWidget::tick);
+		for (WWidget widget : getLinkedWidgets()) {
+			widget.tick();
+		}
 	}
 }
