@@ -1,19 +1,18 @@
 package spinnery.container.common;
 
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.math.BlockPos;
 import spinnery.block.TestBlock;
 import spinnery.container.common.widget.WAnchor;
 import spinnery.container.common.widget.WButton;
 import spinnery.container.common.widget.WDropdown;
 import spinnery.container.common.widget.WDynamicText;
-import spinnery.container.common.widget.WList;
 import spinnery.container.common.widget.WHorizontalSlider;
-import spinnery.container.common.widget.WSlot;
+import spinnery.container.common.widget.WList;
 import spinnery.container.common.widget.WPanel;
-import net.minecraft.entity.player.PlayerInventory;
+import spinnery.container.common.widget.WSlot;
 import spinnery.container.common.widget.WStaticText;
 import spinnery.container.common.widget.WToggle;
-import spinnery.container.common.widget.WVerticalSlider;
 
 public class TestContainer extends BaseContainer {
 	public TestContainer(int synchronizationID, BlockPos newLinkedInventoryPosition, PlayerInventory newLinkedPlayerInventory) {
@@ -21,13 +20,13 @@ public class TestContainer extends BaseContainer {
 
 		setLinkedInventory(((TestBlock) newLinkedPlayerInventory.player.world.getBlockState(newLinkedInventoryPosition).getBlock()).getInventory());
 
-		setLinkedPanel(new WPanel(30, 0, -10, 170, 210, this));
+		setLinkedPanel(new WPanel(30, 0, - 10, 170, 210, this));
 
 		linkedPanel.center();
 
 		WSlot.addPlayerInventory(0, 18, 18, linkedPlayerInventory, linkedPanel);
 
-		WDropdown dropdownA = new WDropdown(WAnchor.MC_ORIGIN, -70, 0, 0, 66, 18, 66, 170, linkedPanel);
+		WDropdown dropdownA = new WDropdown(WAnchor.MC_ORIGIN, - 70, 0, 0, 66, 18, 66, 170, linkedPanel);
 
 		WStaticText textDropdown = new WStaticText(WAnchor.MC_ORIGIN, 0, 0, 20, "? ?? ???", linkedPanel);
 		dropdownA.add(textDropdown);
@@ -35,10 +34,10 @@ public class TestContainer extends BaseContainer {
 		WList listA = new WList(WAnchor.MC_ORIGIN, 174, 0, 0, 66, 170, linkedPanel);
 
 
-		for (int i = 0; i < 54; ++i) {
-			WSlot slotA = new WSlot(WAnchor.MC_ORIGIN, 0, 0, 3, 18, 18, ++i, linkedInventory, linkedPanel);
-			WSlot slotB = new WSlot(WAnchor.MC_ORIGIN, 0, 0, 3, 18, 18, ++i, linkedInventory, linkedPanel);
-			WSlot slotC = new WSlot(WAnchor.MC_ORIGIN, 0, 0, 3, 18, 18, ++i, linkedInventory, linkedPanel);
+		for (int i = 0; i < 54; ++ i) {
+			WSlot slotA = new WSlot(WAnchor.MC_ORIGIN, 0, 0, 3, 18, 18, ++ i, linkedInventory, linkedPanel);
+			WSlot slotB = new WSlot(WAnchor.MC_ORIGIN, 0, 0, 3, 18, 18, ++ i, linkedInventory, linkedPanel);
+			WSlot slotC = new WSlot(WAnchor.MC_ORIGIN, 0, 0, 3, 18, 18, ++ i, linkedInventory, linkedPanel);
 
 			listA.add(slotA, slotB, slotC);
 		}

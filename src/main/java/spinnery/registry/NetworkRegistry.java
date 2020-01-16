@@ -1,7 +1,5 @@
 package spinnery.registry;
 
-import net.minecraft.util.Identifier;
-
 public class NetworkRegistry {
 	//public static Identifier SLOT_CLICK
 	public NetworkRegistry() {
@@ -13,6 +11,6 @@ public class NetworkRegistry {
 	}
 
 	//public static <I extends Item> I register(Identifier ID, I item) {
-		//return Registry.register(Registry.ITEM, ID, item);
+	//return Registry.register(Registry.ITEM, ID, item);
 	//}
 }

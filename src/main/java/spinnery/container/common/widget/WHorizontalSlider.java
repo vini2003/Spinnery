@@ -1,95 +1,16 @@
 package spinnery.container.common.widget;
 
 import com.google.gson.annotations.SerializedName;
-import spinnery.container.client.BaseRenderer;
 import org.lwjgl.glfw.GLFW;
+import spinnery.container.client.BaseRenderer;
 import spinnery.registry.ResourceRegistry;
 
 public class WHorizontalSlider extends WWidget {
-	public class Theme extends WWidget.Theme {
-		transient private WColor topLeftBackground;
-		transient private WColor bottomRightBackground;
-		transient private WColor backgroundOn;
-		transient private WColor backgroundOff;
-		transient private WColor topLeftForeground;
-		transient private WColor bottomRightForeground;
-		transient private WColor foreground;
-		transient private WColor text;
-
-		@SerializedName("top_left_background")
-		private String rawTopLeftBackground;
-
-		@SerializedName("bottom_right_background")
-		private String rawBottomRightBackground;
-
-		@SerializedName("background_on")
-		private String rawBackgroundOn;
-
-		@SerializedName("background_off")
-		private String rawBackgroundOff;
-
-		@SerializedName("top_left_foreground")
-		private String rawTopLeftForeground;
-
-		@SerializedName("bottom_right_foreground")
-		private String rawBottomRightForeground;
-
-		@SerializedName("foreground")
-		private String rawForeground;
-
-		@SerializedName("text")
-		private String rawText;
-
-		public void build() {
-			topLeftBackground = new WColor(rawTopLeftBackground);
-			bottomRightBackground = new WColor(rawBottomRightBackground);
-			backgroundOn = new WColor(rawBackgroundOn);
-			backgroundOff = new WColor(rawBackgroundOff);
-			topLeftForeground = new WColor(rawTopLeftForeground);
-			bottomRightForeground = new WColor(rawBottomRightForeground);
-			foreground = new WColor(rawForeground);
-			text = new WColor(rawText);
-		}
-
-		public WColor getTopLeftBackground() {
-			return topLeftBackground;
-		}
-
-		public WColor getBottomRightBackground() {
-			return bottomRightBackground;
-		}
-
-		public WColor getBackgroundOn() {
-			return backgroundOn;
-		}
-
-		public WColor getBackgroundOff() {
-			return backgroundOff;
-		}
-
-		public WColor getTopLeftForeground() {
-			return topLeftForeground;
-		}
-
-		public WColor getBottomRightForeground() {
-			return bottomRightForeground;
-		}
-
-		public WColor getForeground() {
-			return foreground;
-		}
-
-		public WColor getText() { return text; }
-	}
-
-	WHorizontalSlider.Theme drawTheme;
-
 	protected double limit = 0;
 	protected double position = 0;
-
 	protected String total;
 	protected int tX;
-
+	WHorizontalSlider.Theme drawTheme;
 	public WHorizontalSlider(WAnchor anchor, int positionX, int positionY, int positionZ, double sizeX, double sizeY, int limit, WPanel linkedWPanel) {
 		setLinkedPanel(linkedWPanel);
 
@@ -183,5 +104,83 @@ public class WHorizontalSlider extends WWidget {
 		BaseRenderer.drawRectangle(x + ((sX + 7) / l) * p, y + 1, z, (sX + 7) - ((sX + 7) / l) * p, sY - 1, drawTheme.getBackgroundOff());
 
 		BaseRenderer.drawBeveledPanel(x + (sX / l) * p, y - 1, z, 8, sY + 3, drawTheme.getTopLeftForeground(), drawTheme.getForeground(), drawTheme.getBottomRightForeground());
+	}
+
+	public class Theme extends WWidget.Theme {
+		transient private WColor topLeftBackground;
+		transient private WColor bottomRightBackground;
+		transient private WColor backgroundOn;
+		transient private WColor backgroundOff;
+		transient private WColor topLeftForeground;
+		transient private WColor bottomRightForeground;
+		transient private WColor foreground;
+		transient private WColor text;
+
+		@SerializedName("top_left_background")
+		private String rawTopLeftBackground;
+
+		@SerializedName("bottom_right_background")
+		private String rawBottomRightBackground;
+
+		@SerializedName("background_on")
+		private String rawBackgroundOn;
+
+		@SerializedName("background_off")
+		private String rawBackgroundOff;
+
+		@SerializedName("top_left_foreground")
+		private String rawTopLeftForeground;
+
+		@SerializedName("bottom_right_foreground")
+		private String rawBottomRightForeground;
+
+		@SerializedName("foreground")
+		private String rawForeground;
+
+		@SerializedName("text")
+		private String rawText;
+
+		public void build() {
+			topLeftBackground = new WColor(rawTopLeftBackground);
+			bottomRightBackground = new WColor(rawBottomRightBackground);
+			backgroundOn = new WColor(rawBackgroundOn);
+			backgroundOff = new WColor(rawBackgroundOff);
+			topLeftForeground = new WColor(rawTopLeftForeground);
+			bottomRightForeground = new WColor(rawBottomRightForeground);
+			foreground = new WColor(rawForeground);
+			text = new WColor(rawText);
+		}
+
+		public WColor getTopLeftBackground() {
+			return topLeftBackground;
+		}
+
+		public WColor getBottomRightBackground() {
+			return bottomRightBackground;
+		}
+
+		public WColor getBackgroundOn() {
+			return backgroundOn;
+		}
+
+		public WColor getBackgroundOff() {
+			return backgroundOff;
+		}
+
+		public WColor getTopLeftForeground() {
+			return topLeftForeground;
+		}
+
+		public WColor getBottomRightForeground() {
+			return bottomRightForeground;
+		}
+
+		public WColor getForeground() {
+			return foreground;
+		}
+
+		public WColor getText() {
+			return text;
+		}
 	}
 }

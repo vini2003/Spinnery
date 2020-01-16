@@ -1,7 +1,7 @@
 package spinnery.container.common.widget;
 
-import spinnery.container.client.BaseRenderer;
 import net.minecraft.util.Identifier;
+import spinnery.container.client.BaseRenderer;
 
 public class WDynamicImage extends WWidget {
 	protected Identifier[] textures;
@@ -41,25 +41,24 @@ public class WDynamicImage extends WWidget {
 		return getPosition();
 	}
 
+	public int getPosition() {
+		return position;
+	}
 
 	public void setPosition(int position) {
 		this.position = position;
-	}
-
-	public int getPosition() {
-		return position;
 	}
 
 	public Identifier getTexture(int position) {
 		return textures[position];
 	}
 
-	public void setTextures(Identifier... textures) {
-		this.textures = textures;
-	}
-
 	public Identifier[] getTextures() {
 		return textures;
+	}
+
+	public void setTextures(Identifier... textures) {
+		this.textures = textures;
 	}
 
 	@Override

@@ -1,69 +1,18 @@
 package spinnery.container.common.widget;
 
 import com.google.gson.annotations.SerializedName;
+import org.lwjgl.glfw.GLFW;
 import spinnery.container.client.BaseRenderer;
 import spinnery.container.common.BaseContainer;
-import org.lwjgl.glfw.GLFW;
 import spinnery.registry.ResourceRegistry;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class WPanel extends WWidget {
-	public class Theme extends WWidget.Theme {
-		transient private WColor shadow;
-		transient private WColor background;
-		transient private WColor highlight;
-		transient private WColor outline;
-		transient private WColor label;
-
-		@SerializedName("shadow")
-		private String rawShadow;
-
-		@SerializedName("background")
-		private String rawBackground;
-
-		@SerializedName("highlight")
-		private String rawHighlight;
-
-		@SerializedName("outline")
-		private String rawOutline;
-
-		@SerializedName("label")
-		private String rawLabel;
-
-		public void build() {
-			shadow = new WColor(rawShadow);
-			background = new WColor(rawBackground);
-			highlight = new WColor(rawHighlight);
-			outline = new WColor(rawOutline);
-			label = new WColor(rawLabel);
-		}
-
-		public WColor getShadow() {
-			return shadow;
-		}
-
-		public WColor getBackground() {
-			return background;
-		}
-
-		public WColor getHighlight() {
-			return highlight;
-		}
-
-		public WColor getOutline() {
-			return outline;
-		}
-
-		public WColor getLabel() { return label; }
-	}
-
-	WPanel.Theme drawTheme;
-
 	protected BaseContainer linkedContainer;
-
 	protected List<WWidget> linkedWWidgets = new ArrayList<>();
+	WPanel.Theme drawTheme;
 
 	public WPanel(BaseContainer linkedContainer) {
 		setLinkedContainer(linkedContainer);
@@ -111,7 +60,7 @@ public class WPanel extends WWidget {
 
 	public void add(WWidget... WWidgets) {
 		for (WWidget WWidget : WWidgets) {
-			if (!this.getLinkedWidgets().contains(WWidget)) {
+			if (! this.getLinkedWidgets().contains(WWidget)) {
 				WWidget.setLinkedPanel(this);
 				getLinkedWidgets().add(WWidget);
 			}
@@ -170,7 +119,7 @@ public class WPanel extends WWidget {
 
 		double sX = getSizeX();
 		double sY = getSizeY();
-		
+
 		BaseRenderer.drawPanel(x, y, z, sX, sY, drawTheme.getShadow(), drawTheme.getBackground(), drawTheme.getHighlight(), drawTheme.getOutline());
 
 		if (hasLabel()) {
@@ -188,6 +137,57 @@ public class WPanel extends WWidget {
 	public void tick() {
 		for (WWidget widget : getLinkedWidgets()) {
 			widget.tick();
+		}
+	}
+
+	public class Theme extends WWidget.Theme {
+		transient private WColor shadow;
+		transient private WColor background;
+		transient private WColor highlight;
+		transient private WColor outline;
+		transient private WColor label;
+
+		@SerializedName("shadow")
+		private String rawShadow;
+
+		@SerializedName("background")
+		private String rawBackground;
+
+		@SerializedName("highlight")
+		private String rawHighlight;
+
+		@SerializedName("outline")
+		private String rawOutline;
+
+		@SerializedName("label")
+		private String rawLabel;
+
+		public void build() {
+			shadow = new WColor(rawShadow);
+			background = new WColor(rawBackground);
+			highlight = new WColor(rawHighlight);
+			outline = new WColor(rawOutline);
+			label = new WColor(rawLabel);
+		}
+
+		public WColor getShadow() {
+			return shadow;
+		}
+
+		public WColor getBackground() {
+			return background;
+		}
+
+		public WColor getHighlight() {
+			return highlight;
+		}
+
+		public WColor getOutline() {
+			return outline;
+		}
+
+		public WColor getLabel() {
+			return label;
 		}
 	}
 }

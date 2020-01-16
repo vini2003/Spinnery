@@ -8,32 +8,16 @@ import net.minecraft.util.Tickable;
 import java.util.Optional;
 
 public class WWidget implements Tickable {
-	public class Theme {
-		public void build() {
-		}
-	}
-
 	protected WPanel linkedWPanel;
-
 	protected WAnchor anchor;
-
-	private String theme = "default";
-
-	private String label = null;
-
 	protected double positionX = 0;
 	protected double positionY = 0;
 	protected double positionZ = 0;
-
 	protected double sizeX = 0;
 	protected double sizeY = 0;
-
 	protected boolean isHidden = false;
-
 	protected boolean hasFocus = false;
-
 	protected boolean canMove = false;
-
 	protected Runnable linkedRunnableOnCharTyped;
 	protected Runnable linkedRunnableOnMouseClicekd;
 	protected Runnable linkedRunnableOnKeyPressed;
@@ -46,7 +30,8 @@ public class WWidget implements Tickable {
 	protected Runnable linkedRunnableOnMouseDragged;
 	protected Runnable linkedRunnableOnMouseScrolled;
 	protected Runnable linkedRunnableOnSlotClicked;
-
+	private String theme = "default";
+	private String label = null;
 	public WWidget() {
 	}
 
@@ -291,10 +276,10 @@ public class WWidget implements Tickable {
 	}
 
 	public boolean setFocus(boolean hasFocus) {
-		if (!getFocus() && hasFocus) {
+		if (! getFocus() && hasFocus) {
 			onFocusGained();
 		}
-		if (getFocus() && !hasFocus) {
+		if (getFocus() && ! hasFocus) {
 			onFocusReleased();
 		}
 		this.hasFocus = hasFocus;
@@ -311,9 +296,9 @@ public class WWidget implements Tickable {
 
 	public boolean isWithinBounds(double positionX, double positionY) {
 		return positionX > getPositionX()
-			&& positionX < getPositionX() + getSizeX()
-			&& positionY > getPositionY()
-			&& positionY < getPositionY() + getSizeY();
+				&& positionX < getPositionX() + getSizeX()
+				&& positionY > getPositionY()
+				&& positionY < getPositionY() + getSizeY();
 	}
 
 	public boolean scanFocus(double mouseX, double mouseY) {
@@ -323,20 +308,20 @@ public class WWidget implements Tickable {
 		Optional<? extends WWidget> optional = linkedWPanel.getLinkedWidgets().stream().filter((widget) ->
 				widget.getPositionZ() > getPositionZ() && widget.isWithinBounds(mouseX, mouseY)
 		).findAny();
-		setFocus(!optional.isPresent() && isWithinBounds(mouseX, mouseY));
+		setFocus(! optional.isPresent() && isWithinBounds(mouseX, mouseY));
 		return getFocus();
-	}
-
-	public void setAnchor(WAnchor anchor) {
-		this.anchor = anchor;
 	}
 
 	public WAnchor getAnchor() {
 		return anchor;
 	}
 
+	public void setAnchor(WAnchor anchor) {
+		this.anchor = anchor;
+	}
+
 	public void center() {
-		this.positionX = MinecraftClient.getInstance().window.getScaledWidth() / 2f  - sizeX / 2;
+		this.positionX = MinecraftClient.getInstance().window.getScaledWidth() / 2f - sizeX / 2;
 		this.positionY = MinecraftClient.getInstance().window.getScaledHeight() / 2f - sizeY / 2;
 	}
 
@@ -345,5 +330,10 @@ public class WWidget implements Tickable {
 
 	@Override
 	public void tick() {
+	}
+
+	public class Theme {
+		public void build() {
+		}
 	}
 }

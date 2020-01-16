@@ -5,6 +5,74 @@ import spinnery.container.client.BaseRenderer;
 import spinnery.registry.ResourceRegistry;
 
 public class WToggle extends WWidget {
+	protected boolean toggleState = false;
+	WToggle.Theme drawTheme;
+
+	public WToggle(WAnchor anchor, int positionX, int positionY, int positionZ, double sizeX, double sizeY, WPanel linkedWPanel) {
+		setLinkedPanel(linkedWPanel);
+
+		setAnchor(anchor);
+
+		setPositionX(positionX + (getAnchor() == WAnchor.MC_ORIGIN ? getLinkedPanel().getPositionX() : 0));
+		setPositionY(positionY + (getAnchor() == WAnchor.MC_ORIGIN ? getLinkedPanel().getPositionY() : 0));
+		setPositionZ(positionZ);
+
+		setSizeX(sizeX);
+		setSizeY(sizeY);
+
+		setTheme("default");
+	}
+
+	@Override
+	public void onMouseClicked(double mouseX, double mouseY, int mouseButton) {
+		if (scanFocus(mouseX, mouseY)) {
+			setToggleState(! getToggleState());
+		}
+		super.onMouseClicked(mouseX, mouseY, mouseButton);
+	}
+
+	@Override
+	public void setTheme(String theme) {
+		super.setTheme(theme);
+		drawTheme = ResourceRegistry.get(getTheme()).getWToggleTheme();
+	}
+
+	@Override
+	public void draw() {
+		double x = getPositionX();
+		double y = getPositionY();
+		double z = getPositionZ();
+
+		double sX = getSizeX();
+		double sY = getSizeY();
+
+		BaseRenderer.drawRectangle(x, y, z, sX, 1, drawTheme.getTopLeftBackground());
+		BaseRenderer.drawRectangle(x, y, z, 1, sY, drawTheme.getTopLeftBackground());
+
+		BaseRenderer.drawRectangle(x, y + sY, z, sX, 1, drawTheme.getBottomRightBackground());
+		BaseRenderer.drawRectangle(x + sX, y, z, 1, sY + 1, drawTheme.getBottomRightBackground());
+
+		BaseRenderer.drawRectangle(x + 1, y + 1, z, sX - 1, sY - 1, getToggleState() ? drawTheme.getBackgroundOn() : drawTheme.getBackgroundOff());
+
+		if (getToggleState()) {
+			BaseRenderer.drawBeveledPanel(x + sX - 8, y - 1, z, 8, sY + 3, drawTheme.getTopLeftForeground(), drawTheme.getForeground(), drawTheme.getBottomRightForeground());
+		} else {
+			BaseRenderer.drawBeveledPanel(x + 1, y - 1, z, 8, sY + 3, drawTheme.getTopLeftForeground(), drawTheme.getForeground(), drawTheme.getBottomRightForeground());
+		}
+
+		if (hasLabel()) {
+			BaseRenderer.getTextRenderer().drawWithShadow(getLabel(), (float) (positionX + sizeX + 2), (float) (positionY + sizeY / 2 - 4.5), drawTheme.getLabel().RGB);
+		}
+	}
+
+	public boolean getToggleState() {
+		return toggleState;
+	}
+
+	public void setToggleState(boolean toggleState) {
+		this.toggleState = toggleState;
+	}
+
 	public class Theme extends WWidget.Theme {
 		transient private WColor topLeftBackground;
 		transient private WColor bottomRightBackground;
@@ -78,75 +146,8 @@ public class WToggle extends WWidget {
 			return foreground;
 		}
 
-		public WColor getLabel() { return label; }
-	}
-
-	WToggle.Theme drawTheme;
-
-	protected boolean toggleState = false;
-
-	public WToggle(WAnchor anchor, int positionX, int positionY, int positionZ, double sizeX, double sizeY, WPanel linkedWPanel) {
-		setLinkedPanel(linkedWPanel);
-
-		setAnchor(anchor);
-
-		setPositionX(positionX + (getAnchor() == WAnchor.MC_ORIGIN ? getLinkedPanel().getPositionX() : 0));
-		setPositionY(positionY + (getAnchor() == WAnchor.MC_ORIGIN ? getLinkedPanel().getPositionY() : 0));
-		setPositionZ(positionZ);
-
-		setSizeX(sizeX);
-		setSizeY(sizeY);
-
-		setTheme("default");
-	}
-
-	@Override
-	public void onMouseClicked(double mouseX, double mouseY, int mouseButton) {
-		if (scanFocus(mouseX, mouseY)) {
-			setToggleState(!getToggleState());
-		}
-		super.onMouseClicked(mouseX, mouseY, mouseButton);
-	}
-
-	public boolean getToggleState() {
-		return toggleState;
-	}
-
-	public void setToggleState(boolean toggleState) {
-		this.toggleState = toggleState;
-	}
-
-	@Override
-	public void setTheme(String theme) {
-		super.setTheme(theme);
-		drawTheme = ResourceRegistry.get(getTheme()).getWToggleTheme();
-	}
-
-	@Override
-	public void draw() {
-		double x = getPositionX();
-		double y = getPositionY();
-		double z = getPositionZ();
-
-		double sX = getSizeX();
-		double sY = getSizeY();
-		
-		BaseRenderer.drawRectangle(x, y, z, sX, 1, drawTheme.getTopLeftBackground());
-		BaseRenderer.drawRectangle(x, y, z, 1, sY, drawTheme.getTopLeftBackground());
-
-		BaseRenderer.drawRectangle(x, y + sY, z, sX, 1, drawTheme.getBottomRightBackground());
-		BaseRenderer.drawRectangle(x + sX, y, z, 1, sY + 1, drawTheme.getBottomRightBackground());
-
-		BaseRenderer.drawRectangle(x + 1, y + 1, z, sX - 1, sY - 1, getToggleState() ? drawTheme.getBackgroundOn() : drawTheme.getBackgroundOff());
-
-		if (getToggleState()) {
-			BaseRenderer.drawBeveledPanel(x + sX - 8, y - 1, z, 8, sY + 3, drawTheme.getTopLeftForeground(), drawTheme.getForeground(), drawTheme.getBottomRightForeground());
-		} else {
-			BaseRenderer.drawBeveledPanel(x + 1, y - 1, z, 8, sY + 3, drawTheme.getTopLeftForeground(), drawTheme.getForeground(), drawTheme.getBottomRightForeground());
-		}
-
-		if (hasLabel()) {
-			BaseRenderer.getTextRenderer().drawWithShadow(getLabel(), (float) (positionX + sizeX + 2), (float) (positionY + sizeY / 2 - 4.5), drawTheme.getLabel().RGB);
+		public WColor getLabel() {
+			return label;
 		}
 	}
 }

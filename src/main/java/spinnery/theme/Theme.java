@@ -15,22 +15,16 @@ import spinnery.container.common.widget.WVerticalSlider;
 public class Theme {
 	@SerializedName("Identifier")
 	String ID;
-
-	@SerializedName("WPanel")
-	private WPanel.Theme WPanelTheme;
-
-	@SerializedName("WList")
-	private WList.Theme WListTheme;
-
-	@SerializedName("WDropdown")
-	private WDropdown.Theme WDropdownTheme;
-
 	@SerializedName("WStaticImage")
 	transient Object WStaticImageTheme;
-
 	@SerializedName("WDynamicImage")
 	transient Object WDynamicImageTheme;
-
+	@SerializedName("WPanel")
+	private WPanel.Theme WPanelTheme;
+	@SerializedName("WList")
+	private WList.Theme WListTheme;
+	@SerializedName("WDropdown")
+	private WDropdown.Theme WDropdownTheme;
 	@SerializedName("WStaticText")
 	private WStaticText.Theme WStaticTextTheme;
 
@@ -115,7 +109,9 @@ public class Theme {
 		return WToggleTheme;
 	}
 
-	public WButton.Theme getWButtonTheme() { return WButtonTheme; }
+	public WButton.Theme getWButtonTheme() {
+		return WButtonTheme;
+	}
 
 	public WSlot.Theme getWSlotTheme() {
 		return WSlotTheme;

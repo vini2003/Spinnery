@@ -3,7 +3,6 @@ package spinnery.container.common.widget;
 import com.google.gson.annotations.SerializedName;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.GuiLighting;
-import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
@@ -17,55 +16,10 @@ import spinnery.registry.ResourceRegistry;
 import java.util.List;
 
 public class WSlot extends WWidget {
-	public static class Theme {
-		transient private WColor topLeft;
-		transient private WColor bottomRight;
-		transient private WColor backgroundFocused;
-		transient private WColor backgroundUnfocused;
-
-		@SerializedName("top_left")
-		private String rawTopLeft;
-
-		@SerializedName("bottom_right")
-		private String rawBottomRight;
-
-		@SerializedName("background_focused")
-		private String rawBackgroundFocused;
-
-		@SerializedName("background_unfocused")
-		private String rawBackgroundUnfocused;
-
-		public void build() {
-			topLeft = new WColor(rawTopLeft);
-			bottomRight = new WColor(rawBottomRight);
-			backgroundFocused = new WColor(rawBackgroundFocused);
-			backgroundUnfocused = new WColor(rawBackgroundUnfocused);
-		}
-
-
-		public WColor getTopLeft(){
-			return this.topLeft;
-		}
-
-		public WColor getBottomRight(){
-			return this.bottomRight;
-		}
-
-		public WColor getBackgroundFocused(){
-			return this.backgroundFocused;
-		}
-
-		public WColor getBackgroundUnfocused(){
-			return this.backgroundUnfocused;
-		}
-	}
-
 	WSlot.Theme drawTheme;
-
 	private int slotNumber;
 	private ItemStack previewStack = ItemStack.EMPTY;
 	private Inventory linkedInventory;
-
 	public WSlot(WAnchor anchor, int positionX, int positionY, int positionZ, double sizeX, double sizeY, int slotNumber, Inventory linkedInventory, WPanel linkedWPanel) {
 		setLinkedPanel(linkedWPanel);
 
@@ -89,8 +43,8 @@ public class WSlot extends WWidget {
 	}
 
 	public static void addArray(WAnchor anchor, int arrayX, int arrayY, int positionX, int positionY, int positionZ, double sizeX, double sizeY, int slotNumber, Inventory linkedInventory, WPanel linkedWPanel) {
-		for (int y = 0; y < arrayY; ++y) {
-			for (int x = 0; x < arrayX; ++x) {
+		for (int y = 0; y < arrayY; ++ y) {
+			for (int x = 0; x < arrayX; ++ x) {
 				WSlot.addSingle(anchor, positionX + (int) (sizeX * x), positionY + (int) (sizeY * y), positionZ, sizeX, sizeY, slotNumber++, linkedInventory, linkedWPanel);
 			}
 		}
@@ -249,12 +203,12 @@ public class WSlot extends WWidget {
 						stackA.decrement(1);
 						stackB.increment(1);
 					}
-				} else if (!stackB.isEmpty() && stackA.isEmpty() && mouseButton == 1) {
+				} else if (! stackB.isEmpty() && stackA.isEmpty() && mouseButton == 1) {
 					int quantityA = (int) Math.ceil(stackB.getCount() / 2f);
 
 					stackA = new ItemStack(stackB.getItem(), quantityA);
 					stackB.decrement(quantityA);
-				} else if (stackB.isEmpty() && !stackA.isEmpty() && mouseButton == 1) {
+				} else if (stackB.isEmpty() && ! stackA.isEmpty() && mouseButton == 1) {
 					stackB = new ItemStack(stackA.getItem(), 1);
 					stackA.decrement(1);
 				} else if (mouseButton == 0) {
@@ -276,7 +230,7 @@ public class WSlot extends WWidget {
 	@Override
 	public void onMouseDragged(double mouseX, double mouseY, int mouseButton, double dragOffsetX, double dragOffsetY) {
 		if (isWithinBounds(mouseX, mouseY) && InputUtil.isKeyPressed(MinecraftClient.getInstance().window.getHandle(), GLFW.GLFW_KEY_LEFT_SHIFT)) {
-			if (!getLinkedPanel().getLinkedContainer().getDragSlots().contains(this)) {
+			if (! getLinkedPanel().getLinkedContainer().getDragSlots().contains(this)) {
 				getLinkedPanel().getLinkedContainer().getDragSlots().add(this);
 			}
 		}
@@ -306,5 +260,48 @@ public class WSlot extends WWidget {
 		BaseRenderer.getItemRenderer().renderGuiItemOverlay(MinecraftClient.getInstance().textRenderer, getPreviewStack().isEmpty() ? getStack() : getPreviewStack(), 1 + (int) (x + (sX - 18) / 2), 1 + (int) (y + (sY - 18) / 2));
 
 		GuiLighting.disable();
+	}
+
+	public static class Theme {
+		transient private WColor topLeft;
+		transient private WColor bottomRight;
+		transient private WColor backgroundFocused;
+		transient private WColor backgroundUnfocused;
+
+		@SerializedName("top_left")
+		private String rawTopLeft;
+
+		@SerializedName("bottom_right")
+		private String rawBottomRight;
+
+		@SerializedName("background_focused")
+		private String rawBackgroundFocused;
+
+		@SerializedName("background_unfocused")
+		private String rawBackgroundUnfocused;
+
+		public void build() {
+			topLeft = new WColor(rawTopLeft);
+			bottomRight = new WColor(rawBottomRight);
+			backgroundFocused = new WColor(rawBackgroundFocused);
+			backgroundUnfocused = new WColor(rawBackgroundUnfocused);
+		}
+
+
+		public WColor getTopLeft() {
+			return this.topLeft;
+		}
+
+		public WColor getBottomRight() {
+			return this.bottomRight;
+		}
+
+		public WColor getBackgroundFocused() {
+			return this.backgroundFocused;
+		}
+
+		public WColor getBackgroundUnfocused() {
+			return this.backgroundUnfocused;
+		}
 	}
 }

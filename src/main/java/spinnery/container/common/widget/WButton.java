@@ -5,6 +5,85 @@ import spinnery.container.client.BaseRenderer;
 import spinnery.registry.ResourceRegistry;
 
 public class WButton extends WWidget {
+	protected boolean toggleState = false;
+	protected int toggleTicks = 0;
+	WButton.Theme drawTheme;
+	public WButton(WAnchor anchor, int positionX, int positionY, int positionZ, double sizeX, double sizeY, WPanel linkedWPanel) {
+		setLinkedPanel(linkedWPanel);
+
+		setAnchor(anchor);
+
+		setPositionX(positionX + (getAnchor() == WAnchor.MC_ORIGIN ? getLinkedPanel().getPositionX() : 0));
+		setPositionY(positionY + (getAnchor() == WAnchor.MC_ORIGIN ? getLinkedPanel().getPositionY() : 0));
+		setPositionZ(positionZ);
+
+		setSizeX(sizeX);
+		setSizeY(sizeY);
+
+		setTheme("default");
+	}
+
+	@Override
+	public void onMouseClicked(double mouseX, double mouseY, int mouseButton) {
+		if (scanFocus(mouseX, mouseY)) {
+			setToggleState(! getToggleState());
+			setToggleTicks(1);
+		}
+
+		super.onMouseClicked(mouseX, mouseY, mouseButton);
+	}
+
+	@Override
+	public void setTheme(String theme) {
+		super.setTheme(theme);
+		drawTheme = ResourceRegistry.get(getTheme()).getWButtonTheme();
+	}
+
+	@Override
+	public void draw() {
+		if (getToggleState()) {
+			BaseRenderer.drawBeveledPanel(getPositionX(), getPositionY(), getPositionZ(), getSizeX(), getSizeY(), drawTheme.getTopLeftOn(), drawTheme.getBackgroundOn(), drawTheme.getBottomRightOn());
+		} else {
+			BaseRenderer.drawBeveledPanel(getPositionX(), getPositionY(), getPositionZ(), getSizeX(), getSizeY(), drawTheme.getTopLeftOff(), drawTheme.getBackgroundOff(), drawTheme.getBottomRightOff());
+		}
+		if (hasLabel()) {
+			BaseRenderer.getTextRenderer().drawWithShadow(getLabel(), (float) (getPositionX() + getSizeX() + 2), (float) (getPositionY() + getSizeY() / 2 - 4.5), drawTheme.getLabel().RGB);
+		}
+	}
+
+	@Override
+	public void tick() {
+		if (getToggleTicks() > 0) {
+			decrementToggleTicks(1);
+		} else if (getToggleState()) {
+			setToggleState(! getToggleState());
+		}
+	}
+
+	public boolean getToggleState() {
+		return toggleState;
+	}
+
+	public void setToggleState(boolean toggleState) {
+		this.toggleState = toggleState;
+	}
+
+	public int getToggleTicks() {
+		return toggleTicks;
+	}
+
+	public void setToggleTicks(int toggleTicks) {
+		this.toggleTicks = toggleTicks;
+	}
+
+	public void incrementToggleTicks(int increment) {
+		toggleTicks += increment;
+	}
+
+	public void decrementToggleTicks(int decrement) {
+		toggleTicks -= decrement;
+	}
+
 	public class Theme extends WWidget.Theme {
 		transient private WColor topLeftOn;
 		transient private WColor bottomRightOn;
@@ -39,7 +118,7 @@ public class WButton extends WWidget {
 			topLeftOn = new WColor(rawTopLeftOn);
 			bottomRightOn = new WColor(rawBottomRightOn);
 			backgroundOn = new WColor(rawBackgroundOn);
-			topLeftOff  = new WColor(rawTopLeftOff);
+			topLeftOff = new WColor(rawTopLeftOff);
 			bottomRightOff = new WColor(rawBottomRightOff);
 			backgroundOff = new WColor(rawBackgroundOff);
 			label = new WColor(rawLabel);
@@ -71,87 +150,6 @@ public class WButton extends WWidget {
 
 		public WColor getLabel() {
 			return label;
-		}
-	}
-
-	WButton.Theme drawTheme;
-
-	protected boolean toggleState = false;
-	protected int toggleTicks = 0;
-
-	public WButton(WAnchor anchor, int positionX, int positionY, int positionZ, double sizeX, double sizeY, WPanel linkedWPanel) {
-		setLinkedPanel(linkedWPanel);
-
-		setAnchor(anchor);
-
-		setPositionX(positionX + (getAnchor() == WAnchor.MC_ORIGIN ? getLinkedPanel().getPositionX() : 0));
-		setPositionY(positionY + (getAnchor() == WAnchor.MC_ORIGIN ? getLinkedPanel().getPositionY() : 0));
-		setPositionZ(positionZ);
-
-		setSizeX(sizeX);
-		setSizeY(sizeY);
-
-		setTheme("default");
-	}
-
-	@Override
-	public void onMouseClicked(double mouseX, double mouseY, int mouseButton) {
-		if (scanFocus(mouseX, mouseY)) {
-			setToggleState(!getToggleState());
-			setToggleTicks(1);
-		}
-
-		super.onMouseClicked(mouseX, mouseY, mouseButton);
-	}
-
-	public boolean getToggleState() {
-		return toggleState;
-	}
-
-	public void setToggleState(boolean toggleState) {
-		this.toggleState = toggleState;
-	}
-
-	public int getToggleTicks() {
-		return toggleTicks;
-	}
-
-	public void setToggleTicks(int toggleTicks) {
-		this.toggleTicks = toggleTicks;
-	}
-
-	public void incrementToggleTicks(int increment) {
-		toggleTicks += increment;
-	}
-
-	public void decrementToggleTicks(int decrement) {
-		toggleTicks -= decrement;
-	}
-
-	@Override
-	public void setTheme(String theme) {
-		super.setTheme(theme);
-		drawTheme = ResourceRegistry.get(getTheme()).getWButtonTheme();
-	}
-
-	@Override
-	public void draw() {
-		if (getToggleState()) {
-			BaseRenderer.drawBeveledPanel(getPositionX(), getPositionY(), getPositionZ(), getSizeX(), getSizeY(), drawTheme.getTopLeftOn(), drawTheme.getBackgroundOn(), drawTheme.getBottomRightOn());
-		} else {
-			BaseRenderer.drawBeveledPanel(getPositionX(), getPositionY(), getPositionZ(), getSizeX(), getSizeY(), drawTheme.getTopLeftOff(), drawTheme.getBackgroundOff(), drawTheme.getBottomRightOff());
-		}
-		if (hasLabel()) {
-			BaseRenderer.getTextRenderer().drawWithShadow(getLabel(), (float) (getPositionX() + getSizeX() + 2), (float) (getPositionY() + getSizeY() / 2 - 4.5), drawTheme.getLabel().RGB);
-		}
-	}
-
-	@Override
-	public void tick() {
-		if (getToggleTicks() > 0) {
-			decrementToggleTicks(1);
-		} else if (getToggleState()) {
-			setToggleState(!getToggleState());
 		}
 	}
 }
