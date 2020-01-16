@@ -109,7 +109,7 @@ public class WVerticalSlider extends WWidget {
 		double sX = getSizeX();
 		double sY = getSizeY();
 
-		BaseRenderer.getTextRenderer().draw(getSlidTotal(), (int) (x + sX + 4), (int) (y + sY / 2), 16);
+		BaseRenderer.getTextRenderer().drawWithShadow(getSlidTotal(), (int) (x + sX + 4), (int) (y + sY / 2), 0xffffff);
 
 		BaseRenderer.drawRectangle(x, y, z, sX, 1, drawTheme.getTopLeftBackground());
 		BaseRenderer.drawRectangle(x, y, z, 1, (sY + 7), drawTheme.getTopLeftBackground());

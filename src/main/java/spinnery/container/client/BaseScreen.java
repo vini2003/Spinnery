@@ -112,16 +112,15 @@ public class BaseScreen<T extends BaseContainer> extends AbstractContainerScreen
 
 	public void updateTooltip(double mouseX, double mouseY) {
 		setDrawSlot(null);
-
 		for (WWidget widgetA : getLinkedContainer().getLinkedPanel().getLinkedWidgets()) {
 			if (widgetA.getFocus() && widgetA instanceof WSlot) {
 				setDrawSlot((WSlot) widgetA);
 				setTooltipX(mouseX);
 				setTooltipY(mouseY);
-			} else if (widgetA.getFocus() && widgetA instanceof WList) {
+			} else if (widgetA instanceof WList) {
 				for (List<WWidget> widgetB : ((WList) widgetA).getListWidgets()) {
 					for (WWidget widgetC : widgetB) {
-						if (widgetC.isWithinBounds(mouseX, mouseY)) {
+						if (widgetC.scanFocus(mouseX, mouseY)) {
 							setDrawSlot((WSlot) widgetC);
 							setTooltipX(mouseX);
 							setTooltipY(mouseY);

@@ -122,7 +122,6 @@ public class WSlot extends WWidget {
 
 	@Override
 	public void onMouseClicked(double mouseX, double mouseY, int mouseButton) {
-		super.onMouseClicked(mouseX, mouseY, mouseButton);
 		if (getFocus()) {
 			ItemStack stackA = getLinkedPanel().getLinkedContainer().getLinkedPlayerInventory().getCursorStack().copy();
 			ItemStack stackB = getStack().copy();
@@ -225,12 +224,13 @@ public class WSlot extends WWidget {
 			getLinkedPanel().getLinkedContainer().getLinkedPlayerInventory().setCursorStack(stackA);
 			setStack(stackB);
 		}
+		super.onMouseClicked(mouseX, mouseY, mouseButton);
 	}
 
 	@Override
 	public void onMouseDragged(double mouseX, double mouseY, int mouseButton, double dragOffsetX, double dragOffsetY) {
 		if (isWithinBounds(mouseX, mouseY) && InputUtil.isKeyPressed(MinecraftClient.getInstance().window.getHandle(), GLFW.GLFW_KEY_LEFT_SHIFT)) {
-			if (! getLinkedPanel().getLinkedContainer().getDragSlots().contains(this)) {
+			if (!getLinkedPanel().getLinkedContainer().getDragSlots().contains(this)) {
 				getLinkedPanel().getLinkedContainer().getDragSlots().add(this);
 			}
 		}

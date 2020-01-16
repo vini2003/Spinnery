@@ -19,7 +19,7 @@ public class WWidget implements Tickable {
 	protected boolean hasFocus = false;
 	protected boolean canMove = false;
 	protected Runnable linkedRunnableOnCharTyped;
-	protected Runnable linkedRunnableOnMouseClicekd;
+	protected Runnable linkedRunnableOnMouseClicked;
 	protected Runnable linkedRunnableOnKeyPressed;
 	protected Runnable linkedRunnableOnKeyReleased;
 	protected Runnable linkedRunnableOnFocusGained;
@@ -112,17 +112,17 @@ public class WWidget implements Tickable {
 	}
 
 	public void onMouseClicked(double mouseX, double mouseY, int mouseButton) {
-		if (linkedRunnableOnMouseClicekd != null) {
-			linkedRunnableOnMouseClicekd.run();
+		if (linkedRunnableOnMouseClicked != null) {
+			linkedRunnableOnMouseClicked.run();
 		}
 	}
 
 	public Runnable getOnMouseClicked() {
-		return linkedRunnableOnMouseClicekd;
+		return linkedRunnableOnMouseClicked;
 	}
 
 	public void setOnMouseClicked(Runnable linkedRunnable) {
-		this.linkedRunnableOnMouseClicekd = linkedRunnable;
+		this.linkedRunnableOnMouseClicked = linkedRunnable;
 	}
 
 	public void onMouseDragged(double mouseX, double mouseY, int mouseButton, double dragOffsetX, double dragOffsetY) {
@@ -308,7 +308,7 @@ public class WWidget implements Tickable {
 		Optional<? extends WWidget> optional = linkedWPanel.getLinkedWidgets().stream().filter((widget) ->
 				widget.getPositionZ() > getPositionZ() && widget.isWithinBounds(mouseX, mouseY)
 		).findAny();
-		setFocus(! optional.isPresent() && isWithinBounds(mouseX, mouseY));
+		setFocus(!optional.isPresent() && isWithinBounds(mouseX, mouseY));
 		return getFocus();
 	}
 

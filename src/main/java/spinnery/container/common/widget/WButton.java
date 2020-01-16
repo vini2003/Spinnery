@@ -84,6 +84,10 @@ public class WButton extends WWidget {
 		toggleTicks -= decrement;
 	}
 
+	/**
+	 * JSON loading handler class, used with GSON.
+	 * Provides parsing, building and getters for this class' theme options.
+	 */
 	public class Theme extends WWidget.Theme {
 		transient private WColor topLeftOn;
 		transient private WColor bottomRightOn;

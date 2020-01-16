@@ -39,82 +39,38 @@ public class BaseContainer extends CraftingContainer<Inventory> implements Ticka
 		return super.addSlot(slot);
 	}
 
-	/**
-	 * Defines custom behavior for 'onSlotClick'.
-	 *
-	 * @param slot   Slot clicked.
-	 * @param button WToggle clicked.
-	 * @param action Action type.
-	 * @param player Player entity which did action.
-	 * @return ItemStack remaining after click.
-	 */
 	@Deprecated
 	@Override
 	public ItemStack onSlotClick(int slot, int button, SlotActionType action, PlayerEntity player) {
 		return super.onSlotClick(slot, button, action, player);
 	}
 
-	/**
-	 * Define custom behavior for 'canUse'.
-	 *
-	 * @return Boolean of can use result.
-	 */
 	@Deprecated
 	@Override
 	public boolean canUse(PlayerEntity entity) {
 		return true;
 	}
 
-	/**
-	 * Get linked WPanel.
-	 *
-	 * @return Retrieved WPanel.
-	 */
 	public WPanel getLinkedPanel() {
 		return linkedPanel;
 	}
 
-	/**
-	 * Set linked WPanel.
-	 *
-	 * @param linkedWPanel WPanel to bet set.
-	 */
 	public void setLinkedPanel(WPanel linkedWPanel) {
 		this.linkedPanel = linkedWPanel;
 	}
 
-	/**
-	 * Get linked Inventory.
-	 *
-	 * @return Retrieved Inventory.
-	 */
 	public Inventory getLinkedInventory() {
 		return linkedInventory;
 	}
 
-	/**
-	 * Set linked Inventory.
-	 *
-	 * @param linkedInventory Inventory to be set.
-	 */
 	public void setLinkedInventory(Inventory linkedInventory) {
 		this.linkedInventory = linkedInventory;
 	}
 
-	/**
-	 * Get linked PlayerInventory.
-	 *
-	 * @return Retrieved PlayerInventory.
-	 */
 	public PlayerInventory getLinkedPlayerInventory() {
 		return linkedPlayerInventory;
 	}
 
-	/**
-	 * Set linked PlayerInventory.
-	 *
-	 * @param linkedPlayerInventory PlayerInventory to be set.
-	 */
 	public void setLinkedPlayerInventory(PlayerInventory linkedPlayerInventory) {
 		this.linkedPlayerInventory = linkedPlayerInventory;
 	}
@@ -151,11 +107,6 @@ public class BaseContainer extends CraftingContainer<Inventory> implements Ticka
 		this.dragSlots = dragSlots;
 	}
 
-	/**
-	 * Defines custom behavior for 'populateRecipeFinder'.
-	 *
-	 * @param recipeFinder ReciperFinder to be manipulated.
-	 */
 	@Deprecated
 	@Override
 	public void populateRecipeFinder(RecipeFinder recipeFinder) {
@@ -164,73 +115,41 @@ public class BaseContainer extends CraftingContainer<Inventory> implements Ticka
 		}
 	}
 
-	/**
-	 * Defines custom behavior for 'clearCraftingSlots'.
-	 */
 	@Deprecated
 	@Override
 	public void clearCraftingSlots() {
 	}
 
-	/**
-	 * Defines custom behavior for 'matches'.
-	 *
-	 * @param recipe Recipe to find a match for.
-	 * @return Boolean of match result.
-	 */
 	@Deprecated
 	@Override
 	public boolean matches(Recipe<? super Inventory> recipe) {
 		return false;
 	}
 
-	/**
-	 * Defines custom behavior for 'getCraftingResultSlotIndex'.
-	 *
-	 * @return Integer of slot index.
-	 */
 	@Deprecated
 	@Override
 	public int getCraftingResultSlotIndex() {
 		return - 1;
 	}
 
-	/**
-	 * Defines custom behavior for 'getCraftingWidth'.
-	 *
-	 * @return Integer of crafting grid width.
-	 */
 	@Deprecated
 	@Override
 	public int getCraftingWidth() {
 		return 0;
 	}
 
-	/**
-	 * Defines custom behavior for 'getCraftingHeight'.
-	 *
-	 * @return Integer of crafting grid height.
-	 */
 	@Deprecated
 	@Override
 	public int getCraftingHeight() {
 		return 0;
 	}
 
-	/**
-	 * Defines custom behavior for 'getCraftingSlotCount'.
-	 *
-	 * @return Integer of crafting grid slot count.
-	 */
 	@Deprecated
 	@Override
 	public int getCraftingSlotCount() {
 		return 0;
 	}
 
-	/**
-	 * Defines custom behavior for 'tick'.
-	 */
 	@Override
 	public void tick() {
 		for (WWidget widgetA : getLinkedPanel().getLinkedWidgets()) {

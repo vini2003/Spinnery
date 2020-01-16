@@ -138,6 +138,13 @@ public class WList extends WWidget {
 	}
 
 	@Override
+	public void setLabel(String label) {
+		super.setLabel(label);
+		updatePositions();
+		updateHidden();
+	}
+
+	@Override
 	public boolean scanFocus(double mouseX, double mouseY) {
 		for (List<WWidget> widgetB : getListWidgets()) {
 			for (WWidget widgetC : widgetB) {

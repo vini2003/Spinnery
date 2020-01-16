@@ -75,6 +75,8 @@ public class WDynamicText extends WWidget {
 
 		clearSelection();
 		recalculateVisible();
+
+		super.onCharTyped(character);
 	}
 
 	@Override
@@ -140,6 +142,8 @@ public class WDynamicText extends WWidget {
 			}
 			recalculateVisible();
 		}
+
+		super.onKeyPressed(keyPressed, character, keyModifier);
 	}
 
 	@Override
