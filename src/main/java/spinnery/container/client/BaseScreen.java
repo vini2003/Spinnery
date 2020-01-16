@@ -4,6 +4,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.item.ItemStack;
 import org.lwjgl.glfw.GLFW;
+import spinnery.SpinneryMod;
 import spinnery.container.common.BaseContainer;
 import spinnery.container.common.widget.WList;
 import spinnery.container.common.widget.WSlot;
@@ -12,11 +13,13 @@ import net.minecraft.container.Slot;
 import net.minecraft.container.SlotActionType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
+import spinnery.container.common.widget.WWidget;
+
+import javax.sound.midi.SysexMessage;
 
 public class BaseScreen<T extends BaseContainer> extends AbstractContainerScreen<T> {
 	double tooltipX = 0;
 	double tooltipY = 0;
-	boolean isMouseHovering = false;
 	WSlot drawSlot;
 
 	public BaseScreen(Text name, T linkedContainer, PlayerEntity player) {
@@ -76,13 +79,17 @@ public class BaseScreen<T extends BaseContainer> extends AbstractContainerScreen
 
 	@Override
 	protected void drawMouseoverTooltip(int mouseX, int mouseY) {
-		getLinkedContainer().getLinkedPanel().getLinkedWidgets().forEach((widget) -> widget.onDrawTooltip());
+		for (WWidget widget : getLinkedContainer().getLinkedPanel().getLinkedWidgets()) {
+			widget.onDrawTooltip();
+		}
 		super.drawMouseoverTooltip(mouseX, mouseY);
 	}
 
 	@Override
 	public boolean keyPressed(int character, int keyCode, int keyModifier) {
-		getLinkedContainer().getLinkedPanel().getLinkedWidgets().forEach((widget) -> widget.onKeyPressed(keyCode, character, keyModifier));
+		for (WWidget widget : getLinkedContainer().getLinkedPanel().getLinkedWidgets()) {
+			widget.onKeyPressed(keyCode, character, keyModifier);
+		}
 		if (character == GLFW.GLFW_KEY_ESCAPE) {
 			minecraft.player.closeContainer();
 			return true;
@@ -93,14 +100,18 @@ public class BaseScreen<T extends BaseContainer> extends AbstractContainerScreen
 
 	@Override
 	public boolean keyReleased(int character, int keyCode, int keyModifier) {
-		getLinkedContainer().getLinkedPanel().getLinkedWidgets().forEach((widget) -> widget.onKeyReleased(keyCode));
+		for (WWidget widget : getLinkedContainer().getLinkedPanel().getLinkedWidgets()) {
+			widget.onKeyReleased(keyCode);
+		}
 		return super.keyReleased(character, keyCode, keyModifier);
 	}
 
 	@Override
 	public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
 		if (!InputUtil.isKeyPressed(MinecraftClient.getInstance().window.getHandle(), GLFW.GLFW_KEY_LEFT_SHIFT)) {
-			getLinkedContainer().getLinkedPanel().getLinkedWidgets().forEach((widget) -> widget.onMouseClicked(mouseX, mouseY, mouseButton));
+			for (WWidget widget : getLinkedContainer().getLinkedPanel().getLinkedWidgets()) {
+				widget.onMouseClicked(mouseX, mouseY, mouseButton);
+			}
 		}
 		return super.mouseClicked(mouseX, mouseY, mouseButton);
 	}
@@ -109,8 +120,8 @@ public class BaseScreen<T extends BaseContainer> extends AbstractContainerScreen
 	public boolean mouseReleased(double mouseX, double mouseY, int mouseButton) {
 		if (InputUtil.isKeyPressed(MinecraftClient.getInstance().window.getHandle(), GLFW.GLFW_KEY_LEFT_SHIFT)) {
 			ItemStack[] stackA = { MinecraftClient.getInstance().player.inventory.getCursorStack() };
-			int quantityA = mouseButton == 0 ? (int) Math.floor((float) stackA[0].getCount() / getLinkedContainer().dragSlots.size()) : mouseButton == 1 ? 1 : 0;
-			getLinkedContainer().dragSlots.forEach(widget -> {
+			int quantityA = mouseButton == 0 ? (int) Math.floor((float) stackA[0].getCount() / getLinkedContainer().getDragSlots().size()) : mouseButton == 1 ? 1 : 0;
+			for (WSlot widget : getLinkedContainer().getDragSlots()) {
 				if (widget.getStack().getCount() != widget.getStack().getMaxCount()) {
 					if (widget.getStack().isEmpty()) {
 						widget.setStack(new ItemStack(stackA[0].getItem(), quantityA));
@@ -122,21 +133,23 @@ public class BaseScreen<T extends BaseContainer> extends AbstractContainerScreen
 					}
 					widget.setPreviewStack(ItemStack.EMPTY);
 				}
-			});
-			isMouseHovering = false;
-			getLinkedContainer().dragSlots.clear();
+			}
+
+			getLinkedContainer().getDragSlots().clear();
 		} else {
-			getLinkedContainer().getLinkedPanel().getLinkedWidgets().forEach((widget) -> widget.onMouseReleased(mouseX, mouseY, mouseButton));
+			for (WWidget widget : getLinkedContainer().getLinkedPanel().getLinkedWidgets()) {
+				widget.onMouseReleased(mouseX, mouseY, mouseButton);
+			}
 		}
 		return super.mouseReleased(mouseX, mouseY, mouseButton);
 	}
 
 	@Override
 	public void mouseMoved(double mouseX, double mouseY) {
-		getLinkedContainer().getLinkedPanel().getLinkedWidgets().forEach((widget) -> {
+		for (WWidget widget : getLinkedContainer().getLinkedPanel().getLinkedWidgets()) {
 			widget.scanFocus(mouseX, mouseY);
 			widget.onMouseMoved(mouseX, mouseY);
-		});
+		}
 
 		updateTooltip(mouseX, mouseY);
 
@@ -145,29 +158,37 @@ public class BaseScreen<T extends BaseContainer> extends AbstractContainerScreen
 
 	@Override
 	public boolean mouseScrolled(double mouseX, double mouseY, double mouseZ) {
-		getLinkedContainer().getLinkedPanel().getLinkedWidgets().forEach((widget) -> widget.onMouseScrolled(mouseX, mouseY, mouseZ));
+		for (WWidget widget : getLinkedContainer().getLinkedPanel().getLinkedWidgets()) {
+			widget.onMouseScrolled(mouseX, mouseY, mouseZ);
+		}
+
 		return super.mouseScrolled(mouseX, mouseY, mouseZ);
 	}
 
 	@Override
 	protected void onMouseClick(Slot slot, int slotX, int slotY, SlotActionType slotActionType) {
-		getLinkedContainer().getLinkedPanel().getLinkedWidgets().forEach((widget) -> widget.onSlotClicked(slot, slotX, slotY, slotActionType));
+		for (WWidget widget : getLinkedContainer().getLinkedPanel().getLinkedWidgets()) {
+			widget.onSlotClicked(slot, slotX, slotY, slotActionType);
+		}
+
 		super.onMouseClick(slot, slotX, slotY, slotActionType);
 	}
 
 	@Override
 	public boolean charTyped(char character, int keyCode) {
-		getLinkedContainer().getLinkedPanel().getLinkedWidgets().forEach((widget) -> widget.onCharTyped(character));
+		for (WWidget widget : getLinkedContainer().getLinkedPanel().getLinkedWidgets()) {
+			widget.onCharTyped(character);
+		}
+
 		return super.charTyped(character, keyCode);
 	}
 
 	@Override
 	public boolean mouseDragged(double slotX, double slotY, int mouseButton, double mouseX, double mouseY) {
-		isMouseHovering = true;
 		if (InputUtil.isKeyPressed(MinecraftClient.getInstance().window.getHandle(), GLFW.GLFW_KEY_LEFT_SHIFT)) {
 			ItemStack stackA = MinecraftClient.getInstance().player.inventory.getCursorStack();
-			int quantityA = mouseButton == 0 ? (int) Math.floor((float) stackA.getCount() / getLinkedContainer().dragSlots.size()) : mouseButton == 1 ? 1 : 0;
-			getLinkedContainer().dragSlots.forEach(widgetA -> {
+			int quantityA = mouseButton == 0 ? (int) Math.floor((float) stackA.getCount() / getLinkedContainer().getDragSlots().size()) : mouseButton == 1 ? 1 : 0;
+			for (WSlot widgetA : getLinkedContainer().getDragSlots()) {
 				if ((widgetA.getStack().getCount() !=  widgetA.getStack().getMaxCount())) {
 					if (widgetA.getStack().isEmpty()) {
 						widgetA.setPreviewStack(new ItemStack(stackA.getItem(), quantityA));
@@ -177,9 +198,13 @@ public class BaseScreen<T extends BaseContainer> extends AbstractContainerScreen
 						widgetA.getPreviewStack().increment(quantityB);
 					}
 				}
-			});
+			}
+		} else {
+			for (WWidget widget : getLinkedContainer().getLinkedPanel().getLinkedWidgets()) {
+				widget.onMouseDragged(slotX, slotY, mouseButton, mouseX, mouseY);
+			}
 		}
-		getLinkedContainer().getLinkedPanel().getLinkedWidgets().forEach((widget) -> widget.onMouseDragged(slotX, slotY, mouseButton, mouseX, mouseY));
+
 		return super.mouseDragged(slotX, slotY, mouseButton, mouseX, mouseY);
 	}
 
@@ -202,7 +227,7 @@ public class BaseScreen<T extends BaseContainer> extends AbstractContainerScreen
 	public void updateTooltip(double mouseX, double mouseY) {
 		setDrawSlot(null);
 
-		getLinkedContainer().getLinkedPanel().getLinkedWidgets().forEach(widgetA -> {
+		for (WWidget widgetA : getLinkedContainer().getLinkedPanel().getLinkedWidgets()) {
 			if (widgetA.getFocus() && widgetA instanceof WSlot) {
 				setDrawSlot((WSlot) widgetA);
 				setTooltipX(mouseX);
@@ -216,7 +241,7 @@ public class BaseScreen<T extends BaseContainer> extends AbstractContainerScreen
 					}
 				}));
 			}
-		});
+		}
 	}
 
 	@Override
