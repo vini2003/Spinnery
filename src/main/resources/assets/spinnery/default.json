@@ -25,10 +25,15 @@
 
 	},
 	"WStaticText": {
-
+		"text": "0xffffff"
 	},
 	"WDynamicText": {
-
+		"top_left": "0xff373737",
+		"bottom_right": "0xffffffff",
+		"background": "0xff000000",
+		"text": "0xffffff",
+		"highlight": "0xb30400ff",
+		"cursor": "0xffffff"
 	},
 	"WVerticalSlider": {
 		"top_left_background": "0xff373737",

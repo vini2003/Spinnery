@@ -57,7 +57,7 @@ public class TestContainer extends BaseContainer {
 
 		WButton buttonA = new WButton(WAnchor.MC_ORIGIN, 90, 110, 20, 18, 18, linkedWPanel);
 
-		WStaticText textA = new WStaticText(WAnchor.MC_ORIGIN, 110, 90, 20, 40, new LiteralText("Hey there, Cringewalker"), linkedWPanel);
+		WStaticText textA = new WStaticText(WAnchor.MC_ORIGIN, 110, 90, 20, 40, new LiteralText("We've got static text!"), linkedWPanel);
 
 		WDynamicText textB = new WDynamicText(WAnchor.MC_ORIGIN, 300, 90, 0, 100, 18, linkedWPanel);
 
