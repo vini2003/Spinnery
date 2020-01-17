@@ -15,7 +15,10 @@
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"spinnery.SpinneryMod"
+			"spinnery.Spinnery"
+		],
+		"client": [
+			"spinnery.SpinneryClient"
 		]
 	},
 	"mixins": [

@@ -168,22 +168,6 @@ public class BaseScreen<T extends BaseContainer> extends AbstractContainerScreen
 
 	@Override
 	public boolean mouseDragged(double slotX, double slotY, int mouseButton, double mouseX, double mouseY) {
-		if (Screen.hasShiftDown()) {
-			ItemStack stackA = MinecraftClient.getInstance().player.inventory.getCursorStack();
-			int quantityA = mouseButton == 0 ? (int) Math.floor((float) stackA.getCount() / getLinkedContainer().getDragSlots().size()) : mouseButton == 1 ? 1 : 0;
-			for (WSlot widgetA : getLinkedContainer().getDragSlots()) {
-				if ((widgetA.getStack().getCount() != widgetA.getStack().getMaxCount())) {
-					if (widgetA.getStack().isEmpty()) {
-						widgetA.setPreviewStack(new ItemStack(stackA.getItem(), quantityA));
-					} else if (widgetA.getStack().isItemEqualIgnoreDamage(stackA)) {
-						int quantityB = Math.min(quantityA, widgetA.getStack().getMaxCount() - widgetA.getStack().getCount());
-						widgetA.setPreviewStack(widgetA.getStack().copy());
-						widgetA.getPreviewStack().increment(quantityB);
-					}
-				}
-			}
-		}
-
 		for (WWidget widget : getLinkedContainer().getLinkedPanel().getLinkedWidgets()) {
 			widget.onMouseDragged(slotX, slotY, mouseButton, mouseX, mouseY);
 		}
@@ -193,28 +177,8 @@ public class BaseScreen<T extends BaseContainer> extends AbstractContainerScreen
 
 	@Override
 	public boolean mouseReleased(double mouseX, double mouseY, int mouseButton) {
-		if (Screen.hasShiftDown()) {
-			ItemStack[] stackA = {MinecraftClient.getInstance().player.inventory.getCursorStack()};
-			int quantityA = mouseButton == 0 ? (int) Math.floor((float) stackA[0].getCount() / getLinkedContainer().getDragSlots().size()) : mouseButton == 1 ? 1 : 0;
-			for (WSlot widget : getLinkedContainer().getDragSlots()) {
-				if (widget.getStack().getCount() != widget.getStack().getMaxCount()) {
-					if (widget.getStack().isEmpty()) {
-						widget.setStack(new ItemStack(stackA[0].getItem(), quantityA));
-						stackA[0].decrement(quantityA);
-					} else if (widget.getStack().isItemEqualIgnoreDamage(stackA[0])) {
-						int quantityB = Math.min(quantityA, widget.getStack().getMaxCount() - widget.getStack().getCount());
-						widget.getStack().increment(quantityB);
-						stackA[0].decrement(quantityB);
-					}
-					widget.setPreviewStack(ItemStack.EMPTY);
-				}
-			}
-
-			getLinkedContainer().getDragSlots().clear();
-		} else {
-			for (WWidget widget : getLinkedContainer().getLinkedPanel().getLinkedWidgets()) {
-				widget.onMouseReleased(mouseX, mouseY, mouseButton);
-			}
+		for (WWidget widget : getLinkedContainer().getLinkedPanel().getLinkedWidgets()) {
+			widget.onMouseReleased(mouseX, mouseY, mouseButton);
 		}
 		return super.mouseReleased(mouseX, mouseY, mouseButton);
 	}

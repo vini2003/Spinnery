@@ -4,26 +4,22 @@ import com.google.gson.annotations.SerializedName;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
-import net.minecraft.client.util.InputUtil;
 import net.minecraft.container.SlotActionType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import org.apache.logging.log4j.Level;
-import org.lwjgl.glfw.GLFW;
-import spinnery.SpinneryMod;
+import spinnery.Spinnery;
 import spinnery.client.BaseRenderer;
 import spinnery.registry.ResourceRegistry;
-
-import java.util.List;
 
 public class WSlot extends WWidget {
 	WSlot.Theme drawTheme;
 	private int slotNumber;
 	private ItemStack previewStack = ItemStack.EMPTY;
 	private Inventory linkedInventory;
+	private boolean ignoreOnRelease = false;
 
 	public WSlot(WAnchor anchor, int positionX, int positionY, int positionZ, double sizeX, double sizeY, int slotNumber, Inventory linkedInventory, WPanel linkedWPanel) {
 		setLinkedPanel(linkedWPanel);
@@ -88,7 +84,7 @@ public class WSlot extends WWidget {
 		try {
 			return getLinkedInventory().getInvStack(getSlotNumber());
 		} catch (ArrayIndexOutOfBoundsException exception) {
-			SpinneryMod.logger.log(Level.ERROR, "Cannot access slot " + getSlotNumber() + ", as it does exist in the inventory!");
+			Spinnery.logger.log(Level.ERROR, "Cannot access slot " + getSlotNumber() + ", as it does exist in the inventory!");
 			return ItemStack.EMPTY;
 		}
 	}
@@ -97,7 +93,7 @@ public class WSlot extends WWidget {
 		try {
 			getLinkedInventory().setInvStack(getSlotNumber(), stack);
 		} catch (ArrayIndexOutOfBoundsException exception) {
-			SpinneryMod.logger.log(Level.ERROR, "Cannot access slot " + getSlotNumber() + ", as it does exist in the inventory!");
+			Spinnery.logger.log(Level.ERROR, "Cannot access slot " + getSlotNumber() + ", as it does exist in the inventory!");
 		}
 	}
 
@@ -126,14 +122,36 @@ public class WSlot extends WWidget {
 	}
 
 	@Override
+	public void onMouseReleased(double mouseX, double mouseY, int mouseButton) {
+		if (getFocus()) {
+			PlayerEntity playerEntity = getLinkedPanel().getLinkedContainer().getLinkedPlayerInventory().player;
+
+			if (! ignoreOnRelease && mouseButton == 0 && !Screen.hasShiftDown() && !playerEntity.inventory.getCursorStack().isEmpty()) {
+				getLinkedPanel().getLinkedContainer().onSlotClick(getSlotNumber(), 0, SlotActionType.PICKUP, playerEntity);
+			} else if (! ignoreOnRelease && mouseButton == 1 && !Screen.hasShiftDown() && !playerEntity.inventory.getCursorStack().isEmpty()) {
+				getLinkedPanel().getLinkedContainer().onSlotClick(getSlotNumber(), 1, SlotActionType.PICKUP, playerEntity);
+			}
+
+			ignoreOnRelease = false;
+		}
+
+		getLinkedPanel().getLinkedContainer().getDragSlots().clear();
+
+		super.onMouseReleased(mouseX, mouseY, mouseButton);
+	}
+
+	@Override
 	public void onMouseClicked(double mouseX, double mouseY, int mouseButton) {
 		if (getFocus()) {
 			PlayerEntity playerEntity = getLinkedPanel().getLinkedContainer().getLinkedPlayerInventory().player;
+
 			if (mouseButton == 0 && Screen.hasShiftDown()) {
 				getLinkedPanel().getLinkedContainer().onSlotClick(getSlotNumber(), 0, SlotActionType.QUICK_MOVE, playerEntity);
-			} else if (mouseButton == 0 && !Screen.hasShiftDown()) {
+			} else if (mouseButton == 0 && !Screen.hasShiftDown() && playerEntity.inventory.getCursorStack().isEmpty()) {
+				ignoreOnRelease = true;
 				getLinkedPanel().getLinkedContainer().onSlotClick(getSlotNumber(), 0, SlotActionType.PICKUP, playerEntity);
-			} else if (mouseButton == 1) {
+			} else if (mouseButton == 1 && ! Screen.hasShiftDown() && playerEntity.inventory.getCursorStack().isEmpty()) {
+				ignoreOnRelease = true;
 				getLinkedPanel().getLinkedContainer().onSlotClick(getSlotNumber(), 1, SlotActionType.PICKUP, playerEntity);
 			} else if (mouseButton == 2) {
 				getLinkedPanel().getLinkedContainer().onSlotClick(getSlotNumber(), 2, SlotActionType.CLONE, playerEntity);
@@ -144,11 +162,12 @@ public class WSlot extends WWidget {
 
 	@Override
 	public void onMouseDragged(double mouseX, double mouseY, int mouseButton, double dragOffsetX, double dragOffsetY) {
-		if (isWithinBounds(mouseX, mouseY) && Screen.hasShiftDown()) {
-			if (!getLinkedPanel().getLinkedContainer().getDragSlots().contains(this)) {
-				getLinkedPanel().getLinkedContainer().getDragSlots().add(this);
-			}
+		if (getFocus() && Screen.hasShiftDown()) {
+			PlayerEntity playerEntity = getLinkedPanel().getLinkedContainer().getLinkedPlayerInventory().player;
+
+			getLinkedPanel().getLinkedContainer().onSlotClick(getSlotNumber(), mouseButton, SlotActionType.QUICK_MOVE, MinecraftClient.getInstance().player);
 		}
+
 		super.onMouseDragged(mouseX, mouseY, mouseButton, dragOffsetX, dragOffsetY);
 	}
 

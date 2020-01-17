@@ -6,7 +6,7 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.minecraft.resource.ResourceType;
 import org.apache.logging.log4j.Level;
-import spinnery.SpinneryMod;
+import spinnery.Spinnery;
 import spinnery.theme.Theme;
 import spinnery.util.ResourceListener;
 
@@ -70,10 +70,10 @@ public class ResourceRegistry {
 
 				});
 			} catch (NullPointerException exception) {
-				SpinneryMod.logger.log(Level.INFO, "[Spinnery] No custom themes found.");
+				Spinnery.logger.log(Level.INFO, "[Spinnery] No custom themes found.");
 			}
 		} catch (IOException exception) {
-			SpinneryMod.logger.log(Level.INFO, "[Spinnery] No custom themes found.");
+			Spinnery.logger.log(Level.INFO, "[Spinnery] No custom themes found.");
 		}
 	}
 }
