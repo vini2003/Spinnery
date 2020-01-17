@@ -271,6 +271,14 @@ public class WWidget implements Tickable {
 		this.positionZ = positionZ;
 	}
 
+	public void setAnchoredPositionX(double positionX) {
+		setAnchoredPositionX(positionX);
+	}
+
+	public void setAnchoredPositionY(double positionY) {
+		setPositionX(positionY + (getAnchor() == WAnchor.MC_ORIGIN ? getLinkedPanel().getPositionY() : 0));
+	}
+
 	public boolean getFocus() {
 		return hasFocus;
 	}

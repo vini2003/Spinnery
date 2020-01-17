@@ -16,8 +16,8 @@ public class WHorizontalSlider extends WWidget {
 
 		setAnchor(anchor);
 
-		setPositionX(positionX + (getAnchor() == WAnchor.MC_ORIGIN ? getLinkedPanel().getPositionX() : 0));
-		setPositionY(positionY + (getAnchor() == WAnchor.MC_ORIGIN ? getLinkedPanel().getPositionY() : 0));
+		setAnchoredPositionX(positionX);
+		setAnchoredPositionY(positionY);
 		setPositionZ(positionZ);
 
 		setSizeX(sizeX);

@@ -20,8 +20,8 @@ public class WDropdown extends WWidget {
 
 		setAnchor(anchor);
 
-		setPositionX(positionX + (getAnchor() == WAnchor.MC_ORIGIN ? getLinkedPanel().getPositionX() : 0));
-		setPositionY(positionY + (getAnchor() == WAnchor.MC_ORIGIN ? getLinkedPanel().getPositionY() : 0));
+		setAnchoredPositionX(positionX);
+		setAnchoredPositionY(positionY);
 		setPositionZ(positionZ);
 
 		setSizes(sizeX1, sizeY1, sizeX2, sizeY2);
