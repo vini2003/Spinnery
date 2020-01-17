@@ -4,6 +4,9 @@ import net.fabricmc.api.ModInitializer;
 import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import spinnery.debug.BlockRegistry;
+import spinnery.debug.ContainerRegistry;
+import spinnery.debug.ItemRegistry;
 
 public class Spinnery implements ModInitializer {
 	public static final String LOG_ID = "Spinnery";
@@ -12,5 +15,8 @@ public class Spinnery implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
+		BlockRegistry.initialize();
+		ItemRegistry.initialize();
+		ContainerRegistry.initialize();
 	}
 }

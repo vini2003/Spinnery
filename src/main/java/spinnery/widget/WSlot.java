@@ -162,7 +162,7 @@ public class WSlot extends WWidget {
 
 	@Override
 	public void onMouseDragged(double mouseX, double mouseY, int mouseButton, double dragOffsetX, double dragOffsetY) {
-		if (getFocus() && Screen.hasShiftDown()) {
+		if (getFocus() && Screen.hasShiftDown() && mouseButton == 0) {
 			PlayerEntity playerEntity = getLinkedPanel().getLinkedContainer().getLinkedPlayerInventory().player;
 
 			getLinkedPanel().getLinkedContainer().onSlotClick(getSlotNumber(), mouseButton, SlotActionType.QUICK_MOVE, MinecraftClient.getInstance().player);
