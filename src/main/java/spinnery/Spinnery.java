@@ -4,7 +4,6 @@ import net.fabricmc.api.ModInitializer;
 import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import spinnery.registry.ResourceRegistry;
 
 public class Spinnery implements ModInitializer {
 	public static final String LOG_ID = "Spinnery";
