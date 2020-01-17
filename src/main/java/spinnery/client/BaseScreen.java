@@ -154,10 +154,8 @@ public class BaseScreen<T extends BaseContainer> extends AbstractContainerScreen
 
 	@Override
 	public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
-		if (! InputUtil.isKeyPressed(MinecraftClient.getInstance().getWindow().getHandle(), GLFW.GLFW_KEY_LEFT_SHIFT)) {
-			for (WWidget widget : getLinkedContainer().getLinkedPanel().getLinkedWidgets()) {
-				widget.onMouseClicked(mouseX, mouseY, mouseButton);
-			}
+		for (WWidget widget : getLinkedContainer().getLinkedPanel().getLinkedWidgets()) {
+			widget.onMouseClicked(mouseX, mouseY, mouseButton);
 		}
 		return super.mouseClicked(mouseX, mouseY, mouseButton);
 	}
