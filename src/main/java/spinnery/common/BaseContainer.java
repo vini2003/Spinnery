@@ -13,6 +13,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeFinder;
 import net.minecraft.recipe.RecipeInputProvider;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Tickable;
 import net.minecraft.world.World;
 import org.lwjgl.glfw.GLFW;
@@ -51,21 +52,23 @@ public class BaseContainer extends CraftingContainer<Inventory> implements Ticka
 		int countA = stackA.getCount();
 		int countB = stackB.getCount();
 
+		int availableA = maxA - countA;
 		int availableB = maxB - countB;
 
-		stackA.setCount(Math.min(countA - availableB, 0));
 		stackB.increment(Math.min(countA, availableB));
+		stackA.setCount(Math.max(countA - availableB, 0));
 	}
 
 	@Deprecated
 	@Override
 	public ItemStack onSlotClick(int slot, int button, SlotActionType action, PlayerEntity player) {
-		WSlot slotA = null;
-		for (WWidget widget : getLinkedPanel().getLinkedWidgets()) {
-			if (widget instanceof WSlot && ((WSlot) widget).getSlotNumber() == slot) {
-				slotA = ((WSlot) widget);
-				break;
-			}
+		Optional<WWidget> optionalWSlot = getLinkedPanel().getLinkedWidgets().stream().filter((widget) -> (widget instanceof WSlot && ((WSlot) widget).getSlotNumber() == slot && widget.getFocus())).findFirst();
+
+		WSlot slotA;
+		if (optionalWSlot.isPresent()) {
+			slotA = (WSlot) optionalWSlot.get();
+		} else {
+			return ItemStack.EMPTY;
 		}
 
 		ItemStack stackA = slotA.getStack();
@@ -74,32 +77,58 @@ public class BaseContainer extends CraftingContainer<Inventory> implements Ticka
 		switch (action) {
 			case PICKUP: {
 				if (!stackA.isItemEqual(stackB)) {
-					ItemStack stackC = stackA.copy();
-					stackA = stackB.copy();
-					stackB = stackC.copy();
+					if (button == 0) { // Swap with existing // LMB
+						ItemStack stackC = stackA.copy();
+						stackA = stackB.copy();
+						stackB = stackC.copy();
+					} else if (button == 1  && !stackB.isEmpty()) { // Add to existing // RMB
+						if (stackA.isEmpty()) { // If existing is empty, initialize it // RMB
+							stackA = new ItemStack(stackB.getItem(), 1);
+							stackB.decrement(1);
+						}
+					}  else if (button == 1) { // Split existing // RMB
+						ItemStack stackC = stackA.split(stackA.getCount() / 2);
+						stackB = stackC.copy();
+					}
 				} else {
 					if (button == 0) {
-						mergeStacks(stackB, stackA);
+						mergeStacks(stackB, stackA); // Add to existing // LMB
 					} else {
-						boolean canStackTransfer = stackA.getCount() >= 1 && stackB.getCount() < stackB.getMaxCount();
-						if (canStackTransfer) {
-							stackA.decrement(1);
-							stackB.increment(1);
+						boolean canStackTransfer = stackB.getCount() >= 1 && stackA.getCount() < stackA.getMaxCount();
+						if (canStackTransfer) { // Add to existing // RMB
+							stackA.increment(1);
+							stackB.decrement(1);
 						}
 					}
 				}
+				break;
 			}
 			case CLONE: {
-				stackB = new ItemStack(stackA.getItem(), stackA.getMaxCount());
+				stackB = new ItemStack(stackA.getItem(), stackA.getMaxCount()); // Clone existing // MMB
+				break;
 			}
 			case QUICK_MOVE: {
 				for (WWidget widget : getLinkedPanel().getLinkedWidgets()) {
-					if (widget instanceof WSlot && ((WSlot) widget).getStack().isItemEqual(stackA)) {
-						mergeStacks(stackA, stackB);
+					if (widget != slotA && widget instanceof WSlot && ((WSlot) widget).getLinkedInventory() != slotA.getLinkedInventory()) {
+						ItemStack stackC = ((WSlot) widget).getStack();
+						if (!(stackC.getCount() == stackC.getMaxCount())) {
+							if (stackA.isItemEqual(stackC)) { // Merge with existing // LFSHIFT + LMB
+								mergeStacks(stackA, stackC);
+								((WSlot) widget).setStack(stackC);
+								break;
+							} else if (stackC.isEmpty()) { // Swap with existing // LSHIFT + LMB
+								((WSlot) widget).setStack(stackA.copy());
+								stackA = ItemStack.EMPTY;
+								break;
+							}
+						}
 					}
 				}
+				break;
 			}
 		}
+		slotA.setStack(stackA);
+		linkedPlayerInventory.setCursorStack(stackB);
 		return ItemStack.EMPTY;
 	}
 
