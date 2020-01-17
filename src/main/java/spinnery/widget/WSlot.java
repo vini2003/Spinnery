@@ -3,6 +3,7 @@ package spinnery.widget;
 import com.google.gson.annotations.SerializedName;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.entity.player.PlayerInventory;
@@ -124,7 +125,7 @@ public class WSlot extends WWidget {
 
 	@Override
 	public void onMouseClicked(double mouseX, double mouseY, int mouseButton) {
-		if (getFocus()) {
+		if (getFocus() && !Screen.hasShiftDown()) {
 			ItemStack stackA = getLinkedPanel().getLinkedContainer().getLinkedPlayerInventory().getCursorStack().copy();
 			ItemStack stackB = getStack().copy();
 
@@ -225,13 +226,43 @@ public class WSlot extends WWidget {
 			}
 			getLinkedPanel().getLinkedContainer().getLinkedPlayerInventory().setCursorStack(stackA);
 			setStack(stackB);
+		} else if (getFocus() && Screen.hasShiftDown()) {
+			for (WWidget wWidget : getLinkedPanel().getLinkedWidgets()) {
+				if (wWidget instanceof WSlot && ((WSlot) wWidget).linkedInventory != linkedInventory) {
+					ItemStack stackA = getStack();
+					ItemStack stackB = ((WSlot) wWidget).getStack();
+
+					if (!stackB.isEmpty() && stackA.isItemEqual(stackB)) {
+						// stackA = 32
+						// stackB = 48
+
+						int maxA = stackA.getMaxCount();
+						int maxB = stackB.getMaxCount();
+
+						int countA = stackA.getCount();
+						int countB = stackB.getCount();
+
+						int availableB = maxB - countB;
+
+						stackA.setCount(Math.max(countA - availableB, 0));
+						stackB.increment(Math.min(countA, availableB));
+					} else if (stackB.isEmpty()) {
+						stackB = stackA.copy();
+						stackA = ItemStack.EMPTY;
+					}
+
+
+
+
+				}
+			}
 		}
 		super.onMouseClicked(mouseX, mouseY, mouseButton);
 	}
 
 	@Override
 	public void onMouseDragged(double mouseX, double mouseY, int mouseButton, double dragOffsetX, double dragOffsetY) {
-		if (isWithinBounds(mouseX, mouseY) && InputUtil.isKeyPressed(MinecraftClient.getInstance().getWindow().getHandle(), GLFW.GLFW_KEY_LEFT_SHIFT)) {
+		if (isWithinBounds(mouseX, mouseY) && Screen.hasShiftDown()) {
 			if (!getLinkedPanel().getLinkedContainer().getDragSlots().contains(this)) {
 				getLinkedPanel().getLinkedContainer().getDragSlots().add(this);
 			}

@@ -2,6 +2,7 @@ package spinnery.widget;
 
 import com.google.gson.annotations.SerializedName;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.InputUtil;
 import org.lwjgl.glfw.GLFW;
 import spinnery.client.BaseRenderer;
@@ -87,29 +88,29 @@ public class WDynamicText extends WWidget {
 
 		long handle = MinecraftClient.getInstance().getWindow().getHandle();
 
-		if (keyPressed == 30 && InputUtil.isKeyPressed(handle, GLFW.GLFW_KEY_LEFT_CONTROL)) { // Ctrl w. A
+		if (keyPressed == 30 && Screen.hasControlDown()) { // Ctrl w. A
 			selLeftPos = 0;
 			selRightPos = text.length() - 1;
 			recalculateVisible();
-		} else if (keyPressed == 32 && InputUtil.isKeyPressed(handle, GLFW.GLFW_KEY_LEFT_CONTROL)) { // Ctrl w. D
+		} else if (keyPressed == 32 && Screen.hasControlDown()) { // Ctrl w. D
 			clearSelection();
 			clip = "";
 			recalculateVisible();
-		} else if (keyPressed == 46 && InputUtil.isKeyPressed(handle, GLFW.GLFW_KEY_LEFT_CONTROL)) { // Ctrl w. C
+		} else if (keyPressed == 46 && Screen.hasControlDown()) { // Ctrl w. C
 			if (selLeftPos >= 0 && selRightPos >= 0 && selRightPos <= text.length()) {
 				clip = text.substring(selLeftPos, selRightPos);
 				clearSelection();
 			}
-		} else if (keyPressed == 47 && InputUtil.isKeyPressed(handle, GLFW.GLFW_KEY_LEFT_CONTROL)) { // Ctrl w. V
+		} else if (keyPressed == 47 && Screen.hasControlDown()) { // Ctrl w. V
 			text = new StringBuilder(text).insert(cursorPos, clip).toString();
 			cursorPos += clip.length();
 			recalculateVisible();
-		} else if (keyPressed == GLFW.GLFW_KEY_KP_SUBTRACT && InputUtil.isKeyPressed(handle, GLFW.GLFW_KEY_LEFT_SHIFT) && cursorPos < text.length()) { // Right w. Shift
+		} else if (keyPressed == GLFW.GLFW_KEY_KP_SUBTRACT && Screen.hasShiftDown() && cursorPos < text.length()) { // Right w. Shift
 			selLeftPos = selLeftPos == - 1 ? cursorPos : selLeftPos;
 			++ cursorPos;
 			selRightPos = cursorPos;
 			recalculateVisible();
-		} else if (keyPressed == GLFW.GLFW_KEY_KP_DIVIDE && InputUtil.isKeyPressed(handle, GLFW.GLFW_KEY_LEFT_SHIFT) && cursorPos > 0) { // Left w. Shift
+		} else if (keyPressed == GLFW.GLFW_KEY_KP_DIVIDE && Screen.hasShiftDown()&& cursorPos > 0) { // Left w. Shift
 			selRightPos = selRightPos == - 1 ? cursorPos : selRightPos;
 			-- cursorPos;
 			selLeftPos = cursorPos;

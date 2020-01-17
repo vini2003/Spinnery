@@ -1,6 +1,7 @@
 package spinnery.client;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.AbstractContainerScreen;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.container.Slot;
@@ -167,7 +168,7 @@ public class BaseScreen<T extends BaseContainer> extends AbstractContainerScreen
 
 	@Override
 	public boolean mouseDragged(double slotX, double slotY, int mouseButton, double mouseX, double mouseY) {
-		if (InputUtil.isKeyPressed(MinecraftClient.getInstance().getWindow().getHandle(), GLFW.GLFW_KEY_LEFT_SHIFT)) {
+		if (Screen.hasShiftDown()) {
 			ItemStack stackA = MinecraftClient.getInstance().player.inventory.getCursorStack();
 			int quantityA = mouseButton == 0 ? (int) Math.floor((float) stackA.getCount() / getLinkedContainer().getDragSlots().size()) : mouseButton == 1 ? 1 : 0;
 			for (WSlot widgetA : getLinkedContainer().getDragSlots()) {
@@ -192,7 +193,7 @@ public class BaseScreen<T extends BaseContainer> extends AbstractContainerScreen
 
 	@Override
 	public boolean mouseReleased(double mouseX, double mouseY, int mouseButton) {
-		if (InputUtil.isKeyPressed(MinecraftClient.getInstance().getWindow().getHandle(), GLFW.GLFW_KEY_LEFT_SHIFT)) {
+		if (Screen.hasShiftDown()) {
 			ItemStack[] stackA = {MinecraftClient.getInstance().player.inventory.getCursorStack()};
 			int quantityA = mouseButton == 0 ? (int) Math.floor((float) stackA[0].getCount() / getLinkedContainer().getDragSlots().size()) : mouseButton == 1 ? 1 : 0;
 			for (WSlot widget : getLinkedContainer().getDragSlots()) {
