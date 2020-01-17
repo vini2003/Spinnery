@@ -6,6 +6,8 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
 import net.minecraft.client.util.InputUtil;
+import net.minecraft.container.SlotActionType;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
@@ -125,138 +127,16 @@ public class WSlot extends WWidget {
 
 	@Override
 	public void onMouseClicked(double mouseX, double mouseY, int mouseButton) {
-		if (getFocus() && !Screen.hasShiftDown()) {
-			ItemStack stackA = getLinkedPanel().getLinkedContainer().getLinkedPlayerInventory().getCursorStack().copy();
-			ItemStack stackB = getStack().copy();
-
-			if (InputUtil.isKeyPressed(MinecraftClient.getInstance().getWindow().getHandle(), GLFW.GLFW_KEY_LEFT_CONTROL)) {
-				if (mouseButton == 0) {
-					if (stackB.getCount() < stackB.getMaxCount()) {
-						for (WWidget widget : getLinkedPanel().getLinkedWidgets()) {
-							if (widget != this) {
-								if (widget instanceof WSlot) {
-									ItemStack stackC = ((WSlot) widget).getStack();
-
-									if (stackB.getCount() < stackB.getMaxCount() && stackB.getItem() == stackC.getItem()) {
-										int quantityA = stackB.getMaxCount() - stackB.getCount();
-
-										int quantityB = stackC.getCount() - quantityA;
-
-										if (quantityB <= 0) {
-											stackB.increment(stackC.getCount());
-											stackC.decrement(stackC.getCount());
-										} else {
-											stackB.increment(quantityA);
-											stackC.decrement(quantityA);
-										}
-									}
-								} else if (widget instanceof WList) {
-									for (List listWidget : ((WList) widget).getListWidgets()) {
-										for (Object internalWidget : listWidget) {
-											if (internalWidget instanceof WSlot) {
-												ItemStack stackC = ((WSlot) internalWidget).getStack();
-
-												if (stackB.getCount() < stackB.getMaxCount() && stackB.getItem() == stackC.getItem()) {
-													int quantityA = stackB.getMaxCount() - stackB.getCount();
-
-													int quantityB = stackC.getCount() - quantityA;
-
-													if (quantityB <= 0) {
-														stackB.increment(stackC.getCount());
-														stackC.decrement(stackC.getCount());
-													} else {
-														stackB.increment(quantityA);
-														stackC.decrement(quantityA);
-													}
-
-												} else {
-													setStack(stackB);
-													return;
-												}
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			} else {
-				if (mouseButton == 2) {
-					if (getLinkedPanel().getLinkedContainer().getLinkedPlayerInventory().player.isCreative()) {
-						getLinkedPanel().getLinkedContainer().getLinkedPlayerInventory().setCursorStack(new ItemStack(stackB.getItem(), stackB.getMaxCount()));
-						return;
-					}
-				} else if (stackA.isItemEqualIgnoreDamage(stackB)) {
-					if (mouseButton == 0) {
-						int quantityA = stackA.getCount(); // Cursor
-						int quantityB = stackB.getCount(); // WSlot
-
-						if (quantityA <= stackB.getMaxCount() - quantityB) {
-							stackB.increment(quantityA);
-							stackA.decrement(quantityA);
-						} else {
-							int quantityC = stackB.getMaxCount() - quantityB;
-
-							stackB.increment(quantityC);
-							stackA.decrement(quantityC);
-						}
-					} else if (mouseButton == 1) {
-						stackA.decrement(1);
-						stackB.increment(1);
-					}
-				} else if (! stackB.isEmpty() && stackA.isEmpty() && mouseButton == 1) {
-					int quantityA = (int) Math.ceil(stackB.getCount() / 2f);
-
-					stackA = new ItemStack(stackB.getItem(), quantityA);
-					stackB.decrement(quantityA);
-				} else if (stackB.isEmpty() && ! stackA.isEmpty() && mouseButton == 1) {
-					stackB = new ItemStack(stackA.getItem(), 1);
-					stackA.decrement(1);
-				} else if (mouseButton == 0) {
-					if (stackB.isEmpty()) {
-						stackB = stackA.copy();
-						stackA = ItemStack.EMPTY;
-					} else {
-						ItemStack stackC = stackB.copy();
-						stackB = stackA.copy();
-						stackA = stackC.copy();
-					}
-				}
-			}
-			getLinkedPanel().getLinkedContainer().getLinkedPlayerInventory().setCursorStack(stackA);
-			setStack(stackB);
-		} else if (getFocus() && Screen.hasShiftDown()) {
-			for (WWidget wWidget : getLinkedPanel().getLinkedWidgets()) {
-				if (wWidget instanceof WSlot && ((WSlot) wWidget).linkedInventory != linkedInventory) {
-					ItemStack stackA = getStack();
-					ItemStack stackB = ((WSlot) wWidget).getStack();
-
-					if (!stackB.isEmpty() && stackA.isItemEqual(stackB)) {
-						// stackA = 32
-						// stackB = 48
-
-						int maxA = stackA.getMaxCount();
-						int maxB = stackB.getMaxCount();
-
-						int countA = stackA.getCount();
-						int countB = stackB.getCount();
-
-						int availableB = maxB - countB;
-
-						stackA.setCount(Math.max(countA - availableB, 0));
-						stackB.increment(Math.min(countA, availableB));
-						break;
-					} else if (stackB.isEmpty()) {
-						stackB = stackA.copy();
-						stackA = ItemStack.EMPTY;
-						break;
-					}
-
-
-
-
-				}
+		if (getFocus()) {
+			PlayerEntity playerEntity = getLinkedPanel().getLinkedContainer().getLinkedPlayerInventory().player;
+			if (mouseButton == 0 && Screen.hasShiftDown()) {
+				getLinkedPanel().getLinkedContainer().onSlotClick(getSlotNumber(), 0, SlotActionType.QUICK_MOVE, playerEntity);
+			} else if (mouseButton == 0 && !Screen.hasShiftDown()) {
+				getLinkedPanel().getLinkedContainer().onSlotClick(getSlotNumber(), 0, SlotActionType.PICKUP, playerEntity);
+			} else if (mouseButton == 1) {
+				getLinkedPanel().getLinkedContainer().onSlotClick(getSlotNumber(), 1, SlotActionType.PICKUP, playerEntity);
+			} else if (mouseButton == 2) {
+				getLinkedPanel().getLinkedContainer().onSlotClick(getSlotNumber(), 2, SlotActionType.CLONE, playerEntity);
 			}
 		}
 		super.onMouseClicked(mouseX, mouseY, mouseButton);

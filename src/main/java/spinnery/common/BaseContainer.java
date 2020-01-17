@@ -1,5 +1,8 @@
 package spinnery.common;
 
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.util.InputUtil;
 import net.minecraft.container.CraftingContainer;
 import net.minecraft.container.Slot;
 import net.minecraft.container.SlotActionType;
@@ -12,6 +15,7 @@ import net.minecraft.recipe.RecipeFinder;
 import net.minecraft.recipe.RecipeInputProvider;
 import net.minecraft.util.Tickable;
 import net.minecraft.world.World;
+import org.lwjgl.glfw.GLFW;
 import spinnery.widget.WList;
 import spinnery.widget.WPanel;
 import spinnery.widget.WSlot;
@@ -19,6 +23,7 @@ import spinnery.widget.WWidget;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class BaseContainer extends CraftingContainer<Inventory> implements Tickable {
 	public List<WSlot> dragSlots = new ArrayList<>();
@@ -39,10 +44,63 @@ public class BaseContainer extends CraftingContainer<Inventory> implements Ticka
 		return super.addSlot(slot);
 	}
 
+	public void mergeStacks(ItemStack stackA, ItemStack stackB) {
+		int maxA = stackA.getMaxCount();
+		int maxB = stackB.getMaxCount();
+
+		int countA = stackA.getCount();
+		int countB = stackB.getCount();
+
+		int availableB = maxB - countB;
+
+		stackA.setCount(Math.min(countA - availableB, 0));
+		stackB.increment(Math.min(countA, availableB));
+	}
+
 	@Deprecated
 	@Override
 	public ItemStack onSlotClick(int slot, int button, SlotActionType action, PlayerEntity player) {
-		return super.onSlotClick(slot, button, action, player);
+		WSlot slotA = null;
+		for (WWidget widget : getLinkedPanel().getLinkedWidgets()) {
+			if (widget instanceof WSlot && ((WSlot) widget).getSlotNumber() == slot) {
+				slotA = ((WSlot) widget);
+				break;
+			}
+		}
+
+		ItemStack stackA = slotA.getStack();
+		ItemStack stackB = player.inventory.getCursorStack();
+
+		switch (action) {
+			case PICKUP: {
+				if (!stackA.isItemEqual(stackB)) {
+					ItemStack stackC = stackA.copy();
+					stackA = stackB.copy();
+					stackB = stackC.copy();
+				} else {
+					if (button == 0) {
+						mergeStacks(stackB, stackA);
+					} else {
+						boolean canStackTransfer = stackA.getCount() >= 1 && stackB.getCount() < stackB.getMaxCount();
+						if (canStackTransfer) {
+							stackA.decrement(1);
+							stackB.increment(1);
+						}
+					}
+				}
+			}
+			case CLONE: {
+				stackB = new ItemStack(stackA.getItem(), stackA.getMaxCount());
+			}
+			case QUICK_MOVE: {
+				for (WWidget widget : getLinkedPanel().getLinkedWidgets()) {
+					if (widget instanceof WSlot && ((WSlot) widget).getStack().isItemEqual(stackA)) {
+						mergeStacks(stackA, stackB);
+					}
+				}
+			}
+		}
+		return ItemStack.EMPTY;
 	}
 
 	@Deprecated
