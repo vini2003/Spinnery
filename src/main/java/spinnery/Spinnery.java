@@ -13,6 +13,5 @@ public class Spinnery implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
-		ResourceRegistry.initialize();
 	}
 }
