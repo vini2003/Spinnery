@@ -246,9 +246,11 @@ public class WSlot extends WWidget {
 
 						stackA.setCount(Math.max(countA - availableB, 0));
 						stackB.increment(Math.min(countA, availableB));
+						break;
 					} else if (stackB.isEmpty()) {
 						stackB = stackA.copy();
 						stackA = ItemStack.EMPTY;
+						break;
 					}
 
 
