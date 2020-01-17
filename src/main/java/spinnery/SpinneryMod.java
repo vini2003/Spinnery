@@ -4,10 +4,6 @@ import net.fabricmc.api.ModInitializer;
 import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import spinnery.debug.BlockRegistry;
-import spinnery.debug.ContainerRegistry;
-import spinnery.debug.ItemRegistry;
-import spinnery.debug.ScreenRegistry;
 import spinnery.registry.ResourceRegistry;
 
 public class SpinneryMod implements ModInitializer {
