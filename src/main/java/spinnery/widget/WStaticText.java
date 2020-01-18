@@ -41,6 +41,10 @@ public class WStaticText extends WWidget {
 
 	@Override
 	public void draw() {
+		if (isHidden()) {
+			return;
+		}
+
 		double x = getPositionX();
 		double y = getPositionY();
 

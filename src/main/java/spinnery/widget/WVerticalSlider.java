@@ -100,6 +100,10 @@ public class WVerticalSlider extends WWidget {
 
 	@Override
 	public void draw() {
+		if (isHidden()) {
+			return;
+		}
+
 		double l = getLimit();
 		double p = getPosition();
 

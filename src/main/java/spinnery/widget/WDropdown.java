@@ -153,6 +153,10 @@ public class WDropdown extends WWidget {
 
 	@Override
 	public void draw() {
+		if (isHidden()) {
+			return;
+		}
+
 		BaseRenderer.drawPanel(getPositionX(), getPositionY(), getPositionZ(), getSizeX(), getSizeY() + 1.75, drawTheme.getShadow(), drawTheme.getBackground(), drawTheme.getHighlight(), drawTheme.getOutline());
 
 		if (hasLabel()) {

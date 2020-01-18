@@ -31,6 +31,10 @@ public class WStaticImage extends WWidget {
 
 	@Override
 	public void draw() {
+		if (isHidden()) {
+			return;
+		}
+
 		double x = getPositionX();
 		double y = getPositionY();
 		double z = getPositionZ();

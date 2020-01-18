@@ -42,13 +42,21 @@ public class WButton extends WWidget {
 
 	@Override
 	public void draw() {
+		if (isHidden()) {
+			return;
+		}
+
 		if (getToggleState()) {
 			BaseRenderer.drawBeveledPanel(getPositionX(), getPositionY(), getPositionZ(), getSizeX(), getSizeY(), drawTheme.getTopLeftOn(), drawTheme.getBackgroundOn(), drawTheme.getBottomRightOn());
 		} else {
 			BaseRenderer.drawBeveledPanel(getPositionX(), getPositionY(), getPositionZ(), getSizeX(), getSizeY(), drawTheme.getTopLeftOff(), drawTheme.getBackgroundOff(), drawTheme.getBottomRightOff());
 		}
 		if (hasLabel()) {
-			BaseRenderer.getTextRenderer().drawWithShadow(getLabel(), (float) (getPositionX() + getSizeX() + 2), (float) (getPositionY() + getSizeY() / 2 - 4.5), drawTheme.getLabel().RGB);
+			if (BaseRenderer.getTextRenderer().getStringWidth(getLabel()) > getSizeX() - 6) {
+				BaseRenderer.getTextRenderer().drawWithShadow(getLabel(), (float) (getPositionX() + getSizeX() + 2), (float) (getPositionY() + getSizeY() / 2 - 4.5), drawTheme.getLabel().RGB);
+			} else {
+				BaseRenderer.getTextRenderer().drawWithShadow(getLabel(), (float) (getPositionX() + 3), (float) (getPositionY() + getSizeY() / 2 - 4.5), drawTheme.getLabel().RGB);
+			}
 		}
 	}
 
