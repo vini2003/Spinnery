@@ -140,8 +140,10 @@ public class WList extends WWidget {
 
 	@Override
 	public void setTheme(String theme) {
-		super.setTheme(theme);
-		drawTheme = ResourceRegistry.get(getTheme()).getWListTheme();
+		if (getLinkedPanel().getLinkedContainer().getLinkedWorld().isClient()) {
+			super.setTheme(theme);
+			drawTheme = ResourceRegistry.get(getTheme()).getWListTheme();
+		}
 	}
 
 	@Override

@@ -35,8 +35,10 @@ public class WStaticText extends WWidget {
 
 	@Override
 	public void setTheme(String theme) {
-		super.setTheme(theme);
-		drawTheme = ResourceRegistry.get(getTheme()).getWStaticTextTheme();
+		if (getLinkedPanel().getLinkedContainer().getLinkedWorld().isClient()) {
+			super.setTheme(theme);
+			drawTheme = ResourceRegistry.get(getTheme()).getWStaticTextTheme();
+		}
 	}
 
 	@Override

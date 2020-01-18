@@ -213,7 +213,9 @@ public class WWidget implements Tickable {
 	}
 
 	public void setTheme(String theme) {
-		this.theme = theme;
+		if (getLinkedPanel().getLinkedContainer().getLinkedWorld().isClient()) {
+			this.theme = theme;
+		}
 	}
 
 	public boolean getCanMove() {

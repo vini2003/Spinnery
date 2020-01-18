@@ -94,8 +94,10 @@ public class WVerticalSlider extends WWidget {
 
 	@Override
 	public void setTheme(String theme) {
-		super.setTheme(theme);
-		drawTheme = ResourceRegistry.get(getTheme()).getWVerticalSliderTheme();
+		if (getLinkedPanel().getLinkedContainer().getLinkedWorld().isClient()) {
+			super.setTheme(theme);
+			drawTheme = ResourceRegistry.get(getTheme()).getWVerticalSliderTheme();
+		}
 	}
 
 	@Override

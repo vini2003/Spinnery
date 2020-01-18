@@ -78,7 +78,10 @@ public class WHorizontalSlider extends WWidget {
 
 	@Override
 	public void setTheme(String theme) {
-		drawTheme = ResourceRegistry.get(getTheme()).getWHorizontalSliderTheme();
+		if (getLinkedPanel().getLinkedContainer().getLinkedWorld().isClient()) {
+			super.setTheme(theme);
+			drawTheme = ResourceRegistry.get(getTheme()).getWHorizontalSliderTheme();
+		}
 	}
 
 	@Override

@@ -67,8 +67,7 @@ public class WDynamicText extends WWidget {
 		return selRightPos != - 1 && selLeftPos != - 1;
 	}
 
-	public String getText()
-	{
+	public String getText() {
 		return text;
 	}
 
@@ -172,8 +171,10 @@ public class WDynamicText extends WWidget {
 
 	@Override
 	public void setTheme(String theme) {
-		super.setTheme(theme);
-		drawTheme = ResourceRegistry.get(getTheme()).getWDynamicTextTheme();
+		if (getLinkedPanel().getLinkedContainer().getLinkedWorld().isClient()) {
+			super.setTheme(theme);
+			drawTheme = ResourceRegistry.get(getTheme()).getWDynamicTextTheme();
+		}
 	}
 
 	@Override
