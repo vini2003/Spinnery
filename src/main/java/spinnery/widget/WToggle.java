@@ -26,7 +26,7 @@ public class WToggle extends WWidget {
 	@Override
 	public void onMouseClicked(double mouseX, double mouseY, int mouseButton) {
 		if (scanFocus(mouseX, mouseY)) {
-			setToggleState(! getToggleState());
+			setToggleState(!getToggleState());
 		}
 		super.onMouseClicked(mouseX, mouseY, mouseButton);
 	}

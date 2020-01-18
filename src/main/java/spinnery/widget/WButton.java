@@ -27,7 +27,7 @@ public class WButton extends WWidget {
 	@Override
 	public void onMouseClicked(double mouseX, double mouseY, int mouseButton) {
 		if (scanFocus(mouseX, mouseY)) {
-			setToggleState(! getToggleState());
+			setToggleState(!getToggleState());
 			setToggleTicks(1);
 		}
 
@@ -67,7 +67,7 @@ public class WButton extends WWidget {
 		if (getToggleTicks() > 0) {
 			decrementToggleTicks(1);
 		} else if (getToggleState()) {
-			setToggleState(! getToggleState());
+			setToggleState(!getToggleState());
 		}
 	}
 

@@ -87,7 +87,7 @@ public class WDropdown extends WWidget {
 	@Override
 	public void onMouseClicked(double mouseX, double mouseY, int mouseButton) {
 		if (getFocus() && mouseButton == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
-			setState(! getState());
+			setState(!getState());
 			updateHidden();
 		} else {
 			for (List<WWidget> widgetB : getDropdownWidgets()) {
@@ -132,12 +132,12 @@ public class WDropdown extends WWidget {
 
 	@Override
 	public double getSizeX() {
-		return sizes[! getState() ? 0 : 1][0];
+		return sizes[!getState() ? 0 : 1][0];
 	}
 
 	@Override
 	public double getSizeY() {
-		return sizes[! getState() ? 0 : 1][1];
+		return sizes[!getState() ? 0 : 1][1];
 	}
 
 	@Override
@@ -148,7 +148,7 @@ public class WDropdown extends WWidget {
 			}
 		}
 
-		setFocus(isWithinBounds(mouseX, mouseY) && ! getDropdownWidgets().stream().anyMatch((widgets) -> widgets.stream().anyMatch(WWidget::getFocus)));
+		setFocus(isWithinBounds(mouseX, mouseY) && !getDropdownWidgets().stream().anyMatch((widgets) -> widgets.stream().anyMatch(WWidget::getFocus)));
 
 		return getFocus();
 	}
@@ -193,7 +193,7 @@ public class WDropdown extends WWidget {
 	public void updateHidden() {
 		for (List<WWidget> widgetB : getDropdownWidgets()) {
 			for (WWidget widgetC : widgetB) {
-				widgetC.setHidden(! getState());
+				widgetC.setHidden(!getState());
 			}
 		}
 	}

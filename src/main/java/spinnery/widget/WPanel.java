@@ -60,7 +60,7 @@ public class WPanel extends WWidget {
 
 	public void add(WWidget... WWidgets) {
 		for (WWidget WWidget : WWidgets) {
-			if (! this.getLinkedWidgets().contains(WWidget)) {
+			if (!this.getLinkedWidgets().contains(WWidget)) {
 				WWidget.setLinkedPanel(this);
 				getLinkedWidgets().add(WWidget);
 			}

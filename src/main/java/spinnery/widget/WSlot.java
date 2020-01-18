@@ -45,8 +45,8 @@ public class WSlot extends WWidget {
 	}
 
 	public static void addArray(WAnchor anchor, int arrayX, int arrayY, int positionX, int positionY, int positionZ, double sizeX, double sizeY, int slotNumber, int inventoryNumber, WPanel linkedPanel) {
-		for (int y = 0; y < arrayY; ++ y) {
-			for (int x = 0; x < arrayX; ++ x) {
+		for (int y = 0; y < arrayY; ++y) {
+			for (int x = 0; x < arrayX; ++x) {
 				WSlot.addSingle(anchor, positionX + (int) (sizeX * x), positionY + (int) (sizeY * y), positionZ, sizeX, sizeY, slotNumber++, inventoryNumber, linkedPanel);
 			}
 		}
@@ -131,10 +131,10 @@ public class WSlot extends WWidget {
 		if (getFocus()) {
 			PlayerEntity playerEntity = getLinkedPanel().getLinkedContainer().getLinkedPlayerInventory().player;
 
-			if (! ignoreOnRelease && mouseButton == 0 && ! Screen.hasShiftDown() && ! playerEntity.inventory.getCursorStack().isEmpty()) {
+			if (!ignoreOnRelease && mouseButton == 0 && !Screen.hasShiftDown() && !playerEntity.inventory.getCursorStack().isEmpty()) {
 				getLinkedPanel().getLinkedContainer().onSlotClicked(getSlotNumber(), getInventoryNumber(), 0, SlotActionType.PICKUP, playerEntity);
 				ClientSidePacketRegistry.INSTANCE.sendToServer(NetworkRegistry.SLOT_CLICK_PACKET, NetworkRegistry.createSlotClickPacket(getSlotNumber(), getInventoryNumber(), 0, SlotActionType.PICKUP));
-			} else if (! ignoreOnRelease && mouseButton == 1 && ! Screen.hasShiftDown() && ! playerEntity.inventory.getCursorStack().isEmpty()) {
+			} else if (!ignoreOnRelease && mouseButton == 1 && !Screen.hasShiftDown() && !playerEntity.inventory.getCursorStack().isEmpty()) {
 				getLinkedPanel().getLinkedContainer().onSlotClicked(getSlotNumber(), getInventoryNumber(), 1, SlotActionType.PICKUP, playerEntity);
 				ClientSidePacketRegistry.INSTANCE.sendToServer(NetworkRegistry.SLOT_CLICK_PACKET, NetworkRegistry.createSlotClickPacket(getSlotNumber(), getInventoryNumber(), 1, SlotActionType.PICKUP));
 			}
@@ -153,11 +153,11 @@ public class WSlot extends WWidget {
 			if (mouseButton == 0 && Screen.hasShiftDown()) {
 				getLinkedPanel().getLinkedContainer().onSlotClicked(getSlotNumber(), getInventoryNumber(), 0, SlotActionType.QUICK_MOVE, playerEntity);
 				ClientSidePacketRegistry.INSTANCE.sendToServer(NetworkRegistry.SLOT_CLICK_PACKET, NetworkRegistry.createSlotClickPacket(getSlotNumber(), getInventoryNumber(), 0, SlotActionType.QUICK_MOVE));
-			} else if (mouseButton == 0 && ! Screen.hasShiftDown() && playerEntity.inventory.getCursorStack().isEmpty()) {
+			} else if (mouseButton == 0 && !Screen.hasShiftDown() && playerEntity.inventory.getCursorStack().isEmpty()) {
 				ignoreOnRelease = true;
 				getLinkedPanel().getLinkedContainer().onSlotClicked(getSlotNumber(), getInventoryNumber(), 0, SlotActionType.PICKUP, playerEntity);
 				ClientSidePacketRegistry.INSTANCE.sendToServer(NetworkRegistry.SLOT_CLICK_PACKET, NetworkRegistry.createSlotClickPacket(getSlotNumber(), getInventoryNumber(), 0, SlotActionType.PICKUP));
-			} else if (mouseButton == 1 && ! Screen.hasShiftDown() && playerEntity.inventory.getCursorStack().isEmpty()) {
+			} else if (mouseButton == 1 && !Screen.hasShiftDown() && playerEntity.inventory.getCursorStack().isEmpty()) {
 				ignoreOnRelease = true;
 				getLinkedPanel().getLinkedContainer().onSlotClicked(getSlotNumber(), getInventoryNumber(), 1, SlotActionType.PICKUP, playerEntity);
 				ClientSidePacketRegistry.INSTANCE.sendToServer(NetworkRegistry.SLOT_CLICK_PACKET, NetworkRegistry.createSlotClickPacket(getSlotNumber(), getInventoryNumber(), 1, SlotActionType.PICKUP));

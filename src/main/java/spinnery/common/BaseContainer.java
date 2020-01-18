@@ -82,12 +82,12 @@ public class BaseContainer extends CraftingContainer<Inventory> implements Ticka
 
 		switch (action) {
 			case PICKUP: {
-				if (! stackA.isItemEqual(stackB)) {
+				if (!stackA.isItemEqual(stackB)) {
 					if (button == 0) { // Swap with existing // LMB
 						ItemStack stackC = stackA.copy();
 						stackA = stackB.copy();
 						stackB = stackC.copy();
-					} else if (button == 1 && ! stackB.isEmpty()) { // Add to existing // RMB
+					} else if (button == 1 && !stackB.isEmpty()) { // Add to existing // RMB
 						if (stackA.isEmpty()) { // If existing is empty, initialize it // RMB
 							stackA = new ItemStack(stackB.getItem(), 1);
 							stackB.decrement(1);
@@ -117,7 +117,7 @@ public class BaseContainer extends CraftingContainer<Inventory> implements Ticka
 				for (WWidget widget : getLinkedPanel().getLinkedWidgets()) {
 					if (widget != slotA && widget instanceof WSlot && ((WSlot) widget).getLinkedInventory() != slotA.getLinkedInventory()) {
 						ItemStack stackC = ((WSlot) widget).getStack();
-						if (! (stackC.getCount() == stackC.getMaxCount())) {
+						if (!(stackC.getCount() == stackC.getMaxCount())) {
 							if (stackA.isItemEqual(stackC)) { // Merge with existing // LFSHIFT + LMB
 								mergeStacks(stackA, stackC);
 								((WSlot) widget).setStack(stackC);
@@ -197,7 +197,7 @@ public class BaseContainer extends CraftingContainer<Inventory> implements Ticka
 	@Deprecated
 	@Override
 	public int getCraftingResultSlotIndex() {
-		return - 1;
+		return -1;
 	}
 
 	@Deprecated
@@ -221,7 +221,7 @@ public class BaseContainer extends CraftingContainer<Inventory> implements Ticka
 	@Override
 	public void tick() {
 		for (WWidget widgetA : getLinkedPanel().getLinkedWidgets()) {
-			if (! (widgetA instanceof WList)) {
+			if (!(widgetA instanceof WList)) {
 				widgetA.tick();
 			} else {
 				for (List<WWidget> widgetB : ((WList) widgetA).getListWidgets()) {

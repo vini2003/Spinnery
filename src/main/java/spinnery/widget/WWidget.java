@@ -287,10 +287,10 @@ public class WWidget implements Tickable {
 	}
 
 	public boolean setFocus(boolean hasFocus) {
-		if (! getFocus() && hasFocus) {
+		if (!getFocus() && hasFocus) {
 			onFocusGained();
 		}
-		if (getFocus() && ! hasFocus) {
+		if (getFocus() && !hasFocus) {
 			onFocusReleased();
 		}
 		this.hasFocus = hasFocus;
@@ -319,7 +319,7 @@ public class WWidget implements Tickable {
 		Optional<? extends WWidget> optional = linkedPanel.getLinkedWidgets().stream().filter((widget) ->
 				widget.getPositionZ() > getPositionZ() && widget.isWithinBounds(mouseX, mouseY)
 		).findAny();
-		setFocus(! optional.isPresent() && isWithinBounds(mouseX, mouseY));
+		setFocus(!optional.isPresent() && isWithinBounds(mouseX, mouseY));
 		return getFocus();
 	}
 

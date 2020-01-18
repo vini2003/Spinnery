@@ -102,7 +102,7 @@ public class BaseScreen<T extends BaseContainer> extends AbstractContainerScreen
 	}
 
 	public void renderTooltip() {
-		if (getDrawSlot() != null && getLinkedContainer().getLinkedPlayerInventory().getCursorStack().isEmpty() && ! getDrawSlot().getStack().isEmpty()) {
+		if (getDrawSlot() != null && getLinkedContainer().getLinkedPlayerInventory().getCursorStack().isEmpty() && !getDrawSlot().getStack().isEmpty()) {
 			this.renderTooltip(getDrawSlot().getStack(), (int) getTooltipX(), (int) getTooltipY());
 		}
 	}

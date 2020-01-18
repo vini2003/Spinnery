@@ -54,8 +54,8 @@ public class ResourceRegistry {
 		File file = new File("./resources/spinnery/themes");
 
 		try {
-			if (! file.exists()) {
-				if (! file.mkdirs() || ! file.createNewFile()) {
+			if (!file.exists()) {
+				if (!file.mkdirs() || !file.createNewFile()) {
 					throw new IOException("Could not create file(s): ./resources/spinnery/themes");
 				}
 			}

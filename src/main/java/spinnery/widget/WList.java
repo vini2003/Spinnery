@@ -105,7 +105,7 @@ public class WList extends WWidget {
 
 	@Override
 	public void onMouseScrolled(double mouseX, double mouseY, double scrollOffsetY) {
-		if (! isWithinBounds(mouseX, mouseY) || getListWidgets().size() == 0) {
+		if (!isWithinBounds(mouseX, mouseY) || getListWidgets().size() == 0) {
 			return;
 		}
 
@@ -119,11 +119,11 @@ public class WList extends WWidget {
 				widget.getPositionY() + widget.getSizeY() + scaledOffsetY <= getPositionY() + getSizeY() - 6
 		);
 
-		if ((scaledOffsetY > 0 && ! hitTop) || (scaledOffsetY < 0 && ! hitBottom)) {
+		if ((scaledOffsetY > 0 && !hitTop) || (scaledOffsetY < 0 && !hitBottom)) {
 			for (List<WWidget> widgetB : getListWidgets()) {
 				for (WWidget widgetC : widgetB) {
 					widgetC.setPositionY(widgetC.getPositionY() + scaledOffsetY);
-					widgetC.setHidden(! (isWithinBounds(widgetC.getPositionX(), widgetC.getPositionY())));
+					widgetC.setHidden(!(isWithinBounds(widgetC.getPositionX(), widgetC.getPositionY())));
 				}
 			}
 		}
@@ -213,7 +213,7 @@ public class WList extends WWidget {
 	public void updateHidden() {
 		for (List<WWidget> widgetB : getListWidgets()) {
 			for (WWidget widgetC : widgetB) {
-				widgetC.setHidden(! isWithinBounds(widgetC.getPositionX(), widgetC.getPositionY()));
+				widgetC.setHidden(!isWithinBounds(widgetC.getPositionX(), widgetC.getPositionY()));
 			}
 		}
 	}
