@@ -6,9 +6,10 @@ import net.minecraft.container.SlotActionType;
 import net.minecraft.util.Tickable;
 
 import java.util.Optional;
+import java.util.UUID;
 
 public class WWidget implements Tickable {
-	protected WPanel linkedWPanel;
+	protected WPanel linkedPanel;
 	protected WAnchor anchor;
 	protected double positionX = 0;
 	protected double positionY = 0;
@@ -32,6 +33,7 @@ public class WWidget implements Tickable {
 	protected Runnable linkedRunnableOnSlotClicked;
 	private String theme = "default";
 	private String label = null;
+
 	public WWidget() {
 	}
 
@@ -224,11 +226,11 @@ public class WWidget implements Tickable {
 	}
 
 	public WPanel getLinkedPanel() {
-		return linkedWPanel;
+		return linkedPanel;
 	}
 
-	public void setLinkedPanel(WPanel linkedWPanel) {
-		this.linkedWPanel = linkedWPanel;
+	public void setLinkedPanel(WPanel linkedPanel) {
+		this.linkedPanel = linkedPanel;
 	}
 
 	public double getSizeX() {
@@ -313,7 +315,7 @@ public class WWidget implements Tickable {
 		if (isHidden) {
 			return false;
 		}
-		Optional<? extends WWidget> optional = linkedWPanel.getLinkedWidgets().stream().filter((widget) ->
+		Optional<? extends WWidget> optional = linkedPanel.getLinkedWidgets().stream().filter((widget) ->
 				widget.getPositionZ() > getPositionZ() && widget.isWithinBounds(mouseX, mouseY)
 		).findAny();
 		setFocus(!optional.isPresent() && isWithinBounds(mouseX, mouseY));

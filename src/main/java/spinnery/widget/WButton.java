@@ -8,8 +8,8 @@ public class WButton extends WWidget {
 	protected boolean toggleState = false;
 	protected int toggleTicks = 0;
 	WButton.Theme drawTheme;
-	public WButton(WAnchor anchor, int positionX, int positionY, int positionZ, double sizeX, double sizeY, WPanel linkedWPanel) {
-		setLinkedPanel(linkedWPanel);
+	public WButton(WAnchor anchor, int positionX, int positionY, int positionZ, double sizeX, double sizeY, WPanel linkedPanel) {
+		setLinkedPanel(linkedPanel);
 
 		setAnchor(anchor);
 

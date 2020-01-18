@@ -19,8 +19,8 @@ public class WDynamicText extends WWidget {
 	WDynamicText.Theme drawTheme;
 	int offsetPos = 0;
 	int fooY = 0;
-	public WDynamicText(WAnchor anchor, int positionX, int positionY, int positionZ, double sizeX, double sizeY, WPanel linkedWPanel) {
-		setLinkedPanel(linkedWPanel);
+	public WDynamicText(WAnchor anchor, int positionX, int positionY, int positionZ, double sizeX, double sizeY, WPanel linkedPanel) {
+		setLinkedPanel(linkedPanel);
 
 		setAnchor(anchor);
 

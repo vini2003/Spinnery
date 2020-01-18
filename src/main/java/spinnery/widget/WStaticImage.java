@@ -6,8 +6,8 @@ import spinnery.client.BaseRenderer;
 public class WStaticImage extends WWidget {
 	protected Identifier texture;
 
-	public WStaticImage(WAnchor anchor, double positionX, double positionY, double positionZ, double sizeX, double sizeY, Identifier texture, WPanel linkedWPanel) {
-		setLinkedPanel(linkedWPanel);
+	public WStaticImage(WAnchor anchor, double positionX, double positionY, double positionZ, double sizeX, double sizeY, Identifier texture, WPanel linkedPanel) {
+		setLinkedPanel(linkedPanel);
 
 		setAnchor(anchor);
 

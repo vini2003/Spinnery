@@ -11,8 +11,8 @@ public class WHorizontalSlider extends WWidget {
 	protected String total;
 	protected int tX;
 	WHorizontalSlider.Theme drawTheme;
-	public WHorizontalSlider(WAnchor anchor, int positionX, int positionY, int positionZ, double sizeX, double sizeY, int limit, WPanel linkedWPanel) {
-		setLinkedPanel(linkedWPanel);
+	public WHorizontalSlider(WAnchor anchor, int positionX, int positionY, int positionZ, double sizeX, double sizeY, int limit, WPanel linkedPanel) {
+		setLinkedPanel(linkedPanel);
 
 		setAnchor(anchor);
 

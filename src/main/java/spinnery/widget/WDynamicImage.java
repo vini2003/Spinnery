@@ -8,8 +8,8 @@ public class WDynamicImage extends WWidget {
 
 	protected int position = 0;
 
-	public WDynamicImage(WAnchor anchor, double positionX, double positionY, double positionZ, double sizeX, double sizeY, WPanel linkedWPanel, Identifier... textures) {
-		setLinkedPanel(linkedWPanel);
+	public WDynamicImage(WAnchor anchor, double positionX, double positionY, double positionZ, double sizeX, double sizeY, WPanel linkedPanel, Identifier... textures) {
+		setLinkedPanel(linkedPanel);
 
 		setAnchor(anchor);
 

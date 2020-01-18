@@ -13,6 +13,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeFinder;
 import net.minecraft.recipe.RecipeInputProvider;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Tickable;
 import net.minecraft.world.World;
@@ -23,22 +24,26 @@ import spinnery.widget.WSlot;
 import spinnery.widget.WWidget;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public class BaseContainer extends CraftingContainer<Inventory> implements Tickable {
-	public List<WSlot> dragSlots = new ArrayList<>();
+	public Map<Integer, WSlot> dragSlots = new HashMap<>();
+	public Map<Integer, Inventory> linkedInventories = new HashMap<>();
 	public int positionY = 0;
 	public int positionX = 0;
-	protected PlayerInventory linkedPlayerInventory;
-	protected Inventory linkedInventory;
 	protected World linkedWorld;
 	protected WPanel linkedPanel;
+	public int totalID = 0;
 
-	public BaseContainer(int synchronizationID, PlayerInventory newLinkedPlayerInventory) {
+	public static final int PLAYER_INVENTORY = 0;
+
+	public BaseContainer(int synchronizationID, PlayerInventory linkedPlayerInventory) {
 		super(null, synchronizationID);
-		setLinkedPlayerInventory(newLinkedPlayerInventory);
-		setLinkedWorld(newLinkedPlayerInventory.player.world);
+		linkedInventories.put(PLAYER_INVENTORY, linkedPlayerInventory);
+		setLinkedWorld(linkedPlayerInventory.player.world);
 	}
 
 	public Slot addSlot(Slot slot) {
@@ -59,16 +64,14 @@ public class BaseContainer extends CraftingContainer<Inventory> implements Ticka
 		stackA.setCount(Math.max(countA - availableB, 0));
 	}
 
-	@Deprecated
-	@Override
-	public ItemStack onSlotClick(int slot, int button, SlotActionType action, PlayerEntity player) {
-		Optional<WWidget> optionalWSlot = getLinkedPanel().getLinkedWidgets().stream().filter((widget) -> (widget instanceof WSlot && ((WSlot) widget).getSlotNumber() == slot && widget.getFocus())).findFirst();
+	public void onSlotClicked(int slotNumber, int inventoryNumber, int button, SlotActionType action, PlayerEntity player) {
+		Optional<WWidget> optionalWSlot = getLinkedPanel().getLinkedWidgets().stream().filter((widget) -> (widget instanceof WSlot && ((WSlot) widget).getSlotNumber() == slotNumber && ((WSlot) widget).getInventoryNumber() == inventoryNumber)).findFirst();
 
 		WSlot slotA;
 		if (optionalWSlot.isPresent()) {
 			slotA = (WSlot) optionalWSlot.get();
 		} else {
-			return ItemStack.EMPTY;
+			return;
 		}
 
 		ItemStack stackA = slotA.getStack();
@@ -128,7 +131,12 @@ public class BaseContainer extends CraftingContainer<Inventory> implements Ticka
 			}
 		}
 		slotA.setStack(stackA);
-		linkedPlayerInventory.setCursorStack(stackB);
+		((PlayerInventory) linkedInventories.get(PLAYER_INVENTORY)).setCursorStack(stackB);
+	}
+
+	@Deprecated
+	@Override
+	public ItemStack onSlotClick(int identifier, int button, SlotActionType action, PlayerEntity player) {
 		return ItemStack.EMPTY;
 	}
 
@@ -142,24 +150,8 @@ public class BaseContainer extends CraftingContainer<Inventory> implements Ticka
 		return linkedPanel;
 	}
 
-	public void setLinkedPanel(WPanel linkedWPanel) {
-		this.linkedPanel = linkedWPanel;
-	}
-
-	public Inventory getLinkedInventory() {
-		return linkedInventory;
-	}
-
-	public void setLinkedInventory(Inventory linkedInventory) {
-		this.linkedInventory = linkedInventory;
-	}
-
-	public PlayerInventory getLinkedPlayerInventory() {
-		return linkedPlayerInventory;
-	}
-
-	public void setLinkedPlayerInventory(PlayerInventory linkedPlayerInventory) {
-		this.linkedPlayerInventory = linkedPlayerInventory;
+	public void setLinkedPanel(WPanel linkedPanel) {
+		this.linkedPanel = linkedPanel;
 	}
 
 	public World getLinkedWorld() {
@@ -186,20 +178,18 @@ public class BaseContainer extends CraftingContainer<Inventory> implements Ticka
 		this.positionY = positionY;
 	}
 
-	public List<WSlot> getDragSlots() {
-		return dragSlots;
+	public PlayerInventory getLinkedPlayerInventory() {
+		return (PlayerInventory) linkedInventories.get(PLAYER_INVENTORY);
 	}
 
-	public void setDragSlots(List<WSlot> dragSlots) {
-		this.dragSlots = dragSlots;
+	public Map<Integer, Inventory> getLinkedInventories() {
+		return linkedInventories;
 	}
 
 	@Deprecated
 	@Override
 	public void populateRecipeFinder(RecipeFinder recipeFinder) {
-		if (linkedInventory instanceof RecipeInputProvider) {
-			((RecipeInputProvider) linkedInventory).provideRecipeInputs(recipeFinder);
-		}
+		return;
 	}
 
 	@Deprecated

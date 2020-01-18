@@ -9,8 +9,8 @@ public class WStaticText extends WWidget {
 	protected String text;
 	WStaticText.Theme drawTheme;
 
-	public WStaticText(WAnchor anchor, int positionX, int positionY, int positionZ, String text, WPanel linkedWPanel) {
-		setLinkedPanel(linkedWPanel);
+	public WStaticText(WAnchor anchor, int positionX, int positionY, int positionZ, String text, WPanel linkedPanel) {
+		setLinkedPanel(linkedPanel);
 
 		setAnchor(anchor);
 

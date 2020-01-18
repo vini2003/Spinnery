@@ -8,8 +8,10 @@ public class WToggle extends WWidget {
 	protected boolean toggleState = false;
 	WToggle.Theme drawTheme;
 
-	public WToggle(WAnchor anchor, int positionX, int positionY, int positionZ, double sizeX, double sizeY, WPanel linkedWPanel) {
-		setLinkedPanel(linkedWPanel);
+	public WToggle(WAnchor anchor, int positionX, int positionY, int positionZ, double sizeX, double sizeY, WPanel linkedPanel) {
+		super();
+
+		setLinkedPanel(linkedPanel);
 
 		setAnchor(anchor);
 

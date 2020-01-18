@@ -14,8 +14,8 @@ public class WList extends WWidget {
 	public List<List<WWidget>> listWidgets = new ArrayList<>();
 	WList.Theme drawTheme;
 
-	public WList(WAnchor anchor, int positionX, int positionY, int positionZ, double sizeX, double sizeY, WPanel linkedWPanel) {
-		setLinkedPanel(linkedWPanel);
+	public WList(WAnchor anchor, int positionX, int positionY, int positionZ, double sizeX, double sizeY, WPanel linkedPanel) {
+		setLinkedPanel(linkedPanel);
 
 		setAnchor(anchor);
 
