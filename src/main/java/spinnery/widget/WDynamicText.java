@@ -196,7 +196,7 @@ public class WDynamicText extends WWidget {
 
 				pP += cW;
 
-				if (pC == cursorPos || pC == cursorPos - 1) {
+				if ((pC == cursorPos || pC == cursorPos - 1) && isSelected) {
 					BaseRenderer.getTextRenderer().drawWithShadow("|", (float) pP, (float) y + (float) sY - 10, drawTheme.getCursor().RGB);
 				}
 
