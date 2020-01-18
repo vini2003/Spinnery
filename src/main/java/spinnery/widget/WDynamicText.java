@@ -19,6 +19,8 @@ public class WDynamicText extends WWidget {
 	protected int offsetPos = 0;
 	protected int fooY = 0;
 
+	protected boolean isEditable;
+
 	public WDynamicText(WAnchor anchor, int positionX, int positionY, int positionZ, double sizeX, double sizeY, WPanel linkedPanel) {
 		setLinkedPanel(linkedPanel);
 
@@ -63,6 +65,14 @@ public class WDynamicText extends WWidget {
 
 	boolean hasSelection() {
 		return selRightPos != - 1 && selLeftPos != - 1;
+	}
+
+	public boolean isEditable() {
+		return isEditable;
+	}
+
+	public void setEditable(boolean editable) {
+		isEditable = editable;
 	}
 
 	@Override
@@ -149,7 +159,9 @@ public class WDynamicText extends WWidget {
 
 	@Override
 	public void onMouseClicked(double mouseX, double mouseY, int mouseButton) {
-		this.isSelected = scanFocus(mouseX, mouseY);
+		if (isEditable) {
+			this.isSelected = scanFocus(mouseX, mouseY);
+		}
 		super.onMouseClicked(mouseX, mouseY, mouseButton);
 	}
 
