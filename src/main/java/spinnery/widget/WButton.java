@@ -7,7 +7,8 @@ import spinnery.registry.ResourceRegistry;
 public class WButton extends WWidget {
 	protected boolean toggleState = false;
 	protected int toggleTicks = 0;
-	WButton.Theme drawTheme;
+	protected WButton.Theme drawTheme;
+
 	public WButton(WAnchor anchor, int positionX, int positionY, int positionZ, double sizeX, double sizeY, WPanel linkedPanel) {
 		setLinkedPanel(linkedPanel);
 

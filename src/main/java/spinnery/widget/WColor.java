@@ -5,7 +5,7 @@ public class WColor {
 
 	public int RGB = 0x000000;
 
-	WColor(String ARGB) {
+	public WColor(String ARGB) {
 		if (ARGB.length() == 8) {
 			R = Integer.decode("0x" + ARGB.substring(2, 4)) / 255f;
 			G = Integer.decode("0x" + ARGB.substring(4, 6)) / 255f;

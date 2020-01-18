@@ -7,7 +7,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.container.SlotActionType;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import org.apache.logging.log4j.Level;
@@ -17,7 +16,7 @@ import spinnery.registry.NetworkRegistry;
 import spinnery.registry.ResourceRegistry;
 
 public class WSlot extends WWidget {
-	WSlot.Theme drawTheme;
+	protected WSlot.Theme drawTheme;
 	protected int slotNumber;
 	protected ItemStack previewStack = ItemStack.EMPTY;
 	protected int inventoryNumber;
@@ -132,10 +131,10 @@ public class WSlot extends WWidget {
 		if (getFocus()) {
 			PlayerEntity playerEntity = getLinkedPanel().getLinkedContainer().getLinkedPlayerInventory().player;
 
-			if (! ignoreOnRelease && mouseButton == 0 && !Screen.hasShiftDown() && !playerEntity.inventory.getCursorStack().isEmpty()) {
+			if (! ignoreOnRelease && mouseButton == 0 && ! Screen.hasShiftDown() && ! playerEntity.inventory.getCursorStack().isEmpty()) {
 				getLinkedPanel().getLinkedContainer().onSlotClicked(getSlotNumber(), getInventoryNumber(), 0, SlotActionType.PICKUP, playerEntity);
 				ClientSidePacketRegistry.INSTANCE.sendToServer(NetworkRegistry.SLOT_CLICK_PACKET, NetworkRegistry.createSlotClickPacket(getSlotNumber(), getInventoryNumber(), 0, SlotActionType.PICKUP));
-			} else if (! ignoreOnRelease && mouseButton == 1 && !Screen.hasShiftDown() && !playerEntity.inventory.getCursorStack().isEmpty()) {
+			} else if (! ignoreOnRelease && mouseButton == 1 && ! Screen.hasShiftDown() && ! playerEntity.inventory.getCursorStack().isEmpty()) {
 				getLinkedPanel().getLinkedContainer().onSlotClicked(getSlotNumber(), getInventoryNumber(), 1, SlotActionType.PICKUP, playerEntity);
 				ClientSidePacketRegistry.INSTANCE.sendToServer(NetworkRegistry.SLOT_CLICK_PACKET, NetworkRegistry.createSlotClickPacket(getSlotNumber(), getInventoryNumber(), 1, SlotActionType.PICKUP));
 			}
@@ -154,7 +153,7 @@ public class WSlot extends WWidget {
 			if (mouseButton == 0 && Screen.hasShiftDown()) {
 				getLinkedPanel().getLinkedContainer().onSlotClicked(getSlotNumber(), getInventoryNumber(), 0, SlotActionType.QUICK_MOVE, playerEntity);
 				ClientSidePacketRegistry.INSTANCE.sendToServer(NetworkRegistry.SLOT_CLICK_PACKET, NetworkRegistry.createSlotClickPacket(getSlotNumber(), getInventoryNumber(), 0, SlotActionType.QUICK_MOVE));
-			} else if (mouseButton == 0 && !Screen.hasShiftDown() && playerEntity.inventory.getCursorStack().isEmpty()) {
+			} else if (mouseButton == 0 && ! Screen.hasShiftDown() && playerEntity.inventory.getCursorStack().isEmpty()) {
 				ignoreOnRelease = true;
 				getLinkedPanel().getLinkedContainer().onSlotClicked(getSlotNumber(), getInventoryNumber(), 0, SlotActionType.PICKUP, playerEntity);
 				ClientSidePacketRegistry.INSTANCE.sendToServer(NetworkRegistry.SLOT_CLICK_PACKET, NetworkRegistry.createSlotClickPacket(getSlotNumber(), getInventoryNumber(), 0, SlotActionType.PICKUP));

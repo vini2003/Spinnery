@@ -6,7 +6,6 @@ import net.minecraft.container.SlotActionType;
 import net.minecraft.util.Tickable;
 
 import java.util.Optional;
-import java.util.UUID;
 
 public class WWidget implements Tickable {
 	protected WPanel linkedPanel;
@@ -318,7 +317,7 @@ public class WWidget implements Tickable {
 		Optional<? extends WWidget> optional = linkedPanel.getLinkedWidgets().stream().filter((widget) ->
 				widget.getPositionZ() > getPositionZ() && widget.isWithinBounds(mouseX, mouseY)
 		).findAny();
-		setFocus(!optional.isPresent() && isWithinBounds(mouseX, mouseY));
+		setFocus(! optional.isPresent() && isWithinBounds(mouseX, mouseY));
 		return getFocus();
 	}
 

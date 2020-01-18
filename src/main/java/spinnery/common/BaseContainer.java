@@ -1,8 +1,5 @@
 package spinnery.common;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.util.InputUtil;
 import net.minecraft.container.CraftingContainer;
 import net.minecraft.container.Slot;
 import net.minecraft.container.SlotActionType;
@@ -12,33 +9,27 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeFinder;
-import net.minecraft.recipe.RecipeInputProvider;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.ActionResult;
 import net.minecraft.util.Tickable;
 import net.minecraft.world.World;
-import org.lwjgl.glfw.GLFW;
 import spinnery.widget.WList;
 import spinnery.widget.WPanel;
 import spinnery.widget.WSlot;
 import spinnery.widget.WWidget;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 public class BaseContainer extends CraftingContainer<Inventory> implements Tickable {
+	public static final int PLAYER_INVENTORY = 0;
 	public Map<Integer, WSlot> dragSlots = new HashMap<>();
 	public Map<Integer, Inventory> linkedInventories = new HashMap<>();
 	public int positionY = 0;
 	public int positionX = 0;
+	public int totalID = 0;
 	protected World linkedWorld;
 	protected WPanel linkedPanel;
-	public int totalID = 0;
-
-	public static final int PLAYER_INVENTORY = 0;
 
 	public BaseContainer(int synchronizationID, PlayerInventory linkedPlayerInventory) {
 		super(null, synchronizationID);
@@ -48,6 +39,18 @@ public class BaseContainer extends CraftingContainer<Inventory> implements Ticka
 
 	public Slot addSlot(Slot slot) {
 		return super.addSlot(slot);
+	}
+
+	@Deprecated
+	@Override
+	public ItemStack onSlotClick(int identifier, int button, SlotActionType action, PlayerEntity player) {
+		return ItemStack.EMPTY;
+	}
+
+	@Deprecated
+	@Override
+	public boolean canUse(PlayerEntity entity) {
+		return true;
 	}
 
 	public void mergeStacks(ItemStack stackA, ItemStack stackB) {
@@ -79,17 +82,17 @@ public class BaseContainer extends CraftingContainer<Inventory> implements Ticka
 
 		switch (action) {
 			case PICKUP: {
-				if (!stackA.isItemEqual(stackB)) {
+				if (! stackA.isItemEqual(stackB)) {
 					if (button == 0) { // Swap with existing // LMB
 						ItemStack stackC = stackA.copy();
 						stackA = stackB.copy();
 						stackB = stackC.copy();
-					} else if (button == 1  && !stackB.isEmpty()) { // Add to existing // RMB
+					} else if (button == 1 && ! stackB.isEmpty()) { // Add to existing // RMB
 						if (stackA.isEmpty()) { // If existing is empty, initialize it // RMB
 							stackA = new ItemStack(stackB.getItem(), 1);
 							stackB.decrement(1);
 						}
-					}  else if (button == 1) { // Split existing // RMB
+					} else if (button == 1) { // Split existing // RMB
 						ItemStack stackC = stackA.split(stackA.getCount() / 2);
 						stackB = stackC.copy();
 					}
@@ -114,7 +117,7 @@ public class BaseContainer extends CraftingContainer<Inventory> implements Ticka
 				for (WWidget widget : getLinkedPanel().getLinkedWidgets()) {
 					if (widget != slotA && widget instanceof WSlot && ((WSlot) widget).getLinkedInventory() != slotA.getLinkedInventory()) {
 						ItemStack stackC = ((WSlot) widget).getStack();
-						if (!(stackC.getCount() == stackC.getMaxCount())) {
+						if (! (stackC.getCount() == stackC.getMaxCount())) {
 							if (stackA.isItemEqual(stackC)) { // Merge with existing // LFSHIFT + LMB
 								mergeStacks(stackA, stackC);
 								((WSlot) widget).setStack(stackC);
@@ -132,18 +135,6 @@ public class BaseContainer extends CraftingContainer<Inventory> implements Ticka
 		}
 		slotA.setStack(stackA);
 		((PlayerInventory) linkedInventories.get(PLAYER_INVENTORY)).setCursorStack(stackB);
-	}
-
-	@Deprecated
-	@Override
-	public ItemStack onSlotClick(int identifier, int button, SlotActionType action, PlayerEntity player) {
-		return ItemStack.EMPTY;
-	}
-
-	@Deprecated
-	@Override
-	public boolean canUse(PlayerEntity entity) {
-		return true;
 	}
 
 	public WPanel getLinkedPanel() {

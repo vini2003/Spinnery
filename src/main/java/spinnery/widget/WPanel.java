@@ -12,7 +12,7 @@ import java.util.List;
 public class WPanel extends WWidget {
 	protected BaseContainer linkedContainer;
 	protected List<WWidget> linkedWWidgets = new ArrayList<>();
-	WPanel.Theme drawTheme;
+	protected WPanel.Theme drawTheme;
 
 	public WPanel(BaseContainer linkedContainer) {
 		setLinkedContainer(linkedContainer);

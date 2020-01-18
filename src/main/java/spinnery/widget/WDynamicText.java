@@ -3,7 +3,6 @@ package spinnery.widget;
 import com.google.gson.annotations.SerializedName;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.util.InputUtil;
 import org.lwjgl.glfw.GLFW;
 import spinnery.client.BaseRenderer;
 import spinnery.registry.ResourceRegistry;
@@ -16,9 +15,10 @@ public class WDynamicText extends WWidget {
 	protected int selLeftPos = 0;
 	protected int selRightPos = 0;
 	protected int cursorPos;
-	WDynamicText.Theme drawTheme;
-	int offsetPos = 0;
-	int fooY = 0;
+	protected WDynamicText.Theme drawTheme;
+	protected int offsetPos = 0;
+	protected int fooY = 0;
+
 	public WDynamicText(WAnchor anchor, int positionX, int positionY, int positionZ, double sizeX, double sizeY, WPanel linkedPanel) {
 		setLinkedPanel(linkedPanel);
 
@@ -110,7 +110,7 @@ public class WDynamicText extends WWidget {
 			++ cursorPos;
 			selRightPos = cursorPos;
 			recalculateVisible();
-		} else if (keyPressed == GLFW.GLFW_KEY_KP_DIVIDE && Screen.hasShiftDown()&& cursorPos > 0) { // Left w. Shift
+		} else if (keyPressed == GLFW.GLFW_KEY_KP_DIVIDE && Screen.hasShiftDown() && cursorPos > 0) { // Left w. Shift
 			selRightPos = selRightPos == - 1 ? cursorPos : selRightPos;
 			-- cursorPos;
 			selLeftPos = cursorPos;

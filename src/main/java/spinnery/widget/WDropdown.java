@@ -12,8 +12,8 @@ import java.util.List;
 public class WDropdown extends WWidget {
 	public List<List<WWidget>> dropdownWidgets = new ArrayList<>();
 	protected boolean state = false;
-	WDropdown.Theme drawTheme;
-	int[][] sizes = new int[2][2];
+	protected WDropdown.Theme drawTheme;
+	protected int[][] sizes = new int[2][2];
 
 	public WDropdown(WAnchor anchor, int positionX, int positionY, int positionZ, int sizeX1, int sizeY1, int sizeX2, int sizeY2, WPanel linkedPanel) {
 		setLinkedPanel(linkedPanel);

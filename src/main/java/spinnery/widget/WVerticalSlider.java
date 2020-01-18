@@ -10,7 +10,8 @@ public class WVerticalSlider extends WWidget {
 	protected double position = 0;
 	protected String slidTotal;
 	protected int slidStringPosition;
-	WVerticalSlider.Theme drawTheme;
+	protected WVerticalSlider.Theme drawTheme;
+
 	public WVerticalSlider(WAnchor anchor, int positionX, int positionY, int positionZ, double sizeX, double sizeY, int limit, WPanel linkedPanel) {
 		setLinkedPanel(linkedPanel);
 

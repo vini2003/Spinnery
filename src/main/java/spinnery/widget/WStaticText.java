@@ -7,7 +7,7 @@ import spinnery.registry.ResourceRegistry;
 public class WStaticText extends WWidget {
 	protected int hexColor;
 	protected String text;
-	WStaticText.Theme drawTheme;
+	protected WStaticText.Theme drawTheme;
 
 	public WStaticText(WAnchor anchor, int positionX, int positionY, int positionZ, String text, WPanel linkedPanel) {
 		setLinkedPanel(linkedPanel);

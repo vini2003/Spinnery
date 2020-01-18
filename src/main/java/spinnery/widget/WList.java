@@ -12,7 +12,7 @@ import java.util.List;
 
 public class WList extends WWidget {
 	public List<List<WWidget>> listWidgets = new ArrayList<>();
-	WList.Theme drawTheme;
+	protected WList.Theme drawTheme;
 
 	public WList(WAnchor anchor, int positionX, int positionY, int positionZ, double sizeX, double sizeY, WPanel linkedPanel) {
 		setLinkedPanel(linkedPanel);
@@ -132,16 +132,16 @@ public class WList extends WWidget {
 	}
 
 	@Override
-	public void setTheme(String theme) {
-		super.setTheme(theme);
-		drawTheme = ResourceRegistry.get(getTheme()).getWListTheme();
-	}
-
-	@Override
 	public void setLabel(String label) {
 		super.setLabel(label);
 		updatePositions();
 		updateHidden();
+	}
+
+	@Override
+	public void setTheme(String theme) {
+		super.setTheme(theme);
+		drawTheme = ResourceRegistry.get(getTheme()).getWListTheme();
 	}
 
 	@Override

@@ -1,13 +1,9 @@
 package spinnery.client;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.AbstractContainerScreen;
-import net.minecraft.client.util.InputUtil;
 import net.minecraft.container.Slot;
 import net.minecraft.container.SlotActionType;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import org.lwjgl.glfw.GLFW;
 import spinnery.common.BaseContainer;
