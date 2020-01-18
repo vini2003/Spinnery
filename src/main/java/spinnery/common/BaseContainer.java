@@ -110,7 +110,9 @@ public class BaseContainer extends CraftingContainer<Inventory> implements Ticka
 				break;
 			}
 			case CLONE: {
-				stackB = new ItemStack(stackA.getItem(), stackA.getMaxCount()); // Clone existing // MMB
+				if (player.isCreative()) {
+					stackB = new ItemStack(stackA.getItem(), stackA.getMaxCount()); // Clone existing // MMB
+				}
 				break;
 			}
 			case QUICK_MOVE: {
