@@ -9,6 +9,7 @@ import spinnery.widget.WWidget;
 
 public class BaseScreen extends Screen {
 	WInterface linkedInterface;
+	private boolean isPauseScreen = false;
 
 	public BaseScreen() {
 		super(new LiteralText(""));
@@ -20,6 +21,16 @@ public class BaseScreen extends Screen {
 
 	public void setInterface(WInterface linkedInterface) {
 		this.linkedInterface = linkedInterface;
+	}
+
+	public void setIsPauseScreen(boolean isPauseScreen)
+	{
+		this.isPauseScreen = isPauseScreen;
+	}
+
+	@Override
+	public boolean isPauseScreen() {
+		return isPauseScreen;
 	}
 
 	@Override
