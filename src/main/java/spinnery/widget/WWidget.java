@@ -8,7 +8,7 @@ import net.minecraft.util.Tickable;
 import java.util.Optional;
 
 public class WWidget implements Tickable {
-	protected WPanel linkedPanel;
+	protected WInterface linkedPanel;
 	protected WAnchor anchor;
 	protected double positionX = 0;
 	protected double positionY = 0;
@@ -213,9 +213,7 @@ public class WWidget implements Tickable {
 	}
 
 	public void setTheme(String theme) {
-		if (getLinkedPanel().getLinkedContainer().getLinkedWorld().isClient()) {
-			this.theme = theme;
-		}
+		this.theme = theme;
 	}
 
 	public boolean getCanMove() {
@@ -226,11 +224,11 @@ public class WWidget implements Tickable {
 		this.canMove = canMove;
 	}
 
-	public WPanel getLinkedPanel() {
+	public WInterface getInterface() {
 		return linkedPanel;
 	}
 
-	public void setLinkedPanel(WPanel linkedPanel) {
+	public void setInterface(WInterface linkedPanel) {
 		this.linkedPanel = linkedPanel;
 	}
 
@@ -275,11 +273,11 @@ public class WWidget implements Tickable {
 	}
 
 	public void setAnchoredPositionX(double positionX) {
-		setPositionX(positionX + (getAnchor() == WAnchor.MC_ORIGIN ? getLinkedPanel().getPositionX() : 0));
+		setPositionX(positionX + (getAnchor() == WAnchor.MC_ORIGIN ? getInterface().getPositionX() : 0));
 	}
 
 	public void setAnchoredPositionY(double positionY) {
-		setPositionY(positionY + (getAnchor() == WAnchor.MC_ORIGIN ? getLinkedPanel().getPositionY() : 0));
+		setPositionY(positionY + (getAnchor() == WAnchor.MC_ORIGIN ? getInterface().getPositionY() : 0));
 	}
 
 	public boolean getFocus() {
@@ -316,7 +314,7 @@ public class WWidget implements Tickable {
 		if (isHidden) {
 			return false;
 		}
-		Optional<? extends WWidget> optional = linkedPanel.getLinkedWidgets().stream().filter((widget) ->
+		Optional<? extends WWidget> optional = linkedPanel.getWidgets().stream().filter((widget) ->
 				widget.getPositionZ() > getPositionZ() && widget.isWithinBounds(mouseX, mouseY)
 		).findAny();
 		setFocus(!optional.isPresent() && isWithinBounds(mouseX, mouseY));

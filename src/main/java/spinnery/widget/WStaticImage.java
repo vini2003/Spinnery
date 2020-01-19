@@ -3,11 +3,11 @@ package spinnery.widget;
 import net.minecraft.util.Identifier;
 import spinnery.client.BaseRenderer;
 
-public class WStaticImage extends WWidget {
+public class WStaticImage extends WWidget implements WClient {
 	protected Identifier texture;
 
-	public WStaticImage(WAnchor anchor, double positionX, double positionY, double positionZ, double sizeX, double sizeY, Identifier texture, WPanel linkedPanel) {
-		setLinkedPanel(linkedPanel);
+	public WStaticImage(WAnchor anchor, double positionX, double positionY, double positionZ, double sizeX, double sizeY, Identifier texture, WInterface linkedPanel) {
+		setInterface(linkedPanel);
 
 		setAnchor(anchor);
 

@@ -9,14 +9,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class WDropdown extends WWidget {
+public class WDropdown extends WWidget implements WClient, WCollection {
 	public List<List<WWidget>> dropdownWidgets = new ArrayList<>();
 	protected boolean state = false;
 	protected WDropdown.Theme drawTheme;
 	protected int[][] sizes = new int[2][2];
 
-	public WDropdown(WAnchor anchor, int positionX, int positionY, int positionZ, int sizeX1, int sizeY1, int sizeX2, int sizeY2, WPanel linkedPanel) {
-		setLinkedPanel(linkedPanel);
+	public WDropdown(WAnchor anchor, int positionX, int positionY, int positionZ, int sizeX1, int sizeY1, int sizeX2, int sizeY2, WInterface linkedPanel) {
+		setInterface(linkedPanel);
 
 		setAnchor(anchor);
 
@@ -52,11 +52,18 @@ public class WDropdown extends WWidget {
 	}
 
 	@Override
+	public List<WWidget> getWidgets() {
+		List<WWidget> widgets = new ArrayList<>();
+		for (List<WWidget> widgetA : getDropdownWidgets()) {
+			widgets.addAll(widgetA);
+		}
+		return widgets;
+	}
+
+	@Override
 	public void onKeyPressed(int keyPressed, int character, int keyModifier) {
-		for (List<WWidget> widgetB : getDropdownWidgets()) {
-			for (WWidget widgetC : widgetB) {
-				widgetC.onKeyPressed(keyPressed, character, keyModifier);
-			}
+		for (WWidget widget : getWidgets()) {
+			widget.onKeyPressed(keyPressed, character, keyModifier);
 		}
 
 		super.onKeyPressed(keyPressed, character, keyModifier);
@@ -64,10 +71,8 @@ public class WDropdown extends WWidget {
 
 	@Override
 	public void onKeyReleased(int keyReleased) {
-		for (List<WWidget> widgetB : getDropdownWidgets()) {
-			for (WWidget widgetC : widgetB) {
-				widgetC.onKeyReleased(keyReleased);
-			}
+		for (WWidget widget : getWidgets()) {
+			widget.onKeyReleased(keyReleased);
 		}
 
 		super.onKeyReleased(keyReleased);
@@ -75,10 +80,8 @@ public class WDropdown extends WWidget {
 
 	@Override
 	public void onMouseReleased(double mouseX, double mouseY, int mouseButton) {
-		for (List<WWidget> widgetB : getDropdownWidgets()) {
-			for (WWidget widgetC : widgetB) {
-				widgetC.onMouseReleased(mouseX, mouseY, mouseButton);
-			}
+		for (WWidget widget : getWidgets()) {
+			widget.onMouseReleased(mouseX, mouseY, mouseButton);
 		}
 
 		super.onMouseReleased(mouseX, mouseY, mouseButton);
@@ -90,10 +93,8 @@ public class WDropdown extends WWidget {
 			setState(!getState());
 			updateHidden();
 		} else {
-			for (List<WWidget> widgetB : getDropdownWidgets()) {
-				for (WWidget widgetC : widgetB) {
-					widgetC.onMouseClicked(mouseX, mouseY, mouseButton);
-				}
+			for (WWidget widget : getWidgets()) {
+				widget.onMouseClicked(mouseX, mouseY, mouseButton);
 			}
 		}
 
@@ -102,10 +103,8 @@ public class WDropdown extends WWidget {
 
 	@Override
 	public void onMouseDragged(double mouseX, double mouseY, int mouseButton, double dragOffsetX, double dragOffsetY) {
-		for (List<WWidget> widgetB : getDropdownWidgets()) {
-			for (WWidget widgetC : widgetB) {
-				widgetC.onMouseDragged(mouseX, mouseY, mouseButton, dragOffsetX, dragOffsetY);
-			}
+		for (WWidget widget : getWidgets()) {
+			widget.onMouseDragged(mouseX, mouseY, mouseButton, dragOffsetX, dragOffsetY);
 		}
 
 		super.onMouseDragged(mouseX, mouseY, mouseButton, dragOffsetX, dragOffsetY);
@@ -113,10 +112,8 @@ public class WDropdown extends WWidget {
 
 	@Override
 	public void onMouseMoved(double mouseX, double mouseY) {
-		for (List<WWidget> widgetB : getDropdownWidgets()) {
-			for (WWidget widgetC : widgetB) {
-				widgetC.onMouseMoved(mouseX, mouseY);
-			}
+		for (WWidget widget : getWidgets()) {
+			widget.onMouseMoved(mouseX, mouseY);
 		}
 
 		super.onMouseMoved(mouseX, mouseY);
@@ -124,7 +121,7 @@ public class WDropdown extends WWidget {
 
 	@Override
 	public void setTheme(String theme) {
-		if (getLinkedPanel().getLinkedContainer().getLinkedWorld().isClient()) {
+		if (getInterface().isClient()) {
 			super.setTheme(theme);
 			drawTheme = ResourceRegistry.get(getTheme()).getWDropdownTheme();
 		}
@@ -142,10 +139,8 @@ public class WDropdown extends WWidget {
 
 	@Override
 	public boolean scanFocus(double mouseX, double mouseY) {
-		for (List<WWidget> widgetB : getDropdownWidgets()) {
-			for (WWidget widgetC : widgetB) {
-				widgetC.scanFocus(mouseX, mouseY);
-			}
+		for (WWidget widget : getWidgets()) {
+			widget.scanFocus(mouseX, mouseY);
 		}
 
 		setFocus(isWithinBounds(mouseX, mouseY) && !getDropdownWidgets().stream().anyMatch((widgets) -> widgets.stream().anyMatch(WWidget::getFocus)));

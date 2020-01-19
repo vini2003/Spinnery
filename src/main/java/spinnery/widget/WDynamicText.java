@@ -7,7 +7,7 @@ import org.lwjgl.glfw.GLFW;
 import spinnery.client.BaseRenderer;
 import spinnery.registry.ResourceRegistry;
 
-public class WDynamicText extends WWidget {
+public class WDynamicText extends WWidget implements WClient {
 	protected boolean isSelected;
 	protected String text = "";
 	protected String clip = "";
@@ -21,8 +21,8 @@ public class WDynamicText extends WWidget {
 
 	protected boolean isEditable = true;
 
-	public WDynamicText(WAnchor anchor, int positionX, int positionY, int positionZ, double sizeX, double sizeY, WPanel linkedPanel) {
-		setLinkedPanel(linkedPanel);
+	public WDynamicText(WAnchor anchor, int positionX, int positionY, int positionZ, double sizeX, double sizeY, WInterface linkedPanel) {
+		setInterface(linkedPanel);
 
 		setAnchor(anchor);
 
@@ -175,7 +175,7 @@ public class WDynamicText extends WWidget {
 
 	@Override
 	public void setTheme(String theme) {
-		if (getLinkedPanel().getLinkedContainer().getLinkedWorld().isClient()) {
+		if (getInterface().isClient()) {
 			super.setTheme(theme);
 			drawTheme = ResourceRegistry.get(getTheme()).getWDynamicTextTheme();
 		}

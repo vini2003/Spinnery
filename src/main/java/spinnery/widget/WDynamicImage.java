@@ -3,13 +3,13 @@ package spinnery.widget;
 import net.minecraft.util.Identifier;
 import spinnery.client.BaseRenderer;
 
-public class WDynamicImage extends WWidget {
+public class WDynamicImage extends WWidget implements WClient {
 	protected Identifier[] textures;
 
 	protected int position = 0;
 
-	public WDynamicImage(WAnchor anchor, double positionX, double positionY, double positionZ, double sizeX, double sizeY, WPanel linkedPanel, Identifier... textures) {
-		setLinkedPanel(linkedPanel);
+	public WDynamicImage(WAnchor anchor, double positionX, double positionY, double positionZ, double sizeX, double sizeY, WInterface linkedPanel, Identifier... textures) {
+		setInterface(linkedPanel);
 
 		setAnchor(anchor);
 

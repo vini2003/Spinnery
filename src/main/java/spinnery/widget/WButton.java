@@ -4,13 +4,13 @@ import com.google.gson.annotations.SerializedName;
 import spinnery.client.BaseRenderer;
 import spinnery.registry.ResourceRegistry;
 
-public class WButton extends WWidget {
+public class WButton extends WWidget implements WClient {
 	protected boolean toggleState = false;
 	protected int toggleTicks = 0;
 	protected WButton.Theme drawTheme;
 
-	public WButton(WAnchor anchor, int positionX, int positionY, int positionZ, double sizeX, double sizeY, WPanel linkedPanel) {
-		setLinkedPanel(linkedPanel);
+	public WButton(WAnchor anchor, int positionX, int positionY, int positionZ, double sizeX, double sizeY, WInterface linkedPanel) {
+		setInterface(linkedPanel);
 
 		setAnchor(anchor);
 
@@ -36,7 +36,7 @@ public class WButton extends WWidget {
 
 	@Override
 	public void setTheme(String theme) {
-		if (getLinkedPanel().getLinkedContainer().getLinkedWorld().isClient()) {
+		if (getInterface().isClient()) {
 			super.setTheme(theme);
 			drawTheme = ResourceRegistry.get(getTheme()).getWButtonTheme();
 		}

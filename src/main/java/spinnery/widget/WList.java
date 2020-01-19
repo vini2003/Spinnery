@@ -1,5 +1,6 @@
 package spinnery.widget;
 
+import com.google.common.collect.Lists;
 import com.google.gson.annotations.SerializedName;
 import net.minecraft.client.MinecraftClient;
 import org.lwjgl.opengl.GL11;
@@ -10,12 +11,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class WList extends WWidget {
+public class WList extends WWidget implements WClient, WCollection {
 	public List<List<WWidget>> listWidgets = new ArrayList<>();
 	protected WList.Theme drawTheme;
 
-	public WList(WAnchor anchor, int positionX, int positionY, int positionZ, double sizeX, double sizeY, WPanel linkedPanel) {
-		setLinkedPanel(linkedPanel);
+	public WList(WAnchor anchor, int positionX, int positionY, int positionZ, double sizeX, double sizeY, WInterface linkedPanel) {
+		setInterface(linkedPanel);
 
 		setAnchor(anchor);
 
@@ -29,20 +30,23 @@ public class WList extends WWidget {
 		setTheme("default");
 	}
 
+	@Override
+	public List<WWidget> getWidgets() {
+		List<WWidget> widgets = new ArrayList<>();
+		for (List<WWidget> widgetA : getListWidgets()) {
+			widgets.addAll(widgetA);
+		}
+		return widgets;
+	}
+
 	public List<List<WWidget>> getListWidgets() {
 		return listWidgets;
 	}
 
-	public void setListWidgets(List<List<WWidget>> listWidgets) {
-		this.listWidgets = listWidgets;
-	}
-
 	@Override
 	public void onKeyPressed(int keyPressed, int character, int keyModifier) {
-		for (List<WWidget> widgetB : getListWidgets()) {
-			for (WWidget widgetC : widgetB) {
-				widgetC.onKeyPressed(keyPressed, character, keyModifier);
-			}
+		for (WWidget widget : getWidgets()) {
+			widget.onKeyPressed(keyPressed, character, keyModifier);
 		}
 
 		super.onKeyPressed(keyPressed, character, keyModifier);
@@ -50,10 +54,8 @@ public class WList extends WWidget {
 
 	@Override
 	public void onKeyReleased(int keyReleased) {
-		for (List<WWidget> widgetB : getListWidgets()) {
-			for (WWidget widgetC : widgetB) {
-				widgetC.onKeyReleased(keyReleased);
-			}
+		for (WWidget widget : getWidgets()) {
+			widget.onKeyReleased(keyReleased);
 		}
 
 		super.onKeyReleased(keyReleased);
@@ -61,10 +63,8 @@ public class WList extends WWidget {
 
 	@Override
 	public void onMouseReleased(double mouseX, double mouseY, int mouseButton) {
-		for (List<WWidget> widgetB : getListWidgets()) {
-			for (WWidget widgetC : widgetB) {
-				widgetC.onMouseReleased(mouseX, mouseY, mouseButton);
-			}
+		for (WWidget widget : getWidgets()) {
+			widget.onMouseReleased(mouseX, mouseY, mouseButton);
 		}
 
 		super.onMouseReleased(mouseX, mouseY, mouseButton);
@@ -72,10 +72,8 @@ public class WList extends WWidget {
 
 	@Override
 	public void onMouseClicked(double mouseX, double mouseY, int mouseButton) {
-		for (List<WWidget> widgetB : getListWidgets()) {
-			for (WWidget widgetC : widgetB) {
-				widgetC.onMouseClicked(mouseX, mouseY, mouseButton);
-			}
+		for (WWidget widget : getWidgets()) {
+			widget.onMouseClicked(mouseX, mouseY, mouseButton);
 		}
 
 		super.onMouseClicked(mouseX, mouseY, mouseButton);
@@ -83,10 +81,8 @@ public class WList extends WWidget {
 
 	@Override
 	public void onMouseDragged(double mouseX, double mouseY, int mouseButton, double dragOffsetX, double dragOffsetY) {
-		for (List<WWidget> widgetB : getListWidgets()) {
-			for (WWidget widgetC : widgetB) {
-				widgetC.onMouseDragged(mouseX, mouseY, mouseButton, dragOffsetX, dragOffsetY);
-			}
+		for (WWidget widget : getWidgets()) {
+			widget.onMouseDragged(mouseX, mouseY, mouseButton, dragOffsetX, dragOffsetY);
 		}
 
 		super.onMouseDragged(mouseX, mouseY, mouseButton, dragOffsetX, dragOffsetY);
@@ -94,10 +90,8 @@ public class WList extends WWidget {
 
 	@Override
 	public void onMouseMoved(double mouseX, double mouseY) {
-		for (List<WWidget> widgetB : getListWidgets()) {
-			for (WWidget widgetC : widgetB) {
-				widgetC.onMouseMoved(mouseX, mouseY);
-			}
+		for (WWidget widget : getWidgets()) {
+			widget.onMouseMoved(mouseX, mouseY);
 		}
 
 		super.onMouseMoved(mouseX, mouseY);
@@ -120,11 +114,9 @@ public class WList extends WWidget {
 		);
 
 		if ((scaledOffsetY > 0 && !hitTop) || (scaledOffsetY < 0 && !hitBottom)) {
-			for (List<WWidget> widgetB : getListWidgets()) {
-				for (WWidget widgetC : widgetB) {
-					widgetC.setPositionY(widgetC.getPositionY() + scaledOffsetY);
-					widgetC.setHidden(!(isWithinBounds(widgetC.getPositionX(), widgetC.getPositionY())));
-				}
+			for (WWidget widget : getWidgets()) {
+				widget.setPositionY(widget.getPositionY() + scaledOffsetY);
+				widget.setHidden(!(isWithinBounds(widget.getPositionX(), widget.getPositionY())));
 			}
 		}
 
@@ -140,7 +132,7 @@ public class WList extends WWidget {
 
 	@Override
 	public void setTheme(String theme) {
-		if (getLinkedPanel().getLinkedContainer().getLinkedWorld().isClient()) {
+		if (getInterface().isClient()) {
 			super.setTheme(theme);
 			drawTheme = ResourceRegistry.get(getTheme()).getWListTheme();
 		}
@@ -148,10 +140,8 @@ public class WList extends WWidget {
 
 	@Override
 	public boolean scanFocus(double mouseX, double mouseY) {
-		for (List<WWidget> widgetB : getListWidgets()) {
-			for (WWidget widgetC : widgetB) {
-				widgetC.scanFocus(mouseX, mouseY);
-			}
+		for (WWidget widget : getWidgets()) {
+			widget.scanFocus(mouseX, mouseY);
 		}
 
 		setFocus(isWithinBounds(mouseX, mouseY) && getListWidgets().stream().noneMatch((widgets) -> widgets.stream().anyMatch(WWidget::getFocus)));

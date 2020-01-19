@@ -1,24 +1,28 @@
 package spinnery.widget;
 
 import com.google.gson.annotations.SerializedName;
-import org.lwjgl.glfw.GLFW;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.server.MinecraftServer;
 import spinnery.client.BaseRenderer;
 import spinnery.common.BaseContainer;
 import spinnery.registry.ResourceRegistry;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class WPanel extends WWidget {
+public class WInterface extends WWidget {
 	protected BaseContainer linkedContainer;
-	protected List<WWidget> linkedWWidgets = new ArrayList<>();
-	protected WPanel.Theme drawTheme;
+	protected WWidgetHolder widgetHolder = new WWidgetHolder();
 
-	public WPanel(BaseContainer linkedContainer) {
-		setLinkedContainer(linkedContainer);
+	protected boolean isClientside;
+	protected Class<?> instanceType;
+
+	protected WInterface.Theme drawTheme;
+
+	public WInterface(BaseContainer linkedContainer) {
+		setContainer(linkedContainer);
 	}
 
-	public WPanel(int positionX, int positionY, int positionZ, int sizeX, int sizeY) {
+	public WInterface(int positionX, int positionY, int positionZ, int sizeX, int sizeY) {
 		setPositionX(positionX);
 		setPositionY(positionY);
 		setPositionZ(positionZ);
@@ -26,10 +30,14 @@ public class WPanel extends WWidget {
 		setSizeX(sizeX);
 		setSizeY(sizeY);
 
+		setClientside(true);
+
+		setInstanceType(MinecraftClient.class);
+
 		setTheme("default");
 	}
 
-	public WPanel(int positionX, int positionY, int positionZ, int sizeX, int sizeY, BaseContainer linkedContainer) {
+	public WInterface(int positionX, int positionY, int positionZ, int sizeX, int sizeY, BaseContainer linkedContainer) {
 		setPositionX(positionX);
 		setPositionY(positionY);
 		setPositionZ(positionZ);
@@ -37,79 +45,78 @@ public class WPanel extends WWidget {
 		setSizeX(sizeX);
 		setSizeY(sizeY);
 
-		setTheme("default");
+		setContainer(linkedContainer);
 
-		setLinkedContainer(linkedContainer);
+		setClientside(false);
+
+		if (getContainer().getLinkedWorld().isClient()) {
+			setInstanceType(MinecraftClient.class);
+		} else {
+			setInstanceType(MinecraftServer.class);
+		}
+
+		setTheme("default");
 	}
 
-	public BaseContainer getLinkedContainer() {
+	public Class<?> getInstanceType() {
+		return instanceType;
+	}
+
+	public void setInstanceType(Class<?> instanceType) {
+		this.instanceType = instanceType;
+	}
+
+	public boolean isClient() {
+		return instanceType == MinecraftClient.class;
+	}
+
+	public boolean isServer() {
+		return instanceType == MinecraftServer.class;
+	}
+
+	public Boolean isClientside() {
+		return isClientside;
+	}
+
+	public void setClientside(Boolean clientside) {
+		isClientside = clientside;
+	}
+
+	public BaseContainer getContainer() {
 		return linkedContainer;
 	}
 
-	public void setLinkedContainer(BaseContainer linkedContainer) {
+	public void setContainer(BaseContainer linkedContainer) {
 		this.linkedContainer = linkedContainer;
 	}
 
-	public List<WWidget> getLinkedWidgets() {
-		return linkedWWidgets;
+	public List<WWidget> getWidgets() {
+		return widgetHolder.getWidgets();
 	}
 
-	public void setLinkedWWidgets(List<WWidget> linkedWWidgets) {
-		this.linkedWWidgets = linkedWWidgets;
+	public WWidgetHolder getHolder() {
+		return widgetHolder;
 	}
 
-	public void add(WWidget... WWidgets) {
-		for (WWidget WWidget : WWidgets) {
-			if (!this.getLinkedWidgets().contains(WWidget)) {
-				WWidget.setLinkedPanel(this);
-				getLinkedWidgets().add(WWidget);
+	public void add(WWidget... widgets) {
+		for (WWidget widget : widgets) {
+			if (widget instanceof WServer && isClientside()) {
+				throw new RuntimeException("Cannot add server-side WWidget to non-server-side WIntertface!");
 			}
 		}
+
+		getHolder().add(widgets);
 	}
 
 	public void remove(WWidget... WWidgets) {
-		for (WWidget WWidget : WWidgets) {
-			if (this.getLinkedWidgets().contains(WWidget)) {
-				getLinkedWidgets().remove(WWidget);
-			}
-		}
-	}
-
-	@Override
-	public void onKeyPressed(int keyPressed, int character, int keyModifier) {
-		if (getFocus()) {
-			switch (keyPressed) {
-				case GLFW.GLFW_KEY_KP_SUBTRACT:
-					setPositionX((int) Math.round(getPositionX() + 1));
-					break;
-				case GLFW.GLFW_KEY_KP_DIVIDE:
-					setPositionX((int) Math.round(getPositionX() - 1));
-					break;
-				case GLFW.GLFW_KEY_KP_EQUAL:
-					setPositionY((int) Math.round(getPositionY() + 1));
-					break;
-				case GLFW.GLFW_KEY_KP_8:
-					setPositionY((int) Math.round(getPositionY() - 1));
-					break;
-			}
-		}
-		super.onKeyPressed(keyPressed, character, keyModifier);
-	}
-
-	@Override
-	public void onMouseDragged(double mouseX, double mouseY, int mouseButton, double dragOffsetX, double dragOffsetY) {
-		if (getCanMove() && getFocus() && mouseButton == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
-			setPositionX(getPositionX() + dragOffsetX);
-			setPositionY(getPositionY() + dragOffsetY);
-		}
-		super.onMouseDragged(mouseX, mouseY, mouseButton, dragOffsetX, dragOffsetY);
+		getHolder().remove(WWidgets);
 	}
 
 	@Override
 	public void setTheme(String theme) {
-		if (getLinkedPanel().getLinkedContainer().getLinkedWorld().isClient()) {
+		if (isClient()) {
 			super.setTheme(theme);
-			drawTheme = ResourceRegistry.get(getTheme()).getWPanelTheme();
+			drawTheme = ResourceRegistry.get(getTheme()).getWInterfaceTheme();
 		}
 	}
 
@@ -134,14 +141,14 @@ public class WPanel extends WWidget {
 			BaseRenderer.drawRectangle(positionX + 1, positionY + 17, positionZ, sizeX - 2, 0.75, drawTheme.getShadow());
 		}
 
-		for (WWidget widget : getLinkedWidgets()) {
+		for (WWidget widget : getWidgets()) {
 			widget.draw();
 		}
 	}
 
 	@Override
 	public void tick() {
-		for (WWidget widget : getLinkedWidgets()) {
+		for (WWidget widget : getWidgets()) {
 			widget.tick();
 		}
 	}

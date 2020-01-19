@@ -5,15 +5,15 @@ import org.lwjgl.glfw.GLFW;
 import spinnery.client.BaseRenderer;
 import spinnery.registry.ResourceRegistry;
 
-public class WVerticalSlider extends WWidget {
+public class WVerticalSlider extends WWidget implements WClient {
 	protected double limit = 0;
 	protected double position = 0;
 	protected String slidTotal;
 	protected int slidStringPosition;
 	protected WVerticalSlider.Theme drawTheme;
 
-	public WVerticalSlider(WAnchor anchor, int positionX, int positionY, int positionZ, double sizeX, double sizeY, int limit, WPanel linkedPanel) {
-		setLinkedPanel(linkedPanel);
+	public WVerticalSlider(WAnchor anchor, int positionX, int positionY, int positionZ, double sizeX, double sizeY, int limit, WInterface linkedPanel) {
+		setInterface(linkedPanel);
 
 		setAnchor(anchor);
 
@@ -94,7 +94,7 @@ public class WVerticalSlider extends WWidget {
 
 	@Override
 	public void setTheme(String theme) {
-		if (getLinkedPanel().getLinkedContainer().getLinkedWorld().isClient()) {
+		if (getInterface().isClient()) {
 			super.setTheme(theme);
 			drawTheme = ResourceRegistry.get(getTheme()).getWVerticalSliderTheme();
 		}

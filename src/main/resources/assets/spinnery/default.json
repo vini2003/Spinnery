@@ -1,6 +1,6 @@
 {
 	"Identifier": "default",
-	"WPanel": {
+	"WInterface": {
 		"shadow": "0xff555555",
 		"background": "0xffc6c6c6",
 		"highlight": "0xffffffff",

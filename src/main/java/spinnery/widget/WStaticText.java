@@ -4,13 +4,13 @@ import com.google.gson.annotations.SerializedName;
 import spinnery.client.BaseRenderer;
 import spinnery.registry.ResourceRegistry;
 
-public class WStaticText extends WWidget {
+public class WStaticText extends WWidget implements WClient {
 	protected int hexColor;
 	protected String text;
 	protected WStaticText.Theme drawTheme;
 
-	public WStaticText(WAnchor anchor, int positionX, int positionY, int positionZ, String text, WPanel linkedPanel) {
-		setLinkedPanel(linkedPanel);
+	public WStaticText(WAnchor anchor, int positionX, int positionY, int positionZ, String text, WInterface linkedPanel) {
+		setInterface(linkedPanel);
 
 		setAnchor(anchor);
 
@@ -35,7 +35,7 @@ public class WStaticText extends WWidget {
 
 	@Override
 	public void setTheme(String theme) {
-		if (getLinkedPanel().getLinkedContainer().getLinkedWorld().isClient()) {
+		if (getInterface().isClient()) {
 			super.setTheme(theme);
 			drawTheme = ResourceRegistry.get(getTheme()).getWStaticTextTheme();
 		}

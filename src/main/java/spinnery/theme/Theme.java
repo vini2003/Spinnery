@@ -5,8 +5,8 @@ import spinnery.widget.WButton;
 import spinnery.widget.WDropdown;
 import spinnery.widget.WDynamicText;
 import spinnery.widget.WHorizontalSlider;
+import spinnery.widget.WInterface;
 import spinnery.widget.WList;
-import spinnery.widget.WPanel;
 import spinnery.widget.WSlot;
 import spinnery.widget.WStaticText;
 import spinnery.widget.WToggle;
@@ -19,8 +19,8 @@ public class Theme {
 	transient Object WStaticImageTheme;
 	@SerializedName("WDynamicImage")
 	transient Object WDynamicImageTheme;
-	@SerializedName("WPanel")
-	private WPanel.Theme WPanelTheme;
+	@SerializedName("WInterface")
+	private WInterface.Theme WInterfaceTheme;
 	@SerializedName("WList")
 	private WList.Theme WListTheme;
 	@SerializedName("WDropdown")
@@ -47,7 +47,7 @@ public class Theme {
 	private WSlot.Theme WSlotTheme;
 
 	public void buildAll() {
-		WPanelTheme.build();
+		WInterfaceTheme.build();
 		WListTheme.build();
 		WDropdownTheme.build();
 
@@ -69,8 +69,8 @@ public class Theme {
 		this.ID = ID;
 	}
 
-	public WPanel.Theme getWPanelTheme() {
-		return WPanelTheme;
+	public WInterface.Theme getWInterfaceTheme() {
+		return WInterfaceTheme;
 	}
 
 	public WList.Theme getWListTheme() {
