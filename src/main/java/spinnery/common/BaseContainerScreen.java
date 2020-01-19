@@ -188,6 +188,7 @@ public class BaseContainerScreen<T extends BaseContainer> extends AbstractContai
 		for (WWidget widget : getLinkedContainer().getInterface().getWidgets()) {
 			widget.onKeyPressed(keyCode, character, keyModifier);
 		}
+
 		if (character == GLFW.GLFW_KEY_ESCAPE) {
 			minecraft.player.closeContainer();
 			return true;

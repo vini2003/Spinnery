@@ -23,14 +23,8 @@ public class BaseScreen extends Screen {
 		this.linkedInterface = linkedInterface;
 	}
 
-	public void setIsPauseScreen(boolean isPauseScreen)
-	{
+	public void setIsPauseScreen(boolean isPauseScreen) {
 		this.isPauseScreen = isPauseScreen;
-	}
-
-	@Override
-	public boolean isPauseScreen() {
-		return isPauseScreen;
 	}
 
 	@Override
@@ -75,6 +69,11 @@ public class BaseScreen extends Screen {
 				}
 			}
 		}
+	}
+
+	@Override
+	public boolean isPauseScreen() {
+		return isPauseScreen;
 	}
 
 	@Override

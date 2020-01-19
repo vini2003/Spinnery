@@ -1,15 +1,16 @@
 package spinnery.widget;
 
 import com.google.gson.annotations.SerializedName;
+import net.minecraft.text.Text;
 import spinnery.client.BaseRenderer;
 import spinnery.registry.ResourceRegistry;
 
 public class WStaticText extends WWidget implements WClient {
 	protected int hexColor;
-	protected String text;
+	protected Text text;
 	protected WStaticText.Theme drawTheme;
 
-	public WStaticText(WAnchor anchor, int positionX, int positionY, int positionZ, String text, WInterface linkedPanel) {
+	public WStaticText(WAnchor anchor, int positionX, int positionY, int positionZ, Text text, WInterface linkedPanel) {
 		setInterface(linkedPanel);
 
 		setAnchor(anchor);
@@ -25,11 +26,11 @@ public class WStaticText extends WWidget implements WClient {
 		setText(text);
 	}
 
-	public String getText() {
+	public Text getText() {
 		return text;
 	}
 
-	public void setText(String text) {
+	public void setText(Text text) {
 		this.text = text;
 	}
 
@@ -50,7 +51,7 @@ public class WStaticText extends WWidget implements WClient {
 		double x = getPositionX();
 		double y = getPositionY();
 
-		BaseRenderer.getTextRenderer().drawWithShadow(getText(), (int) x, (int) y, drawTheme.getText().RGB);
+		BaseRenderer.getTextRenderer().drawWithShadow(getText().asFormattedString(), (int) x, (int) y, drawTheme.getText().RGB);
 	}
 
 	public class Theme extends WWidget.Theme {
