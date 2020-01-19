@@ -110,6 +110,8 @@ public class BaseScreen extends Screen {
 	@Override
 	public void tick() {
 		for (WWidget widgetA : getInterface().getWidgets()) {
+			widgetA.tick();
+
 			if (widgetA instanceof WCollection) {
 				for (WWidget widgetB : ((WCollection) widgetA).getWidgets()) {
 					widgetB.tick();
