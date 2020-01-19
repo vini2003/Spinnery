@@ -1,6 +1,5 @@
 package spinnery.widget;
 
-import com.google.common.collect.Lists;
 import com.google.gson.annotations.SerializedName;
 import net.minecraft.client.MinecraftClient;
 import org.lwjgl.opengl.GL11;

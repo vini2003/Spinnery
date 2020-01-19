@@ -12,13 +12,11 @@ import net.minecraft.recipe.RecipeFinder;
 import net.minecraft.util.Tickable;
 import net.minecraft.world.World;
 import spinnery.widget.WCollection;
-import spinnery.widget.WList;
 import spinnery.widget.WInterface;
 import spinnery.widget.WSlot;
 import spinnery.widget.WWidget;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 

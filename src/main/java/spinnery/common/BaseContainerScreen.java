@@ -6,13 +6,9 @@ import net.minecraft.container.SlotActionType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
 import org.lwjgl.glfw.GLFW;
-import spinnery.common.BaseContainer;
 import spinnery.widget.WCollection;
-import spinnery.widget.WList;
 import spinnery.widget.WSlot;
 import spinnery.widget.WWidget;
-
-import java.util.List;
 
 public class BaseContainerScreen<T extends BaseContainer> extends AbstractContainerScreen<T> {
 	double tooltipX = 0;

@@ -5,10 +5,7 @@ import net.minecraft.text.LiteralText;
 import org.lwjgl.glfw.GLFW;
 import spinnery.widget.WCollection;
 import spinnery.widget.WInterface;
-import spinnery.widget.WList;
 import spinnery.widget.WWidget;
-
-import java.util.List;
 
 public class BaseScreen extends Screen {
 	WInterface linkedInterface;
@@ -36,61 +33,10 @@ public class BaseScreen extends Screen {
 	}
 
 	@Override
-	public boolean mouseScrolled(double mouseX, double mouseY, double mouseZ) {
-		for (WWidget widget : getInterface().getWidgets()) {
-			widget.onMouseScrolled(mouseX, mouseY, mouseZ);
-		}
-
-		return super.mouseScrolled(mouseX, mouseY, mouseZ);
-	}
-
-	@Override
-	public boolean keyReleased(int character, int keyCode, int keyModifier) {
-		for (WWidget widget : getInterface().getWidgets()) {
-			widget.onKeyReleased(keyCode);
-		}
-		return super.keyReleased(character, keyCode, keyModifier);
-	}
-
-	@Override
-	public boolean charTyped(char character, int keyCode) {
-		for (WWidget widget : getInterface().getWidgets()) {
-			widget.onCharTyped(character);
-		}
-
-		return super.charTyped(character, keyCode);
-	}
-
-	@Override
 	public void render(int mouseX, int mouseY, float tick) {
 		getInterface().draw();
 
 		super.render(mouseX, mouseY, tick);
-	}
-
-	@Override
-	public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
-		for (WWidget widget : getInterface().getWidgets()) {
-			widget.onMouseClicked(mouseX, mouseY, mouseButton);
-		}
-		return super.mouseClicked(mouseX, mouseY, mouseButton);
-	}
-
-	@Override
-	public boolean mouseDragged(double slotX, double slotY, int mouseButton, double mouseX, double mouseY) {
-		for (WWidget widget : getInterface().getWidgets()) {
-			widget.onMouseDragged(slotX, slotY, mouseButton, mouseX, mouseY);
-		}
-
-		return super.mouseDragged(slotX, slotY, mouseButton, mouseX, mouseY);
-	}
-
-	@Override
-	public boolean mouseReleased(double mouseX, double mouseY, int mouseButton) {
-		for (WWidget widget : getInterface().getWidgets()) {
-			widget.onMouseReleased(mouseX, mouseY, mouseButton);
-		}
-		return super.mouseReleased(mouseX, mouseY, mouseButton);
 	}
 
 	@Override
@@ -118,5 +64,56 @@ public class BaseScreen extends Screen {
 				}
 			}
 		}
+	}
+
+	@Override
+	public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
+		for (WWidget widget : getInterface().getWidgets()) {
+			widget.onMouseClicked(mouseX, mouseY, mouseButton);
+		}
+		return super.mouseClicked(mouseX, mouseY, mouseButton);
+	}
+
+	@Override
+	public boolean mouseReleased(double mouseX, double mouseY, int mouseButton) {
+		for (WWidget widget : getInterface().getWidgets()) {
+			widget.onMouseReleased(mouseX, mouseY, mouseButton);
+		}
+		return super.mouseReleased(mouseX, mouseY, mouseButton);
+	}
+
+	@Override
+	public boolean mouseDragged(double slotX, double slotY, int mouseButton, double mouseX, double mouseY) {
+		for (WWidget widget : getInterface().getWidgets()) {
+			widget.onMouseDragged(slotX, slotY, mouseButton, mouseX, mouseY);
+		}
+
+		return super.mouseDragged(slotX, slotY, mouseButton, mouseX, mouseY);
+	}
+
+	@Override
+	public boolean mouseScrolled(double mouseX, double mouseY, double mouseZ) {
+		for (WWidget widget : getInterface().getWidgets()) {
+			widget.onMouseScrolled(mouseX, mouseY, mouseZ);
+		}
+
+		return super.mouseScrolled(mouseX, mouseY, mouseZ);
+	}
+
+	@Override
+	public boolean keyReleased(int character, int keyCode, int keyModifier) {
+		for (WWidget widget : getInterface().getWidgets()) {
+			widget.onKeyReleased(keyCode);
+		}
+		return super.keyReleased(character, keyCode, keyModifier);
+	}
+
+	@Override
+	public boolean charTyped(char character, int keyCode) {
+		for (WWidget widget : getInterface().getWidgets()) {
+			widget.onCharTyped(character);
+		}
+
+		return super.charTyped(character, keyCode);
 	}
 }
