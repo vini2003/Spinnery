@@ -2,6 +2,7 @@ package spinnery.widget;
 
 import com.google.gson.annotations.SerializedName;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.text.Text;
 import org.lwjgl.opengl.GL11;
 import spinnery.client.BaseRenderer;
 import spinnery.registry.ResourceRegistry;
@@ -123,7 +124,7 @@ public class WList extends WWidget implements WClient, WCollection {
 	}
 
 	@Override
-	public void setLabel(String label) {
+	public void setLabel(Text label) {
 		super.setLabel(label);
 		updatePositions();
 		updateHidden();
@@ -143,7 +144,7 @@ public class WList extends WWidget implements WClient, WCollection {
 			widget.scanFocus(mouseX, mouseY);
 		}
 
-		setFocus(isWithinBounds(mouseX, mouseY) && getListWidgets().stream().noneMatch((widgets) -> widgets.stream().anyMatch(WWidget::getFocus)));
+		setFocus(isWithinBounds(mouseX, mouseY) && getWidgets().stream().noneMatch((WWidget::getFocus)));
 
 		return getFocus();
 	}
@@ -164,7 +165,7 @@ public class WList extends WWidget implements WClient, WCollection {
 		BaseRenderer.drawPanel(x, y, z, sX, sY, drawTheme.getShadow(), drawTheme.getBackground(), drawTheme.getHighlight(), drawTheme.getOutline());
 
 		if (hasLabel()) {
-			BaseRenderer.getTextRenderer().drawWithShadow(getLabel(), (int) (x + sX / 2 - BaseRenderer.getTextRenderer().getStringWidth(getLabel()) / 2), (int) (positionY + 6), drawTheme.getLabel().RGB);
+			BaseRenderer.getTextRenderer().drawWithShadow(getLabel().asFormattedString(), (int) (x + sX / 2 - BaseRenderer.getTextRenderer().getStringWidth(getLabel().asFormattedString()) / 2), (int) (positionY + 6), drawTheme.getLabel().RGB);
 			BaseRenderer.drawRectangle(positionX, positionY + 16, positionZ, sizeX, 1, drawTheme.getOutline());
 			BaseRenderer.drawRectangle(positionX + 1, positionY + 17, positionZ, sizeX - 2, 0.75, drawTheme.getShadow());
 		}

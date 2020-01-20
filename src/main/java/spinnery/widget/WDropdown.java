@@ -143,7 +143,7 @@ public class WDropdown extends WWidget implements WClient, WCollection {
 			widget.scanFocus(mouseX, mouseY);
 		}
 
-		setFocus(isWithinBounds(mouseX, mouseY) && !getDropdownWidgets().stream().anyMatch((widgets) -> widgets.stream().anyMatch(WWidget::getFocus)));
+		setFocus(isWithinBounds(mouseX, mouseY) && getWidgets().stream().noneMatch((WWidget::getFocus)));
 
 		return getFocus();
 	}
@@ -157,7 +157,7 @@ public class WDropdown extends WWidget implements WClient, WCollection {
 		BaseRenderer.drawPanel(getPositionX(), getPositionY(), getPositionZ(), getSizeX(), getSizeY() + 1.75, drawTheme.getShadow(), drawTheme.getBackground(), drawTheme.getHighlight(), drawTheme.getOutline());
 
 		if (hasLabel()) {
-			BaseRenderer.getTextRenderer().drawWithShadow(getLabel(), (int) (getPositionX() + getSizeX() / 2 - BaseRenderer.getTextRenderer().getStringWidth(getLabel()) / 2), (int) (positionY + 6), drawTheme.getLabel().RGB);
+			BaseRenderer.getTextRenderer().drawWithShadow(getLabel().asFormattedString(), (int) (getPositionX() + getSizeX() / 2 - BaseRenderer.getTextRenderer().getStringWidth(getLabel().asFormattedString()) / 2), (int) (positionY + 6), drawTheme.getLabel().RGB);
 			BaseRenderer.drawRectangle(positionX, positionY + 16, positionZ, getSizeX(), 1, drawTheme.getOutline());
 			BaseRenderer.drawRectangle(positionX + 1, positionY + 17, positionZ, getSizeX() - 2, 0.75, drawTheme.getShadow());
 		}

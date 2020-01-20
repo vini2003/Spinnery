@@ -3,6 +3,8 @@ package spinnery.widget;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.container.Slot;
 import net.minecraft.container.SlotActionType;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 import net.minecraft.util.Tickable;
 
 import java.util.Optional;
@@ -31,7 +33,7 @@ public class WWidget implements Tickable {
 	protected Runnable linkedRunnableOnMouseScrolled;
 	protected Runnable linkedRunnableOnSlotClicked;
 	private String theme = "default";
-	private String label = null;
+	private Text label = new LiteralText("");
 
 	public WWidget() {
 	}
@@ -196,11 +198,11 @@ public class WWidget implements Tickable {
 		this.linkedRunnableOnDrawTooltip = linkedRunnableOnDrawTooltip;
 	}
 
-	public String getLabel() {
+	public Text getLabel() {
 		return label;
 	}
 
-	public void setLabel(String label) {
+	public void setLabel(Text label) {
 		this.label = label;
 	}
 
