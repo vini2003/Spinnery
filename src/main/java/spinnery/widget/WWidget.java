@@ -207,7 +207,7 @@ public class WWidget implements Tickable {
 	}
 
 	public boolean hasLabel() {
-		return label != null;
+		return !label.asFormattedString().isEmpty();
 	}
 
 	public String getTheme() {
