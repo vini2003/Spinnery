@@ -1,12 +1,12 @@
 package spinnery.common;
 
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.AbstractContainerScreen;
-import net.minecraft.container.Slot;
-import net.minecraft.container.SlotActionType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
 import org.lwjgl.glfw.GLFW;
 import spinnery.widget.WCollection;
+import spinnery.widget.WInterfaceHolder;
 import spinnery.widget.WSlot;
 import spinnery.widget.WWidget;
 
@@ -19,6 +19,10 @@ public class BaseContainerScreen<T extends BaseContainer> extends AbstractContai
 		super(linkedContainer, player.inventory, name);
 		resizeAll();
 		linkedContainer.tick();
+	}
+
+	public WInterfaceHolder getInterfaces() {
+		return getLinkedContainer().getInterfaces();
 	}
 
 	public T getLinkedContainer() {
@@ -50,55 +54,17 @@ public class BaseContainerScreen<T extends BaseContainer> extends AbstractContai
 	}
 
 	public void resizeAll() {
-		super.containerWidth = (int) getLinkedContainer().getInterface().getSizeX();
-		super.containerHeight = (int) getLinkedContainer().getInterface().getSizeY();
-		super.width = containerWidth;
-		super.height = containerHeight;
-		super.x = (int) ((getLinkedContainer().getInterface().getPositionX()));
-		super.y = (int) ((getLinkedContainer().getInterface().getPositionY()));
+		super.containerWidth = MinecraftClient.getInstance().getWindow().getScaledWidth();
+		super.containerHeight = MinecraftClient.getInstance().getWindow().getScaledHeight();
+		super.width = MinecraftClient.getInstance().getWindow().getScaledWidth();
+		super.height = MinecraftClient.getInstance().getWindow().getScaledHeight();
+		super.x = 0;
+		super.y = 0;
 		getLinkedContainer().setPositionX(super.x);
 		getLinkedContainer().setPositionY(super.y);
 	}
 
-	@Override
-	public void mouseMoved(double mouseX, double mouseY) {
-		for (WWidget widget : getLinkedContainer().getInterface().getWidgets()) {
-			widget.scanFocus(mouseX, mouseY);
-			widget.onMouseMoved(mouseX, mouseY);
-		}
-
-		updateTooltip(mouseX, mouseY);
-
-		super.mouseMoved(mouseX, mouseY);
-	}
-
-	@Override
-	public boolean mouseScrolled(double mouseX, double mouseY, double mouseZ) {
-		for (WWidget widget : getLinkedContainer().getInterface().getWidgets()) {
-			widget.onMouseScrolled(mouseX, mouseY, mouseZ);
-		}
-
-		return super.mouseScrolled(mouseX, mouseY, mouseZ);
-	}
-
-	@Override
-	public boolean keyReleased(int character, int keyCode, int keyModifier) {
-		for (WWidget widget : getLinkedContainer().getInterface().getWidgets()) {
-			widget.onKeyReleased(keyCode);
-		}
-		return super.keyReleased(character, keyCode, keyModifier);
-	}
-
-	@Override
-	public boolean charTyped(char character, int keyCode) {
-		for (WWidget widget : getLinkedContainer().getInterface().getWidgets()) {
-			widget.onCharTyped(character);
-		}
-
-		return super.charTyped(character, keyCode);
-	}
-
-	public void renderTooltip() {
+	public void drawTooltip() {
 		if (getDrawSlot() != null && getLinkedContainer().getLinkedPlayerInventory().getCursorStack().isEmpty() && !getDrawSlot().getStack().isEmpty()) {
 			this.renderTooltip(getDrawSlot().getStack(), (int) getTooltipX(), (int) getTooltipY());
 		}
@@ -106,7 +72,7 @@ public class BaseContainerScreen<T extends BaseContainer> extends AbstractContai
 
 	public void updateTooltip(double mouseX, double mouseY) {
 		setDrawSlot(null);
-		for (WWidget widgetA : getLinkedContainer().getInterface().getWidgets()) {
+		for (WWidget widgetA : getInterfaces().getWidgets()) {
 			if (widgetA.getFocus() && widgetA instanceof WSlot) {
 				setDrawSlot((WSlot) widgetA);
 				setTooltipX(mouseX);
@@ -125,18 +91,17 @@ public class BaseContainerScreen<T extends BaseContainer> extends AbstractContai
 
 	@Override
 	public void render(int mouseX, int mouseY, float tick) {
-		getLinkedContainer().getInterface().draw();
+		getInterfaces().draw();
+
+		drawTooltip();
 
 		super.render(mouseX, mouseY, tick);
-
-		renderTooltip();
 	}
 
 	@Override
 	protected void drawMouseoverTooltip(int mouseX, int mouseY) {
-		for (WWidget widget : getLinkedContainer().getInterface().getWidgets()) {
-			widget.onDrawTooltip();
-		}
+		getInterfaces().drawMouseoverTooltip(mouseX, mouseY);
+
 		super.drawMouseoverTooltip(mouseX, mouseY);
 	}
 
@@ -145,56 +110,8 @@ public class BaseContainerScreen<T extends BaseContainer> extends AbstractContai
 	}
 
 	@Override
-	public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
-		for (WWidget widget : getLinkedContainer().getInterface().getWidgets()) {
-			widget.onMouseClicked(mouseX, mouseY, mouseButton);
-		}
-		return super.mouseClicked(mouseX, mouseY, mouseButton);
-	}
-
-	@Override
 	protected boolean isClickOutsideBounds(double mouseX, double mouseY, int int_1, int int_2, int int_3) {
 		return false;
-	}
-
-	@Override
-	public boolean mouseDragged(double slotX, double slotY, int mouseButton, double mouseX, double mouseY) {
-		for (WWidget widget : getLinkedContainer().getInterface().getWidgets()) {
-			widget.onMouseDragged(slotX, slotY, mouseButton, mouseX, mouseY);
-		}
-
-		return super.mouseDragged(slotX, slotY, mouseButton, mouseX, mouseY);
-	}
-
-	@Override
-	public boolean mouseReleased(double mouseX, double mouseY, int mouseButton) {
-		for (WWidget widget : getLinkedContainer().getInterface().getWidgets()) {
-			widget.onMouseReleased(mouseX, mouseY, mouseButton);
-		}
-		return super.mouseReleased(mouseX, mouseY, mouseButton);
-	}
-
-	@Override
-	protected void onMouseClick(Slot slot, int slotX, int slotY, SlotActionType slotActionType) {
-		for (WWidget widget : getLinkedContainer().getInterface().getWidgets()) {
-			widget.onSlotClicked(slot, slotX, slotY, slotActionType);
-		}
-
-		super.onMouseClick(slot, slotX, slotY, slotActionType);
-	}
-
-	@Override
-	public boolean keyPressed(int character, int keyCode, int keyModifier) {
-		for (WWidget widget : getLinkedContainer().getInterface().getWidgets()) {
-			widget.onKeyPressed(keyCode, character, keyModifier);
-		}
-
-		if (character == GLFW.GLFW_KEY_ESCAPE) {
-			minecraft.player.closeContainer();
-			return true;
-		} else {
-			return false;
-		}
 	}
 
 	@Override
@@ -205,6 +122,68 @@ public class BaseContainerScreen<T extends BaseContainer> extends AbstractContai
 	@Override
 	public void tick() {
 		getLinkedContainer().tick();
+		getInterfaces().tick();
 		super.tick();
+	}
+
+	@Override
+	public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
+		getInterfaces().onMouseClicked(mouseX, mouseY, mouseButton);
+
+		return false;
+	}
+
+	@Override
+	public boolean mouseReleased(double mouseX, double mouseY, int mouseButton) {
+		getInterfaces().onMouseReleased(mouseX, mouseY, mouseButton);
+
+		return false;
+	}
+
+	@Override
+	public boolean mouseDragged(double mouseX, double mouseY, int mouseButton, double deltaX, double deltaY) {
+		getInterfaces().onMouseDragged(mouseX, mouseY, mouseButton, deltaX, deltaY);
+
+		return false;
+	}
+
+	@Override
+	public boolean mouseScrolled(double mouseX, double mouseY, double deltaY) {
+		getInterfaces().onMouseScrolled(mouseX, mouseY, deltaY);
+
+		return false;
+	}
+
+	@Override
+	public void mouseMoved(double mouseX, double mouseY) {
+		getInterfaces().mouseMoved(mouseX, mouseY);
+
+		updateTooltip(mouseX, mouseY);
+	}
+
+	@Override
+	public boolean keyReleased(int character, int keyCode, int keyModifier) {
+		getInterfaces().onKeyReleased(character, keyCode, keyModifier);
+
+		return false;
+	}
+
+	@Override
+	public boolean charTyped(char character, int keyCode) {
+		getInterfaces().onCharTyped(character, keyCode);
+
+		return super.charTyped(character, keyCode);
+	}
+
+	@Override
+	public boolean keyPressed(int character, int keyCode, int keyModifier) {
+		getInterfaces().keyPressed(character, keyCode, keyModifier);
+
+		if (character == GLFW.GLFW_KEY_ESCAPE) {
+			minecraft.player.closeContainer();
+			return true;
+		} else {
+			return false;
+		}
 	}
 }

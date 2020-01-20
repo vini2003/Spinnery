@@ -71,9 +71,9 @@ public class WHorizontalSlider extends WWidget implements WClient {
 	}
 
 	@Override
-	public void onMouseDragged(double mouseX, double mouseY, int mouseButton, double dragOffsetX, double dragOffsetY) {
+	public void onMouseDragged(double mouseX, double mouseY, int mouseButton, double deltaX, double deltaY) {
 		updatePosition(mouseX, mouseY);
-		super.onMouseDragged(mouseX, mouseY, mouseButton, dragOffsetX, dragOffsetY);
+		super.onMouseDragged(mouseX, mouseY, mouseButton, deltaX, deltaY);
 	}
 
 	@Override

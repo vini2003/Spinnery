@@ -148,9 +148,6 @@ public class WInterface extends WWidget {
 
 	@Override
 	public void tick() {
-		for (WWidget widget : getWidgets()) {
-			widget.tick();
-		}
 	}
 
 	public class Theme extends WWidget.Theme {

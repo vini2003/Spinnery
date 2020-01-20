@@ -3,24 +3,19 @@ package spinnery.client;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.LiteralText;
 import org.lwjgl.glfw.GLFW;
-import spinnery.widget.WCollection;
-import spinnery.widget.WInterface;
-import spinnery.widget.WWidget;
+import spinnery.widget.WInterfaceHolder;
 
 public class BaseScreen extends Screen {
-	WInterface linkedInterface;
+	WInterfaceHolder interfaceHolder = new WInterfaceHolder();
+
 	private boolean isPauseScreen = false;
 
 	public BaseScreen() {
 		super(new LiteralText(""));
 	}
 
-	public WInterface getInterface() {
-		return linkedInterface;
-	}
-
-	public void setInterface(WInterface linkedInterface) {
-		this.linkedInterface = linkedInterface;
+	public WInterfaceHolder getInterfaces() {
+		return interfaceHolder;
 	}
 
 	public void setIsPauseScreen(boolean isPauseScreen) {
@@ -28,47 +23,13 @@ public class BaseScreen extends Screen {
 	}
 
 	@Override
-	public void mouseMoved(double mouseX, double mouseY) {
-		for (WWidget widget : getInterface().getWidgets()) {
-			widget.scanFocus(mouseX, mouseY);
-			widget.onMouseMoved(mouseX, mouseY);
-		}
-
-		super.mouseMoved(mouseX, mouseY);
-	}
-
-	@Override
 	public void render(int mouseX, int mouseY, float tick) {
-		getInterface().draw();
-
-		super.render(mouseX, mouseY, tick);
-	}
-
-	@Override
-	public boolean keyPressed(int character, int keyCode, int keyModifier) {
-		for (WWidget widget : getInterface().getWidgets()) {
-			widget.onKeyPressed(keyCode, character, keyModifier);
-		}
-
-		if (character == GLFW.GLFW_KEY_ESCAPE) {
-			minecraft.player.closeContainer();
-			return true;
-		} else {
-			return false;
-		}
+		getInterfaces().draw();
 	}
 
 	@Override
 	public void tick() {
-		for (WWidget widgetA : getInterface().getWidgets()) {
-			widgetA.tick();
-
-			if (widgetA instanceof WCollection) {
-				for (WWidget widgetB : ((WCollection) widgetA).getWidgets()) {
-					widgetB.tick();
-				}
-			}
-		}
+		getInterfaces().tick();
 	}
 
 	@Override
@@ -78,52 +39,60 @@ public class BaseScreen extends Screen {
 
 	@Override
 	public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
-		for (WWidget widget : getInterface().getWidgets()) {
-			widget.onMouseClicked(mouseX, mouseY, mouseButton);
-		}
-		return super.mouseClicked(mouseX, mouseY, mouseButton);
+		getInterfaces().onMouseClicked(mouseX, mouseY, mouseButton);
+
+		return false;
 	}
 
 	@Override
 	public boolean mouseReleased(double mouseX, double mouseY, int mouseButton) {
-		for (WWidget widget : getInterface().getWidgets()) {
-			widget.onMouseReleased(mouseX, mouseY, mouseButton);
-		}
-		return super.mouseReleased(mouseX, mouseY, mouseButton);
+		getInterfaces().onMouseReleased(mouseX, mouseY, mouseButton);
+
+		return false;
 	}
 
 	@Override
-	public boolean mouseDragged(double slotX, double slotY, int mouseButton, double mouseX, double mouseY) {
-		for (WWidget widget : getInterface().getWidgets()) {
-			widget.onMouseDragged(slotX, slotY, mouseButton, mouseX, mouseY);
-		}
+	public boolean mouseDragged(double mouseX, double mouseY, int mouseButton, double deltaX, double deltaY) {
+		getInterfaces().onMouseDragged(mouseX, mouseY, mouseButton, deltaX, deltaY);
 
-		return super.mouseDragged(slotX, slotY, mouseButton, mouseX, mouseY);
+		return false;
 	}
 
 	@Override
-	public boolean mouseScrolled(double mouseX, double mouseY, double mouseZ) {
-		for (WWidget widget : getInterface().getWidgets()) {
-			widget.onMouseScrolled(mouseX, mouseY, mouseZ);
-		}
+	public boolean mouseScrolled(double mouseX, double mouseY, double deltaY) {
+		getInterfaces().onMouseScrolled(mouseX, mouseY, deltaY);
 
-		return super.mouseScrolled(mouseX, mouseY, mouseZ);
+		return false;
+	}
+
+	@Override
+	public void mouseMoved(double mouseX, double mouseY) {
+		getInterfaces().mouseMoved(mouseX, mouseY);
 	}
 
 	@Override
 	public boolean keyReleased(int character, int keyCode, int keyModifier) {
-		for (WWidget widget : getInterface().getWidgets()) {
-			widget.onKeyReleased(keyCode);
-		}
-		return super.keyReleased(character, keyCode, keyModifier);
+		getInterfaces().onKeyReleased(character, keyCode, keyModifier);
+
+		return false;
 	}
 
 	@Override
 	public boolean charTyped(char character, int keyCode) {
-		for (WWidget widget : getInterface().getWidgets()) {
-			widget.onCharTyped(character);
-		}
+		getInterfaces().onCharTyped(character, keyCode);
 
 		return super.charTyped(character, keyCode);
+	}
+
+	@Override
+	public boolean keyPressed(int character, int keyCode, int keyModifier) {
+		getInterfaces().keyPressed(character, keyCode, keyModifier);
+
+		if (character == GLFW.GLFW_KEY_ESCAPE) {
+			minecraft.player.closeScreen();
+			return true;
+		} else {
+			return false;
+		}
 	}
 }

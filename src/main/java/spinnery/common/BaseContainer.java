@@ -1,5 +1,6 @@
 package spinnery.common;
 
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.container.CraftingContainer;
 import net.minecraft.container.Slot;
 import net.minecraft.container.SlotActionType;
@@ -13,10 +14,12 @@ import net.minecraft.util.Tickable;
 import net.minecraft.world.World;
 import spinnery.widget.WCollection;
 import spinnery.widget.WInterface;
+import spinnery.widget.WInterfaceHolder;
 import spinnery.widget.WSlot;
 import spinnery.widget.WWidget;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -28,12 +31,16 @@ public class BaseContainer extends CraftingContainer<Inventory> implements Ticka
 	public int positionX = 0;
 
 	protected World linkedWorld;
-	protected WInterface linkedInterface;
+	protected WInterfaceHolder interfaceHolder = new WInterfaceHolder();
 
 	public BaseContainer(int synchronizationID, PlayerInventory linkedPlayerInventory) {
 		super(null, synchronizationID);
 		getInventories().put(PLAYER_INVENTORY, linkedPlayerInventory);
 		setLinkedWorld(linkedPlayerInventory.player.world);
+	}
+
+	public WInterfaceHolder getInterfaces() {
+		return interfaceHolder;
 	}
 
 	@Deprecated
@@ -69,7 +76,9 @@ public class BaseContainer extends CraftingContainer<Inventory> implements Ticka
 	}
 
 	public void onSlotClicked(int slotNumber, int inventoryNumber, int button, SlotActionType action, PlayerEntity player) {
-		Optional<WWidget> optionalWSlot = getInterface().getWidgets().stream().filter((widget) -> (widget instanceof WSlot && ((WSlot) widget).getSlotNumber() == slotNumber && ((WSlot) widget).getInventoryNumber() == inventoryNumber)).findFirst();
+		Optional<WWidget> optionalWSlot = getInterfaces().getWidgets().stream().filter((widget) ->
+				(widget instanceof WSlot && ((WSlot) widget).getSlotNumber() == slotNumber && ((WSlot) widget).getInventoryNumber() == inventoryNumber)
+		||      (widget instanceof WCollection && ((WCollection) widget).getWidgets().stream().anyMatch(slot -> ((WSlot) slot).getSlotNumber() == slotNumber && ((WSlot) slot).getInventoryNumber() == inventoryNumber))).findFirst();
 
 		WSlot slotA;
 		if (optionalWSlot.isPresent()) {
@@ -117,7 +126,14 @@ public class BaseContainer extends CraftingContainer<Inventory> implements Ticka
 				break;
 			}
 			case QUICK_MOVE: {
-				for (WWidget widget : getInterface().getWidgets()) {
+				List<WWidget> widgets = getInterfaces().getWidgets();
+				for (WWidget widget : widgets) {
+					if (widget instanceof WCollection) {
+						widgets.addAll(((WCollection) widget).getWidgets());
+					}
+				}
+
+				for (WWidget widget : widgets) {
 					if (widget != slotA && widget instanceof WSlot && ((WSlot) widget).getLinkedInventory() != slotA.getLinkedInventory()) {
 						ItemStack stackC = ((WSlot) widget).getStack();
 						if (!(stackC.getCount() == stackC.getMaxCount())) {
@@ -140,13 +156,6 @@ public class BaseContainer extends CraftingContainer<Inventory> implements Ticka
 		((PlayerInventory) linkedInventories.get(PLAYER_INVENTORY)).setCursorStack(stackB);
 	}
 
-	public WInterface getInterface() {
-		return linkedInterface;
-	}
-
-	public void setInterface(WInterface linkedInterface) {
-		this.linkedInterface = linkedInterface;
-	}
 
 	public World getLinkedWorld() {
 		return linkedWorld;
@@ -227,14 +236,5 @@ public class BaseContainer extends CraftingContainer<Inventory> implements Ticka
 
 	@Override
 	public void tick() {
-		for (WWidget widgetA : getInterface().getWidgets()) {
-			widgetA.tick();
-
-			if (widgetA instanceof WCollection) {
-				for (WWidget widgetB : ((WCollection) widgetA).getWidgets()) {
-					widgetB.tick();
-				}
-			}
-		}
 	}
 }

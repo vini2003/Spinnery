@@ -119,43 +119,43 @@ public class WDynamicText extends WWidget implements WClient {
 
 		long handle = MinecraftClient.getInstance().getWindow().getHandle();
 
-		if (keyPressed == 30 && Screen.hasControlDown()) { // Ctrl w. A
+		if (keyPressed == GLFW.GLFW_KEY_A && Screen.hasControlDown()) { // Ctrl w. A
 			selLeftPos = 0;
 			selRightPos = text.length() - 1;
 			updateText();
-		} else if (keyPressed == 32 && Screen.hasControlDown()) { // Ctrl w. D
+		} else if (keyPressed == GLFW.GLFW_KEY_D && Screen.hasControlDown()) { // Ctrl w. D
 			clearSelection();
 			clip = "";
 			updateText();
-		} else if (keyPressed == 46 && Screen.hasControlDown()) { // Ctrl w. C
+		} else if (keyPressed == GLFW.GLFW_KEY_C && Screen.hasControlDown()) { // Ctrl w. C
 			if (selLeftPos >= 0 && selRightPos >= 0 && selRightPos <= text.length()) {
 				clip = text.substring(selLeftPos, selRightPos);
 				clearSelection();
 			}
-		} else if (keyPressed == 47 && Screen.hasControlDown()) { // Ctrl w. V
+		} else if (keyPressed == GLFW.GLFW_KEY_V && Screen.hasControlDown()) { // Ctrl w. V
 			text = new StringBuilder(text).insert(cursorPos, clip).toString();
 			cursorPos += clip.length();
 			updateText();
-		} else if (keyPressed == GLFW.GLFW_KEY_KP_SUBTRACT && Screen.hasShiftDown() && cursorPos < text.length()) { // Right w. Shift
+		} else if (keyPressed == GLFW.GLFW_KEY_RIGHT && Screen.hasShiftDown() && cursorPos < text.length()) { // Right w. Shift
 			selLeftPos = selLeftPos == -1 ? cursorPos : selLeftPos;
 			++cursorPos;
 			selRightPos = cursorPos;
 			updateText();
 
-		} else if (keyPressed == GLFW.GLFW_KEY_KP_DIVIDE && Screen.hasShiftDown() && cursorPos > 0) { // Left w. Shift
+		} else if (keyPressed == GLFW.GLFW_KEY_LEFT && Screen.hasShiftDown() && cursorPos > 0) { // Left w. Shift
 			selRightPos = selRightPos == -1 ? cursorPos : selRightPos;
 			--cursorPos;
 			selLeftPos = cursorPos;
 			updateText();
-		} else if (keyPressed == GLFW.GLFW_KEY_KP_SUBTRACT && cursorPos <= text.length() - 1) { // Right
+		} else if (keyPressed == GLFW.GLFW_KEY_RIGHT && cursorPos <= text.length() - 1) { // Right
 			++cursorPos;
 			clearSelection();
 			updateText();
-		} else if (keyPressed == GLFW.GLFW_KEY_KP_DIVIDE && cursorPos > 0) { // Left
+		} else if (keyPressed == GLFW.GLFW_KEY_LEFT && cursorPos > 0) { // Left
 			--cursorPos;
 			clearSelection();
 			updateText();
-		} else if (keyPressed == 14 && cursorPos > 0 && text.length() > 0) { // Backspace
+		} else if (keyPressed == GLFW.GLFW_KEY_BACKSPACE && cursorPos > 0 && text.length() > 0) { // Backspace
 			--cursorPos;
 			if (hasSelection()) {
 				text = text.substring(0, selLeftPos) + text.substring(selRightPos, text.length() - 1);
@@ -165,7 +165,7 @@ public class WDynamicText extends WWidget implements WClient {
 				text = new StringBuilder(text).deleteCharAt(cursorPos).toString();
 			}
 			updateText();
-		} else if (keyPressed == 339 && cursorPos < text.length()) { // Delete
+		} else if (keyPressed == GLFW.GLFW_KEY_DELETE && cursorPos < text.length()) { // Delete
 			if (hasSelection()) {
 				text = text.substring(0, selLeftPos) +	 text.substring(selRightPos, text.length() - 1);
 				cursorPos = selLeftPos;
@@ -174,7 +174,7 @@ public class WDynamicText extends WWidget implements WClient {
 				text = new StringBuilder(text).deleteCharAt(cursorPos).toString();
 			}
 			updateText();
-		} else if (keyPressed == 28) {
+		} else if (keyPressed == GLFW.GLFW_KEY_ENTER) {
 			text += '\n';
 			++cursorPos;
 			updateText();

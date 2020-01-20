@@ -61,64 +61,14 @@ public class WDropdown extends WWidget implements WClient, WCollection {
 	}
 
 	@Override
-	public void onKeyPressed(int keyPressed, int character, int keyModifier) {
-		for (WWidget widget : getWidgets()) {
-			widget.onKeyPressed(keyPressed, character, keyModifier);
-		}
-
-		super.onKeyPressed(keyPressed, character, keyModifier);
-	}
-
-	@Override
-	public void onKeyReleased(int keyReleased) {
-		for (WWidget widget : getWidgets()) {
-			widget.onKeyReleased(keyReleased);
-		}
-
-		super.onKeyReleased(keyReleased);
-	}
-
-	@Override
-	public void onMouseReleased(double mouseX, double mouseY, int mouseButton) {
-		for (WWidget widget : getWidgets()) {
-			widget.onMouseReleased(mouseX, mouseY, mouseButton);
-		}
-
-		super.onMouseReleased(mouseX, mouseY, mouseButton);
-	}
-
-	@Override
 	public void onMouseClicked(double mouseX, double mouseY, int mouseButton) {
 		if (getFocus() && mouseButton == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
 			setState(!getState());
 			updateHidden();
-		} else {
-			for (WWidget widget : getWidgets()) {
-				widget.onMouseClicked(mouseX, mouseY, mouseButton);
-			}
 		}
 
 		super.onMouseClicked(mouseX, mouseY, mouseButton);
 	}
-
-	@Override
-	public void onMouseDragged(double mouseX, double mouseY, int mouseButton, double dragOffsetX, double dragOffsetY) {
-		for (WWidget widget : getWidgets()) {
-			widget.onMouseDragged(mouseX, mouseY, mouseButton, dragOffsetX, dragOffsetY);
-		}
-
-		super.onMouseDragged(mouseX, mouseY, mouseButton, dragOffsetX, dragOffsetY);
-	}
-
-	@Override
-	public void onMouseMoved(double mouseX, double mouseY) {
-		for (WWidget widget : getWidgets()) {
-			widget.onMouseMoved(mouseX, mouseY);
-		}
-
-		super.onMouseMoved(mouseX, mouseY);
-	}
-
 	@Override
 	public void setTheme(String theme) {
 		if (getInterface().isClient()) {
@@ -139,9 +89,7 @@ public class WDropdown extends WWidget implements WClient, WCollection {
 
 	@Override
 	public boolean scanFocus(double mouseX, double mouseY) {
-		for (WWidget widget : getWidgets()) {
-			widget.scanFocus(mouseX, mouseY);
-		}
+		super.scanFocus(mouseX, mouseY);
 
 		setFocus(isWithinBounds(mouseX, mouseY) && getWidgets().stream().noneMatch((WWidget::getFocus)));
 

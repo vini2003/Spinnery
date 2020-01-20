@@ -170,7 +170,7 @@ public class WSlot extends WWidget implements WClient, WServer {
 	}
 
 	@Override
-	public void onMouseDragged(double mouseX, double mouseY, int mouseButton, double dragOffsetX, double dragOffsetY) {
+	public void onMouseDragged(double mouseX, double mouseY, int mouseButton, double deltaX, double deltaY) {
 		if (getFocus() && Screen.hasShiftDown() && mouseButton == 0) {
 			PlayerEntity playerEntity = getInterface().getContainer().getLinkedPlayerInventory().player;
 
@@ -178,7 +178,7 @@ public class WSlot extends WWidget implements WClient, WServer {
 			ClientSidePacketRegistry.INSTANCE.sendToServer(NetworkRegistry.SLOT_CLICK_PACKET, NetworkRegistry.createSlotClickPacket(getSlotNumber(), getInventoryNumber(), mouseButton, SlotActionType.QUICK_MOVE));
 		}
 
-		super.onMouseDragged(mouseX, mouseY, mouseButton, dragOffsetX, dragOffsetY);
+		super.onMouseDragged(mouseX, mouseY, mouseButton, deltaX, deltaY);
 	}
 
 	@Override

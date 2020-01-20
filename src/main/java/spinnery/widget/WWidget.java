@@ -128,7 +128,7 @@ public class WWidget implements Tickable {
 		this.linkedRunnableOnMouseClicked = linkedRunnable;
 	}
 
-	public void onMouseDragged(double mouseX, double mouseY, int mouseButton, double dragOffsetX, double dragOffsetY) {
+	public void onMouseDragged(double mouseX, double mouseY, int mouseButton, double deltaX, double deltaY) {
 		if (linkedRunnableOnMouseDragged != null) {
 			linkedRunnableOnMouseDragged.run();
 		}
@@ -156,7 +156,7 @@ public class WWidget implements Tickable {
 		this.linkedRunnableOnMouseMoved = linkedRunnable;
 	}
 
-	public void onMouseScrolled(double mouseX, double mouseY, double mouseZ) {
+	public void onMouseScrolled(double mouseX, double mouseY, double deltaY) {
 		if (linkedRunnableOnMouseScrolled != null) {
 			linkedRunnableOnMouseScrolled.run();
 		}
@@ -207,7 +207,7 @@ public class WWidget implements Tickable {
 	}
 
 	public boolean hasLabel() {
-		return label != null;
+		return !label.asFormattedString().isEmpty();
 	}
 
 	public String getTheme() {
