@@ -15,7 +15,7 @@ public class WList extends WWidget implements WClient, WCollection {
 	public List<List<WWidget>> listWidgets = new ArrayList<>();
 	protected WList.Theme drawTheme;
 
-	public WList(WAnchor anchor, int positionX, int positionY, int positionZ, double sizeX, double sizeY, WInterface linkedPanel) {
+	public WList(WAnchor anchor, int positionX, int positionY, int positionZ, int sizeX, int sizeY, WInterface linkedPanel) {
 		setInterface(linkedPanel);
 
 		setAnchor(anchor);
@@ -44,7 +44,7 @@ public class WList extends WWidget implements WClient, WCollection {
 	}
 
 	@Override
-	public void onMouseScrolled(double mouseX, double mouseY, double deltaY) {
+	public void onMouseScrolled(int mouseX, int mouseY, double deltaY) {
 		if (!isWithinBounds(mouseX, mouseY) || getListWidgets().size() == 0) {
 			return;
 		}
@@ -61,8 +61,8 @@ public class WList extends WWidget implements WClient, WCollection {
 
 		if ((scaledOffsetY > 0 && !hitTop) || (scaledOffsetY < 0 && !hitBottom)) {
 			for (WWidget widget : getWidgets()) {
-				widget.setPositionY(widget.getPositionY() + scaledOffsetY);
-				widget.setHidden(!(isWithinBounds(widget.getPositionX(), widget.getPositionY())));
+				widget.setPositionY(widget.getPositionY() + (int) scaledOffsetY);
+				widget.setHidden(!(isWithinBounds(widget.getPositionX(), widget.getPositionY()) || isWithinBounds(widget.getPositionX() + widget.getSizeX(), widget.getPositionY() + widget.getSizeY())));
 			}
 		}
 
@@ -85,7 +85,7 @@ public class WList extends WWidget implements WClient, WCollection {
 	}
 
 	@Override
-	public boolean scanFocus(double mouseX, double mouseY) {
+	public boolean scanFocus(int mouseX, int mouseY) {
 		setFocus(isWithinBounds(mouseX, mouseY) && getWidgets().stream().noneMatch((WWidget::getFocus)));
 
 		return getFocus();
@@ -97,17 +97,17 @@ public class WList extends WWidget implements WClient, WCollection {
 			return;
 		}
 
-		double x = getPositionX();
-		double y = getPositionY();
-		double z = getPositionZ();
+		int x = getPositionX();
+		int y = getPositionY();
+		int z = getPositionZ();
 
-		double sX = getSizeX();
-		double sY = getSizeY();
+		int sX = getSizeX();
+		int sY = getSizeY();
 
 		BaseRenderer.drawPanel(x, y, z, sX, sY, drawTheme.getShadow(), drawTheme.getBackground(), drawTheme.getHighlight(), drawTheme.getOutline());
 
 		if (hasLabel()) {
-			BaseRenderer.getTextRenderer().drawWithShadow(getLabel().asFormattedString(), (int) (x + sX / 2 - BaseRenderer.getTextRenderer().getStringWidth(getLabel().asFormattedString()) / 2), (int) (positionY + 6), drawTheme.getLabel().RGB);
+			BaseRenderer.getTextRenderer().drawWithShadow(getLabel().asFormattedString(), x + sX / 2 - BaseRenderer.getTextRenderer().getStringWidth(getLabel().asFormattedString()) / 2, positionY + 6, drawTheme.getLabel().RGB);
 			BaseRenderer.drawRectangle(positionX, positionY + 16, positionZ, sizeX, 1, drawTheme.getOutline());
 			BaseRenderer.drawRectangle(positionX + 1, positionY + 17, positionZ, sizeX - 2, 0.75, drawTheme.getShadow());
 		}
@@ -129,10 +129,10 @@ public class WList extends WWidget implements WClient, WCollection {
 	}
 
 	public void updatePositions() {
-		int y = hasLabel() ? (int) (positionY + 20) : 4;
+		int y = hasLabel() ? (positionY + 20) : 4;
 
 		for (List<WWidget> widgetA : getListWidgets()) {
-			int x = (int) getPositionX() + 4;
+			int x = getPositionX() + 4;
 			for (WWidget widgetB : widgetA) {
 				widgetB.setPositionX(x);
 				widgetB.setPositionY(y);

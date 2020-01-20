@@ -22,7 +22,7 @@ public class WDynamicText extends WWidget implements WClient {
 	protected boolean isEditable = true;
 	protected boolean isCentered = true;
 
-	public WDynamicText(WAnchor anchor, int positionX, int positionY, int positionZ, double sizeX, double sizeY, WInterface linkedPanel) {
+	public WDynamicText(WAnchor anchor, int positionX, int positionY, int positionZ, int sizeX, int sizeY, WInterface linkedPanel) {
 		setInterface(linkedPanel);
 
 		setAnchor(anchor);
@@ -38,20 +38,20 @@ public class WDynamicText extends WWidget implements WClient {
 	}
 
 	void updateText() {
-			visible = "";
-			int sW = 0;
-			for (char c : text.toCharArray()) {
-				visible += c;
-				if (c != '\n') {
-					sW += BaseRenderer.getTextRenderer().getCharWidth(c);
-					if (sW > sizeX - 12) {
-						visible += '\n';
-						sW = 0;
-					}
-				} else {
+		visible = "";
+		int sW = 0;
+		for (char c : text.toCharArray()) {
+			visible += c;
+			if (c != '\n') {
+				sW += BaseRenderer.getTextRenderer().getCharWidth(c);
+				if (sW > sizeX - 12) {
+					visible += '\n';
 					sW = 0;
 				}
+			} else {
+				sW = 0;
 			}
+		}
 
 
 		int offsetA = visible.length() - (int) (visible.chars().filter(c -> c == '\n').count());
@@ -167,7 +167,7 @@ public class WDynamicText extends WWidget implements WClient {
 			updateText();
 		} else if (keyPressed == GLFW.GLFW_KEY_DELETE && cursorPos < text.length()) { // Delete
 			if (hasSelection()) {
-				text = text.substring(0, selLeftPos) +	 text.substring(selRightPos, text.length() - 1);
+				text = text.substring(0, selLeftPos) + text.substring(selRightPos, text.length() - 1);
 				cursorPos = selLeftPos;
 				clearSelection();
 			} else {
@@ -184,7 +184,7 @@ public class WDynamicText extends WWidget implements WClient {
 	}
 
 	@Override
-	public void onMouseClicked(double mouseX, double mouseY, int mouseButton) {
+	public void onMouseClicked(int mouseX, int mouseY, int mouseButton) {
 		if (isEditable) {
 			this.isSelected = scanFocus(mouseX, mouseY);
 		}
@@ -205,21 +205,21 @@ public class WDynamicText extends WWidget implements WClient {
 			return;
 		}
 
-		double x = getPositionX();
-		double y = getPositionY();
-		double z = getPositionZ();
+		int x = getPositionX();
+		int y = getPositionY();
+		int z = getPositionZ();
 
-		double sX = getSizeX();
-		double sY = getSizeY();
+		int sX = getSizeX();
+		int sY = getSizeY();
 
-		double oY = 0;
+		int oY = 0;
 
 		BaseRenderer.drawBeveledPanel(x, y, z, sX, sY, drawTheme.getTopLeft(), drawTheme.getBackground(), drawTheme.getBottomRight());
 
 		if (text.isEmpty() && !isSelected) {
 			BaseRenderer.getTextRenderer().drawWithShadow(getLabel().asFormattedString(), (float) (positionX + 4), (float) (y + 4 + oY), drawTheme.getLabel().RGB);
 		} else {
-			double pP = x + 4, pC = offsetPos;
+			int pP = x + 4, pC = offsetPos;
 			if (visible.isEmpty() && cursorTick > 10) {
 				BaseRenderer.getTextRenderer().drawWithShadow("|", (float) pP, (float) (y + 4 + oY), drawTheme.getCursor().RGB);
 			}
@@ -228,7 +228,7 @@ public class WDynamicText extends WWidget implements WClient {
 					oY += 9;
 					pP = x + 4;
 				} else {
-					double cW = BaseRenderer.getTextRenderer().getCharWidth(c);
+					int cW = (int) BaseRenderer.getTextRenderer().getCharWidth(c);
 					BaseRenderer.getTextRenderer().drawWithShadow(String.valueOf(c), (float) pP, (float) (y + 4 + oY), drawTheme.getText().RGB);
 
 					if (pC >= selLeftPos && (pC < selRightPos || pC == text.length() - 1 && pC <= selRightPos) && (selLeftPos - selRightPos != 0)) {

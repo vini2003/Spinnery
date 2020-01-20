@@ -61,7 +61,7 @@ public class WDropdown extends WWidget implements WClient, WCollection {
 	}
 
 	@Override
-	public void onMouseClicked(double mouseX, double mouseY, int mouseButton) {
+	public void onMouseClicked(int mouseX, int mouseY, int mouseButton) {
 		if (getFocus() && mouseButton == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
 			setState(!getState());
 			updateHidden();
@@ -69,6 +69,7 @@ public class WDropdown extends WWidget implements WClient, WCollection {
 
 		super.onMouseClicked(mouseX, mouseY, mouseButton);
 	}
+
 	@Override
 	public void setTheme(String theme) {
 		if (getInterface().isClient()) {
@@ -78,17 +79,17 @@ public class WDropdown extends WWidget implements WClient, WCollection {
 	}
 
 	@Override
-	public double getSizeX() {
+	public int getSizeX() {
 		return sizes[!getState() ? 0 : 1][0];
 	}
 
 	@Override
-	public double getSizeY() {
+	public int getSizeY() {
 		return sizes[!getState() ? 0 : 1][1];
 	}
 
 	@Override
-	public boolean scanFocus(double mouseX, double mouseY) {
+	public boolean scanFocus(int mouseX, int mouseY) {
 		super.scanFocus(mouseX, mouseY);
 
 		setFocus(isWithinBounds(mouseX, mouseY) && getWidgets().stream().noneMatch((WWidget::getFocus)));
@@ -105,7 +106,7 @@ public class WDropdown extends WWidget implements WClient, WCollection {
 		BaseRenderer.drawPanel(getPositionX(), getPositionY(), getPositionZ(), getSizeX(), getSizeY() + 1.75, drawTheme.getShadow(), drawTheme.getBackground(), drawTheme.getHighlight(), drawTheme.getOutline());
 
 		if (hasLabel()) {
-			BaseRenderer.getTextRenderer().drawWithShadow(getLabel().asFormattedString(), (int) (getPositionX() + getSizeX() / 2 - BaseRenderer.getTextRenderer().getStringWidth(getLabel().asFormattedString()) / 2), (int) (positionY + 6), drawTheme.getLabel().RGB);
+			BaseRenderer.getTextRenderer().drawWithShadow(getLabel().asFormattedString(), getPositionX() + getSizeX() / 2 - BaseRenderer.getTextRenderer().getStringWidth(getLabel().asFormattedString()) / 2, positionY + 6, drawTheme.getLabel().RGB);
 			BaseRenderer.drawRectangle(positionX, positionY + 16, positionZ, getSizeX(), 1, drawTheme.getOutline());
 			BaseRenderer.drawRectangle(positionX + 1, positionY + 17, positionZ, getSizeX() - 2, 0.75, drawTheme.getShadow());
 		}
@@ -120,10 +121,10 @@ public class WDropdown extends WWidget implements WClient, WCollection {
 	}
 
 	public void updatePositions() {
-		int y = (int) (positionY + sizes[0][1] + 4);
+		int y = positionY + sizes[0][1] + 4;
 
 		for (List<WWidget> widgetA : getDropdownWidgets()) {
-			int x = (int) getPositionX() + 4;
+			int x = getPositionX() + 4;
 			for (WWidget widgetB : widgetA) {
 				widgetB.setPositionX(x);
 				widgetB.setPositionY(y);

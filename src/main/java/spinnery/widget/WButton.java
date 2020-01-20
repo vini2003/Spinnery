@@ -9,7 +9,7 @@ public class WButton extends WWidget implements WClient {
 	protected int toggleTicks = 0;
 	protected WButton.Theme drawTheme;
 
-	public WButton(WAnchor anchor, int positionX, int positionY, int positionZ, double sizeX, double sizeY, WInterface linkedPanel) {
+	public WButton(WAnchor anchor, int positionX, int positionY, int positionZ, int sizeX, int sizeY, WInterface linkedPanel) {
 		setInterface(linkedPanel);
 
 		setAnchor(anchor);
@@ -25,7 +25,7 @@ public class WButton extends WWidget implements WClient {
 	}
 
 	@Override
-	public void onMouseClicked(double mouseX, double mouseY, int mouseButton) {
+	public void onMouseClicked(int mouseX, int mouseY, int mouseButton) {
 		if (scanFocus(mouseX, mouseY)) {
 			setToggleState(!getToggleState());
 			setToggleTicks(1);

@@ -1,6 +1,5 @@
 package spinnery.common;
 
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.container.CraftingContainer;
 import net.minecraft.container.Slot;
 import net.minecraft.container.SlotActionType;
@@ -13,7 +12,6 @@ import net.minecraft.recipe.RecipeFinder;
 import net.minecraft.util.Tickable;
 import net.minecraft.world.World;
 import spinnery.widget.WCollection;
-import spinnery.widget.WInterface;
 import spinnery.widget.WInterfaceHolder;
 import spinnery.widget.WSlot;
 import spinnery.widget.WWidget;
@@ -78,7 +76,7 @@ public class BaseContainer extends CraftingContainer<Inventory> implements Ticka
 	public void onSlotClicked(int slotNumber, int inventoryNumber, int button, SlotActionType action, PlayerEntity player) {
 		Optional<WWidget> optionalWSlot = getInterfaces().getWidgets().stream().filter((widget) ->
 				(widget instanceof WSlot && ((WSlot) widget).getSlotNumber() == slotNumber && ((WSlot) widget).getInventoryNumber() == inventoryNumber)
-		||      (widget instanceof WCollection && ((WCollection) widget).getWidgets().stream().anyMatch(slot -> ((WSlot) slot).getSlotNumber() == slotNumber && ((WSlot) slot).getInventoryNumber() == inventoryNumber))).findFirst();
+						|| (widget instanceof WCollection && ((WCollection) widget).getWidgets().stream().anyMatch(slot -> ((WSlot) slot).getSlotNumber() == slotNumber && ((WSlot) slot).getInventoryNumber() == inventoryNumber))).findFirst();
 
 		WSlot slotA;
 		if (optionalWSlot.isPresent()) {

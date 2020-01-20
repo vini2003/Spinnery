@@ -6,7 +6,7 @@ import spinnery.client.BaseRenderer;
 public class WStaticImage extends WWidget implements WClient {
 	protected Identifier texture;
 
-	public WStaticImage(WAnchor anchor, double positionX, double positionY, double positionZ, double sizeX, double sizeY, Identifier texture, WInterface linkedPanel) {
+	public WStaticImage(WAnchor anchor, int positionX, int positionY, int positionZ, int sizeX, int sizeY, Identifier texture, WInterface linkedPanel) {
 		setInterface(linkedPanel);
 
 		setAnchor(anchor);
@@ -35,12 +35,12 @@ public class WStaticImage extends WWidget implements WClient {
 			return;
 		}
 
-		double x = getPositionX();
-		double y = getPositionY();
-		double z = getPositionZ();
+		int x = getPositionX();
+		int y = getPositionY();
+		int z = getPositionZ();
 
-		double sX = getSizeX();
-		double sY = getSizeY();
+		int sX = getSizeX();
+		int sY = getSizeY();
 
 		BaseRenderer.drawImage(x, y, z, sX, sY, getTexture());
 	}

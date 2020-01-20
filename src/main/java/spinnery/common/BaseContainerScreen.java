@@ -11,8 +11,8 @@ import spinnery.widget.WSlot;
 import spinnery.widget.WWidget;
 
 public class BaseContainerScreen<T extends BaseContainer> extends AbstractContainerScreen<T> {
-	double tooltipX = 0;
-	double tooltipY = 0;
+	int tooltipX = 0;
+	int tooltipY = 0;
 	WSlot drawSlot;
 
 	public BaseContainerScreen(Text name, T linkedContainer, PlayerEntity player) {
@@ -37,19 +37,19 @@ public class BaseContainerScreen<T extends BaseContainer> extends AbstractContai
 		this.drawSlot = drawSlot;
 	}
 
-	public double getTooltipX() {
+	public int getTooltipX() {
 		return tooltipX;
 	}
 
-	public void setTooltipX(double tooltipX) {
+	public void setTooltipX(int tooltipX) {
 		this.tooltipX = tooltipX;
 	}
 
-	public double getTooltipY() {
+	public int getTooltipY() {
 		return tooltipY;
 	}
 
-	public void setTooltipY(double tooltipY) {
+	public void setTooltipY(int tooltipY) {
 		this.tooltipY = tooltipY;
 	}
 
@@ -66,11 +66,11 @@ public class BaseContainerScreen<T extends BaseContainer> extends AbstractContai
 
 	public void drawTooltip() {
 		if (getDrawSlot() != null && getLinkedContainer().getLinkedPlayerInventory().getCursorStack().isEmpty() && !getDrawSlot().getStack().isEmpty()) {
-			this.renderTooltip(getDrawSlot().getStack(), (int) getTooltipX(), (int) getTooltipY());
+			this.renderTooltip(getDrawSlot().getStack(), getTooltipX(), getTooltipY());
 		}
 	}
 
-	public void updateTooltip(double mouseX, double mouseY) {
+	public void updateTooltip(int mouseX, int mouseY) {
 		setDrawSlot(null);
 		for (WWidget widgetA : getInterfaces().getWidgets()) {
 			if (widgetA.getFocus() && widgetA instanceof WSlot) {
@@ -110,8 +110,41 @@ public class BaseContainerScreen<T extends BaseContainer> extends AbstractContai
 	}
 
 	@Override
+	public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
+		getInterfaces().onMouseClicked((int) mouseX, (int) mouseY, mouseButton);
+
+		return false;
+	}
+
+	@Override
 	protected boolean isClickOutsideBounds(double mouseX, double mouseY, int int_1, int int_2, int int_3) {
 		return false;
+	}
+
+	@Override
+	public boolean mouseDragged(double mouseX, double mouseY, int mouseButton, double deltaX, double deltaY) {
+		getInterfaces().onMouseDragged((int) mouseX, (int) mouseY, mouseButton, (int) deltaX, (int) deltaY);
+
+		return false;
+	}
+
+	@Override
+	public boolean mouseReleased(double mouseX, double mouseY, int mouseButton) {
+		getInterfaces().onMouseReleased((int) mouseX, (int) mouseY, mouseButton);
+
+		return false;
+	}
+
+	@Override
+	public boolean keyPressed(int character, int keyCode, int keyModifier) {
+		getInterfaces().keyPressed(character, keyCode, keyModifier);
+
+		if (character == GLFW.GLFW_KEY_ESCAPE) {
+			minecraft.player.closeContainer();
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	@Override
@@ -127,38 +160,10 @@ public class BaseContainerScreen<T extends BaseContainer> extends AbstractContai
 	}
 
 	@Override
-	public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
-		getInterfaces().onMouseClicked(mouseX, mouseY, mouseButton);
-
-		return false;
-	}
-
-	@Override
-	public boolean mouseReleased(double mouseX, double mouseY, int mouseButton) {
-		getInterfaces().onMouseReleased(mouseX, mouseY, mouseButton);
-
-		return false;
-	}
-
-	@Override
-	public boolean mouseDragged(double mouseX, double mouseY, int mouseButton, double deltaX, double deltaY) {
-		getInterfaces().onMouseDragged(mouseX, mouseY, mouseButton, deltaX, deltaY);
-
-		return false;
-	}
-
-	@Override
 	public boolean mouseScrolled(double mouseX, double mouseY, double deltaY) {
-		getInterfaces().onMouseScrolled(mouseX, mouseY, deltaY);
+		getInterfaces().onMouseScrolled((int) mouseX, (int) mouseY, deltaY);
 
 		return false;
-	}
-
-	@Override
-	public void mouseMoved(double mouseX, double mouseY) {
-		getInterfaces().mouseMoved(mouseX, mouseY);
-
-		updateTooltip(mouseX, mouseY);
 	}
 
 	@Override
@@ -176,14 +181,9 @@ public class BaseContainerScreen<T extends BaseContainer> extends AbstractContai
 	}
 
 	@Override
-	public boolean keyPressed(int character, int keyCode, int keyModifier) {
-		getInterfaces().keyPressed(character, keyCode, keyModifier);
+	public void mouseMoved(double mouseX, double mouseY) {
+		getInterfaces().mouseMoved((int) mouseX, (int) mouseY);
 
-		if (character == GLFW.GLFW_KEY_ESCAPE) {
-			minecraft.player.closeContainer();
-			return true;
-		} else {
-			return false;
-		}
+		updateTooltip((int) mouseX, (int) mouseY);
 	}
 }

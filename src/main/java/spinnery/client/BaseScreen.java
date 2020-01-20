@@ -28,6 +28,18 @@ public class BaseScreen extends Screen {
 	}
 
 	@Override
+	public boolean keyPressed(int character, int keyCode, int keyModifier) {
+		getInterfaces().keyPressed(character, keyCode, keyModifier);
+
+		if (character == GLFW.GLFW_KEY_ESCAPE) {
+			minecraft.player.closeScreen();
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	@Override
 	public void tick() {
 		getInterfaces().tick();
 	}
@@ -39,35 +51,30 @@ public class BaseScreen extends Screen {
 
 	@Override
 	public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
-		getInterfaces().onMouseClicked(mouseX, mouseY, mouseButton);
+		getInterfaces().onMouseClicked((int) mouseX, (int) mouseY, mouseButton);
 
 		return false;
 	}
 
 	@Override
 	public boolean mouseReleased(double mouseX, double mouseY, int mouseButton) {
-		getInterfaces().onMouseReleased(mouseX, mouseY, mouseButton);
+		getInterfaces().onMouseReleased((int) mouseX, (int) mouseY, mouseButton);
 
 		return false;
 	}
 
 	@Override
 	public boolean mouseDragged(double mouseX, double mouseY, int mouseButton, double deltaX, double deltaY) {
-		getInterfaces().onMouseDragged(mouseX, mouseY, mouseButton, deltaX, deltaY);
+		getInterfaces().onMouseDragged((int) mouseX, (int) mouseY, mouseButton, (int) deltaX, (int) deltaY);
 
 		return false;
 	}
 
 	@Override
 	public boolean mouseScrolled(double mouseX, double mouseY, double deltaY) {
-		getInterfaces().onMouseScrolled(mouseX, mouseY, deltaY);
+		getInterfaces().onMouseScrolled((int) mouseX, (int) mouseY, deltaY);
 
 		return false;
-	}
-
-	@Override
-	public void mouseMoved(double mouseX, double mouseY) {
-		getInterfaces().mouseMoved(mouseX, mouseY);
 	}
 
 	@Override
@@ -85,14 +92,7 @@ public class BaseScreen extends Screen {
 	}
 
 	@Override
-	public boolean keyPressed(int character, int keyCode, int keyModifier) {
-		getInterfaces().keyPressed(character, keyCode, keyModifier);
-
-		if (character == GLFW.GLFW_KEY_ESCAPE) {
-			minecraft.player.closeScreen();
-			return true;
-		} else {
-			return false;
-		}
+	public void mouseMoved(double mouseX, double mouseY) {
+		getInterfaces().mouseMoved((int) mouseX, (int) mouseY);
 	}
 }

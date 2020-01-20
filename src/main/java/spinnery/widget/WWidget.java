@@ -12,11 +12,11 @@ import java.util.Optional;
 public class WWidget implements Tickable {
 	protected WInterface linkedPanel;
 	protected WAnchor anchor;
-	protected double positionX = 0;
-	protected double positionY = 0;
-	protected double positionZ = 0;
-	protected double sizeX = 0;
-	protected double sizeY = 0;
+	protected int positionX = 0;
+	protected int positionY = 0;
+	protected int positionZ = 0;
+	protected int sizeX = 0;
+	protected int sizeY = 0;
 	protected boolean isHidden = false;
 	protected boolean hasFocus = false;
 	protected boolean canMove = false;
@@ -114,7 +114,7 @@ public class WWidget implements Tickable {
 		this.linkedRunnableOnMouseReleased = linkedRunnable;
 	}
 
-	public void onMouseClicked(double mouseX, double mouseY, int mouseButton) {
+	public void onMouseClicked(int mouseX, int mouseY, int mouseButton) {
 		if (linkedRunnableOnMouseClicked != null) {
 			linkedRunnableOnMouseClicked.run();
 		}
@@ -128,7 +128,7 @@ public class WWidget implements Tickable {
 		this.linkedRunnableOnMouseClicked = linkedRunnable;
 	}
 
-	public void onMouseDragged(double mouseX, double mouseY, int mouseButton, double deltaX, double deltaY) {
+	public void onMouseDragged(int mouseX, int mouseY, int mouseButton, double deltaX, double deltaY) {
 		if (linkedRunnableOnMouseDragged != null) {
 			linkedRunnableOnMouseDragged.run();
 		}
@@ -156,7 +156,7 @@ public class WWidget implements Tickable {
 		this.linkedRunnableOnMouseMoved = linkedRunnable;
 	}
 
-	public void onMouseScrolled(double mouseX, double mouseY, double deltaY) {
+	public void onMouseScrolled(int mouseX, int mouseY, double deltaY) {
 		if (linkedRunnableOnMouseScrolled != null) {
 			linkedRunnableOnMouseScrolled.run();
 		}
@@ -234,51 +234,51 @@ public class WWidget implements Tickable {
 		this.linkedPanel = linkedPanel;
 	}
 
-	public double getSizeX() {
+	public int getSizeX() {
 		return sizeX;
 	}
 
-	public void setSizeX(double sizeX) {
+	public void setSizeX(int sizeX) {
 		this.sizeX = sizeX;
 	}
 
-	public double getSizeY() {
+	public int getSizeY() {
 		return sizeY;
 	}
 
-	public void setSizeY(double sizeY) {
+	public void setSizeY(int sizeY) {
 		this.sizeY = sizeY;
 	}
 
-	public double getPositionX() {
+	public int getPositionX() {
 		return positionX;
 	}
 
-	public void setPositionX(double positionX) {
+	public void setPositionX(int positionX) {
 		this.positionX = positionX;
 	}
 
-	public double getPositionY() {
+	public int getPositionY() {
 		return positionY;
 	}
 
-	public void setPositionY(double positionY) {
+	public void setPositionY(int positionY) {
 		this.positionY = positionY;
 	}
 
-	public double getPositionZ() {
+	public int getPositionZ() {
 		return positionZ;
 	}
 
-	public void setPositionZ(double positionZ) {
+	public void setPositionZ(int positionZ) {
 		this.positionZ = positionZ;
 	}
 
-	public void setAnchoredPositionX(double positionX) {
+	public void setAnchoredPositionX(int positionX) {
 		setPositionX(positionX + (getAnchor() == WAnchor.MC_ORIGIN ? getInterface().getPositionX() : 0));
 	}
 
-	public void setAnchoredPositionY(double positionY) {
+	public void setAnchoredPositionY(int positionY) {
 		setPositionY(positionY + (getAnchor() == WAnchor.MC_ORIGIN ? getInterface().getPositionY() : 0));
 	}
 
@@ -305,14 +305,14 @@ public class WWidget implements Tickable {
 		this.isHidden = isHidden;
 	}
 
-	public boolean isWithinBounds(double positionX, double positionY) {
+	public boolean isWithinBounds(int positionX, int positionY) {
 		return positionX > getPositionX()
 				&& positionX < getPositionX() + getSizeX()
 				&& positionY > getPositionY()
 				&& positionY < getPositionY() + getSizeY();
 	}
 
-	public boolean scanFocus(double mouseX, double mouseY) {
+	public boolean scanFocus(int mouseX, int mouseY) {
 		if (isHidden) {
 			return false;
 		}
@@ -332,8 +332,8 @@ public class WWidget implements Tickable {
 	}
 
 	public void center() {
-		this.positionX = MinecraftClient.getInstance().getWindow().getScaledWidth() / 2f - sizeX / 2;
-		this.positionY = MinecraftClient.getInstance().getWindow().getScaledHeight() / 2f - sizeY / 2;
+		this.positionX = MinecraftClient.getInstance().getWindow().getScaledWidth() / 2 - sizeX / 2;
+		this.positionY = MinecraftClient.getInstance().getWindow().getScaledHeight() / 2 - sizeY / 2;
 	}
 
 	public void draw() {

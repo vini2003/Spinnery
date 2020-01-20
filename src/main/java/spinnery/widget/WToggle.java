@@ -8,7 +8,7 @@ public class WToggle extends WWidget implements WClient {
 	protected boolean toggleState = false;
 	protected WToggle.Theme drawTheme;
 
-	public WToggle(WAnchor anchor, int positionX, int positionY, int positionZ, double sizeX, double sizeY, WInterface linkedPanel) {
+	public WToggle(WAnchor anchor, int positionX, int positionY, int positionZ, int sizeX, int sizeY, WInterface linkedPanel) {
 		setInterface(linkedPanel);
 
 		setAnchor(anchor);
@@ -24,7 +24,7 @@ public class WToggle extends WWidget implements WClient {
 	}
 
 	@Override
-	public void onMouseClicked(double mouseX, double mouseY, int mouseButton) {
+	public void onMouseClicked(int mouseX, int mouseY, int mouseButton) {
 		if (scanFocus(mouseX, mouseY)) {
 			setToggleState(!getToggleState());
 		}
@@ -45,12 +45,12 @@ public class WToggle extends WWidget implements WClient {
 			return;
 		}
 
-		double x = getPositionX();
-		double y = getPositionY();
-		double z = getPositionZ();
+		int x = getPositionX();
+		int y = getPositionY();
+		int z = getPositionZ();
 
-		double sX = getSizeX();
-		double sY = getSizeY();
+		int sX = getSizeX();
+		int sY = getSizeY();
 
 		BaseRenderer.drawRectangle(x, y, z, sX, 1, drawTheme.getTopLeftBackground());
 		BaseRenderer.drawRectangle(x, y, z, 1, sY, drawTheme.getTopLeftBackground());

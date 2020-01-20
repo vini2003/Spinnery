@@ -32,8 +32,8 @@ public class WInterfaceHolder {
 
 		return widgets;
 	}
-	
-	public boolean onMouseClicked(double mouseX, double mouseY, int mouseButton) {
+
+	public boolean onMouseClicked(int mouseX, int mouseY, int mouseButton) {
 		for (WInterface myInterface : getInterfaces()) {
 			for (WWidget widgetA : myInterface.getWidgets()) {
 				widgetA.onMouseClicked(mouseX, mouseY, mouseButton);
@@ -49,8 +49,8 @@ public class WInterfaceHolder {
 		return false;
 	}
 
-	
-	public boolean onMouseReleased(double mouseX, double mouseY, int mouseButton) {
+
+	public boolean onMouseReleased(int mouseX, int mouseY, int mouseButton) {
 		for (WInterface myInterface : getInterfaces()) {
 			for (WWidget widgetA : myInterface.getWidgets()) {
 				widgetA.onMouseReleased(mouseX, mouseY, mouseButton);
@@ -66,8 +66,8 @@ public class WInterfaceHolder {
 		return false;
 	}
 
-	
-	public boolean onMouseDragged(double mouseX, double mouseY, int mouseButton, double deltaX, double deltaY) {
+
+	public boolean onMouseDragged(int mouseX, int mouseY, int mouseButton, int deltaX, int deltaY) {
 		for (WInterface myInterface : getInterfaces()) {
 			for (WWidget widgetA : myInterface.getWidgets()) {
 				widgetA.onMouseDragged(mouseX, mouseY, mouseButton, deltaX, deltaY);
@@ -84,8 +84,8 @@ public class WInterfaceHolder {
 		return false;
 	}
 
-	
-	public boolean onMouseScrolled(double mouseX, double mouseY, double deltaY) {
+
+	public boolean onMouseScrolled(int mouseX, int mouseY, double deltaY) {
 		for (WInterface myInterface : getInterfaces()) {
 			for (WWidget widgetA : myInterface.getWidgets()) {
 				widgetA.onMouseScrolled(mouseX, mouseY, deltaY);
@@ -102,7 +102,7 @@ public class WInterfaceHolder {
 		return false;
 	}
 
-	public void mouseMoved(double mouseX, double mouseY) {
+	public void mouseMoved(int mouseX, int mouseY) {
 		for (WInterface myInterface : getInterfaces()) {
 			for (WWidget widgetA : myInterface.getWidgets()) {
 				widgetA.scanFocus(mouseX, mouseY);
@@ -119,7 +119,7 @@ public class WInterfaceHolder {
 		}
 	}
 
-	
+
 	public boolean onKeyReleased(int character, int keyCode, int keyModifier) {
 		for (WInterface myInterface : getInterfaces()) {
 			for (WWidget widgetA : myInterface.getWidgets()) {
@@ -151,7 +151,6 @@ public class WInterfaceHolder {
 	}
 
 
-
 	public boolean onCharTyped(char character, int keyCode) {
 		for (WInterface myInterface : getInterfaces()) {
 			for (WWidget widgetA : myInterface.getWidgets()) {
@@ -170,7 +169,7 @@ public class WInterfaceHolder {
 
 	public void drawMouseoverTooltip(int mouseX, int mouseY) {
 		for (WInterface myInterface : getInterfaces()) {
-			for (WWidget widgetA :myInterface.getWidgets()) {
+			for (WWidget widgetA : myInterface.getWidgets()) {
 				widgetA.onDrawTooltip();
 
 				if (widgetA instanceof WCollection) {

@@ -22,7 +22,7 @@ public class WSlot extends WWidget implements WClient, WServer {
 	protected int inventoryNumber;
 	protected boolean ignoreOnRelease = false;
 
-	public WSlot(WAnchor anchor, int positionX, int positionY, int positionZ, double sizeX, double sizeY, int slotNumber, int inventoryNumber, WInterface linkedPanel) {
+	public WSlot(WAnchor anchor, int positionX, int positionY, int positionZ, int sizeX, int sizeY, int slotNumber, int inventoryNumber, WInterface linkedPanel) {
 		setInterface(linkedPanel);
 
 		setAnchor(anchor);
@@ -40,26 +40,26 @@ public class WSlot extends WWidget implements WClient, WServer {
 		setInventoryNumber(inventoryNumber);
 	}
 
-	public static void addSingle(WAnchor anchor, int positionX, int positionY, int positionZ, double sizeX, double sizeY, int slotNumber, int inventoryNumber, WInterface linkedPanel) {
+	public static void addSingle(WAnchor anchor, int positionX, int positionY, int positionZ, int sizeX, int sizeY, int slotNumber, int inventoryNumber, WInterface linkedPanel) {
 		linkedPanel.add(new WSlot(anchor, positionX, positionY, positionZ, sizeX, sizeY, slotNumber, inventoryNumber, linkedPanel));
 	}
 
-	public static void addArray(WAnchor anchor, int arrayX, int arrayY, int positionX, int positionY, int positionZ, double sizeX, double sizeY, int slotNumber, int inventoryNumber, WInterface linkedPanel) {
+	public static void addArray(WAnchor anchor, int arrayX, int arrayY, int positionX, int positionY, int positionZ, int sizeX, int sizeY, int slotNumber, int inventoryNumber, WInterface linkedPanel) {
 		for (int y = 0; y < arrayY; ++y) {
 			for (int x = 0; x < arrayX; ++x) {
-				WSlot.addSingle(anchor, positionX + (int) (sizeX * x), positionY + (int) (sizeY * y), positionZ, sizeX, sizeY, slotNumber++, inventoryNumber, linkedPanel);
+				WSlot.addSingle(anchor, positionX + (sizeX * x), positionY + (sizeY * y), positionZ, sizeX, sizeY, slotNumber++, inventoryNumber, linkedPanel);
 			}
 		}
 	}
 
-	public static void addPlayerInventory(int positionZ, double sizeX, double sizeY, int inventoryNumber, WInterface linkedPanel) {
+	public static void addPlayerInventory(int positionZ, int sizeX, int sizeY, int inventoryNumber, WInterface linkedPanel) {
 		int temporarySlotNumber = 0;
 		addArray(
 				WAnchor.MC_ORIGIN,
 				9,
 				1,
 				4,
-				(int) linkedPanel.getSizeY() - 18 - 4,
+				linkedPanel.getSizeY() - 18 - 4,
 				positionZ,
 				sizeX,
 				sizeY,
@@ -72,7 +72,7 @@ public class WSlot extends WWidget implements WClient, WServer {
 				9,
 				3,
 				4,
-				(int) linkedPanel.getSizeY() - 72 - 6,
+				linkedPanel.getSizeY() - 72 - 6,
 				positionZ,
 				sizeX,
 				sizeY,
@@ -146,7 +146,7 @@ public class WSlot extends WWidget implements WClient, WServer {
 	}
 
 	@Override
-	public void onMouseClicked(double mouseX, double mouseY, int mouseButton) {
+	public void onMouseClicked(int mouseX, int mouseY, int mouseButton) {
 		if (getFocus()) {
 			PlayerEntity playerEntity = getInterface().getContainer().getLinkedPlayerInventory().player;
 
@@ -170,7 +170,7 @@ public class WSlot extends WWidget implements WClient, WServer {
 	}
 
 	@Override
-	public void onMouseDragged(double mouseX, double mouseY, int mouseButton, double deltaX, double deltaY) {
+	public void onMouseDragged(int mouseX, int mouseY, int mouseButton, double deltaX, double deltaY) {
 		if (getFocus() && Screen.hasShiftDown() && mouseButton == 0) {
 			PlayerEntity playerEntity = getInterface().getContainer().getLinkedPlayerInventory().player;
 
@@ -195,19 +195,19 @@ public class WSlot extends WWidget implements WClient, WServer {
 			return;
 		}
 
-		double x = getPositionX();
-		double y = getPositionY();
-		double z = getPositionZ();
+		int x = getPositionX();
+		int y = getPositionY();
+		int z = getPositionZ();
 
-		double sX = getSizeX();
-		double sY = getSizeY();
+		int sX = getSizeX();
+		int sY = getSizeY();
 
 		BaseRenderer.drawBeveledPanel(x, y, z, sX, sY, drawTheme.getTopLeft(), getFocus() ? drawTheme.getBackgroundFocused() : drawTheme.getBackgroundUnfocused(), drawTheme.getBottomRight());
 
 		RenderSystem.enableLighting();
 
-		BaseRenderer.getItemRenderer().renderGuiItem(getPreviewStack().isEmpty() ? getStack() : getPreviewStack(), 1 + (int) (x + (sX - 18) / 2), 1 + (int) (y + (sY - 18) / 2));
-		BaseRenderer.getItemRenderer().renderGuiItemOverlay(MinecraftClient.getInstance().textRenderer, getPreviewStack().isEmpty() ? getStack() : getPreviewStack(), 1 + (int) (x + (sX - 18) / 2), 1 + (int) (y + (sY - 18) / 2));
+		BaseRenderer.getItemRenderer().renderGuiItem(getPreviewStack().isEmpty() ? getStack() : getPreviewStack(), 1 + x + (sX - 18) / 2, 1 + y + (sY - 18) / 2);
+		BaseRenderer.getItemRenderer().renderGuiItemOverlay(MinecraftClient.getInstance().textRenderer, getPreviewStack().isEmpty() ? getStack() : getPreviewStack(), 1 + x + (sX - 18) / 2, 1 + y + (sY - 18) / 2);
 
 		RenderSystem.disableLighting();
 	}

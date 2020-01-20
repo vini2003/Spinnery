@@ -48,10 +48,10 @@ public class WStaticText extends WWidget implements WClient {
 			return;
 		}
 
-		double x = getPositionX();
-		double y = getPositionY();
+		int x = getPositionX();
+		int y = getPositionY();
 
-		BaseRenderer.getTextRenderer().drawWithShadow(getText().asFormattedString(), (int) x, (int) y, drawTheme.getText().RGB);
+		BaseRenderer.getTextRenderer().drawWithShadow(getText().asFormattedString(), x, y, drawTheme.getText().RGB);
 	}
 
 	public class Theme extends WWidget.Theme {

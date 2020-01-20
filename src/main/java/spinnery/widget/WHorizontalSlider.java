@@ -6,13 +6,13 @@ import spinnery.client.BaseRenderer;
 import spinnery.registry.ResourceRegistry;
 
 public class WHorizontalSlider extends WWidget implements WClient {
-	protected double limit = 0;
-	protected double position = 0;
+	protected int limit = 0;
+	protected int position = 0;
 	protected String total;
 	protected int tX;
 	protected WHorizontalSlider.Theme drawTheme;
 
-	public WHorizontalSlider(WAnchor anchor, int positionX, int positionY, int positionZ, double sizeX, double sizeY, int limit, WInterface linkedPanel) {
+	public WHorizontalSlider(WAnchor anchor, int positionX, int positionY, int positionZ, int sizeX, int sizeY, int limit, WInterface linkedPanel) {
 		setInterface(linkedPanel);
 
 		setAnchor(anchor);
@@ -29,25 +29,25 @@ public class WHorizontalSlider extends WWidget implements WClient {
 		setLimit(limit);
 	}
 
-	public double getLimit() {
+	public int getLimit() {
 		return limit;
 	}
 
-	public void setLimit(double limit) {
+	public void setLimit(int limit) {
 		this.limit = limit;
 	}
 
-	public double getPosition() {
+	public int getPosition() {
 		return position;
 	}
 
-	public void setPosition(double position) {
+	public void setPosition(int position) {
 		this.position = position;
-		total = Integer.toString((int) Math.round(getPosition()));
-		tX = (int) (getPositionX() + (getSizeX() + 7) / 2 - BaseRenderer.getTextRenderer().getStringWidth(Integer.toString((int) getPosition())) / 2);
+		total = Integer.toString(Math.round(getPosition()));
+		tX = getPositionX() + (getSizeX() + 7) / 2 - BaseRenderer.getTextRenderer().getStringWidth(Integer.toString(getPosition())) / 2;
 	}
 
-	public void updatePosition(double mouseX, double mouseY) {
+	public void updatePosition(int mouseX, int mouseY) {
 		if (scanFocus(mouseX, mouseY)) {
 			setPosition((mouseX - getPositionX()) * (getLimit() / (getSizeX())));
 		}
@@ -65,13 +65,13 @@ public class WHorizontalSlider extends WWidget implements WClient {
 	}
 
 	@Override
-	public void onMouseClicked(double mouseX, double mouseY, int mouseButton) {
+	public void onMouseClicked(int mouseX, int mouseY, int mouseButton) {
 		updatePosition(mouseX, mouseY);
 		super.onMouseClicked(mouseX, mouseY, mouseButton);
 	}
 
 	@Override
-	public void onMouseDragged(double mouseX, double mouseY, int mouseButton, double deltaX, double deltaY) {
+	public void onMouseDragged(int mouseX, int mouseY, int mouseButton, double deltaX, double deltaY) {
 		updatePosition(mouseX, mouseY);
 		super.onMouseDragged(mouseX, mouseY, mouseButton, deltaX, deltaY);
 	}
@@ -90,17 +90,17 @@ public class WHorizontalSlider extends WWidget implements WClient {
 			return;
 		}
 
-		double l = getLimit();
-		double p = getPosition();
+		int l = getLimit();
+		int p = getPosition();
 
-		double x = getPositionX();
-		double y = getPositionY();
-		double z = getPositionZ();
+		int x = getPositionX();
+		int y = getPositionY();
+		int z = getPositionZ();
 
-		double sX = getSizeX();
-		double sY = getSizeY();
+		int sX = getSizeX();
+		int sY = getSizeY();
 
-		BaseRenderer.getTextRenderer().drawWithShadow(total, tX, (int) (y + sY) + 4, drawTheme.getText().RGB);
+		BaseRenderer.getTextRenderer().drawWithShadow(total, tX, y + sY + 4, drawTheme.getText().RGB);
 
 		BaseRenderer.drawRectangle(x, y, z, (sX + 7), 1, drawTheme.getTopLeftBackground());
 		BaseRenderer.drawRectangle(x, y, z, 1, sY, drawTheme.getTopLeftBackground());
