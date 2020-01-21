@@ -84,6 +84,10 @@ public class BaseRenderer {
 		RenderSystem.disableBlend();
 	}
 
+	public static void drawPixel(double x, double y, double z, WColor color) {
+		drawRectangle(x, y, z, 1, 1, color);
+	}
+
 	public static TextRenderer getTextRenderer() {
 		return MinecraftClient.getInstance().textRenderer;
 	}
