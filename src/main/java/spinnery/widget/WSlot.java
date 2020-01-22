@@ -38,7 +38,7 @@ public class WSlot extends WWidget implements WClient, WServer {
 		setSizeX(sizeX);
 		setSizeY(sizeY);
 
-		setTheme("default");
+		setTheme("light");
 
 		setSlotNumber(slotNumber);
 		setInventoryNumber(inventoryNumber);

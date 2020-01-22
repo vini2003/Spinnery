@@ -21,7 +21,7 @@ public class WStaticText extends WWidget implements WClient {
 
 		setSizeX(sizeX);
 
-		setTheme("default");
+		setTheme("light");
 
 		setText(text);
 	}

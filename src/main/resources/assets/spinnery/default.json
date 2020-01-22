@@ -1,6 +1,6 @@
 {
 	"Identifier": {
-		"name": "default"
+		"name": "light"
 	},
 	"spinnery.widget.WInterface": {
 		"shadow": "0xff555555",

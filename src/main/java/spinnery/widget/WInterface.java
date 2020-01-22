@@ -35,7 +35,7 @@ public class WInterface extends WWidget {
 
 		setInstanceType(MinecraftClient.class);
 
-		setTheme("default");
+		setTheme("light");
 	}
 
 	public WInterface(int positionX, int positionY, int positionZ, int sizeX, int sizeY, BaseContainer linkedContainer) {
@@ -56,7 +56,7 @@ public class WInterface extends WWidget {
 			setInstanceType(MinecraftServer.class);
 		}
 
-		setTheme("default");
+		setTheme("light");
 	}
 
 	public static WWidget.Theme of(Map<String, String> rawTheme) {

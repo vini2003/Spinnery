@@ -29,7 +29,7 @@ public class WDropdown extends WWidget implements WClient, WCollection {
 
 		setSizes(sizeX1, sizeY1, sizeX2, sizeY2);
 
-		setTheme("default");
+		setTheme("light");
 
 		updateHidden();
 	}

@@ -27,7 +27,7 @@ public class WToggle extends WWidget implements WClient {
 		setSizeX(sizeX);
 		setSizeY(sizeY);
 
-		setTheme("default");
+		setTheme("light");
 	}
 
 	public static WWidget.Theme of(Map<String, String> rawTheme) {

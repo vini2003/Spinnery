@@ -29,7 +29,7 @@ public class WTabHolder extends WWidget implements WClient, WCollection {
 		setSizeX(sizeX);
 		setSizeY(sizeY);
 
-		setTheme("default");
+		setTheme("light");
 	}
 
 	public static WWidget.Theme of(Map<String, String> rawTheme) {
