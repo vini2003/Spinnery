@@ -92,14 +92,14 @@ public class WTabToggle extends WToggle {
 		int sY = getSizeY() + 4;
 
 		if (!getToggleState()) {
-			BaseRenderer.drawPanel(x, y, z, sX, sY, getColor(SHADOW_OFF), getColor(BACKGROUND_OFF), getColor(HIGHLIGHT_OFF), getColor(OUTLINE_OFF));
+			BaseRenderer.drawPanel(x, y, z - 1, sX, sY, getColor(SHADOW_OFF), getColor(BACKGROUND_OFF), getColor(HIGHLIGHT_OFF), getColor(OUTLINE_OFF));
 		} else {
-			BaseRenderer.drawPanel(x, y, z, sX, sY, getColor(SHADOW_ON), getColor(BACKGROUND_ON), getColor(HIGHLIGHT_ON), getColor(OUTLINE_ON));
+			BaseRenderer.drawPanel(x, y, z - 1, sX, sY, getColor(SHADOW_ON), getColor(BACKGROUND_ON), getColor(HIGHLIGHT_ON), getColor(OUTLINE_ON));
 		}
 
 		RenderSystem.enableLighting();
 		BaseRenderer.getItemRenderer().renderGuiItemIcon(new ItemStack(getSymbol(), 1), x + 4, y + 4);
 		RenderSystem.disableLighting();
-		BaseRenderer.getTextRenderer().draw(name.asFormattedString(), x + 24, (int) (y + sY / 2 - 4.5), getColor(LABEL).RGB);
+		BaseRenderer.getTextRenderer().drawWithShadow(name.asFormattedString(), x + 24, (int) (y + sY / 2 - 4.5), getColor(LABEL).RGB);
 	}
 }
