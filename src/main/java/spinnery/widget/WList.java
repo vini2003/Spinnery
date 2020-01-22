@@ -1,11 +1,9 @@
 package spinnery.widget;
 
-import com.google.gson.annotations.SerializedName;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
 import org.lwjgl.opengl.GL11;
 import spinnery.client.BaseRenderer;
-import spinnery.registry.ResourceRegistry;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,8 +11,12 @@ import java.util.List;
 import java.util.Map;
 
 public class WList extends WWidget implements WClient, WCollection {
+	public static final int SHADOW = 0;
+	public static final int BACKGROUND = 1;
+	public static final int HIGHLIGHT = 2;
+	public static final int OUTLINE = 3;
+	public static final int LABEL = 4;
 	public List<List<WWidget>> listWidgets = new ArrayList<>();
-	protected WList.Theme drawTheme;
 
 	public WList(WAnchor anchor, int positionX, int positionY, int positionZ, int sizeX, int sizeY, WInterface linkedPanel) {
 		setInterface(linkedPanel);
@@ -29,6 +31,16 @@ public class WList extends WWidget implements WClient, WCollection {
 		setSizeY(sizeY);
 
 		setTheme("default");
+	}
+
+	public static WWidget.Theme of(Map<String, String> rawTheme) {
+		WWidget.Theme theme = new WWidget.Theme();
+		theme.add(SHADOW, WColor.of(rawTheme.get("shadow")));
+		theme.add(BACKGROUND, WColor.of(rawTheme.get("background")));
+		theme.add(HIGHLIGHT, WColor.of(rawTheme.get("highlight")));
+		theme.add(OUTLINE, WColor.of(rawTheme.get("outline")));
+		theme.add(LABEL, WColor.of(rawTheme.get("label")));
+		return theme;
 	}
 
 	@Override
@@ -81,7 +93,6 @@ public class WList extends WWidget implements WClient, WCollection {
 	public void setTheme(String theme) {
 		if (getInterface().isClient()) {
 			super.setTheme(theme);
-			//
 		}
 	}
 
@@ -161,21 +172,5 @@ public class WList extends WWidget implements WClient, WCollection {
 		getListWidgets().remove(Arrays.asList(widgetArray));
 		updateHidden();
 		updatePositions();
-	}
-
-	public static final int SHADOW = 0;
-	public static final int BACKGROUND = 1;
-	public static final int HIGHLIGHT = 2;
-	public static final int OUTLINE = 3;
-	public static final int LABEL = 4;
-
-	public static WWidget.Theme of(Map<String, String> rawTheme) {
-		WInterface.Theme theme = new WWidget.Theme();
-		theme.add(SHADOW, WColor.of(rawTheme.get("shadow")));
-		theme.add(BACKGROUND, WColor.of(rawTheme.get("background")));
-		theme.add(HIGHLIGHT, WColor.of(rawTheme.get("highlight")));
-		theme.add(OUTLINE, WColor.of(rawTheme.get("outline")));
-		theme.add(LABEL, WColor.of(rawTheme.get("label")));
-		return theme;
 	}
 }

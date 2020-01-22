@@ -1,6 +1,5 @@
 package spinnery.widget;
 
-import com.google.gson.annotations.SerializedName;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
 import net.minecraft.client.MinecraftClient;
@@ -13,12 +12,15 @@ import org.apache.logging.log4j.Level;
 import spinnery.Spinnery;
 import spinnery.client.BaseRenderer;
 import spinnery.registry.NetworkRegistry;
-import spinnery.registry.ResourceRegistry;
 
 import java.util.Map;
 
 public class WSlot extends WWidget implements WClient, WServer {
-	protected WSlot.Theme drawTheme;
+
+	public static final int TOP_LEFT = 0;
+	public static final int BOTTOM_RIGHT = 1;
+	public static final int BACKGROUND_FOCUSED = 2;
+	public static final int BACKGROUND_UNFOCUSED = 3;
 	protected int slotNumber;
 	protected ItemStack previewStack = ItemStack.EMPTY;
 	protected int inventoryNumber;
@@ -81,6 +83,15 @@ public class WSlot extends WWidget implements WClient, WServer {
 				temporarySlotNumber,
 				inventoryNumber,
 				linkedPanel);
+	}
+
+	public static WWidget.Theme of(Map<String, String> rawTheme) {
+		WWidget.Theme theme = new WWidget.Theme();
+		theme.add(TOP_LEFT, WColor.of(rawTheme.get("top_left")));
+		theme.add(BOTTOM_RIGHT, WColor.of(rawTheme.get("bottom_right")));
+		theme.add(BACKGROUND_FOCUSED, WColor.of(rawTheme.get("background_focused")));
+		theme.add(BACKGROUND_UNFOCUSED, WColor.of(rawTheme.get("background_unfocused")));
+		return theme;
 	}
 
 	public ItemStack getStack() {
@@ -187,7 +198,6 @@ public class WSlot extends WWidget implements WClient, WServer {
 	public void setTheme(String theme) {
 		if (getInterface().isClient()) {
 			super.setTheme(theme);
-			//
 		}
 	}
 
@@ -212,19 +222,5 @@ public class WSlot extends WWidget implements WClient, WServer {
 		BaseRenderer.getItemRenderer().renderGuiItemOverlay(MinecraftClient.getInstance().textRenderer, getPreviewStack().isEmpty() ? getStack() : getPreviewStack(), 1 + x + (sX - 18) / 2, 1 + y + (sY - 18) / 2);
 
 		RenderSystem.disableLighting();
-	}
-
-	public static final int TOP_LEFT = 0;
-	public static final int BOTTOM_RIGHT = 1;
-	public static final int BACKGROUND_FOCUSED = 2;
-	public static final int BACKGROUND_UNFOCUSED = 3;
-
-	public static WWidget.Theme of(Map<String, String> rawTheme) {
-		WInterface.Theme theme = new WWidget.Theme();
-		theme.add(TOP_LEFT, WColor.of(rawTheme.get("top_left")));
-		theme.add(BOTTOM_RIGHT, WColor.of(rawTheme.get("bottom_right")));
-		theme.add(BACKGROUND_FOCUSED, WColor.of(rawTheme.get("background_focused")));
-		theme.add(BACKGROUND_UNFOCUSED, WColor.of(rawTheme.get("background_unfocused")));
-		return theme;
 	}
 }

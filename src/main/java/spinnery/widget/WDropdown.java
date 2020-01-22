@@ -1,9 +1,7 @@
 package spinnery.widget;
 
-import com.google.gson.annotations.SerializedName;
 import org.lwjgl.glfw.GLFW;
 import spinnery.client.BaseRenderer;
-import spinnery.registry.ResourceRegistry;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,9 +9,13 @@ import java.util.List;
 import java.util.Map;
 
 public class WDropdown extends WWidget implements WClient, WCollection {
+	public static final int SHADOW = 0;
+	public static final int BACKGROUND = 1;
+	public static final int HIGHLIGHT = 2;
+	public static final int OUTLINE = 3;
+	public static final int LABEL = 4;
 	public List<List<WWidget>> dropdownWidgets = new ArrayList<>();
 	protected boolean state = false;
-	protected WDropdown.Theme drawTheme;
 	protected int[][] sizes = new int[2][2];
 
 	public WDropdown(WAnchor anchor, int positionX, int positionY, int positionZ, int sizeX1, int sizeY1, int sizeX2, int sizeY2, WInterface linkedPanel) {
@@ -30,6 +32,16 @@ public class WDropdown extends WWidget implements WClient, WCollection {
 		setTheme("default");
 
 		updateHidden();
+	}
+
+	public static WWidget.Theme of(Map<String, String> rawTheme) {
+		WWidget.Theme theme = new WWidget.Theme();
+		theme.add(SHADOW, WColor.of(rawTheme.get("shadow")));
+		theme.add(BACKGROUND, WColor.of(rawTheme.get("background")));
+		theme.add(HIGHLIGHT, WColor.of(rawTheme.get("highlight")));
+		theme.add(OUTLINE, WColor.of(rawTheme.get("outline")));
+		theme.add(LABEL, WColor.of(rawTheme.get("label")));
+		return theme;
 	}
 
 	public List<List<WWidget>> getDropdownWidgets() {
@@ -75,7 +87,6 @@ public class WDropdown extends WWidget implements WClient, WCollection {
 	public void setTheme(String theme) {
 		if (getInterface().isClient()) {
 			super.setTheme(theme);
-			//
 		}
 	}
 
@@ -153,21 +164,5 @@ public class WDropdown extends WWidget implements WClient, WCollection {
 		getDropdownWidgets().remove(Arrays.asList(widgetArray));
 		updateHidden();
 		updatePositions();
-	}
-
-	public static final int SHADOW = 0;
-	public static final int BACKGROUND = 1;
-	public static final int HIGHLIGHT = 2;
-	public static final int OUTLINE = 3;
-	public static final int LABEL = 4;
-
-	public static WWidget.Theme of(Map<String, String> rawTheme) {
-		WInterface.Theme theme = new WWidget.Theme();
-		theme.add(SHADOW, WColor.of(rawTheme.get("shadow")));
-		theme.add(BACKGROUND, WColor.of(rawTheme.get("background")));
-		theme.add(HIGHLIGHT, WColor.of(rawTheme.get("highlight")));
-		theme.add(OUTLINE, WColor.of(rawTheme.get("outline")));
-		theme.add(LABEL, WColor.of(rawTheme.get("label")));
-		return theme;
 	}
 }

@@ -8,7 +8,6 @@ import net.minecraft.resource.ResourceType;
 import org.apache.logging.log4j.Level;
 import spinnery.Spinnery;
 import spinnery.util.ResourceListener;
-import spinnery.widget.WDynamicText;
 import spinnery.widget.WWidget;
 
 import java.io.File;

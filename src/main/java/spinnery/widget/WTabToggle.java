@@ -6,7 +6,20 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import spinnery.client.BaseRenderer;
 
+import java.util.Map;
+
 public class WTabToggle extends WToggle {
+	public static final int SHADOW_ON = 0;
+	public static final int BACKGROUND_ON = 1;
+	public static final int HIGHLIGHT_ON = 2;
+	public static final int OUTLINE_ON = 3;
+	public static final int SHADOW_OFF = 4;
+	public static final int BACKGROUND_OFF = 5;
+	public static final int HIGHLIGHT_OFF = 6;
+	public static final int OUTLINE_OFF = 7;
+	public static final int LABEL = 8;
+	Item symbol;
+	Text name;
 	public WTabToggle(Item symbol, Text name, WAnchor anchor, int positionX, int positionY, int positionZ, int sizeX, int sizeY, WInterface linkedPanel) {
 		super(anchor, positionX, positionY, positionZ, sizeX, sizeY, linkedPanel);
 
@@ -24,11 +37,22 @@ public class WTabToggle extends WToggle {
 		setSizeX(sizeX);
 		setSizeY(sizeY);
 
-		//setTheme("default");
+		setTheme("default");
 	}
 
-	Item symbol;
-	Text name;
+	public static WWidget.Theme of(Map<String, String> rawTheme) {
+		WWidget.Theme theme = new WWidget.Theme();
+		theme.add(SHADOW_ON, WColor.of(rawTheme.get("shadow_on")));
+		theme.add(BACKGROUND_ON, WColor.of(rawTheme.get("background_on")));
+		theme.add(HIGHLIGHT_ON, WColor.of(rawTheme.get("highlight_on")));
+		theme.add(OUTLINE_ON, WColor.of(rawTheme.get("outline_on")));
+		theme.add(SHADOW_OFF, WColor.of(rawTheme.get("shadow_off")));
+		theme.add(BACKGROUND_OFF, WColor.of(rawTheme.get("background_off")));
+		theme.add(HIGHLIGHT_OFF, WColor.of(rawTheme.get("highlight_off")));
+		theme.add(OUTLINE_OFF, WColor.of(rawTheme.get("outline_off")));
+		theme.add(LABEL, WColor.of(rawTheme.get("label")));
+		return theme;
+	}
 
 	public Item getSymbol() {
 		return symbol;
@@ -63,14 +87,14 @@ public class WTabToggle extends WToggle {
 		int sY = getSizeY() + 4;
 
 		if (!getToggleState()) {
-			BaseRenderer.drawPanel(x, y, z, sX, sY, new WColor("0xff262626"), new WColor("0xff393939"), new WColor("0xff474747"), new WColor("0xff000000"));
+			BaseRenderer.drawPanel(x, y, z, sX, sY, getColor(SHADOW_OFF), getColor(BACKGROUND_OFF), getColor(HIGHLIGHT_OFF), getColor(OUTLINE_OFF));
 		} else {
-			BaseRenderer.drawPanel(x, y, z, sX, sY, new WColor("0xff545454"), new WColor("0xff444444"), new WColor("0xff353535"), new WColor("0xff000000"));
+			BaseRenderer.drawPanel(x, y, z, sX, sY, getColor(SHADOW_ON), getColor(BACKGROUND_ON), getColor(HIGHLIGHT_ON), getColor(OUTLINE_ON));
 		}
 
 		RenderSystem.enableLighting();
 		BaseRenderer.getItemRenderer().renderGuiItemIcon(new ItemStack(getSymbol(), 1), x + 4, y + 4);
 		RenderSystem.disableLighting();
-		BaseRenderer.getTextRenderer().draw(name.asFormattedString(), x + 24, (int) (y + sY / 2 - 4.5), new WColor("0xffffff").RGB);
+		BaseRenderer.getTextRenderer().draw(name.asFormattedString(), x + 24, (int) (y + sY / 2 - 4.5), getColor(LABEL).RGB);
 	}
 }

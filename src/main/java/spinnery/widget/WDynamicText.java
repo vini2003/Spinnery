@@ -1,15 +1,20 @@
 package spinnery.widget;
 
-import com.google.gson.annotations.SerializedName;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import org.lwjgl.glfw.GLFW;
 import spinnery.client.BaseRenderer;
-import spinnery.registry.ResourceRegistry;
 
 import java.util.Map;
 
 public class WDynamicText extends WWidget implements WClient {
+	public static final int TOP_LEFT = 0;
+	public static final int BOTTOM_RIGHT = 1;
+	public static final int BACKGROUND = 2;
+	public static final int TEXT = 3;
+	public static final int HIGHLIGHT = 4;
+	public static final int CURSOR = 5;
+	public static final int LABEL = 6;
 	protected boolean isSelected;
 	protected String text = "";
 	protected String clip = "";
@@ -17,10 +22,8 @@ public class WDynamicText extends WWidget implements WClient {
 	protected int selLeftPos = 0;
 	protected int selRightPos = 0;
 	protected int cursorPos;
-	protected WDynamicText.Theme drawTheme;
 	protected int offsetPos = 0;
 	protected int cursorTick = 0;
-
 	protected boolean isEditable = true;
 	protected boolean isCentered = true;
 
@@ -37,6 +40,18 @@ public class WDynamicText extends WWidget implements WClient {
 		setSizeY(sizeY);
 
 		setTheme("default");
+	}
+
+	public static WWidget.Theme of(Map<String, String> rawTheme) {
+		WWidget.Theme theme = new WWidget.Theme();
+		theme.add(TOP_LEFT, WColor.of(rawTheme.get("top_left")));
+		theme.add(BOTTOM_RIGHT, WColor.of(rawTheme.get("bottom_right")));
+		theme.add(BACKGROUND, WColor.of(rawTheme.get("background")));
+		theme.add(TEXT, WColor.of(rawTheme.get("text")));
+		theme.add(HIGHLIGHT, WColor.of(rawTheme.get("highlight")));
+		theme.add(CURSOR, WColor.of(rawTheme.get("cursor")));
+		theme.add(LABEL, WColor.of(rawTheme.get("label")));
+		return theme;
 	}
 
 	void updateText() {
@@ -197,7 +212,6 @@ public class WDynamicText extends WWidget implements WClient {
 	public void setTheme(String theme) {
 		if (getInterface().isClient()) {
 			super.setTheme(theme);
-			//
 		}
 	}
 
@@ -257,25 +271,5 @@ public class WDynamicText extends WWidget implements WClient {
 			cursorTick = 20;
 		}
 		super.tick();
-	}
-
-	public static final int TOP_LEFT = 0;
-	public static final int BOTTOM_RIGHT = 1;
-	public static final int BACKGROUND = 2;
-	public static final int TEXT = 3;
-	public static final int HIGHLIGHT = 4;
-	public static final int CURSOR = 5;
-	public static final int LABEL = 6;
-
-	public static WWidget.Theme of(Map<String, String> rawTheme) {
-		WInterface.Theme theme = new WWidget.Theme();
-		theme.add(TOP_LEFT, WColor.of(rawTheme.get("top_left")));
-		theme.add(BOTTOM_RIGHT, WColor.of(rawTheme.get("bottom_right")));
-		theme.add(BACKGROUND, WColor.of(rawTheme.get("background")));
-		theme.add(TEXT, WColor.of(rawTheme.get("text")));
-		theme.add(HIGHLIGHT, WColor.of(rawTheme.get("highlight")));
-		theme.add(CURSOR, WColor.of(rawTheme.get("cursor")));
-		theme.add(LABEL, WColor.of(rawTheme.get("label")));
-		return theme;
 	}
 }

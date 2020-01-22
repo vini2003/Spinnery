@@ -5,9 +5,15 @@ import spinnery.client.BaseRenderer;
 import java.util.Map;
 
 public class WToggle extends WWidget implements WClient {
+	public static final int TOP_LEFT_BACKGROUND = 0;
+	public static final int BOTTOM_RIGHT_BACKGROUND = 1;
+	public static final int BACKGROUND_ON = 2;
+	public static final int BACKGROUND_OFF = 3;
+	public static final int TOP_LEFT_FOREGROUND = 4;
+	public static final int BOTTOM_RIGHT_FOREGROUND = 5;
+	public static final int FOREGROUND = 6;
+	public static final int LABEL = 7;
 	protected boolean toggleState = false;
-	protected WToggle.Theme drawTheme;
-
 	public WToggle(WAnchor anchor, int positionX, int positionY, int positionZ, int sizeX, int sizeY, WInterface linkedPanel) {
 		setInterface(linkedPanel);
 
@@ -23,6 +29,19 @@ public class WToggle extends WWidget implements WClient {
 		setTheme("default");
 	}
 
+	public static WWidget.Theme of(Map<String, String> rawTheme) {
+		WWidget.Theme theme = new WWidget.Theme();
+		theme.add(TOP_LEFT_BACKGROUND, WColor.of(rawTheme.get("top_left_background")));
+		theme.add(BOTTOM_RIGHT_BACKGROUND, WColor.of(rawTheme.get("bottom_right_background")));
+		theme.add(BACKGROUND_ON, WColor.of(rawTheme.get("background_on")));
+		theme.add(BACKGROUND_OFF, WColor.of(rawTheme.get("background_off")));
+		theme.add(TOP_LEFT_FOREGROUND, WColor.of(rawTheme.get("top_left_foreground")));
+		theme.add(BOTTOM_RIGHT_FOREGROUND, WColor.of(rawTheme.get("bottom_right_foreground")));
+		theme.add(FOREGROUND, WColor.of(rawTheme.get("foreground")));
+		theme.add(LABEL, WColor.of(rawTheme.get("label")));
+		return theme;
+	}
+
 	@Override
 	public void onMouseClicked(int mouseX, int mouseY, int mouseButton) {
 		if (scanFocus(mouseX, mouseY)) {
@@ -35,7 +54,6 @@ public class WToggle extends WWidget implements WClient {
 	public void setTheme(String theme) {
 		if (getInterface().isClient()) {
 			super.setTheme(theme);
-			//
 		}
 	}
 
@@ -77,27 +95,5 @@ public class WToggle extends WWidget implements WClient {
 
 	public void setToggleState(boolean toggleState) {
 		this.toggleState = toggleState;
-	}
-
-	public static final int TOP_LEFT_BACKGROUND = 0;
-	public static final int BOTTOM_RIGHT_BACKGROUND = 1;
-	public static final int BACKGROUND_ON = 2;
-	public static final int BACKGROUND_OFF = 3;
-	public static final int TOP_LEFT_FOREGROUND = 4;
-	public static final int BOTTOM_RIGHT_FOREGROUND = 5;
-	public static final int FOREGROUND = 6;
-	public static final int LABEL = 7;
-
-	public static WWidget.Theme of(Map<String, String> rawTheme) {
-		WInterface.Theme theme = new WWidget.Theme();
-		theme.add(TOP_LEFT_BACKGROUND, WColor.of(rawTheme.get("top_left_background")));
-		theme.add(BOTTOM_RIGHT_BACKGROUND, WColor.of(rawTheme.get("bottom_right_background")));
-		theme.add(BACKGROUND_ON, WColor.of(rawTheme.get("background_on")));
-		theme.add(BACKGROUND_OFF, WColor.of(rawTheme.get("background_off")));
-		theme.add(TOP_LEFT_FOREGROUND, WColor.of(rawTheme.get("top_left_foreground")));
-		theme.add(BOTTOM_RIGHT_FOREGROUND, WColor.of(rawTheme.get("bottom_right_foreground")));
-		theme.add(FOREGROUND, WColor.of(rawTheme.get("foreground")));
-		theme.add(LABEL, WColor.of(rawTheme.get("label")));
-		return theme;
 	}
 }

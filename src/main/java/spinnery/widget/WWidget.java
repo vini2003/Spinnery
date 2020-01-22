@@ -41,6 +41,10 @@ public class WWidget implements Tickable {
 	public WWidget() {
 	}
 
+	public static Theme of(Map<String, String> rawTheme) {
+		return null;
+	}
+
 	public void onCharTyped(char character) {
 		if (linkedRunnableOnCharTyped != null) {
 			linkedRunnableOnCharTyped.run();
@@ -348,10 +352,6 @@ public class WWidget implements Tickable {
 
 	public WColor getColor(int number) {
 		return ThemeRegistry.get(getTheme(), getClass()).get(number);
-	}
-
-	public static Theme of(Map<String, String> rawTheme) {
-		return null;
 	}
 
 	public static class Theme {

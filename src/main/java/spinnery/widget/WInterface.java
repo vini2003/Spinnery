@@ -1,24 +1,23 @@
 package spinnery.widget;
 
-import com.google.gson.annotations.SerializedName;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.server.MinecraftServer;
 import spinnery.client.BaseRenderer;
 import spinnery.common.BaseContainer;
-import spinnery.registry.ResourceRegistry;
-import spinnery.registry.ThemeRegistry;
 
 import java.util.List;
 import java.util.Map;
 
 public class WInterface extends WWidget {
+	public static final int SHADOW = 0;
+	public static final int BACKGROUND = 1;
+	public static final int HIGHLIGHT = 2;
+	public static final int OUTLINE = 3;
+	public static final int LABEL = 4;
 	protected BaseContainer linkedContainer;
 	protected WWidgetHolder widgetHolder = new WWidgetHolder();
-
 	protected boolean isClientside;
 	protected Class<?> instanceType;
-
-	protected WInterface.Theme drawTheme;
 
 	public WInterface(BaseContainer linkedContainer) {
 		setContainer(linkedContainer);
@@ -58,6 +57,16 @@ public class WInterface extends WWidget {
 		}
 
 		setTheme("default");
+	}
+
+	public static WWidget.Theme of(Map<String, String> rawTheme) {
+		WWidget.Theme theme = new WWidget.Theme();
+		theme.add(SHADOW, WColor.of(rawTheme.get("shadow")));
+		theme.add(BACKGROUND, WColor.of(rawTheme.get("background")));
+		theme.add(HIGHLIGHT, WColor.of(rawTheme.get("highlight")));
+		theme.add(OUTLINE, WColor.of(rawTheme.get("outline")));
+		theme.add(LABEL, WColor.of(rawTheme.get("label")));
+		return theme;
 	}
 
 	public Class<?> getInstanceType() {
@@ -118,7 +127,6 @@ public class WInterface extends WWidget {
 	public void setTheme(String theme) {
 		if (isClient()) {
 			super.setTheme(theme);
-			//
 		}
 	}
 
@@ -135,7 +143,7 @@ public class WInterface extends WWidget {
 		int sX = getSizeX();
 		int sY = getSizeY();
 
-		 BaseRenderer.drawPanel(x, y, z, sX, sY, getColor(SHADOW), getColor(BACKGROUND), getColor(HIGHLIGHT),getColor(OUTLINE));
+		BaseRenderer.drawPanel(x, y, z, sX, sY, getColor(SHADOW), getColor(BACKGROUND), getColor(HIGHLIGHT), getColor(OUTLINE));
 
 		if (hasLabel()) {
 			BaseRenderer.getTextRenderer().drawWithShadow(getLabel().asFormattedString(), x + sX / 2 - BaseRenderer.getTextRenderer().getStringWidth(getLabel().asFormattedString()) / 2, positionY + 6, getColor(LABEL).RGB);
@@ -146,21 +154,5 @@ public class WInterface extends WWidget {
 		for (WWidget widget : getWidgets()) {
 			widget.draw();
 		}
-	}
-
-	public static final int SHADOW = 0;
-	public static final int BACKGROUND = 1;
-	public static final int HIGHLIGHT = 2;
-	public static final int OUTLINE = 3;
-	public static final int LABEL = 4;
-
-	public static WWidget.Theme of(Map<String, String> rawTheme) {
-		WInterface.Theme theme = new WWidget.Theme();
-		theme.add(SHADOW, WColor.of(rawTheme.get("shadow")));
-		theme.add(BACKGROUND, WColor.of(rawTheme.get("background")));
-		theme.add(HIGHLIGHT, WColor.of(rawTheme.get("highlight")));
-		theme.add(OUTLINE, WColor.of(rawTheme.get("outline")));
-		theme.add(LABEL, WColor.of(rawTheme.get("label")));
-		return theme;
 	}
 }

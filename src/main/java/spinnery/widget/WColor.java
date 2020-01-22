@@ -5,10 +5,6 @@ public class WColor {
 
 	public int RGB = 0x000000;
 
-	public static WColor of(String ARGB) {
-		return new WColor(ARGB);
-	}
-
 	public WColor(String ARGB) {
 		if (ARGB.length() == 8) {
 			R = Integer.decode("0x" + ARGB.substring(2, 4)) / 255f;
@@ -21,5 +17,9 @@ public class WColor {
 			G = Integer.decode("0x" + ARGB.substring(6, 8)) / 255f;
 			B = Integer.decode("0x" + ARGB.substring(8, 10)) / 255f;
 		}
+	}
+
+	public static WColor of(String ARGB) {
+		return new WColor(ARGB);
 	}
 }
