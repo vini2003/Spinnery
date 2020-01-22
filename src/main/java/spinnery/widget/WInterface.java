@@ -6,8 +6,10 @@ import net.minecraft.server.MinecraftServer;
 import spinnery.client.BaseRenderer;
 import spinnery.common.BaseContainer;
 import spinnery.registry.ResourceRegistry;
+import spinnery.registry.ThemeRegistry;
 
 import java.util.List;
+import java.util.Map;
 
 public class WInterface extends WWidget {
 	protected BaseContainer linkedContainer;
@@ -116,7 +118,7 @@ public class WInterface extends WWidget {
 	public void setTheme(String theme) {
 		if (isClient()) {
 			super.setTheme(theme);
-			drawTheme = ResourceRegistry.get(getTheme()).getWInterfaceTheme();
+			//
 		}
 	}
 
@@ -133,12 +135,12 @@ public class WInterface extends WWidget {
 		int sX = getSizeX();
 		int sY = getSizeY();
 
-		BaseRenderer.drawPanel(x, y, z, sX, sY, drawTheme.getShadow(), drawTheme.getBackground(), drawTheme.getHighlight(), drawTheme.getOutline());
+		 BaseRenderer.drawPanel(x, y, z, sX, sY, getColor(SHADOW), getColor(BACKGROUND), getColor(HIGHLIGHT),getColor(OUTLINE));
 
 		if (hasLabel()) {
-			BaseRenderer.getTextRenderer().drawWithShadow(getLabel().asFormattedString(), x + sX / 2 - BaseRenderer.getTextRenderer().getStringWidth(getLabel().asFormattedString()) / 2, positionY + 6, drawTheme.getLabel().RGB);
-			BaseRenderer.drawRectangle(positionX, positionY + 16, positionZ, sizeX, 1, drawTheme.getOutline());
-			BaseRenderer.drawRectangle(positionX + 1, positionY + 17, positionZ, sizeX - 2, 0.75, drawTheme.getShadow());
+			BaseRenderer.getTextRenderer().drawWithShadow(getLabel().asFormattedString(), x + sX / 2 - BaseRenderer.getTextRenderer().getStringWidth(getLabel().asFormattedString()) / 2, positionY + 6, getColor(LABEL).RGB);
+			BaseRenderer.drawRectangle(positionX, positionY + 16, positionZ, sizeX, 1, getColor(OUTLINE));
+			BaseRenderer.drawRectangle(positionX + 1, positionY + 17, positionZ, sizeX - 2, 0.75, getColor(SHADOW));
 		}
 
 		for (WWidget widget : getWidgets()) {
@@ -146,58 +148,19 @@ public class WInterface extends WWidget {
 		}
 	}
 
-	@Override
-	public void tick() {
-	}
+	public static final int SHADOW = 0;
+	public static final int BACKGROUND = 1;
+	public static final int HIGHLIGHT = 2;
+	public static final int OUTLINE = 3;
+	public static final int LABEL = 4;
 
-	public class Theme extends WWidget.Theme {
-		transient private WColor shadow;
-		transient private WColor background;
-		transient private WColor highlight;
-		transient private WColor outline;
-		transient private WColor label;
-
-		@SerializedName("shadow")
-		private String rawShadow;
-
-		@SerializedName("background")
-		private String rawBackground;
-
-		@SerializedName("highlight")
-		private String rawHighlight;
-
-		@SerializedName("outline")
-		private String rawOutline;
-
-		@SerializedName("label")
-		private String rawLabel;
-
-		public void build() {
-			shadow = new WColor(rawShadow);
-			background = new WColor(rawBackground);
-			highlight = new WColor(rawHighlight);
-			outline = new WColor(rawOutline);
-			label = new WColor(rawLabel);
-		}
-
-		public WColor getShadow() {
-			return shadow;
-		}
-
-		public WColor getBackground() {
-			return background;
-		}
-
-		public WColor getHighlight() {
-			return highlight;
-		}
-
-		public WColor getOutline() {
-			return outline;
-		}
-
-		public WColor getLabel() {
-			return label;
-		}
+	public static WWidget.Theme of(Map<String, String> rawTheme) {
+		WInterface.Theme theme = new WWidget.Theme();
+		theme.add(SHADOW, WColor.of(rawTheme.get("shadow")));
+		theme.add(BACKGROUND, WColor.of(rawTheme.get("background")));
+		theme.add(HIGHLIGHT, WColor.of(rawTheme.get("highlight")));
+		theme.add(OUTLINE, WColor.of(rawTheme.get("outline")));
+		theme.add(LABEL, WColor.of(rawTheme.get("label")));
+		return theme;
 	}
 }

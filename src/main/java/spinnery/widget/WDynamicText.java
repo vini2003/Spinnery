@@ -7,6 +7,8 @@ import org.lwjgl.glfw.GLFW;
 import spinnery.client.BaseRenderer;
 import spinnery.registry.ResourceRegistry;
 
+import java.util.Map;
+
 public class WDynamicText extends WWidget implements WClient {
 	protected boolean isSelected;
 	protected String text = "";
@@ -195,7 +197,7 @@ public class WDynamicText extends WWidget implements WClient {
 	public void setTheme(String theme) {
 		if (getInterface().isClient()) {
 			super.setTheme(theme);
-			drawTheme = ResourceRegistry.get(getTheme()).getWDynamicTextTheme();
+			//
 		}
 	}
 
@@ -214,14 +216,14 @@ public class WDynamicText extends WWidget implements WClient {
 
 		int oY = 0;
 
-		BaseRenderer.drawBeveledPanel(x, y, z, sX, sY, drawTheme.getTopLeft(), drawTheme.getBackground(), drawTheme.getBottomRight());
+		BaseRenderer.drawBeveledPanel(x, y, z, sX, sY, getColor(TOP_LEFT), getColor(BACKGROUND), getColor(BOTTOM_RIGHT));
 
 		if (text.isEmpty() && !isSelected) {
-			BaseRenderer.getTextRenderer().drawWithShadow(getLabel().asFormattedString(), (float) (positionX + 4), (float) (y + 4 + oY), drawTheme.getLabel().RGB);
+			BaseRenderer.getTextRenderer().drawWithShadow(getLabel().asFormattedString(), (float) (positionX + 4), (float) (y + 4 + oY), getColor(LABEL).RGB);
 		} else {
 			int pP = x + 4, pC = offsetPos;
 			if (visible.isEmpty() && cursorTick > 10) {
-				BaseRenderer.getTextRenderer().drawWithShadow("|", (float) pP, (float) (y + 4 + oY), drawTheme.getCursor().RGB);
+				BaseRenderer.getTextRenderer().drawWithShadow("|", (float) pP, (float) (y + 4 + oY), getColor(CURSOR).RGB);
 			}
 			for (char c : visible.toCharArray()) {
 				if (c == '\n') {
@@ -229,16 +231,16 @@ public class WDynamicText extends WWidget implements WClient {
 					pP = x + 4;
 				} else {
 					int cW = (int) BaseRenderer.getTextRenderer().getCharWidth(c);
-					BaseRenderer.getTextRenderer().drawWithShadow(String.valueOf(c), (float) pP, (float) (y + 4 + oY), drawTheme.getText().RGB);
+					BaseRenderer.getTextRenderer().drawWithShadow(String.valueOf(c), (float) pP, (float) (y + 4 + oY), getColor(TEXT).RGB);
 
 					if (pC >= selLeftPos && (pC < selRightPos || pC == text.length() - 1 && pC <= selRightPos) && (selLeftPos - selRightPos != 0)) {
-						BaseRenderer.drawRectangle(pP, y + 4 + oY, 10, cW, 9, drawTheme.getHighlight());
+						BaseRenderer.drawRectangle(pP, y + 4 + oY, 10, cW, 9, getColor(HIGHLIGHT));
 					}
 
 					pP += cW;
 
 					if ((pC == cursorPos - 1) && isSelected && cursorTick > 10) {
-						BaseRenderer.getTextRenderer().drawWithShadow("|", (float) pP, (float) (y + 4 + oY), drawTheme.getCursor().RGB);
+						BaseRenderer.getTextRenderer().drawWithShadow("|", (float) pP, (float) (y + 4 + oY), getColor(CURSOR).RGB);
 					}
 
 					++pC;
@@ -257,72 +259,23 @@ public class WDynamicText extends WWidget implements WClient {
 		super.tick();
 	}
 
-	public class Theme extends WWidget.Theme {
-		transient private WColor topLeft;
-		transient private WColor bottomRight;
-		transient private WColor background;
-		transient private WColor text;
-		transient private WColor highlight;
-		transient private WColor cursor;
-		transient private WColor label;
+	public static final int TOP_LEFT = 0;
+	public static final int BOTTOM_RIGHT = 1;
+	public static final int BACKGROUND = 2;
+	public static final int TEXT = 3;
+	public static final int HIGHLIGHT = 4;
+	public static final int CURSOR = 5;
+	public static final int LABEL = 6;
 
-		@SerializedName("top_left")
-		private String rawTopLeft;
-
-		@SerializedName("bottom_right")
-		private String rawBottomRight;
-
-		@SerializedName("background")
-		private String rawBackground;
-
-		@SerializedName("text")
-		private String rawText;
-
-		@SerializedName("highlight")
-		private String rawHighlight;
-
-		@SerializedName("cursor")
-		private String rawCursor;
-
-		@SerializedName("label")
-		private String rawLabel;
-
-		public void build() {
-			topLeft = new WColor(rawTopLeft);
-			bottomRight = new WColor(rawBottomRight);
-			background = new WColor(rawBackground);
-			text = new WColor(rawText);
-			highlight = new WColor(rawHighlight);
-			cursor = new WColor(rawCursor);
-			label = new WColor(rawLabel);
-		}
-
-		public WColor getTopLeft() {
-			return topLeft;
-		}
-
-		public WColor getBottomRight() {
-			return bottomRight;
-		}
-
-		public WColor getBackground() {
-			return background;
-		}
-
-		public WColor getText() {
-			return text;
-		}
-
-		public WColor getHighlight() {
-			return highlight;
-		}
-
-		public WColor getCursor() {
-			return cursor;
-		}
-
-		public WColor getLabel() {
-			return label;
-		}
+	public static WWidget.Theme of(Map<String, String> rawTheme) {
+		WInterface.Theme theme = new WWidget.Theme();
+		theme.add(TOP_LEFT, WColor.of(rawTheme.get("top_left")));
+		theme.add(BOTTOM_RIGHT, WColor.of(rawTheme.get("bottom_right")));
+		theme.add(BACKGROUND, WColor.of(rawTheme.get("background")));
+		theme.add(TEXT, WColor.of(rawTheme.get("text")));
+		theme.add(HIGHLIGHT, WColor.of(rawTheme.get("highlight")));
+		theme.add(CURSOR, WColor.of(rawTheme.get("cursor")));
+		theme.add(LABEL, WColor.of(rawTheme.get("label")));
+		return theme;
 	}
 }

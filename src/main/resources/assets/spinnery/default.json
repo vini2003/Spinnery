@@ -1,34 +1,36 @@
 {
-	"Identifier": "default",
-	"WInterface": {
+	"Identifier": {
+		"name": "default"
+	},
+	"spinnery.widget.WInterface": {
 		"shadow": "0xff555555",
 		"background": "0xffc6c6c6",
 		"highlight": "0xffffffff",
 		"outline": "0xff000000",
 		"label": "0xffffff"
 	},
-	"WList": {
+	"spinnery.widget.WList": {
 		"shadow": "0xff555555",
 		"background": "0xffc6c6c6",
 		"highlight": "0xffffffff",
 		"outline": "0xff000000",
 		"label": "0xffffff"
 	},
-	"WDropdown": {
+	"spinnery.widget.WDropdown": {
 		"shadow": "0xff555555",
 		"background": "0xffc6c6c6",
 		"highlight": "0xffffffff",
 		"outline": "0xff000000",
 		"label": "0xffffff"
 	},
-	"WStaticImage": {
+	"spinnery.widget.WStaticImage": {
 	},
-	"WDynamicImage": {
+	"spinnery.widget.WDynamicImage": {
 	},
-	"WStaticText": {
+	"spinnery.widget.WStaticText": {
 		"text": "0xffffff"
 	},
-	"WDynamicText": {
+	"spinnery.widget.WDynamicText": {
 		"top_left": "0xff373737",
 		"bottom_right": "0xffffffff",
 		"background": "0xff000000",
@@ -37,7 +39,7 @@
 		"cursor": "0xffffff",
 		"label": "0x808080"
 	},
-	"WVerticalSlider": {
+	"spinnery.widget.WVerticalSlider": {
 		"top_left_background": "0xff373737",
 		"bottom_right_background": "0xffffffff",
 		"background_on": "0xff00c116",
@@ -47,7 +49,7 @@
 		"foreground": "0xff6b6b6b",
 		"text": "0xffffff"
 	},
-	"WHorizontalSlider": {
+	"spinnery.widget.WHorizontalSlider": {
 		"top_left_background": "0xff373737",
 		"bottom_right_background": "0xffffffff",
 		"background_on": "0xff00c116",
@@ -57,7 +59,7 @@
 		"foreground": "0xff6b6b6b",
 		"text": "0xffffff"
 	},
-	"WToggle": {
+	"spinnery.widget.WToggle": {
 		"top_left_background": "0xff373737",
 		"bottom_right_background": "0xffffffff",
 		"background_on": "0xff00c116",
@@ -67,7 +69,7 @@
 		"foreground": "0xff6b6b6b",
 		"label": "0xffffff"
 	},
-	"WButton": {
+	"spinnery.widget.WButton": {
 		"top_left_on": "0xff373737",
 		"bottom_right_on": "0xffffffff",
 		"background_on": "0xff686868",
@@ -76,7 +78,7 @@
 		"background_off": "0xff8b8b8b",
 		"label": "0xffffff"
 	},
-	"WSlot": {
+	"spinnery.widget.WSlot": {
 		"top_left": "0xff373737",
 		"bottom_right": "0xffffffff",
 		"background_focused": "0xff00c116",

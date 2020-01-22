@@ -5,6 +5,8 @@ import org.lwjgl.glfw.GLFW;
 import spinnery.client.BaseRenderer;
 import spinnery.registry.ResourceRegistry;
 
+import java.util.Map;
+
 public class WVerticalSlider extends WWidget implements WClient {
 	protected int limit = 0;
 	protected int position = 0;
@@ -96,7 +98,7 @@ public class WVerticalSlider extends WWidget implements WClient {
 	public void setTheme(String theme) {
 		if (getInterface().isClient()) {
 			super.setTheme(theme);
-			drawTheme = ResourceRegistry.get(getTheme()).getWVerticalSliderTheme();
+			//
 		}
 	}
 
@@ -118,84 +120,37 @@ public class WVerticalSlider extends WWidget implements WClient {
 
 		BaseRenderer.getTextRenderer().drawWithShadow(getSlidTotal(), x + sX + 4, y + sY / 2, 0xffffff);
 
-		BaseRenderer.drawRectangle(x, y, z, sX, 1, drawTheme.getTopLeftBackground());
-		BaseRenderer.drawRectangle(x, y, z, 1, (sY + 7), drawTheme.getTopLeftBackground());
+		BaseRenderer.drawRectangle(x, y, z, sX, 1, getColor(TOP_LEFT_BACKGROUND));
+		BaseRenderer.drawRectangle(x, y, z, 1, (sY + 7), getColor(TOP_LEFT_BACKGROUND));
 
-		BaseRenderer.drawRectangle(x, y + (sY + 7) - 1, z, sX, 1, drawTheme.getBottomRightBackground());
-		BaseRenderer.drawRectangle(x + sX, y, z, 1, (sY + 7), drawTheme.getBottomRightBackground());
+		BaseRenderer.drawRectangle(x, y + (sY + 7) - 1, z, sX, 1, getColor(BOTTOM_RIGHT_BACKGROUND));
+		BaseRenderer.drawRectangle(x + sX, y, z, 1, (sY + 7), getColor(BOTTOM_RIGHT_BACKGROUND));
 
-		BaseRenderer.drawRectangle(x + 1, y + 1, z, sX - 1, ((sY + 7) / l) * p - 2, drawTheme.getBackgroundOn());
-		BaseRenderer.drawRectangle(x + 1, y + ((sY + 7) / l) * p - 1, z, sX - 1, (sY + 7) - ((sY + 7) / l) * p, drawTheme.getBackgroundOff());
+		BaseRenderer.drawRectangle(x + 1, y + 1, z, sX - 1, ((sY + 7) / l) * p - 2, getColor(BACKGROUND_ON));
+		BaseRenderer.drawRectangle(x + 1, y + ((sY + 7) / l) * p - 1, z, sX - 1, (sY + 7) - ((sY + 7) / l) * p, getColor(BACKGROUND_OFF));
 
-		BaseRenderer.drawBeveledPanel(x - 1, y + (sY / l) * p - 1, z, sX + 3, 8, drawTheme.getTopLeftForeground(), drawTheme.getForeground(), drawTheme.getBottomRightForeground());
+		BaseRenderer.drawBeveledPanel(x - 1, y + (sY / l) * p - 1, z, sX + 3, 8, getColor(TOP_LEFT_FOREGROUND), getColor(FOREGROUND), getColor(BOTTOM_RIGHT_FOREGROUND));
 	}
 
-	public class Theme extends WWidget.Theme {
-		transient private WColor topLeftBackground;
-		transient private WColor bottomRightBackground;
-		transient private WColor backgroundOn;
-		transient private WColor backgroundOff;
-		transient private WColor topLeftForeground;
-		transient private WColor bottomRightForeground;
-		transient private WColor foreground;
+	public static final int TOP_LEFT_BACKGROUND = 0;
+	public static final int BOTTOM_RIGHT_BACKGROUND = 1;
+	public static final int BACKGROUND_ON = 2;
+	public static final int BACKGROUND_OFF = 3;
+	public static final int TOP_LEFT_FOREGROUND = 4;
+	public static final int BOTTOM_RIGHT_FOREGROUND = 5;
+	public static final int FOREGROUND = 6;
+	public static final int TEXT = 7;
 
-		@SerializedName("top_left_background")
-		private String rawTopLeftBackground;
-
-		@SerializedName("bottom_right_background")
-		private String rawBottomRightBackground;
-
-		@SerializedName("background_on")
-		private String rawBackgroundOn;
-
-		@SerializedName("background_off")
-		private String rawBackgroundOff;
-
-		@SerializedName("top_left_foreground")
-		private String rawTopLeftForeground;
-
-		@SerializedName("bottom_right_foreground")
-		private String rawBottomRightForeground;
-
-		@SerializedName("foreground")
-		private String rawForeground;
-
-		public void build() {
-			topLeftBackground = new WColor(rawTopLeftBackground);
-			bottomRightBackground = new WColor(rawBottomRightBackground);
-			backgroundOn = new WColor(rawBackgroundOn);
-			backgroundOff = new WColor(rawBackgroundOff);
-			topLeftForeground = new WColor(rawTopLeftForeground);
-			bottomRightForeground = new WColor(rawBottomRightForeground);
-			foreground = new WColor(rawForeground);
-		}
-
-		public WColor getTopLeftBackground() {
-			return topLeftBackground;
-		}
-
-		public WColor getBottomRightBackground() {
-			return bottomRightBackground;
-		}
-
-		public WColor getBackgroundOn() {
-			return backgroundOn;
-		}
-
-		public WColor getBackgroundOff() {
-			return backgroundOff;
-		}
-
-		public WColor getTopLeftForeground() {
-			return topLeftForeground;
-		}
-
-		public WColor getBottomRightForeground() {
-			return bottomRightForeground;
-		}
-
-		public WColor getForeground() {
-			return foreground;
-		}
+	public static WWidget.Theme of(Map<String, String> rawTheme) {
+		WInterface.Theme theme = new WWidget.Theme();
+		theme.add(TOP_LEFT_BACKGROUND, WColor.of(rawTheme.get("top_left_background")));
+		theme.add(BOTTOM_RIGHT_BACKGROUND, WColor.of(rawTheme.get("bottom_right_background")));
+		theme.add(BACKGROUND_ON, WColor.of(rawTheme.get("background_on")));
+		theme.add(BACKGROUND_OFF, WColor.of(rawTheme.get("background_off")));
+		theme.add(TOP_LEFT_FOREGROUND, WColor.of(rawTheme.get("top_left_foreground")));
+		theme.add(BOTTOM_RIGHT_FOREGROUND, WColor.of(rawTheme.get("bottom_right_foreground")));
+		theme.add(FOREGROUND, WColor.of(rawTheme.get("foreground")));
+		theme.add(TEXT, WColor.of(rawTheme.get("text")));
+		return theme;
 	}
 }

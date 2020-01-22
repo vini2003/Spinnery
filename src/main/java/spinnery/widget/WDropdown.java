@@ -8,6 +8,7 @@ import spinnery.registry.ResourceRegistry;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 public class WDropdown extends WWidget implements WClient, WCollection {
 	public List<List<WWidget>> dropdownWidgets = new ArrayList<>();
@@ -74,7 +75,7 @@ public class WDropdown extends WWidget implements WClient, WCollection {
 	public void setTheme(String theme) {
 		if (getInterface().isClient()) {
 			super.setTheme(theme);
-			drawTheme = ResourceRegistry.get(getTheme()).getWDropdownTheme();
+			//
 		}
 	}
 
@@ -103,12 +104,12 @@ public class WDropdown extends WWidget implements WClient, WCollection {
 			return;
 		}
 
-		BaseRenderer.drawPanel(getPositionX(), getPositionY(), getPositionZ(), getSizeX(), getSizeY() + 1.75, drawTheme.getShadow(), drawTheme.getBackground(), drawTheme.getHighlight(), drawTheme.getOutline());
+		BaseRenderer.drawPanel(getPositionX(), getPositionY(), getPositionZ(), getSizeX(), getSizeY() + 1.75, getColor(SHADOW), getColor(BACKGROUND), getColor(HIGHLIGHT), getColor(OUTLINE));
 
 		if (hasLabel()) {
-			BaseRenderer.getTextRenderer().drawWithShadow(getLabel().asFormattedString(), getPositionX() + getSizeX() / 2 - BaseRenderer.getTextRenderer().getStringWidth(getLabel().asFormattedString()) / 2, positionY + 6, drawTheme.getLabel().RGB);
-			BaseRenderer.drawRectangle(positionX, positionY + 16, positionZ, getSizeX(), 1, drawTheme.getOutline());
-			BaseRenderer.drawRectangle(positionX + 1, positionY + 17, positionZ, getSizeX() - 2, 0.75, drawTheme.getShadow());
+			BaseRenderer.getTextRenderer().drawWithShadow(getLabel().asFormattedString(), getPositionX() + getSizeX() / 2 - BaseRenderer.getTextRenderer().getStringWidth(getLabel().asFormattedString()) / 2, positionY + 6, getColor(LABEL).RGB);
+			BaseRenderer.drawRectangle(positionX, positionY + 16, positionZ, getSizeX(), 1, getColor(OUTLINE));
+			BaseRenderer.drawRectangle(positionX + 1, positionY + 17, positionZ, getSizeX() - 2, 0.75, getColor(SHADOW));
 		}
 
 		if (getState()) {
@@ -154,54 +155,19 @@ public class WDropdown extends WWidget implements WClient, WCollection {
 		updatePositions();
 	}
 
-	public class Theme extends WWidget.Theme {
-		transient private WColor shadow;
-		transient private WColor background;
-		transient private WColor highlight;
-		transient private WColor outline;
-		transient private WColor label;
+	public static final int SHADOW = 0;
+	public static final int BACKGROUND = 1;
+	public static final int HIGHLIGHT = 2;
+	public static final int OUTLINE = 3;
+	public static final int LABEL = 4;
 
-		@SerializedName("shadow")
-		private String rawShadow;
-
-		@SerializedName("background")
-		private String rawBackground;
-
-		@SerializedName("highlight")
-		private String rawHighlight;
-
-		@SerializedName("outline")
-		private String rawOutline;
-
-		@SerializedName("label")
-		private String rawLabel;
-
-		public void build() {
-			shadow = new WColor(rawShadow);
-			background = new WColor(rawBackground);
-			highlight = new WColor(rawHighlight);
-			outline = new WColor(rawOutline);
-			label = new WColor(rawLabel);
-		}
-
-		public WColor getShadow() {
-			return shadow;
-		}
-
-		public WColor getBackground() {
-			return background;
-		}
-
-		public WColor getHighlight() {
-			return highlight;
-		}
-
-		public WColor getOutline() {
-			return outline;
-		}
-
-		public WColor getLabel() {
-			return label;
-		}
+	public static WWidget.Theme of(Map<String, String> rawTheme) {
+		WInterface.Theme theme = new WWidget.Theme();
+		theme.add(SHADOW, WColor.of(rawTheme.get("shadow")));
+		theme.add(BACKGROUND, WColor.of(rawTheme.get("background")));
+		theme.add(HIGHLIGHT, WColor.of(rawTheme.get("highlight")));
+		theme.add(OUTLINE, WColor.of(rawTheme.get("outline")));
+		theme.add(LABEL, WColor.of(rawTheme.get("label")));
+		return theme;
 	}
 }

@@ -5,6 +5,8 @@ import net.minecraft.text.Text;
 import spinnery.client.BaseRenderer;
 import spinnery.registry.ResourceRegistry;
 
+import java.util.Map;
+
 public class WStaticText extends WWidget implements WClient {
 	protected int hexColor;
 	protected Text text;
@@ -38,7 +40,7 @@ public class WStaticText extends WWidget implements WClient {
 	public void setTheme(String theme) {
 		if (getInterface().isClient()) {
 			super.setTheme(theme);
-			drawTheme = ResourceRegistry.get(getTheme()).getWStaticTextTheme();
+			//
 		}
 	}
 
@@ -51,21 +53,14 @@ public class WStaticText extends WWidget implements WClient {
 		int x = getPositionX();
 		int y = getPositionY();
 
-		BaseRenderer.getTextRenderer().drawWithShadow(getText().asFormattedString(), x, y, drawTheme.getText().RGB);
+		BaseRenderer.getTextRenderer().drawWithShadow(getText().asFormattedString(), x, y, getColor(TEXT).RGB);
 	}
 
-	public class Theme extends WWidget.Theme {
-		transient private WColor text;
+	public static final int TEXT = 7;
 
-		@SerializedName("text")
-		private String rawText;
-
-		public void build() {
-			text = new WColor(rawText);
-		}
-
-		public WColor getText() {
-			return text;
-		}
+	public static WWidget.Theme of(Map<String, String> rawTheme) {
+		WInterface.Theme theme = new WWidget.Theme();
+		theme.add(TEXT, WColor.of(rawTheme.get("text")));
+		return theme;
 	}
 }

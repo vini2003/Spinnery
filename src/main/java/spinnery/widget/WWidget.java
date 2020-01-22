@@ -6,7 +6,10 @@ import net.minecraft.container.SlotActionType;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Tickable;
+import spinnery.registry.ThemeRegistry;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 public class WWidget implements Tickable {
@@ -343,8 +346,23 @@ public class WWidget implements Tickable {
 	public void tick() {
 	}
 
-	public class Theme {
-		public void build() {
+	public WColor getColor(int number) {
+		return ThemeRegistry.get(getTheme(), getClass()).get(number);
+	}
+
+	public static Theme of(Map<String, String> rawTheme) {
+		return null;
+	}
+
+	public static class Theme {
+		private Map<Integer, WColor> colors = new HashMap<>();
+
+		public void add(int number, WColor color) {
+			colors.put(number, color);
+		}
+
+		public WColor get(int number) {
+			return colors.get(number);
 		}
 	}
 }

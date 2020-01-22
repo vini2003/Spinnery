@@ -1,8 +1,8 @@
 package spinnery.widget;
 
-import com.google.gson.annotations.SerializedName;
 import spinnery.client.BaseRenderer;
-import spinnery.registry.ResourceRegistry;
+
+import java.util.Map;
 
 public class WToggle extends WWidget implements WClient {
 	protected boolean toggleState = false;
@@ -35,7 +35,7 @@ public class WToggle extends WWidget implements WClient {
 	public void setTheme(String theme) {
 		if (getInterface().isClient()) {
 			super.setTheme(theme);
-			drawTheme = ResourceRegistry.get(getTheme()).getWToggleTheme();
+			//
 		}
 	}
 
@@ -52,22 +52,22 @@ public class WToggle extends WWidget implements WClient {
 		int sX = getSizeX();
 		int sY = getSizeY();
 
-		BaseRenderer.drawRectangle(x, y, z, sX, 1, drawTheme.getTopLeftBackground());
-		BaseRenderer.drawRectangle(x, y, z, 1, sY, drawTheme.getTopLeftBackground());
+		BaseRenderer.drawRectangle(x, y, z, sX, 1, getColor(TOP_LEFT_BACKGROUND));
+		BaseRenderer.drawRectangle(x, y, z, 1, sY, getColor(TOP_LEFT_BACKGROUND));
 
-		BaseRenderer.drawRectangle(x, y + sY, z, sX, 1, drawTheme.getBottomRightBackground());
-		BaseRenderer.drawRectangle(x + sX, y, z, 1, sY + 1, drawTheme.getBottomRightBackground());
+		BaseRenderer.drawRectangle(x, y + sY, z, sX, 1, getColor(BOTTOM_RIGHT_BACKGROUND));
+		BaseRenderer.drawRectangle(x + sX, y, z, 1, sY + 1, getColor(BOTTOM_RIGHT_BACKGROUND));
 
-		BaseRenderer.drawRectangle(x + 1, y + 1, z, sX - 1, sY - 1, getToggleState() ? drawTheme.getBackgroundOn() : drawTheme.getBackgroundOff());
+		BaseRenderer.drawRectangle(x + 1, y + 1, z, sX - 1, sY - 1, getToggleState() ? getColor(BACKGROUND_ON) : getColor(BACKGROUND_OFF));
 
 		if (getToggleState()) {
-			BaseRenderer.drawBeveledPanel(x + sX - 8, y - 1, z, 8, sY + 3, drawTheme.getTopLeftForeground(), drawTheme.getForeground(), drawTheme.getBottomRightForeground());
+			BaseRenderer.drawBeveledPanel(x + sX - 8, y - 1, z, 8, sY + 3, getColor(TOP_LEFT_FOREGROUND), getColor(FOREGROUND), getColor(BOTTOM_RIGHT_FOREGROUND));
 		} else {
-			BaseRenderer.drawBeveledPanel(x + 1, y - 1, z, 8, sY + 3, drawTheme.getTopLeftForeground(), drawTheme.getForeground(), drawTheme.getBottomRightForeground());
+			BaseRenderer.drawBeveledPanel(x + 1, y - 1, z, 8, sY + 3, getColor(TOP_LEFT_FOREGROUND), getColor(FOREGROUND), getColor(BOTTOM_RIGHT_FOREGROUND));
 		}
 
 		if (hasLabel()) {
-			BaseRenderer.getTextRenderer().drawWithShadow(getLabel().asFormattedString(), (float) (positionX + sizeX + 2), (float) (positionY + sizeY / 2 - 4.5), drawTheme.getLabel().RGB);
+			BaseRenderer.getTextRenderer().drawWithShadow(getLabel().asFormattedString(), (float) (positionX + sizeX + 2), (float) (positionY + sizeY / 2 - 4.5), getColor(LABEL).RGB);
 		}
 	}
 
@@ -79,81 +79,25 @@ public class WToggle extends WWidget implements WClient {
 		this.toggleState = toggleState;
 	}
 
-	public class Theme extends WWidget.Theme {
-		transient private WColor topLeftBackground;
-		transient private WColor bottomRightBackground;
-		transient private WColor backgroundOn;
-		transient private WColor backgroundOff;
-		transient private WColor topLeftForeground;
-		transient private WColor bottomRightForeground;
-		transient private WColor foreground;
-		transient private WColor label;
+	public static final int TOP_LEFT_BACKGROUND = 0;
+	public static final int BOTTOM_RIGHT_BACKGROUND = 1;
+	public static final int BACKGROUND_ON = 2;
+	public static final int BACKGROUND_OFF = 3;
+	public static final int TOP_LEFT_FOREGROUND = 4;
+	public static final int BOTTOM_RIGHT_FOREGROUND = 5;
+	public static final int FOREGROUND = 6;
+	public static final int LABEL = 7;
 
-		@SerializedName("top_left_background")
-		private String rawTopLeftBackground;
-
-		@SerializedName("bottom_right_background")
-		private String rawBottomRightBackground;
-
-		@SerializedName("background_on")
-		private String rawBackgroundOn;
-
-		@SerializedName("background_off")
-		private String rawBackgroundOff;
-
-		@SerializedName("top_left_foreground")
-		private String rawTopLeftForeground;
-
-		@SerializedName("bottom_right_foreground")
-		private String rawBottomRightForeground;
-
-		@SerializedName("foreground")
-		private String rawForeground;
-
-		@SerializedName("label")
-		private String rawLabel;
-
-		public void build() {
-			topLeftBackground = new WColor(rawTopLeftBackground);
-			bottomRightBackground = new WColor(rawBottomRightBackground);
-			backgroundOn = new WColor(rawBackgroundOn);
-			backgroundOff = new WColor(rawBackgroundOff);
-			topLeftForeground = new WColor(rawTopLeftForeground);
-			bottomRightForeground = new WColor(rawBottomRightForeground);
-			foreground = new WColor(rawForeground);
-			label = new WColor(rawLabel);
-		}
-
-		public WColor getTopLeftBackground() {
-			return topLeftBackground;
-		}
-
-		public WColor getBottomRightBackground() {
-			return bottomRightBackground;
-		}
-
-		public WColor getBackgroundOn() {
-			return backgroundOn;
-		}
-
-		public WColor getBackgroundOff() {
-			return backgroundOff;
-		}
-
-		public WColor getTopLeftForeground() {
-			return topLeftForeground;
-		}
-
-		public WColor getBottomRightForeground() {
-			return bottomRightForeground;
-		}
-
-		public WColor getForeground() {
-			return foreground;
-		}
-
-		public WColor getLabel() {
-			return label;
-		}
+	public static WWidget.Theme of(Map<String, String> rawTheme) {
+		WInterface.Theme theme = new WWidget.Theme();
+		theme.add(TOP_LEFT_BACKGROUND, WColor.of(rawTheme.get("top_left_background")));
+		theme.add(BOTTOM_RIGHT_BACKGROUND, WColor.of(rawTheme.get("bottom_right_background")));
+		theme.add(BACKGROUND_ON, WColor.of(rawTheme.get("background_on")));
+		theme.add(BACKGROUND_OFF, WColor.of(rawTheme.get("background_off")));
+		theme.add(TOP_LEFT_FOREGROUND, WColor.of(rawTheme.get("top_left_foreground")));
+		theme.add(BOTTOM_RIGHT_FOREGROUND, WColor.of(rawTheme.get("bottom_right_foreground")));
+		theme.add(FOREGROUND, WColor.of(rawTheme.get("foreground")));
+		theme.add(LABEL, WColor.of(rawTheme.get("label")));
+		return theme;
 	}
 }

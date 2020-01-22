@@ -15,6 +15,8 @@ import spinnery.client.BaseRenderer;
 import spinnery.registry.NetworkRegistry;
 import spinnery.registry.ResourceRegistry;
 
+import java.util.Map;
+
 public class WSlot extends WWidget implements WClient, WServer {
 	protected WSlot.Theme drawTheme;
 	protected int slotNumber;
@@ -185,7 +187,7 @@ public class WSlot extends WWidget implements WClient, WServer {
 	public void setTheme(String theme) {
 		if (getInterface().isClient()) {
 			super.setTheme(theme);
-			drawTheme = ResourceRegistry.get(getTheme()).getWSlotTheme();
+			//
 		}
 	}
 
@@ -202,7 +204,7 @@ public class WSlot extends WWidget implements WClient, WServer {
 		int sX = getSizeX();
 		int sY = getSizeY();
 
-		BaseRenderer.drawBeveledPanel(x, y, z, sX, sY, drawTheme.getTopLeft(), getFocus() ? drawTheme.getBackgroundFocused() : drawTheme.getBackgroundUnfocused(), drawTheme.getBottomRight());
+		BaseRenderer.drawBeveledPanel(x, y, z, sX, sY, getColor(TOP_LEFT), getFocus() ? getColor(BACKGROUND_FOCUSED) : getColor(BACKGROUND_UNFOCUSED), getColor(BOTTOM_RIGHT));
 
 		RenderSystem.enableLighting();
 
@@ -212,46 +214,17 @@ public class WSlot extends WWidget implements WClient, WServer {
 		RenderSystem.disableLighting();
 	}
 
-	public static class Theme {
-		transient private WColor topLeft;
-		transient private WColor bottomRight;
-		transient private WColor backgroundFocused;
-		transient private WColor backgroundUnfocused;
+	public static final int TOP_LEFT = 0;
+	public static final int BOTTOM_RIGHT = 1;
+	public static final int BACKGROUND_FOCUSED = 2;
+	public static final int BACKGROUND_UNFOCUSED = 3;
 
-		@SerializedName("top_left")
-		private String rawTopLeft;
-
-		@SerializedName("bottom_right")
-		private String rawBottomRight;
-
-		@SerializedName("background_focused")
-		private String rawBackgroundFocused;
-
-		@SerializedName("background_unfocused")
-		private String rawBackgroundUnfocused;
-
-		public void build() {
-			topLeft = new WColor(rawTopLeft);
-			bottomRight = new WColor(rawBottomRight);
-			backgroundFocused = new WColor(rawBackgroundFocused);
-			backgroundUnfocused = new WColor(rawBackgroundUnfocused);
-		}
-
-
-		public WColor getTopLeft() {
-			return this.topLeft;
-		}
-
-		public WColor getBottomRight() {
-			return this.bottomRight;
-		}
-
-		public WColor getBackgroundFocused() {
-			return this.backgroundFocused;
-		}
-
-		public WColor getBackgroundUnfocused() {
-			return this.backgroundUnfocused;
-		}
+	public static WWidget.Theme of(Map<String, String> rawTheme) {
+		WInterface.Theme theme = new WWidget.Theme();
+		theme.add(TOP_LEFT, WColor.of(rawTheme.get("top_left")));
+		theme.add(BOTTOM_RIGHT, WColor.of(rawTheme.get("bottom_right")));
+		theme.add(BACKGROUND_FOCUSED, WColor.of(rawTheme.get("background_focused")));
+		theme.add(BACKGROUND_UNFOCUSED, WColor.of(rawTheme.get("background_unfocused")));
+		return theme;
 	}
 }
