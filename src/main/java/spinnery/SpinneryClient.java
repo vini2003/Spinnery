@@ -13,10 +13,6 @@ public class SpinneryClient implements ClientModInitializer {
 
 	@Override
 	public void onInitializeClient() {
-		if (Spinnery.DEBUG) {
-			spinnery.debug.ScreenRegistry.initialize();
-		}
-
 		ResourceRegistry.initialize();
 	}
 }

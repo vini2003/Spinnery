@@ -12,16 +12,8 @@ public class Spinnery implements ModInitializer {
 	public static final Identifier MOD_ID = new Identifier(LOG_ID.toLowerCase());
 	public static Logger logger = LogManager.getLogger("Spinnery");
 
-	public static final boolean DEBUG = false;
-
 	@Override
 	public void onInitialize() {
-		if (DEBUG) {
-			spinnery.debug.ItemRegistry.initialize();
-			spinnery.debug.BlockRegistry.initialize();
-			spinnery.debug.ContainerRegistry.initialize();
-		}
-
 		NetworkRegistry.initialize();
 		WidgetRegistry.initialize();
 	}
