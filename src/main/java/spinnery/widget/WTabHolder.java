@@ -79,6 +79,29 @@ public class WTabHolder extends WWidget implements WClient, WCollection {
 	}
 
 	@Override
+	public void center() {
+		int oldX = getPositionX();
+		int oldY = getPositionY();
+
+		super.center();
+
+		int newX = getPositionX();
+		int newY = getPositionY();
+
+		int offsetX = newX - oldX;
+		int offsetY = newY - oldY;
+
+		for (int i : tabs.keySet()) {
+			WTab tab = tabs.get(i);
+
+			for (WWidget widget : tab.getWidgets()) {
+				widget.positionX += offsetX;
+				widget.positionY += offsetY;
+			}
+		}
+	}
+
+	@Override
 	public void draw() {
 		if (isHidden()) {
 			return;
@@ -109,11 +132,12 @@ public class WTabHolder extends WWidget implements WClient, WCollection {
 		Text name;
 		int number;
 		List<WWidget> widgets = new LinkedList<>();
+
 		public WTab(Item symbol, Text name, int number) {
 			this.symbol = symbol;
 			this.name = name;
 			this.number = number;
-			this.widgets.add(new WTabToggle(symbol, name, WAnchor.MC_ORIGIN, getPositionX(), getPositionY() - 20, getPositionZ() + 1, 36, 24, getInterface()));
+			this.widgets.add(new WTabToggle(symbol, name, getAnchor(), getPositionX(), getPositionY(), getPositionZ() + 1, 36, 24, getInterface()));
 			this.widgets.get(0).setOnMouseClicked(() -> {
 				if (getToggle().getFocus() && getToggle().getToggleState()) {
 					selectTab(this.number);
@@ -131,6 +155,7 @@ public class WTabHolder extends WWidget implements WClient, WCollection {
 
 		public void add(WWidget... widgets) {
 			this.widgets.addAll(Arrays.asList(widgets));
+			this.widgets.forEach(widget -> widget.setHidden(true));
 		}
 
 		public void remove(WWidget... widgets) {

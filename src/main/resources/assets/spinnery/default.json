@@ -85,19 +85,19 @@
 		"background_unfocused": "0xff8b8b8b"
 	},
 	"spinnery.widget.WTabHolder": {
-		"shadow": "0xff262626",
-		"background": "0xff393939",
-		"highlight": "0xff474747",
+		"shadow": "0xff555555",
+		"background": "0xffc6c6c6",
+		"highlight": "0xffffffff",
 		"outline": "0xff000000"
 	},
 	"spinnery.widget.WTabToggle": {
 		"shadow_on": "0xff545454",
-		"background_on": "0xff444444",
-		"highlight_on": "0xff353535",
+		"background_on": "0xff9C9C9C",
+		"highlight_on": "0xffABABAB",
 		"outline_on": "0xff000000",
-		"shadow_off": "0xff262626",
-		"background_off": "0xff393939",
-		"highlight_off": "0xff474747",
+		"shadow_off": "0xff555555",
+		"background_off": "0xffc6c6c6",
+		"highlight_off": "0xffffffff",
 		"outline_off": "0xff000000",
 		"label": "0xffffff"
 	}

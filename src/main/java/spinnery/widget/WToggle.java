@@ -14,6 +14,7 @@ public class WToggle extends WWidget implements WClient {
 	public static final int FOREGROUND = 6;
 	public static final int LABEL = 7;
 	protected boolean toggleState = false;
+
 	public WToggle(WAnchor anchor, int positionX, int positionY, int positionZ, int sizeX, int sizeY, WInterface linkedPanel) {
 		setInterface(linkedPanel);
 

@@ -339,8 +339,8 @@ public class WWidget implements Tickable {
 	}
 
 	public void center() {
-		this.positionX = MinecraftClient.getInstance().getWindow().getScaledWidth() / 2 - sizeX / 2;
-		this.positionY = MinecraftClient.getInstance().getWindow().getScaledHeight() / 2 - sizeY / 2;
+		this.positionX = MinecraftClient.getInstance().getWindow().getScaledWidth() / 2 - getSizeX() / 2;
+		this.positionY = MinecraftClient.getInstance().getWindow().getScaledHeight() / 2 - getSizeY() / 2;
 	}
 
 	public void draw() {

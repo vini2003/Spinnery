@@ -110,6 +110,25 @@ public class WDropdown extends WWidget implements WClient, WCollection {
 	}
 
 	@Override
+	public void center() {
+		int oldX = getPositionX();
+		int oldY = getPositionY();
+
+		super.center();
+
+		int newX = getPositionX();
+		int newY = getPositionY();
+
+		int offsetX = newX - oldX;
+		int offsetY = newY - oldY;
+
+		for (WWidget widget : getWidgets()) {
+			widget.positionX += offsetX;
+			widget.positionY += offsetY;
+		}
+	}
+
+	@Override
 	public void draw() {
 		if (isHidden()) {
 			return;

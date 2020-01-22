@@ -20,6 +20,7 @@ public class WTabToggle extends WToggle {
 	public static final int LABEL = 8;
 	Item symbol;
 	Text name;
+
 	public WTabToggle(Item symbol, Text name, WAnchor anchor, int positionX, int positionY, int positionZ, int sizeX, int sizeY, WInterface linkedPanel) {
 		super(anchor, positionX, positionY, positionZ, sizeX, sizeY, linkedPanel);
 
@@ -79,6 +80,10 @@ public class WTabToggle extends WToggle {
 
 	@Override
 	public void draw() {
+		if (isHidden()) {
+			return;
+		}
+
 		int x = getPositionX();
 		int y = getPositionY();
 		int z = getPositionZ();
