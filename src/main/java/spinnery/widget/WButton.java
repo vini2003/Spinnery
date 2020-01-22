@@ -21,7 +21,7 @@ public class WButton extends WWidget implements WClient {
 		setAnchor(anchor);
 
 		setPositionX(positionX);
-		setPositionX(positionY);
+		setPositionY(positionY);
 		setPositionZ(positionZ);
 
 		setSizeX(sizeX);
