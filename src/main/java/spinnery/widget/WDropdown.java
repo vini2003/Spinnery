@@ -144,8 +144,11 @@ public class WDropdown extends WWidget implements WClient, WCollection {
 
 		if (hasLabel()) {
 			BaseRenderer.getTextRenderer().drawWithShadow(getLabel().asFormattedString(), x + sX / 2 - BaseRenderer.getTextRenderer().getStringWidth(getLabel().asFormattedString()) / 2, y + 6, getColor(LABEL).RGB);
-			BaseRenderer.drawRectangle(x, y + 16, z, sX, 1, getColor(OUTLINE));
-			BaseRenderer.drawRectangle(x + 1, y + 17, z, sX - 2, 0.75, getColor(SHADOW));
+
+			if (getState()) {
+				BaseRenderer.drawRectangle(x, y + 16, z, sX, 1, getColor(OUTLINE));
+				BaseRenderer.drawRectangle(x + 1, y + 17, z, sX - 2, 0.75, getColor(SHADOW));
+			}
 		}
 
 		if (getState()) {
