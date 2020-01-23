@@ -26,10 +26,10 @@ public class WSlot extends WWidget implements WClient, WServer {
 	protected int inventoryNumber;
 	protected boolean ignoreOnRelease = false;
 
-	public WSlot(WAnchor anchor, WPosition position, WSize size, WInterface linkedInterface, int slotNumber, int inventoryNumber) {
+	public WSlot(WPosition position, WSize size, WInterface linkedInterface, int slotNumber, int inventoryNumber) {
 		setInterface(linkedInterface);
 
-		setAnchor(anchor);
+
 
 		setPosition(position);
 
@@ -42,14 +42,14 @@ public class WSlot extends WWidget implements WClient, WServer {
 
 	}
 
-	public static void addSingle(WAnchor anchor, WPosition position, WSize size, WInterface linkedInterface, int slotNumber, int inventoryNumber) {
-		linkedInterface.add(new WSlot(anchor, position, size, linkedInterface, slotNumber, inventoryNumber));
+	public static void addSingle(WPosition position, WSize size, WInterface linkedInterface, int slotNumber, int inventoryNumber) {
+		linkedInterface.add(new WSlot(position, size, linkedInterface, slotNumber, inventoryNumber));
 	}
 
-	public static void addArray(WAnchor anchor, WPosition position, WSize size, WInterface linkedInterface, int slotNumber, int inventoryNumber, int arrayWidth, int arrayHeight) {
+	public static void addArray(WPosition position, WSize size, WInterface linkedInterface, int slotNumber, int inventoryNumber, int arrayWidth, int arrayHeight) {
 		for (int y = 0; y < arrayHeight; ++y) {
 			for (int x = 0; x < arrayWidth; ++x) {
-				WSlot.addSingle(anchor, WPosition.of(WPosition.WType.ANCHORED, position.getX() + (size.getX() * x), position.getY() + (size.getY() * y), position.getZ(), linkedInterface), WSize.of(size.getX(), size.getY()), linkedInterface, slotNumber++, inventoryNumber);
+				WSlot.addSingle(WPosition.of(WType.FREE, position.getX() + (size.getX() * x), position.getY() + (size.getY() * y), position.getZ()), WSize.of(size.getX(), size.getY()), linkedInterface, slotNumber++, inventoryNumber);
 			}
 		}
 	}
@@ -57,8 +57,7 @@ public class WSlot extends WWidget implements WClient, WServer {
 	public static void addPlayerInventory(WSize size, WInterface linkedInterface, int inventoryNumber) {
 		int temporarySlotNumber = 0;
 		addArray(
-				WAnchor.MC_ORIGIN,
-				WPosition.of(WPosition.WType.ANCHORED, 4, linkedInterface.getHeight() - 72 - 6, 0, linkedInterface),
+				WPosition.of(WType.ANCHORED, 4, linkedInterface.getHeight() - 72 - 6, 0, linkedInterface),
 				size,
 				linkedInterface,
 				temporarySlotNumber,
@@ -67,8 +66,7 @@ public class WSlot extends WWidget implements WClient, WServer {
 				1);
 		temporarySlotNumber = 9;
 		addArray(
-				WAnchor.MC_ORIGIN,
-				WPosition.of(WPosition.WType.ANCHORED, 4, linkedInterface.getHeight() - 72 - 6, 0, linkedInterface),
+				WPosition.of(WType.ANCHORED, 4, linkedInterface.getHeight() - 72 - 6, 0, linkedInterface),
 				size,
 				linkedInterface,
 				temporarySlotNumber,

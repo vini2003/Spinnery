@@ -14,9 +14,9 @@ import java.util.Optional;
 
 public class WWidget implements Tickable {
 	protected WInterface linkedInterface;
-	protected WAnchor anchor;
-	protected WPosition position;
-	protected WSize size;
+	protected WType anchor = WType.FREE;
+	protected WPosition position = WPosition.of(WType.FREE, 0, 0, 0);
+	protected WSize size = WSize.of(0, 0);
 	protected boolean isHidden = false;
 	protected boolean hasFocus = false;
 	protected boolean canMove = false;
@@ -345,10 +345,10 @@ public class WWidget implements Tickable {
 	}
 
 	public boolean isWithinBounds(int positionX, int positionY) {
-		return positionX > getX()
-				&& positionX < getX() + getWidth()
-				&& positionY > getY()
-				&& positionY < getY() + getHeight();
+		return positionX >= getX()
+				&& positionX <= getX() + getWidth()
+				&& positionY >= getY()
+				&& positionY <= getY() + getHeight();
 	}
 
 	public boolean scanFocus(int mouseX, int mouseY) {
@@ -360,14 +360,6 @@ public class WWidget implements Tickable {
 		).findAny();
 		setFocus(!optional.isPresent() && isWithinBounds(mouseX, mouseY));
 		return getFocus();
-	}
-
-	public WAnchor getAnchor() {
-		return anchor;
-	}
-
-	public void setAnchor(WAnchor anchor) {
-		this.anchor = anchor;
 	}
 
 	public void center() {

@@ -15,10 +15,10 @@ public class WToggle extends WWidget implements WClient {
 	public static final int LABEL = 7;
 	protected boolean toggleState = false;
 
-	public WToggle(WAnchor anchor, WPosition position, WSize size, WInterface linkedInterface) {
+	public WToggle(WPosition position, WSize size, WInterface linkedInterface) {
 		setInterface(linkedInterface);
 
-		setAnchor(anchor);
+
 
 		setPosition(position);
 

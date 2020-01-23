@@ -9,10 +9,8 @@ public class WStaticText extends WWidget implements WClient {
 	public static final int TEXT = 7;
 	protected Text text;
 
-	public WStaticText(WAnchor anchor, WPosition position, WInterface linkedInterface, Text text) {
+	public WStaticText(WPosition position, WInterface linkedInterface, Text text) {
 		setInterface(linkedInterface);
-
-		setAnchor(anchor);
 
 		setPosition(position);
 

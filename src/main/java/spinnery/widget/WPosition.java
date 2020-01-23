@@ -1,11 +1,6 @@
 package spinnery.widget;
 
 public class WPosition {
-	public enum WType {
-		ANCHORED,
-		FREE
-	}
-
 	protected WType type;
 	protected WWidget anchor;
 	protected int x;
@@ -56,15 +51,15 @@ public class WPosition {
 	}
 
 	public void setX(int x) {
-		this.x = x + (type == WType.ANCHORED ? getRawX() : 0);
+		this.x = x;
 	}
 
 	public void setY(int y) {
-		this.y = y + (type == WType.ANCHORED ? getRawY() : 0);
+		this.y = y;
 	}
 
 	public void setZ(int z) {
-		this.z = z + (type == WType.ANCHORED ? getRawZ() : 0);
+		this.z = z;
 	}
 
 	public int getX() {

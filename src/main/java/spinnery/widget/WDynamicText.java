@@ -27,10 +27,10 @@ public class WDynamicText extends WWidget implements WClient {
 	protected boolean isEditable = true;
 	protected boolean isCentered = true;
 
-	public WDynamicText(WAnchor anchor, WPosition position, WSize size, WInterface linkedInterface) {
+	public WDynamicText(WPosition position, WSize size, WInterface linkedInterface) {
 		setInterface(linkedInterface);
 
-		setAnchor(anchor);
+
 
 		setPosition(position);
 

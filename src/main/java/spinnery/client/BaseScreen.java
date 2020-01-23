@@ -4,6 +4,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.LiteralText;
 import org.lwjgl.glfw.GLFW;
+import spinnery.widget.WCollection;
 import spinnery.widget.WInterface;
 import spinnery.widget.WInterfaceHolder;
 import spinnery.widget.WWidget;
@@ -35,9 +36,9 @@ public class BaseScreen extends Screen {
 		for (WInterface wInterface : interfaceHolder.getInterfaces()) {
 			wInterface.align();
 			wInterface.onAlign();
-			for (WWidget widget : wInterface.getWidgets()) {
-				widget.align();
-				widget.onAlign();
+			for (WWidget widgetA : wInterface.getWidgets()) {
+				widgetA.align();
+				widgetA.onAlign();
 			}
 		}
 		super.resize(client, width, height);

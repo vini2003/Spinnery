@@ -15,14 +15,12 @@ public class WVerticalSlider extends WWidget implements WClient {
 	public static final int FOREGROUND = 6;
 	public static final int TEXT = 7;
 	protected int limit = 0;
-	protected int progress = 0;
+	protected float progress = 0;
 	protected String slidTotal;
 	protected int slidStringPosition;
 
-	public WVerticalSlider(WAnchor anchor, WPosition position, WSize size, WInterface linkedInterface, int limit) {
+	public WVerticalSlider(WPosition position, WSize size, WInterface linkedInterface, int limit) {
 		setInterface(linkedInterface);
-
-		setAnchor(anchor);
 
 		setPosition(position);
 
@@ -70,19 +68,19 @@ public class WVerticalSlider extends WWidget implements WClient {
 		this.slidStringPosition = slidStringPosition;
 	}
 
-	public int getProgress() {
+	public float getProgress() {
 		return progress;
 	}
 
-	public void setProgress(int progress) {
+	public void setProgress(float progress) {
 		this.progress = progress;
 		setSlidTotal(Integer.toString(Math.round(getProgress())));
-		setSlidStringPosition(getY() + getHeight() / 2 - BaseRenderer.getTextRenderer().getStringWidth(Integer.toString(getProgress())) / 2);
+		setSlidStringPosition(getY() + getHeight() / 2 - BaseRenderer.getTextRenderer().getStringWidth(Integer.toString((int) getProgress())) / 2);
 	}
 
 	public void updatePosition(int mouseX, int mouseY) {
 		if (scanFocus(mouseX, mouseY)) {
-			setProgress((mouseY - getY()) * (getLimit() / (getHeight())));
+			setProgress((mouseY - getY()) * ((float) getLimit() / (float) (getWidth())));
 		}
 	}
 
@@ -123,7 +121,7 @@ public class WVerticalSlider extends WWidget implements WClient {
 		}
 
 		int l = getLimit();
-		int p = getProgress();
+		float p = getProgress();
 
 		int x = getX();
 		int y = getY();
@@ -135,14 +133,14 @@ public class WVerticalSlider extends WWidget implements WClient {
 		BaseRenderer.getTextRenderer().drawWithShadow(getSlidTotal(), x + sX + 4, y + sY / 2, 0xffffff);
 
 		BaseRenderer.drawRectangle(x, y, z, sX, 1, getColor(TOP_LEFT_BACKGROUND));
-		BaseRenderer.drawRectangle(x, y, z, 1, (sY + 7), getColor(TOP_LEFT_BACKGROUND));
+		BaseRenderer.drawRectangle(x, y, z, 1, (sY), getColor(TOP_LEFT_BACKGROUND));
 
-		BaseRenderer.drawRectangle(x, y + (sY + 7) - 1, z, sX, 1, getColor(BOTTOM_RIGHT_BACKGROUND));
+		BaseRenderer.drawRectangle(x, y + (sY) - 1, z, sX, 1, getColor(BOTTOM_RIGHT_BACKGROUND));
 		BaseRenderer.drawRectangle(x + sX, y, z, 1, (sY + 7), getColor(BOTTOM_RIGHT_BACKGROUND));
 
-		BaseRenderer.drawRectangle(x + 1, y + 1, z, sX - 1, ((sY + 7) / l) * p - 2, getColor(BACKGROUND_ON));
-		BaseRenderer.drawRectangle(x + 1, y + ((sY + 7) / l) * p - 1, z, sX - 1, (sY + 7) - ((sY + 7) / l) * p, getColor(BACKGROUND_OFF));
+		BaseRenderer.drawRectangle(x + 1, y + 1, z, sX - 1, ((sY) / l) * p - 2, getColor(BACKGROUND_ON));
+		BaseRenderer.drawRectangle(x + 1, y + ((sY) / l) * p - 1, z, sX - 1, (sY) - ((sY) / l) * p, getColor(BACKGROUND_OFF));
 
-		BaseRenderer.drawBeveledPanel(x - 1, y + (sY / l) * p - 1, z, sX + 3, 8, getColor(TOP_LEFT_FOREGROUND), getColor(FOREGROUND), getColor(BOTTOM_RIGHT_FOREGROUND));
+		BaseRenderer.drawBeveledPanel(x - 1, Math.min(y + sY - 7, y + (sY / l) * p), z, sX + 3, 8, getColor(TOP_LEFT_FOREGROUND), getColor(FOREGROUND), getColor(BOTTOM_RIGHT_FOREGROUND));
 	}
 }

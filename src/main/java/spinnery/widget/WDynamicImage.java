@@ -8,10 +8,10 @@ public class WDynamicImage extends WWidget implements WClient {
 
 	protected int position = 0;
 
-	public WDynamicImage(WAnchor anchor, WPosition position, WSize size, WInterface linkedInterface, Identifier... textures) {
+	public WDynamicImage(WPosition position, WSize size, WInterface linkedInterface, Identifier... textures) {
 		setInterface(linkedInterface);
 
-		setAnchor(anchor);
+
 
 		setPosition(position);
 

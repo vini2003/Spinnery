@@ -21,12 +21,10 @@ public class WTabToggle extends WToggle implements WClient {
 	Item symbol;
 	Text name;
 
-	public WTabToggle(WAnchor anchor, WPosition position, WSize size, WInterface linkedInterface, Item symbol, Text name) {
-		super(anchor, position, size, linkedInterface);
+	public WTabToggle(WPosition position, WSize size, WInterface linkedInterface, Item symbol, Text name) {
+		super(position, size, linkedInterface);
 
 		setInterface(linkedInterface);
-
-		setAnchor(anchor);
 
 		setPosition(position);
 

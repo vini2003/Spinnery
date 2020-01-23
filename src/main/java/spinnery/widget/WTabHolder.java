@@ -17,10 +17,10 @@ public class WTabHolder extends WWidget implements WClient, WCollection {
 	public static final int OUTLINE = 3;
 	Map<Integer, WTab> tabs = new HashMap<>();
 
-	public WTabHolder(WAnchor anchor, WPosition position, WSize size, WInterface linkedInterface) {
+	public WTabHolder(WPosition position, WSize size, WInterface linkedInterface) {
 		setInterface(linkedInterface);
 
-		setAnchor(anchor);
+
 
 		setPosition(position);
 
@@ -60,7 +60,7 @@ public class WTabHolder extends WWidget implements WClient, WCollection {
 		for (int i : tabs.keySet()) {
 			WTabToggle button = tabs.get(i).getToggle();
 			button.setWidth(tabSize);
-			button.setX(tabOffset);
+			button.setPosition(WPosition.of(WType.ANCHORED, tabOffset, 0, 0, this));
 			tabOffset += tabSize;
 		}
 		return tabs.get(tabNumber);
@@ -114,6 +114,15 @@ public class WTabHolder extends WWidget implements WClient, WCollection {
 		}
 	}
 
+	@Override
+	public void align() {
+		super.align();
+
+		for (WWidget widget : getWidgets()) {
+			widget.align();
+		}
+	}
+
 	public class WTab {
 		Item symbol;
 		Text name;
@@ -124,7 +133,7 @@ public class WTabHolder extends WWidget implements WClient, WCollection {
 			this.symbol = symbol;
 			this.name = name;
 			this.number = number;
-			this.widgets.add(new WTabToggle(getAnchor(), WPosition.of(WPosition.WType.ANCHORED, 0, 0, 0, holder), WSize.of(36, 24), getInterface(), symbol, name));
+			this.widgets.add(new WTabToggle(WPosition.of(WType.ANCHORED, 0, 0, 0, holder), WSize.of(36, 24), getInterface(), symbol, name));
 			this.widgets.get(0).setOnMouseClicked(() -> {
 				if (getToggle().getFocus() && getToggle().getToggleState()) {
 					selectTab(this.number);
@@ -142,7 +151,11 @@ public class WTabHolder extends WWidget implements WClient, WCollection {
 
 		public void add(WWidget... widgets) {
 			this.widgets.addAll(Arrays.asList(widgets));
-			this.widgets.forEach(widget -> widget.setHidden(true));
+			for (WWidget widget : getWidgets()) {
+				if (!(widget instanceof WTabToggle)) {
+					widget.setHidden(true);
+				}
+			}
 		}
 
 		public void remove(WWidget... widgets) {

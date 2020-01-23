@@ -65,9 +65,11 @@ public class ResourceRegistry {
 		}
 	}
 
-	public static void reload(InputStream inputStream) {
+	public static void reload(InputStream... inputStream) {
 		themes.clear();
-		register(inputStream);
+		for (InputStream stream : inputStream) {
+			register(stream);
+		}
 		load();
 	}
 

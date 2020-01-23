@@ -1,5 +1,6 @@
 package spinnery.widget;
 
+import net.minecraft.text.Text;
 import org.lwjgl.glfw.GLFW;
 import spinnery.client.BaseRenderer;
 
@@ -17,10 +18,8 @@ public class WDropdown extends WWidget implements WClient, WCollection {
 	public List<List<WWidget>> dropdownWidgets = new ArrayList<>();
 	protected boolean state = false;
 
-	public WDropdown(WAnchor anchor, WPosition position, WSize size, WInterface linkedInterface) {
+	public WDropdown(WPosition position, WSize size, WInterface linkedInterface) {
 		setInterface(linkedInterface);
-
-		setAnchor(anchor);
 
 		setPosition(position);
 
@@ -74,6 +73,13 @@ public class WDropdown extends WWidget implements WClient, WCollection {
 		}
 
 		super.onMouseClicked(mouseX, mouseY, mouseButton);
+	}
+
+	@Override
+	public void setLabel(Text label) {
+		super.setLabel(label);
+		updatePositions();
+		updateHidden();
 	}
 
 	@Override
@@ -151,8 +157,15 @@ public class WDropdown extends WWidget implements WClient, WCollection {
 		}
 	}
 
+	@Override
+	public void align() {
+		super.align();
+
+		updatePositions();
+	}
+
 	public void updatePositions() {
-		int y = getY() + getHeight(0);
+		int y = getY() + (hasLabel() ? 20 : 8);
 
 		for (List<WWidget> widgetA : getDropdownWidgets()) {
 			int x = getX() + 4;
@@ -175,13 +188,13 @@ public class WDropdown extends WWidget implements WClient, WCollection {
 
 	public void add(WWidget... widgetArray) {
 		getDropdownWidgets().add(Arrays.asList(widgetArray));
-		updateHidden();
 		updatePositions();
+		updateHidden();
 	}
 
 	public void remove(WWidget... widgetArray) {
 		getDropdownWidgets().remove(Arrays.asList(widgetArray));
-		updateHidden();
 		updatePositions();
+		updateHidden();
 	}
 }

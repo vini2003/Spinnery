@@ -15,10 +15,10 @@ public class WButton extends WWidget implements WClient {
 	protected boolean toggleState = false;
 	protected int toggleTicks = 0;
 
-	public WButton(WAnchor anchor, WPosition position, WSize size, WInterface linkedInterface) {
+	public WButton(WPosition position, WSize size, WInterface linkedInterface) {
 		setInterface(linkedInterface);
 
-		setAnchor(anchor);
+
 
 		setPosition(position);
 

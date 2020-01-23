@@ -18,10 +18,8 @@ public class WList extends WWidget implements WClient, WCollection {
 	public static final int LABEL = 4;
 	public List<List<WWidget>> listWidgets = new ArrayList<>();
 
-	public WList(WAnchor anchor, WPosition position, WSize size, WInterface linkedInterface) {
+	public WList(WPosition position, WSize size, WInterface linkedInterface) {
 		setInterface(linkedInterface);
-
-		setAnchor(anchor);
 
 		setPosition(position);
 
@@ -156,11 +154,18 @@ public class WList extends WWidget implements WClient, WCollection {
 		GL11.glDisable(GL11.GL_SCISSOR_TEST);
 	}
 
+	@Override
+	public void align() {
+		super.align();
+
+		updatePositions();
+	}
+
 	public void updatePositions() {
-		int y = hasLabel() ? (getY() + 20) : 4;
+		int y = getY() + (hasLabel() ? 20 : 8);
 
 		for (List<WWidget> widgetA : getListWidgets()) {
-			int x = getX() + 4;
+			int x = getX() + 5;
 			for (WWidget widgetB : widgetA) {
 				widgetB.setX(x);
 				widgetB.setY(y);
@@ -180,13 +185,13 @@ public class WList extends WWidget implements WClient, WCollection {
 
 	public void add(WWidget... widgetArray) {
 		getListWidgets().add(Arrays.asList(widgetArray));
-		updateHidden();
 		updatePositions();
+		updateHidden();
 	}
 
 	public void remove(WWidget... widgetArray) {
 		getListWidgets().remove(Arrays.asList(widgetArray));
-		updateHidden();
 		updatePositions();
+		updateHidden();
 	}
 }

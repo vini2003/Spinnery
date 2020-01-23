@@ -6,10 +6,10 @@ import spinnery.client.BaseRenderer;
 public class WStaticImage extends WWidget implements WClient {
 	protected Identifier texture;
 
-	public WStaticImage(WAnchor anchor, WPosition position, WSize size, WInterface linkedInterface, Identifier texture) {
+	public WStaticImage(WPosition position, WSize size, WInterface linkedInterface, Identifier texture) {
 		setInterface(linkedInterface);
 
-		setAnchor(anchor);
+
 
 		setPosition(position);
 
