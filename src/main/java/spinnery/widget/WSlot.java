@@ -57,7 +57,7 @@ public class WSlot extends WWidget implements WClient, WServer {
 	public static void addPlayerInventory(WSize size, WInterface linkedInterface, int inventoryNumber) {
 		int temporarySlotNumber = 0;
 		addArray(
-				WPosition.of(WType.ANCHORED, 4, linkedInterface.getHeight() - 72 - 6, 0, linkedInterface),
+				WPosition.of(WType.ANCHORED, 4, linkedInterface.getHeight() - 82 + size.getY() * 3 + 4, 0, linkedInterface),
 				size,
 				linkedInterface,
 				temporarySlotNumber,
@@ -66,7 +66,7 @@ public class WSlot extends WWidget implements WClient, WServer {
 				1);
 		temporarySlotNumber = 9;
 		addArray(
-				WPosition.of(WType.ANCHORED, 4, linkedInterface.getHeight() - 72 - 6, 0, linkedInterface),
+				WPosition.of(WType.ANCHORED, 4, linkedInterface.getHeight() - 82, 0, linkedInterface),
 				size,
 				linkedInterface,
 				temporarySlotNumber,
@@ -204,7 +204,11 @@ public class WSlot extends WWidget implements WClient, WServer {
 		int sX = getWidth();
 		int sY = getHeight();
 
-		BaseRenderer.drawBeveledPanel(x, y, z, sX, sY, getColor(TOP_LEFT), getFocus() ? getColor(BACKGROUND_FOCUSED) : getColor(BACKGROUND_UNFOCUSED), getColor(BOTTOM_RIGHT));
+		BaseRenderer.drawBeveledPanel(x, y, z, sX, sY, getColor(TOP_LEFT), getColor(BACKGROUND_UNFOCUSED), getColor(BOTTOM_RIGHT));
+
+		if (getFocus()) {
+			BaseRenderer.drawRectangle(x + 1, y + 1, z, sX - 2, sY - 2, getColor(BACKGROUND_FOCUSED));
+		}
 
 		RenderSystem.enableLighting();
 

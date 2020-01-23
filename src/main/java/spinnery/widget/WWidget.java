@@ -345,10 +345,10 @@ public class WWidget implements Tickable {
 	}
 
 	public boolean isWithinBounds(int positionX, int positionY) {
-		return positionX >= getX()
-				&& positionX <= getX() + getWidth()
-				&& positionY >= getY()
-				&& positionY <= getY() + getHeight();
+		return positionX > getX()
+				&& positionX < getX() + getWidth()
+				&& positionY > getY()
+				&& positionY < getY() + getHeight();
 	}
 
 	public boolean scanFocus(int mouseX, int mouseY) {
