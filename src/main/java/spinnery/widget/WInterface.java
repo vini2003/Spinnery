@@ -23,6 +23,18 @@ public class WInterface extends WWidget {
 		setContainer(linkedContainer);
 	}
 
+	public WInterface(WPosition position) {
+		setPosition(position);
+
+		setSize(null);
+
+		setClientside(true);
+
+		setInstanceType(MinecraftClient.class);
+
+		setTheme("light");
+	}
+
 	public WInterface(WPosition position, WSize size) {
 		setPosition(position);
 
@@ -103,6 +115,10 @@ public class WInterface extends WWidget {
 		return widgetHolder;
 	}
 
+	public boolean isDrawable() {
+		return size != null;
+	}
+
 	public void add(WWidget... widgets) {
 		for (WWidget widget : widgets) {
 			if (widget instanceof WServer && isClientside()) {
@@ -130,19 +146,21 @@ public class WInterface extends WWidget {
 			return;
 		}
 
-		int x = getX();
-		int y = getY();
-		int z = getZ();
+		if (isDrawable()) {
+			int x = getX();
+			int y = getY();
+			int z = getZ();
 
-		int sX = getWidth();
-		int sY = getHeight();
+			int sX = getWidth();
+			int sY = getHeight();
 
-		BaseRenderer.drawPanel(x, y, z, sX, sY, getColor(SHADOW), getColor(BACKGROUND), getColor(HIGHLIGHT), getColor(OUTLINE));
+			BaseRenderer.drawPanel(x, y, z, sX, sY, getColor(SHADOW), getColor(BACKGROUND), getColor(HIGHLIGHT), getColor(OUTLINE));
 
-		if (hasLabel()) {
-			BaseRenderer.drawText(isLabelShadowed(), getLabel().asFormattedString(), x + sX / 2 - BaseRenderer.getTextRenderer().getStringWidth(getLabel().asFormattedString()) / 2, y + 6, getColor(LABEL).RGB);
-			BaseRenderer.drawRectangle(x, y + 16, z, sX, 1, getColor(OUTLINE));
-			BaseRenderer.drawRectangle(x + 1, y + 17, z, sX - 2, 0.75, getColor(SHADOW));
+			if (hasLabel()) {
+				BaseRenderer.drawText(isLabelShadowed(), getLabel().asFormattedString(), x + sX / 2 - BaseRenderer.getTextRenderer().getStringWidth(getLabel().asFormattedString()) / 2, y + 6, getColor(LABEL).RGB);
+				BaseRenderer.drawRectangle(x, y + 16, z, sX, 1, getColor(OUTLINE));
+				BaseRenderer.drawRectangle(x + 1, y + 17, z, sX - 2, 0.75, getColor(SHADOW));
+			}
 		}
 
 		for (WWidget widget : getWidgets()) {
