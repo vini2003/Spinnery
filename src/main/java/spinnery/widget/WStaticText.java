@@ -41,6 +41,16 @@ public class WStaticText extends WWidget implements WClient {
 	}
 
 	@Override
+	public int getWidth() {
+		return BaseRenderer.getTextRenderer().getStringWidth(text.asString());
+	}
+
+	@Override
+	public int getHeight() {
+		return BaseRenderer.getTextRenderer().fontHeight;
+	}
+
+	@Override
 	public void draw() {
 		if (isHidden()) {
 			return;
