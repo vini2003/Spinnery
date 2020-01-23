@@ -17,17 +17,14 @@ public class WTabHolder extends WWidget implements WClient, WCollection {
 	public static final int OUTLINE = 3;
 	Map<Integer, WTab> tabs = new HashMap<>();
 
-	public WTabHolder(WAnchor anchor, int positionX, int positionY, int positionZ, int sizeX, int sizeY, WInterface linkedInterface) {
+	public WTabHolder(WAnchor anchor, WPosition position, WSize size, WInterface linkedInterface) {
 		setInterface(linkedInterface);
 
 		setAnchor(anchor);
 
-		setAnchoredPositionX(positionX);
-		setAnchoredPositionY(positionY);
-		setPositionZ(positionZ);
+		setPosition(position);
 
-		setSizeX(sizeX);
-		setSizeY(sizeY);
+		setSize(size);
 
 		setTheme("light");
 	}
@@ -57,13 +54,13 @@ public class WTabHolder extends WWidget implements WClient, WCollection {
 
 	public WTab addTab(Item symbol, Text name) {
 		int tabNumber = tabs.size() == 0 ? 1 : tabs.size() + 1;
-		tabs.put(tabNumber, new WTab(symbol, name, tabNumber));
-		int tabSize = sizeX / tabs.size();
+		tabs.put(tabNumber, new WTab(this, symbol, name, tabNumber));
+		int tabSize = getWidth() / tabs.size();
 		int tabOffset = 0;
 		for (int i : tabs.keySet()) {
 			WTabToggle button = tabs.get(i).getToggle();
-			button.setSizeX(tabSize);
-			button.setAnchoredPositionX(tabOffset);
+			button.setWidth(tabSize);
+			button.setX(tabOffset);
 			tabOffset += tabSize;
 		}
 		return tabs.get(tabNumber);
@@ -80,23 +77,13 @@ public class WTabHolder extends WWidget implements WClient, WCollection {
 
 	@Override
 	public void center() {
-		int oldX = getPositionX();
-		int oldY = getPositionY();
-
 		super.center();
-
-		int newX = getPositionX();
-		int newY = getPositionY();
-
-		int offsetX = newX - oldX;
-		int offsetY = newY - oldY;
 
 		for (int i : tabs.keySet()) {
 			WTab tab = tabs.get(i);
 
 			for (WWidget widget : tab.getWidgets()) {
-				widget.positionX += offsetX;
-				widget.positionY += offsetY;
+				widget.align();
 			}
 		}
 	}
@@ -107,18 +94,18 @@ public class WTabHolder extends WWidget implements WClient, WCollection {
 			return;
 		}
 
-		int x = getPositionX();
-		int y = getPositionY();
-		int z = getPositionZ();
+		int x = getX();
+		int y = getY();
+		int z = getZ();
 
-		int sX = getSizeX();
-		int sY = getSizeY();
+		int sX = getWidth();
+		int sY = getHeight();
 
 		for (int i : tabs.keySet()) {
 			tabs.get(i).getToggle().draw();
 		}
 
-		BaseRenderer.drawPanel(x, y + 24, z, sX, sY - 18, getColor(SHADOW), getColor(BACKGROUND), getColor(HIGHLIGHT), getColor(OUTLINE));
+		BaseRenderer.drawPanel(x, y + 24, z, sX, sY - 24, getColor(SHADOW), getColor(BACKGROUND), getColor(HIGHLIGHT), getColor(OUTLINE));
 
 		for (WWidget widget : getWidgets()) {
 			if (!(widget instanceof WTabToggle)) {
@@ -133,11 +120,11 @@ public class WTabHolder extends WWidget implements WClient, WCollection {
 		int number;
 		List<WWidget> widgets = new LinkedList<>();
 
-		public WTab(Item symbol, Text name, int number) {
+		public WTab(WTabHolder holder, Item symbol, Text name, int number) {
 			this.symbol = symbol;
 			this.name = name;
 			this.number = number;
-			this.widgets.add(new WTabToggle(symbol, name, getAnchor(), getPositionX(), getPositionY(), getPositionZ() + 1, 36, 24, getInterface()));
+			this.widgets.add(new WTabToggle(getAnchor(), WPosition.of(WPosition.WType.ANCHORED, 0, 0, 0, holder), WSize.of(36, 24), getInterface(), symbol, name));
 			this.widgets.get(0).setOnMouseClicked(() -> {
 				if (getToggle().getFocus() && getToggle().getToggleState()) {
 					selectTab(this.number);

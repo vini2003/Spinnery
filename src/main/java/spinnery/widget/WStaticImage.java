@@ -6,17 +6,14 @@ import spinnery.client.BaseRenderer;
 public class WStaticImage extends WWidget implements WClient {
 	protected Identifier texture;
 
-	public WStaticImage(WAnchor anchor, int positionX, int positionY, int positionZ, int sizeX, int sizeY, Identifier texture, WInterface linkedPanel) {
-		setInterface(linkedPanel);
+	public WStaticImage(WAnchor anchor, WPosition position, WSize size, WInterface linkedInterface, Identifier texture) {
+		setInterface(linkedInterface);
 
 		setAnchor(anchor);
 
-		setAnchoredPositionX(positionX);
-		setAnchoredPositionY(positionY);
-		setPositionZ(positionZ);
+		setPosition(position);
 
-		setSizeX(sizeX);
-		setSizeY(sizeY);
+		setSize(size);
 
 		setTexture(texture);
 	}
@@ -35,12 +32,12 @@ public class WStaticImage extends WWidget implements WClient {
 			return;
 		}
 
-		int x = getPositionX();
-		int y = getPositionY();
-		int z = getPositionZ();
+		int x = getX();
+		int y = getY();
+		int z = getZ();
 
-		int sX = getSizeX();
-		int sY = getSizeY();
+		int sX = getWidth();
+		int sY = getHeight();
 
 		BaseRenderer.drawImage(x, y, z, sX, sY, getTexture());
 	}

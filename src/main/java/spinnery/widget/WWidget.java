@@ -13,13 +13,10 @@ import java.util.Map;
 import java.util.Optional;
 
 public class WWidget implements Tickable {
-	protected WInterface linkedPanel;
+	protected WInterface linkedInterface;
 	protected WAnchor anchor;
-	protected int positionX = 0;
-	protected int positionY = 0;
-	protected int positionZ = 0;
-	protected int sizeX = 0;
-	protected int sizeY = 0;
+	protected WPosition position;
+	protected WSize size;
 	protected boolean isHidden = false;
 	protected boolean hasFocus = false;
 	protected boolean canMove = false;
@@ -35,6 +32,7 @@ public class WWidget implements Tickable {
 	protected Runnable linkedRunnableOnMouseDragged;
 	protected Runnable linkedRunnableOnMouseScrolled;
 	protected Runnable linkedRunnableOnSlotClicked;
+	protected Runnable linkedRunnableOnAlign;
 	private String theme = "light";
 	private Text label = new LiteralText("");
 
@@ -205,6 +203,20 @@ public class WWidget implements Tickable {
 		this.linkedRunnableOnDrawTooltip = linkedRunnableOnDrawTooltip;
 	}
 
+	public void onAlign() {
+		if (linkedRunnableOnAlign != null) {
+			linkedRunnableOnAlign.run();
+		}
+	}
+
+	public Runnable getOnAlign() {
+		return linkedRunnableOnAlign;
+	}
+
+	public void setOnAlign(Runnable linkedRunnableOnAlign) {
+		this.linkedRunnableOnAlign = linkedRunnableOnAlign;
+	}
+
 	public Text getLabel() {
 		return label;
 	}
@@ -225,68 +237,88 @@ public class WWidget implements Tickable {
 		this.theme = theme;
 	}
 
-	public boolean getCanMove() {
-		return canMove;
-	}
-
-	public void setMovable(boolean canMove) {
-		this.canMove = canMove;
-	}
-
 	public WInterface getInterface() {
-		return linkedPanel;
+		return linkedInterface;
 	}
 
-	public void setInterface(WInterface linkedPanel) {
-		this.linkedPanel = linkedPanel;
+	public void setInterface(WInterface linkedInterface) {
+		this.linkedInterface = linkedInterface;
 	}
 
-	public int getSizeX() {
-		return sizeX;
+	public void setSize(WSize size) {
+		this.size = size;
 	}
 
-	public void setSizeX(int sizeX) {
-		this.sizeX = sizeX;
+	public WSize getSize() {
+		return size;
 	}
 
-	public int getSizeY() {
-		return sizeY;
+	public int getWidth() {
+		return size.getX();
 	}
 
-	public void setSizeY(int sizeY) {
-		this.sizeY = sizeY;
+	public void setWidth(int width) {
+		size.setX(width);
 	}
 
-	public int getPositionX() {
-		return positionX;
+	public int getHeight() {
+		return size.getY();
 	}
 
-	public void setPositionX(int positionX) {
-		this.positionX = positionX;
+	public void setHeight(int height) {
+		size.setY(height);
 	}
 
-	public int getPositionY() {
-		return positionY;
+	public int getWidth(int number) {
+		return size.getX(number);
 	}
 
-	public void setPositionY(int positionY) {
-		this.positionY = positionY;
+	public void setWidth(int number, int width) {
+		size.setX(number, width);
 	}
 
-	public int getPositionZ() {
-		return positionZ;
+	public int getHeight(int number) {
+		return size.getY(number);
 	}
 
-	public void setPositionZ(int positionZ) {
-		this.positionZ = positionZ;
+	public void setHeight(int number, int height) {
+		size.setY(number, height);
 	}
 
-	public void setAnchoredPositionX(int positionX) {
-		setPositionX(positionX + (getAnchor() == WAnchor.MC_ORIGIN ? getInterface().getPositionX() : 0));
+	public void setPosition(WPosition position) {
+		this.position = position;
 	}
 
-	public void setAnchoredPositionY(int positionY) {
-		setPositionY(positionY + (getAnchor() == WAnchor.MC_ORIGIN ? getInterface().getPositionY() : 0));
+	public WPosition get() {
+		return position;
+	}
+
+	public int getX() {
+		return position.getX();
+	}
+
+	public void setX(int x) {
+		position.setX(x);
+	}
+
+	public int getY() {
+		return position.getY();
+	}
+
+	public void setY(int y) {
+		position.setY(y);
+	}
+
+	public int getZ() {
+		return position.getZ();
+	}
+
+	public void setZ(int z) {
+		position.setZ(z);
+	}
+
+	public void align() {
+		position.align();
 	}
 
 	public boolean getFocus() {
@@ -313,18 +345,18 @@ public class WWidget implements Tickable {
 	}
 
 	public boolean isWithinBounds(int positionX, int positionY) {
-		return positionX > getPositionX()
-				&& positionX < getPositionX() + getSizeX()
-				&& positionY > getPositionY()
-				&& positionY < getPositionY() + getSizeY();
+		return positionX > getX()
+				&& positionX < getX() + getWidth()
+				&& positionY > getY()
+				&& positionY < getY() + getHeight();
 	}
 
 	public boolean scanFocus(int mouseX, int mouseY) {
 		if (isHidden) {
 			return false;
 		}
-		Optional<? extends WWidget> optional = linkedPanel.getWidgets().stream().filter((widget) ->
-				widget.getPositionZ() > getPositionZ() && widget.isWithinBounds(mouseX, mouseY)
+		Optional<? extends WWidget> optional = linkedInterface.getWidgets().stream().filter((widget) ->
+				widget.getZ() > getZ() && widget.isWithinBounds(mouseX, mouseY)
 		).findAny();
 		setFocus(!optional.isPresent() && isWithinBounds(mouseX, mouseY));
 		return getFocus();
@@ -339,8 +371,9 @@ public class WWidget implements Tickable {
 	}
 
 	public void center() {
-		this.positionX = MinecraftClient.getInstance().getWindow().getScaledWidth() / 2 - getSizeX() / 2;
-		this.positionY = MinecraftClient.getInstance().getWindow().getScaledHeight() / 2 - getSizeY() / 2;
+		int x = MinecraftClient.getInstance().getWindow().getScaledWidth() / 2 - getWidth() / 2;
+		int y = MinecraftClient.getInstance().getWindow().getScaledHeight() / 2 - getHeight() / 2;
+		this.position.set(x, y, getZ());
 	}
 
 	public void draw() {

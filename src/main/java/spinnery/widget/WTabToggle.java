@@ -8,7 +8,7 @@ import spinnery.client.BaseRenderer;
 
 import java.util.Map;
 
-public class WTabToggle extends WToggle {
+public class WTabToggle extends WToggle implements WClient {
 	public static final int SHADOW_ON = 0;
 	public static final int BACKGROUND_ON = 1;
 	public static final int HIGHLIGHT_ON = 2;
@@ -21,22 +21,20 @@ public class WTabToggle extends WToggle {
 	Item symbol;
 	Text name;
 
-	public WTabToggle(Item symbol, Text name, WAnchor anchor, int positionX, int positionY, int positionZ, int sizeX, int sizeY, WInterface linkedPanel) {
-		super(anchor, positionX, positionY, positionZ, sizeX, sizeY, linkedPanel);
+	public WTabToggle(WAnchor anchor, WPosition position, WSize size, WInterface linkedInterface, Item symbol, Text name) {
+		super(anchor, position, size, linkedInterface);
 
-		setInterface(linkedPanel);
+		setInterface(linkedInterface);
 
 		setAnchor(anchor);
 
-		setAnchoredPositionX(positionX);
-		setAnchoredPositionY(positionY);
-		setPositionZ(positionZ);
+		setPosition(position);
+
+		setSize(size);
 
 		setSymbol(symbol);
-		setName(name);
 
-		setSizeX(sizeX);
-		setSizeY(sizeY);
+		setName(name);
 
 		setTheme("light");
 	}
@@ -84,12 +82,12 @@ public class WTabToggle extends WToggle {
 			return;
 		}
 
-		int x = getPositionX();
-		int y = getPositionY();
-		int z = getPositionZ();
+		int x = getX();
+		int y = getY();
+		int z = getZ();
 
-		int sX = getSizeX();
-		int sY = getSizeY() + 4;
+		int sX = getWidth();
+		int sY = getHeight() + 4;
 
 		if (!getToggleState()) {
 			BaseRenderer.drawPanel(x, y, z - 1, sX, sY, getColor(SHADOW_OFF), getColor(BACKGROUND_OFF), getColor(HIGHLIGHT_OFF), getColor(OUTLINE_OFF));

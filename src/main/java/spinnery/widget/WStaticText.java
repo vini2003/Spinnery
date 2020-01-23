@@ -7,23 +7,18 @@ import java.util.Map;
 
 public class WStaticText extends WWidget implements WClient {
 	public static final int TEXT = 7;
-	protected int hexColor;
 	protected Text text;
 
-	public WStaticText(WAnchor anchor, int positionX, int positionY, int positionZ, Text text, WInterface linkedPanel) {
-		setInterface(linkedPanel);
+	public WStaticText(WAnchor anchor, WPosition position, WInterface linkedInterface, Text text) {
+		setInterface(linkedInterface);
 
 		setAnchor(anchor);
 
-		setAnchoredPositionX(positionX);
-		setAnchoredPositionY(positionY);
-		setPositionZ(positionZ);
-
-		setSizeX(sizeX);
-
-		setTheme("light");
+		setPosition(position);
 
 		setText(text);
+
+		setTheme("light");
 	}
 
 	public static WWidget.Theme of(Map<String, String> rawTheme) {
@@ -53,8 +48,8 @@ public class WStaticText extends WWidget implements WClient {
 			return;
 		}
 
-		int x = getPositionX();
-		int y = getPositionY();
+		int x = getX();
+		int y = getY();
 
 		BaseRenderer.getTextRenderer().drawWithShadow(getText().asFormattedString(), x, y, getColor(TEXT).RGB);
 	}

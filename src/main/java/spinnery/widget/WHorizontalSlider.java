@@ -15,21 +15,18 @@ public class WHorizontalSlider extends WWidget implements WClient {
 	public static final int FOREGROUND = 6;
 	public static final int TEXT = 7;
 	protected int limit = 0;
-	protected int position = 0;
+	protected int progress = 0;
 	protected String total;
 	protected int tX;
 
-	public WHorizontalSlider(WAnchor anchor, int positionX, int positionY, int positionZ, int sizeX, int sizeY, int limit, WInterface linkedPanel) {
-		setInterface(linkedPanel);
+	public WHorizontalSlider(WAnchor anchor, WPosition position, WSize size, WInterface linkedInterface, int limit) {
+		setInterface(linkedInterface);
 
 		setAnchor(anchor);
 
-		setAnchoredPositionX(positionX);
-		setAnchoredPositionY(positionY);
-		setPositionZ(positionZ);
+		setPosition(position);
 
-		setSizeX(sizeX);
-		setSizeY(sizeY);
+		setSize(size);
 
 		setTheme("light");
 
@@ -57,29 +54,29 @@ public class WHorizontalSlider extends WWidget implements WClient {
 		this.limit = limit;
 	}
 
-	public int getPosition() {
-		return position;
+	public int getProgress() {
+		return progress;
 	}
 
-	public void setPosition(int position) {
-		this.position = position;
-		total = Integer.toString(Math.round(getPosition()));
-		tX = getPositionX() + (getSizeX() + 7) / 2 - BaseRenderer.getTextRenderer().getStringWidth(Integer.toString(getPosition())) / 2;
+	public void setProgress(int progress) {
+		this.progress = progress;
+		total = Integer.toString(Math.round(getProgress()));
+		tX = getX() + (getWidth() + 7) / 2 - BaseRenderer.getTextRenderer().getStringWidth(Integer.toString(getProgress())) / 2;
 	}
 
 	public void updatePosition(int mouseX, int mouseY) {
 		if (scanFocus(mouseX, mouseY)) {
-			setPosition((mouseX - getPositionX()) * (getLimit() / (getSizeX())));
+			setProgress((mouseX - getX()) * (getLimit() / (getWidth())));
 		}
 	}
 
 	@Override
 	public void onKeyPressed(int keyPressed, int character, int keyModifier) {
 		if (getFocus() && keyPressed == GLFW.GLFW_KEY_KP_SUBTRACT) {
-			setPosition(Math.min(getPosition() + 1, getLimit() - 1));
+			setProgress(Math.min(getProgress() + 1, getLimit() - 1));
 		}
 		if (getFocus() && keyPressed == GLFW.GLFW_KEY_KP_DIVIDE) {
-			setPosition(getPosition() - 1 >= 0 ? getPosition() - 1 : 0);
+			setProgress(Math.max(getProgress() - 1, 0));
 		}
 		super.onKeyPressed(keyPressed, character, keyModifier);
 	}
@@ -110,14 +107,14 @@ public class WHorizontalSlider extends WWidget implements WClient {
 		}
 
 		int l = getLimit();
-		int p = getPosition();
+		int p = getProgress();
 
-		int x = getPositionX();
-		int y = getPositionY();
-		int z = getPositionZ();
+		int x = getX();
+		int y = getY();
+		int z = getZ();
 
-		int sX = getSizeX();
-		int sY = getSizeY();
+		int sX = getWidth();
+		int sY = getHeight();
 
 		BaseRenderer.getTextRenderer().drawWithShadow(total, tX, y + sY + 4, getColor(TEXT).RGB);
 

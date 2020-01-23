@@ -8,17 +8,14 @@ public class WDynamicImage extends WWidget implements WClient {
 
 	protected int position = 0;
 
-	public WDynamicImage(WAnchor anchor, int positionX, int positionY, int positionZ, int sizeX, int sizeY, WInterface linkedPanel, Identifier... textures) {
-		setInterface(linkedPanel);
+	public WDynamicImage(WAnchor anchor, WPosition position, WSize size, WInterface linkedInterface, Identifier... textures) {
+		setInterface(linkedInterface);
 
 		setAnchor(anchor);
 
-		setAnchoredPositionX(positionX);
-		setAnchoredPositionY(positionY);
-		setPositionZ(positionZ);
+		setPosition(position);
 
-		setSizeX(sizeX);
-		setSizeY(sizeY);
+		setSize(size);
 
 		setTextures(textures);
 	}
@@ -67,6 +64,6 @@ public class WDynamicImage extends WWidget implements WClient {
 			return;
 		}
 
-		BaseRenderer.drawImage(getPositionX(), getPositionY(), getPositionZ(), getSizeX(), getSizeY(), getTexture(next()));
+		BaseRenderer.drawImage(getX(), getY(), getZ(), getWidth(), getHeight(), getTexture(next()));
 	}
 }

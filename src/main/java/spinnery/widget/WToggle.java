@@ -15,17 +15,14 @@ public class WToggle extends WWidget implements WClient {
 	public static final int LABEL = 7;
 	protected boolean toggleState = false;
 
-	public WToggle(WAnchor anchor, int positionX, int positionY, int positionZ, int sizeX, int sizeY, WInterface linkedPanel) {
-		setInterface(linkedPanel);
+	public WToggle(WAnchor anchor, WPosition position, WSize size, WInterface linkedInterface) {
+		setInterface(linkedInterface);
 
 		setAnchor(anchor);
 
-		setAnchoredPositionX(positionX);
-		setAnchoredPositionY(positionY);
-		setPositionZ(positionZ);
+		setPosition(position);
 
-		setSizeX(sizeX);
-		setSizeY(sizeY);
+		setSize(size);
 
 		setTheme("light");
 	}
@@ -64,12 +61,12 @@ public class WToggle extends WWidget implements WClient {
 			return;
 		}
 
-		int x = getPositionX();
-		int y = getPositionY();
-		int z = getPositionZ();
+		int x = getX();
+		int y = getY();
+		int z = getZ();
 
-		int sX = getSizeX();
-		int sY = getSizeY();
+		int sX = getWidth();
+		int sY = getHeight();
 
 		BaseRenderer.drawRectangle(x, y, z, sX, 1, getColor(TOP_LEFT_BACKGROUND));
 		BaseRenderer.drawRectangle(x, y, z, 1, sY, getColor(TOP_LEFT_BACKGROUND));
@@ -86,7 +83,7 @@ public class WToggle extends WWidget implements WClient {
 		}
 
 		if (hasLabel()) {
-			BaseRenderer.getTextRenderer().drawWithShadow(getLabel().asFormattedString(), (float) (positionX + sizeX + 2), (float) (positionY + sizeY / 2 - 4.5), getColor(LABEL).RGB);
+			BaseRenderer.getTextRenderer().drawWithShadow(getLabel().asFormattedString(), (float) (x + sX + 2), (float) (y + sY / 2 - 4.5), getColor(LABEL).RGB);
 		}
 	}
 

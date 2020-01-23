@@ -14,6 +14,10 @@ public class Spinnery implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
+		spinnery.debug.ItemRegistry.initialize();
+		spinnery.debug.BlockRegistry.initialize();
+		spinnery.debug.ContainerRegistry.initialize();
+
 		NetworkRegistry.initialize();
 		WidgetRegistry.initialize();
 	}

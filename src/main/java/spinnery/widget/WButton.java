@@ -15,17 +15,14 @@ public class WButton extends WWidget implements WClient {
 	protected boolean toggleState = false;
 	protected int toggleTicks = 0;
 
-	public WButton(WAnchor anchor, int positionX, int positionY, int positionZ, int sizeX, int sizeY, WInterface linkedPanel) {
-		setInterface(linkedPanel);
+	public WButton(WAnchor anchor, WPosition position, WSize size, WInterface linkedInterface) {
+		setInterface(linkedInterface);
 
 		setAnchor(anchor);
 
-		setPositionX(positionX);
-		setPositionX(positionY);
-		setPositionZ(positionZ);
+		setPosition(position);
 
-		setSizeX(sizeX);
-		setSizeY(sizeY);
+		setSize(size);
 
 		setTheme("light");
 	}
@@ -66,15 +63,15 @@ public class WButton extends WWidget implements WClient {
 		}
 
 		if (getToggleState()) {
-			BaseRenderer.drawBeveledPanel(getPositionX(), getPositionY(), getPositionZ(), getSizeX(), getSizeY(), getColor(TOP_LEFT_ON), getColor(BACKGROUND_ON), getColor(BOTTOM_RIGHT_ON));
+			BaseRenderer.drawBeveledPanel(getX(), getY(), getZ(), getWidth(), getHeight(), getColor(TOP_LEFT_ON), getColor(BACKGROUND_ON), getColor(BOTTOM_RIGHT_ON));
 		} else {
-			BaseRenderer.drawBeveledPanel(getPositionX(), getPositionY(), getPositionZ(), getSizeX(), getSizeY(), getColor(TOP_LEFT_OFF), getColor(BACKGROUND_OFF), getColor(BOTTOM_RIGHT_OFF));
+			BaseRenderer.drawBeveledPanel(getX(), getY(), getZ(), getWidth(), getHeight(), getColor(TOP_LEFT_OFF), getColor(BACKGROUND_OFF), getColor(BOTTOM_RIGHT_OFF));
 		}
 		if (hasLabel()) {
-			if (BaseRenderer.getTextRenderer().getStringWidth(getLabel().asFormattedString()) > getSizeX() - 6) {
-				BaseRenderer.getTextRenderer().drawWithShadow(getLabel().asFormattedString(), (float) (getPositionX() + getSizeX() + 2), (float) (getPositionY() + getSizeY() / 2 - 4.5), getColor(LABEL).RGB);
+			if (BaseRenderer.getTextRenderer().getStringWidth(getLabel().asFormattedString()) > getWidth() - 6) {
+				BaseRenderer.getTextRenderer().drawWithShadow(getLabel().asFormattedString(), (float) (getX() + getWidth() + 2), (float) (getY() + getHeight() / 2 - 4.5), getColor(LABEL).RGB);
 			} else {
-				BaseRenderer.getTextRenderer().drawWithShadow(getLabel().asFormattedString(), (float) (getPositionX() + 3), (float) (getPositionY() + getSizeY() / 2 - 4.5), getColor(LABEL).RGB);
+				BaseRenderer.getTextRenderer().drawWithShadow(getLabel().asFormattedString(), (float) (getX() + 3), (float) (getY() + getHeight() / 2 - 4.5), getColor(LABEL).RGB);
 			}
 		}
 	}

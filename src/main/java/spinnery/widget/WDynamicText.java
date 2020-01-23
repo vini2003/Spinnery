@@ -27,17 +27,14 @@ public class WDynamicText extends WWidget implements WClient {
 	protected boolean isEditable = true;
 	protected boolean isCentered = true;
 
-	public WDynamicText(WAnchor anchor, int positionX, int positionY, int positionZ, int sizeX, int sizeY, WInterface linkedPanel) {
-		setInterface(linkedPanel);
+	public WDynamicText(WAnchor anchor, WPosition position, WSize size, WInterface linkedInterface) {
+		setInterface(linkedInterface);
 
 		setAnchor(anchor);
 
-		setAnchoredPositionX(positionX);
-		setAnchoredPositionY(positionY);
-		setPositionZ(positionZ);
+		setPosition(position);
 
-		setSizeX(sizeX);
-		setSizeY(sizeY);
+		setSize(size);
 
 		setTheme("light");
 	}
@@ -61,7 +58,7 @@ public class WDynamicText extends WWidget implements WClient {
 			visible += c;
 			if (c != '\n') {
 				sW += BaseRenderer.getTextRenderer().getCharWidth(c);
-				if (sW > sizeX - 12) {
+				if (sW > getWidth() - 12) {
 					visible += '\n';
 					sW = 0;
 				}
@@ -73,7 +70,7 @@ public class WDynamicText extends WWidget implements WClient {
 
 		int offsetA = visible.length() - (int) (visible.chars().filter(c -> c == '\n').count());
 
-		while (visible.chars().filter(c -> c == '\n').count() > (int) (Math.floor((sizeY - 12) / 9))) {
+		while (visible.chars().filter(c -> c == '\n').count() > (int) (Math.floor((getHeight() - 12) / 9))) {
 			for (int i = 0; i < visible.length(); ++i) {
 				if (visible.charAt(i) == '\n') {
 					visible = visible.substring(i + 1);
@@ -221,19 +218,19 @@ public class WDynamicText extends WWidget implements WClient {
 			return;
 		}
 
-		int x = getPositionX();
-		int y = getPositionY();
-		int z = getPositionZ();
+		int x = getX();
+		int y = getY();
+		int z = getZ();
 
-		int sX = getSizeX();
-		int sY = getSizeY();
+		int sX = getWidth();
+		int sY = getHeight();
 
 		int oY = 0;
 
 		BaseRenderer.drawBeveledPanel(x, y, z, sX, sY, getColor(TOP_LEFT), getColor(BACKGROUND), getColor(BOTTOM_RIGHT));
 
 		if (text.isEmpty() && !isSelected) {
-			BaseRenderer.getTextRenderer().drawWithShadow(getLabel().asFormattedString(), (float) (positionX + 4), (float) (y + 4 + oY), getColor(LABEL).RGB);
+			BaseRenderer.getTextRenderer().drawWithShadow(getLabel().asFormattedString(), (float) (x + 4), (float) (y + 4 + oY), getColor(LABEL).RGB);
 		} else {
 			int pP = x + 4, pC = offsetPos;
 			if (visible.isEmpty() && cursorTick > 10) {

@@ -16,18 +16,15 @@ public class WDropdown extends WWidget implements WClient, WCollection {
 	public static final int LABEL = 4;
 	public List<List<WWidget>> dropdownWidgets = new ArrayList<>();
 	protected boolean state = false;
-	protected int[][] sizes = new int[2][2];
 
-	public WDropdown(WAnchor anchor, int positionX, int positionY, int positionZ, int sizeX1, int sizeY1, int sizeX2, int sizeY2, WInterface linkedPanel) {
-		setInterface(linkedPanel);
+	public WDropdown(WAnchor anchor, WPosition position, WSize size, WInterface linkedInterface) {
+		setInterface(linkedInterface);
 
 		setAnchor(anchor);
 
-		setAnchoredPositionX(positionX);
-		setAnchoredPositionY(positionY);
-		setPositionZ(positionZ);
+		setPosition(position);
 
-		setSizes(sizeX1, sizeY1, sizeX2, sizeY2);
+		setSize(size);
 
 		setTheme("light");
 
@@ -60,10 +57,6 @@ public class WDropdown extends WWidget implements WClient, WCollection {
 		this.state = state;
 	}
 
-	public void setSizes(int sizeX1, int sizeY1, int sizeX2, int sizeY2) {
-		sizes = new int[][] {{sizeX1, sizeY1}, {sizeX2, sizeY2}};
-	}
-
 	@Override
 	public List<WWidget> getWidgets() {
 		List<WWidget> widgets = new ArrayList<>();
@@ -91,13 +84,13 @@ public class WDropdown extends WWidget implements WClient, WCollection {
 	}
 
 	@Override
-	public int getSizeX() {
-		return sizes[!getState() ? 0 : 1][0];
+	public int getWidth() {
+		return getWidth(!getState() ? 0 : 1);
 	}
 
 	@Override
-	public int getSizeY() {
-		return sizes[!getState() ? 0 : 1][1];
+	public int getHeight() {
+		return getHeight(!getState() ? 0 : 1);
 	}
 
 	@Override
@@ -111,20 +104,20 @@ public class WDropdown extends WWidget implements WClient, WCollection {
 
 	@Override
 	public void center() {
-		int oldX = getPositionX();
-		int oldY = getPositionY();
+		int oldX = getX();
+		int oldY = getY();
 
 		super.center();
 
-		int newX = getPositionX();
-		int newY = getPositionY();
+		int newX = getX();
+		int newY = getY();
 
 		int offsetX = newX - oldX;
 		int offsetY = newY - oldY;
 
 		for (WWidget widget : getWidgets()) {
-			widget.positionX += offsetX;
-			widget.positionY += offsetY;
+			widget.setX(widget.getX() + offsetX);
+			widget.setY(widget.getY() + offsetY);
 		}
 	}
 
@@ -134,12 +127,19 @@ public class WDropdown extends WWidget implements WClient, WCollection {
 			return;
 		}
 
-		BaseRenderer.drawPanel(getPositionX(), getPositionY(), getPositionZ(), getSizeX(), getSizeY() + 1.75, getColor(SHADOW), getColor(BACKGROUND), getColor(HIGHLIGHT), getColor(OUTLINE));
+		int x = getX();
+		int y = getY();
+		int z = getZ();
+
+		int sX = getWidth();
+		int sY = getHeight();
+
+		BaseRenderer.drawPanel(getX(), getY(), getZ(), getWidth(), getHeight() + 1.75, getColor(SHADOW), getColor(BACKGROUND), getColor(HIGHLIGHT), getColor(OUTLINE));
 
 		if (hasLabel()) {
-			BaseRenderer.getTextRenderer().drawWithShadow(getLabel().asFormattedString(), getPositionX() + getSizeX() / 2 - BaseRenderer.getTextRenderer().getStringWidth(getLabel().asFormattedString()) / 2, positionY + 6, getColor(LABEL).RGB);
-			BaseRenderer.drawRectangle(positionX, positionY + 16, positionZ, getSizeX(), 1, getColor(OUTLINE));
-			BaseRenderer.drawRectangle(positionX + 1, positionY + 17, positionZ, getSizeX() - 2, 0.75, getColor(SHADOW));
+			BaseRenderer.getTextRenderer().drawWithShadow(getLabel().asFormattedString(), x + sX / 2 - BaseRenderer.getTextRenderer().getStringWidth(getLabel().asFormattedString()) / 2, y + 6, getColor(LABEL).RGB);
+			BaseRenderer.drawRectangle(x, y + 16, z, sX, 1, getColor(OUTLINE));
+			BaseRenderer.drawRectangle(x + 1, y + 17, z, sX - 2, 0.75, getColor(SHADOW));
 		}
 
 		if (getState()) {
@@ -152,16 +152,16 @@ public class WDropdown extends WWidget implements WClient, WCollection {
 	}
 
 	public void updatePositions() {
-		int y = positionY + sizes[0][1] + 4;
+		int y = getY() + getHeight(0);
 
 		for (List<WWidget> widgetA : getDropdownWidgets()) {
-			int x = getPositionX() + 4;
+			int x = getX() + 4;
 			for (WWidget widgetB : widgetA) {
-				widgetB.setPositionX(x);
-				widgetB.setPositionY(y);
-				x += widgetB.getSizeX() + 2;
+				widgetB.setX(x);
+				widgetB.setY(y);
+				x += widgetB.getWidth() + 2;
 			}
-			y += widgetA.get(0).getSizeY() + 2;
+			y += widgetA.get(0).getHeight() + 2;
 		}
 	}
 

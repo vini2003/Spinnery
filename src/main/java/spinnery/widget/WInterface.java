@@ -23,13 +23,10 @@ public class WInterface extends WWidget {
 		setContainer(linkedContainer);
 	}
 
-	public WInterface(int positionX, int positionY, int positionZ, int sizeX, int sizeY) {
-		setPositionX(positionX);
-		setPositionY(positionY);
-		setPositionZ(positionZ);
+	public WInterface(WPosition position, WSize size) {
+		setPosition(position);
 
-		setSizeX(sizeX);
-		setSizeY(sizeY);
+		setSize(size);
 
 		setClientside(true);
 
@@ -38,13 +35,10 @@ public class WInterface extends WWidget {
 		setTheme("light");
 	}
 
-	public WInterface(int positionX, int positionY, int positionZ, int sizeX, int sizeY, BaseContainer linkedContainer) {
-		setPositionX(positionX);
-		setPositionY(positionY);
-		setPositionZ(positionZ);
+	public WInterface(WPosition position, WSize size, BaseContainer linkedContainer) {
+		setPosition(position);
 
-		setSizeX(sizeX);
-		setSizeY(sizeY);
+		setSize(size);
 
 		setContainer(linkedContainer);
 
@@ -136,19 +130,19 @@ public class WInterface extends WWidget {
 			return;
 		}
 
-		int x = getPositionX();
-		int y = getPositionY();
-		int z = getPositionZ();
+		int x = getX();
+		int y = getY();
+		int z = getZ();
 
-		int sX = getSizeX();
-		int sY = getSizeY();
+		int sX = getWidth();
+		int sY = getHeight();
 
 		BaseRenderer.drawPanel(x, y, z, sX, sY, getColor(SHADOW), getColor(BACKGROUND), getColor(HIGHLIGHT), getColor(OUTLINE));
 
 		if (hasLabel()) {
-			BaseRenderer.getTextRenderer().drawWithShadow(getLabel().asFormattedString(), x + sX / 2 - BaseRenderer.getTextRenderer().getStringWidth(getLabel().asFormattedString()) / 2, positionY + 6, getColor(LABEL).RGB);
-			BaseRenderer.drawRectangle(positionX, positionY + 16, positionZ, sizeX, 1, getColor(OUTLINE));
-			BaseRenderer.drawRectangle(positionX + 1, positionY + 17, positionZ, sizeX - 2, 0.75, getColor(SHADOW));
+			BaseRenderer.getTextRenderer().drawWithShadow(getLabel().asFormattedString(), x + sX / 2 - BaseRenderer.getTextRenderer().getStringWidth(getLabel().asFormattedString()) / 2, y + 6, getColor(LABEL).RGB);
+			BaseRenderer.drawRectangle(x, y + 16, z, sX, 1, getColor(OUTLINE));
+			BaseRenderer.drawRectangle(x + 1, y + 17, z, sX - 2, 0.75, getColor(SHADOW));
 		}
 
 		for (WWidget widget : getWidgets()) {

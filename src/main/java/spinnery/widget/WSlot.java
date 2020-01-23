@@ -26,63 +26,55 @@ public class WSlot extends WWidget implements WClient, WServer {
 	protected int inventoryNumber;
 	protected boolean ignoreOnRelease = false;
 
-	public WSlot(WAnchor anchor, int positionX, int positionY, int positionZ, int sizeX, int sizeY, int slotNumber, int inventoryNumber, WInterface linkedPanel) {
-		setInterface(linkedPanel);
+	public WSlot(WAnchor anchor, WPosition position, WSize size, WInterface linkedInterface, int slotNumber, int inventoryNumber) {
+		setInterface(linkedInterface);
 
 		setAnchor(anchor);
 
-		setAnchoredPositionX(positionX);
-		setAnchoredPositionY(positionY);
-		setPositionZ(positionZ);
+		setPosition(position);
 
-		setSizeX(sizeX);
-		setSizeY(sizeY);
-
-		setTheme("light");
+		setSize(size);
 
 		setSlotNumber(slotNumber);
 		setInventoryNumber(inventoryNumber);
+
+		setTheme("light");
+
 	}
 
-	public static void addSingle(WAnchor anchor, int positionX, int positionY, int positionZ, int sizeX, int sizeY, int slotNumber, int inventoryNumber, WInterface linkedPanel) {
-		linkedPanel.add(new WSlot(anchor, positionX, positionY, positionZ, sizeX, sizeY, slotNumber, inventoryNumber, linkedPanel));
+	public static void addSingle(WAnchor anchor, WPosition position, WSize size, WInterface linkedInterface, int slotNumber, int inventoryNumber) {
+		linkedInterface.add(new WSlot(anchor, position, size, linkedInterface, slotNumber, inventoryNumber));
 	}
 
-	public static void addArray(WAnchor anchor, int arrayX, int arrayY, int positionX, int positionY, int positionZ, int sizeX, int sizeY, int slotNumber, int inventoryNumber, WInterface linkedPanel) {
-		for (int y = 0; y < arrayY; ++y) {
-			for (int x = 0; x < arrayX; ++x) {
-				WSlot.addSingle(anchor, positionX + (sizeX * x), positionY + (sizeY * y), positionZ, sizeX, sizeY, slotNumber++, inventoryNumber, linkedPanel);
+	public static void addArray(WAnchor anchor, WPosition position, WSize size, WInterface linkedInterface, int slotNumber, int inventoryNumber, int arrayWidth, int arrayHeight) {
+		for (int y = 0; y < arrayHeight; ++y) {
+			for (int x = 0; x < arrayWidth; ++x) {
+				WSlot.addSingle(anchor, WPosition.of(WPosition.WType.ANCHORED, position.getX() + (size.getX() * x), position.getY() + (size.getY() * y), position.getZ(), linkedInterface), WSize.of(size.getX(), size.getY()), linkedInterface, slotNumber++, inventoryNumber);
 			}
 		}
 	}
 
-	public static void addPlayerInventory(int positionZ, int sizeX, int sizeY, int inventoryNumber, WInterface linkedPanel) {
+	public static void addPlayerInventory(WSize size, WInterface linkedInterface, int inventoryNumber) {
 		int temporarySlotNumber = 0;
 		addArray(
 				WAnchor.MC_ORIGIN,
-				9,
-				1,
-				4,
-				linkedPanel.getSizeY() - 18 - 4,
-				positionZ,
-				sizeX,
-				sizeY,
+				WPosition.of(WPosition.WType.ANCHORED, 4, linkedInterface.getHeight() - 72 - 6, 0, linkedInterface),
+				size,
+				linkedInterface,
 				temporarySlotNumber,
 				inventoryNumber,
-				linkedPanel);
+				9,
+				1);
 		temporarySlotNumber = 9;
 		addArray(
 				WAnchor.MC_ORIGIN,
-				9,
-				3,
-				4,
-				linkedPanel.getSizeY() - 72 - 6,
-				positionZ,
-				sizeX,
-				sizeY,
+				WPosition.of(WPosition.WType.ANCHORED, 4, linkedInterface.getHeight() - 72 - 6, 0, linkedInterface),
+				size,
+				linkedInterface,
 				temporarySlotNumber,
 				inventoryNumber,
-				linkedPanel);
+				9,
+				3);
 	}
 
 	public static WWidget.Theme of(Map<String, String> rawTheme) {
@@ -207,12 +199,12 @@ public class WSlot extends WWidget implements WClient, WServer {
 			return;
 		}
 
-		int x = getPositionX();
-		int y = getPositionY();
-		int z = getPositionZ();
+		int x = getX();
+		int y = getY();
+		int z = getZ();
 
-		int sX = getSizeX();
-		int sY = getSizeY();
+		int sX = getWidth();
+		int sY = getHeight();
 
 		BaseRenderer.drawBeveledPanel(x, y, z, sX, sY, getColor(TOP_LEFT), getFocus() ? getColor(BACKGROUND_FOCUSED) : getColor(BACKGROUND_UNFOCUSED), getColor(BOTTOM_RIGHT));
 

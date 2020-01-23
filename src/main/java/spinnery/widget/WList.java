@@ -18,17 +18,14 @@ public class WList extends WWidget implements WClient, WCollection {
 	public static final int LABEL = 4;
 	public List<List<WWidget>> listWidgets = new ArrayList<>();
 
-	public WList(WAnchor anchor, int positionX, int positionY, int positionZ, int sizeX, int sizeY, WInterface linkedPanel) {
-		setInterface(linkedPanel);
+	public WList(WAnchor anchor, WPosition position, WSize size, WInterface linkedInterface) {
+		setInterface(linkedInterface);
 
 		setAnchor(anchor);
 
-		setAnchoredPositionX(positionX);
-		setAnchoredPositionY(positionY);
-		setPositionZ(positionZ);
+		setPosition(position);
 
-		setSizeX(sizeX);
-		setSizeY(sizeY);
+		setSize(size);
 
 		setTheme("light");
 	}
@@ -65,17 +62,17 @@ public class WList extends WWidget implements WClient, WCollection {
 		double scaledOffsetY = deltaY * 2.5;
 
 		boolean hitTop = getListWidgets().get(0).stream().anyMatch(widget ->
-				widget.getPositionY() + scaledOffsetY > getPositionY() + 4
+				widget.getY() + scaledOffsetY > getY() + 4
 		);
 
 		boolean hitBottom = getListWidgets().get(getListWidgets().size() - 1).stream().anyMatch(widget ->
-				widget.getPositionY() + widget.getSizeY() + scaledOffsetY <= getPositionY() + getSizeY() - 6
+				widget.getY() + widget.getHeight() + scaledOffsetY <= getY() + getHeight() - 6
 		);
 
 		if ((scaledOffsetY > 0 && !hitTop) || (scaledOffsetY < 0 && !hitBottom)) {
 			for (WWidget widget : getWidgets()) {
-				widget.setPositionY(widget.getPositionY() + (int) scaledOffsetY);
-				widget.setHidden(!(isWithinBounds(widget.getPositionX(), widget.getPositionY()) || isWithinBounds(widget.getPositionX() + widget.getSizeX(), widget.getPositionY() + widget.getSizeY())));
+				widget.setY(widget.getY() + (int) scaledOffsetY);
+				widget.setHidden(!(isWithinBounds(widget.getX(), widget.getY()) || isWithinBounds(widget.getX() + widget.getWidth(), widget.getY() + widget.getHeight())));
 			}
 		}
 
@@ -105,20 +102,20 @@ public class WList extends WWidget implements WClient, WCollection {
 
 	@Override
 	public void center() {
-		int oldX = getPositionX();
-		int oldY = getPositionY();
+		int oldX = getX();
+		int oldY = getY();
 
 		super.center();
 
-		int newX = getPositionX();
-		int newY = getPositionY();
+		int newX = getX();
+		int newY = getY();
 
 		int offsetX = newX - oldX;
 		int offsetY = newY - oldY;
 
 		for (WWidget widget : getWidgets()) {
-			widget.positionX += offsetX;
-			widget.positionY += offsetY;
+			widget.setX(widget.getX() + offsetX);
+			widget.setY(widget.getY() + offsetY);
 		}
 	}
 
@@ -128,19 +125,19 @@ public class WList extends WWidget implements WClient, WCollection {
 			return;
 		}
 
-		int x = getPositionX();
-		int y = getPositionY();
-		int z = getPositionZ();
+		int x = getX();
+		int y = getY();
+		int z = getZ();
 
-		int sX = getSizeX();
-		int sY = getSizeY();
+		int sX = getWidth();
+		int sY = getHeight();
 
 		BaseRenderer.drawPanel(x, y, z, sX, sY, getColor(SHADOW), getColor(BACKGROUND), getColor(HIGHLIGHT), getColor(OUTLINE));
 
 		if (hasLabel()) {
-			BaseRenderer.getTextRenderer().drawWithShadow(getLabel().asFormattedString(), x + sX / 2 - BaseRenderer.getTextRenderer().getStringWidth(getLabel().asFormattedString()) / 2, positionY + 6, getColor(LABEL).RGB);
-			BaseRenderer.drawRectangle(positionX, positionY + 16, positionZ, sizeX, 1, getColor(OUTLINE));
-			BaseRenderer.drawRectangle(positionX + 1, positionY + 17, positionZ, sizeX - 2, 0.75, getColor(SHADOW));
+			BaseRenderer.getTextRenderer().drawWithShadow(getLabel().asFormattedString(), x + sX / 2 - BaseRenderer.getTextRenderer().getStringWidth(getLabel().asFormattedString()) / 2, y + 6, getColor(LABEL).RGB);
+			BaseRenderer.drawRectangle(x, y + 16, z, sX, 1, getColor(OUTLINE));
+			BaseRenderer.drawRectangle(x + 1, y + 17, z, sX - 2, 0.75, getColor(SHADOW));
 		}
 
 		int rawHeight = MinecraftClient.getInstance().getWindow().getHeight();
@@ -160,23 +157,23 @@ public class WList extends WWidget implements WClient, WCollection {
 	}
 
 	public void updatePositions() {
-		int y = hasLabel() ? (positionY + 20) : 4;
+		int y = hasLabel() ? (getY() + 20) : 4;
 
 		for (List<WWidget> widgetA : getListWidgets()) {
-			int x = getPositionX() + 4;
+			int x = getX() + 4;
 			for (WWidget widgetB : widgetA) {
-				widgetB.setPositionX(x);
-				widgetB.setPositionY(y);
-				x += widgetB.getSizeX() + 2;
+				widgetB.setX(x);
+				widgetB.setY(y);
+				x += widgetB.getWidth() + 2;
 			}
-			y += widgetA.get(0).getSizeY() + 2;
+			y += widgetA.get(0).getHeight() + 2;
 		}
 	}
 
 	public void updateHidden() {
 		for (List<WWidget> widgetB : getListWidgets()) {
 			for (WWidget widgetC : widgetB) {
-				widgetC.setHidden(!isWithinBounds(widgetC.getPositionX(), widgetC.getPositionY()));
+				widgetC.setHidden(!isWithinBounds(widgetC.getX(), widgetC.getY()));
 			}
 		}
 	}
