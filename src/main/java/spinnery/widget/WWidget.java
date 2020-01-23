@@ -32,8 +32,8 @@ public class WWidget implements Tickable {
 	protected Runnable linkedRunnableOnMouseScrolled;
 	protected Runnable linkedRunnableOnSlotClicked;
 	protected Runnable linkedRunnableOnAlign;
-	private String theme = "light";
-	private Text label = new LiteralText("");
+	protected String theme = "light";
+	protected Text label = new LiteralText("");
 
 	public WWidget() {
 	}
