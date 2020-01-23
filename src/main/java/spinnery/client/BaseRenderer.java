@@ -72,7 +72,7 @@ public class BaseRenderer {
 		RenderSystem.blendFuncSeparate(770, 771, 1, 0);
 		RenderSystem.color4f(255, 255, 255, 255);
 
-		getBufferBuilder().begin(GL11.GL_QUADS, VertexFormats.POSITION);
+		getBufferBuilder().begin(GL11.GL_QUADS, VertexFormats.POSITION_TEXTURE);
 
 		getBufferBuilder().vertex(x, y + sY, z).texture(0, 1).next();
 		getBufferBuilder().vertex(x + sX, y + sY, z).texture(1, 1).next();
