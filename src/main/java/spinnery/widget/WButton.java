@@ -18,8 +18,6 @@ public class WButton extends WWidget implements WClient {
 	public WButton(WPosition position, WSize size, WInterface linkedInterface) {
 		setInterface(linkedInterface);
 
-
-
 		setPosition(position);
 
 		setSize(size);
