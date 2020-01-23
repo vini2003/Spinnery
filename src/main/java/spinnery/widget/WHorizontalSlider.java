@@ -114,7 +114,7 @@ public class WHorizontalSlider extends WWidget implements WClient {
 		int sX = getWidth();
 		int sY = getHeight();
 
-		BaseRenderer.getTextRenderer().drawWithShadow(total, tX, y + sY + 4, getColor(TEXT).RGB);
+		BaseRenderer.drawText(isLabelShadowed(), total, tX, y + sY + 4, getColor(TEXT).RGB);
 
 		BaseRenderer.drawRectangle(x, y, z, (sX), 1, getColor(TOP_LEFT_BACKGROUND));
 		BaseRenderer.drawRectangle(x, y, z, 1, sY, getColor(TOP_LEFT_BACKGROUND));

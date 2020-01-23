@@ -81,7 +81,7 @@
 	"spinnery.widget.WSlot": {
 		"top_left": "0xff373737",
 		"bottom_right": "0xffffffff",
-		"background_focused": "0xff00c116",
+		"background_focused": "0xffC5C5C5",
 		"background_unfocused": "0xff8b8b8b"
 	},
 	"spinnery.widget.WTabHolder": {

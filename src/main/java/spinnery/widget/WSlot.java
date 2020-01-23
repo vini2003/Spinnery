@@ -8,6 +8,7 @@ import net.minecraft.container.SlotActionType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.Level;
 import spinnery.Spinnery;
 import spinnery.client.BaseRenderer;
@@ -23,6 +24,7 @@ public class WSlot extends WWidget implements WClient, WServer {
 	public static final int BACKGROUND_UNFOCUSED = 3;
 	protected int slotNumber;
 	protected ItemStack previewStack = ItemStack.EMPTY;
+	protected Identifier previewTexture;
 	protected int inventoryNumber;
 	protected boolean ignoreOnRelease = false;
 
@@ -73,6 +75,18 @@ public class WSlot extends WWidget implements WClient, WServer {
 				inventoryNumber,
 				9,
 				3);
+	}
+
+	public Identifier getPreviewTexture() {
+		return previewTexture;
+	}
+
+	public void setPreviewTexture(Identifier previewTexture) {
+		this.previewTexture = previewTexture;
+	}
+
+	public boolean hasPreviewTexture() {
+		return previewTexture != null;
 	}
 
 	public static WWidget.Theme of(Map<String, String> rawTheme) {
@@ -208,6 +222,10 @@ public class WSlot extends WWidget implements WClient, WServer {
 
 		if (getFocus()) {
 			BaseRenderer.drawRectangle(x + 1, y + 1, z, sX - 2, sY - 2, getColor(BACKGROUND_FOCUSED));
+		}
+
+		if (hasPreviewTexture()) {
+			BaseRenderer.drawImage(x + 1, y + 1, z, sX - 2, sY - 2, getPreviewTexture());
 		}
 
 		RenderSystem.enableLighting();

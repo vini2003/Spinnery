@@ -65,6 +65,14 @@ public class BaseRenderer {
 		drawRectangle(x + 1, y + sY - 1, z, sX - 1, 1, bottomright);
 	}
 
+	public static void drawText(boolean hasShadow, String text, int x, int y, int color) {
+		if (hasShadow) {
+			getTextRenderer().drawWithShadow(text, x, y, color);
+		} else {
+			getTextRenderer().draw(text, x, y, color);
+		}
+	}
+
 	public static void drawImage(double x, double y, double z, double sX, double sY, Identifier texture) {
 		getTextureManager().bindTexture(texture);
 

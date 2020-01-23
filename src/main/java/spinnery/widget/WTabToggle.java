@@ -96,6 +96,6 @@ public class WTabToggle extends WToggle implements WClient {
 		RenderSystem.enableLighting();
 		BaseRenderer.getItemRenderer().renderGuiItemIcon(new ItemStack(getSymbol(), 1), x + 4, y + 4);
 		RenderSystem.disableLighting();
-		BaseRenderer.getTextRenderer().drawWithShadow(name.asFormattedString(), x + 24, (int) (y + sY / 2 - 4.5), getColor(LABEL).RGB);
+		BaseRenderer.drawText(isLabelShadowed(), name.asFormattedString(), x + 24, (int) (y + sY / 2 - 4.5), getColor(LABEL).RGB);
 	}
 }

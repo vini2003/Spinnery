@@ -67,9 +67,9 @@ public class WButton extends WWidget implements WClient {
 		}
 		if (hasLabel()) {
 			if (BaseRenderer.getTextRenderer().getStringWidth(getLabel().asFormattedString()) > getWidth() - 6) {
-				BaseRenderer.getTextRenderer().drawWithShadow(getLabel().asFormattedString(), (float) (getX() + getWidth() + 2), (float) (getY() + getHeight() / 2 - 4.5), getColor(LABEL).RGB);
+				BaseRenderer.drawText(isLabelShadowed(), getLabel().asFormattedString(), (getX() + getWidth() + 2), (int) (getY() + getHeight() / 2 - 4.5), getColor(LABEL).RGB);
 			} else {
-				BaseRenderer.getTextRenderer().drawWithShadow(getLabel().asFormattedString(), (float) (getX() + 3), (float) (getY() + getHeight() / 2 - 4.5), getColor(LABEL).RGB);
+				BaseRenderer.drawText(isLabelShadowed(), getLabel().asFormattedString(), (getX() + 3), (int) (getY() + getHeight() / 2 - 4.5), getColor(LABEL).RGB);
 			}
 		}
 	}

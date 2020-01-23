@@ -83,7 +83,7 @@ public class WToggle extends WWidget implements WClient {
 		}
 
 		if (hasLabel()) {
-			BaseRenderer.getTextRenderer().drawWithShadow(getLabel().asFormattedString(), (float) (x + sX + 2), (float) (y + sY / 2 - 4.5), getColor(LABEL).RGB);
+			BaseRenderer.drawText(isLabelShadowed(), getLabel().asFormattedString(), x + sX + 2, (int) (y + sY / 2 - 4.5), getColor(LABEL).RGB);
 		}
 	}
 

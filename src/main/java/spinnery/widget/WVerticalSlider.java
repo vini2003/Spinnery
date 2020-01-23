@@ -130,7 +130,7 @@ public class WVerticalSlider extends WWidget implements WClient {
 		int sX = getWidth();
 		int sY = getHeight();
 
-		BaseRenderer.getTextRenderer().drawWithShadow(getSlidTotal(), x + sX + 4, y + sY / 2, 0xffffff);
+		BaseRenderer.drawText(isLabelShadowed(), getSlidTotal(), x + sX + 4, y + sY / 2, 0xffffff);
 
 		BaseRenderer.drawRectangle(x, y, z, sX, 1, getColor(TOP_LEFT_BACKGROUND));
 		BaseRenderer.drawRectangle(x, y, z, 1, (sY), getColor(TOP_LEFT_BACKGROUND));

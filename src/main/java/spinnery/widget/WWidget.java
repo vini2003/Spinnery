@@ -14,12 +14,11 @@ import java.util.Optional;
 
 public class WWidget implements Tickable {
 	protected WInterface linkedInterface;
-	protected WType anchor = WType.FREE;
 	protected WPosition position = WPosition.of(WType.FREE, 0, 0, 0);
 	protected WSize size = WSize.of(0, 0);
 	protected boolean isHidden = false;
 	protected boolean hasFocus = false;
-	protected boolean canMove = false;
+	protected boolean isLabelShadowed = false;
 	protected Runnable linkedRunnableOnCharTyped;
 	protected Runnable linkedRunnableOnMouseClicked;
 	protected Runnable linkedRunnableOnKeyPressed;
@@ -223,6 +222,14 @@ public class WWidget implements Tickable {
 
 	public void setLabel(Text label) {
 		this.label = label;
+	}
+
+	public void setLabelShadow(boolean isLabelShadowed) {
+		this.isLabelShadowed = isLabelShadowed;
+	}
+
+	public boolean isLabelShadowed() {
+		return isLabelShadowed;
 	}
 
 	public boolean hasLabel() {

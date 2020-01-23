@@ -49,6 +49,6 @@ public class WStaticText extends WWidget implements WClient {
 		int x = getX();
 		int y = getY();
 
-		BaseRenderer.getTextRenderer().drawWithShadow(getText().asFormattedString(), x, y, getColor(TEXT).RGB);
+		BaseRenderer.drawText(isLabelShadowed(), getText().asFormattedString(), x, y, getColor(TEXT).RGB);
 	}
 }
