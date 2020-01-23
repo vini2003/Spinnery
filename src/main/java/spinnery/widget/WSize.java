@@ -20,6 +20,10 @@ public class WSize {
 		return size;
 	}
 
+	public static WSize of(WWidget widget) {
+		return WSize.of(widget.getWidth(), widget.getHeight());
+	}
+
 	public void add(Pair... pairs) {
 		for (Pair pair : pairs) {
 			sizes.put(sizes.size(), pair);
