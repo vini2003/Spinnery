@@ -25,13 +25,13 @@ public class WSlot extends WWidget implements WClient, WServer {
 	protected int slotNumber;
 	protected ItemStack previewStack = ItemStack.EMPTY;
 	protected Identifier previewTexture;
+	protected int maximumCount = 0;
+	protected boolean overrideMaximumCount = false;
 	protected int inventoryNumber;
 	protected boolean ignoreOnRelease = false;
 
 	public WSlot(WPosition position, WSize size, WInterface linkedInterface, int slotNumber, int inventoryNumber) {
 		setInterface(linkedInterface);
-
-
 
 		setPosition(position);
 
@@ -77,6 +77,21 @@ public class WSlot extends WWidget implements WClient, WServer {
 				3);
 	}
 
+	public static WWidget.Theme of(Map<String, String> rawTheme) {
+		WWidget.Theme theme = new WWidget.Theme();
+		theme.add(TOP_LEFT, WColor.of(rawTheme.get("top_left")));
+		theme.add(BOTTOM_RIGHT, WColor.of(rawTheme.get("bottom_right")));
+		theme.add(BACKGROUND_FOCUSED, WColor.of(rawTheme.get("background_focused")));
+		theme.add(BACKGROUND_UNFOCUSED, WColor.of(rawTheme.get("background_unfocused")));
+		return theme;
+	}
+
+	private static String withSuffix(long value) {
+		if (value < 1000) return "" + value;
+		int exp = (int) (Math.log(value) / Math.log(1000));
+		return String.format("%.1f%c", value / Math.pow(1000, exp), "KMGTPE".charAt(exp - 1));
+	}
+
 	public Identifier getPreviewTexture() {
 		return previewTexture;
 	}
@@ -87,15 +102,6 @@ public class WSlot extends WWidget implements WClient, WServer {
 
 	public boolean hasPreviewTexture() {
 		return previewTexture != null;
-	}
-
-	public static WWidget.Theme of(Map<String, String> rawTheme) {
-		WWidget.Theme theme = new WWidget.Theme();
-		theme.add(TOP_LEFT, WColor.of(rawTheme.get("top_left")));
-		theme.add(BOTTOM_RIGHT, WColor.of(rawTheme.get("bottom_right")));
-		theme.add(BACKGROUND_FOCUSED, WColor.of(rawTheme.get("background_focused")));
-		theme.add(BACKGROUND_UNFOCUSED, WColor.of(rawTheme.get("background_unfocused")));
-		return theme;
 	}
 
 	public ItemStack getStack() {
@@ -109,7 +115,10 @@ public class WSlot extends WWidget implements WClient, WServer {
 
 	public void setStack(ItemStack stack) {
 		try {
-			getLinkedInventory().setInvStack(getSlotNumber(), stack);
+			getLinkedInventory().setInvStack(slotNumber, stack);
+			if (!isOverrideMaximumCount()) {
+				setMaximumCount(stack.getMaxCount());
+			}
 		} catch (ArrayIndexOutOfBoundsException exception) {
 			Spinnery.logger.log(Level.ERROR, "Cannot access slot " + getSlotNumber() + ", as it does exist in the inventory!");
 		}
@@ -141,6 +150,22 @@ public class WSlot extends WWidget implements WClient, WServer {
 
 	public Inventory getLinkedInventory() {
 		return getInterface().getContainer().getInventories().get(inventoryNumber);
+	}
+
+	public int getMaximumCount() {
+		return maximumCount;
+	}
+
+	public void setMaximumCount(int maximumCount) {
+		this.maximumCount = maximumCount;
+	}
+
+	public boolean isOverrideMaximumCount() {
+		return overrideMaximumCount;
+	}
+
+	public void setOverrideMaximumCount(boolean overrideMaximumCount) {
+		this.overrideMaximumCount = overrideMaximumCount;
 	}
 
 	@Override
@@ -229,10 +254,8 @@ public class WSlot extends WWidget implements WClient, WServer {
 		}
 
 		RenderSystem.enableLighting();
-
 		BaseRenderer.getItemRenderer().renderGuiItem(getPreviewStack().isEmpty() ? getStack() : getPreviewStack(), 1 + x + (sX - 18) / 2, 1 + y + (sY - 18) / 2);
-		BaseRenderer.getItemRenderer().renderGuiItemOverlay(MinecraftClient.getInstance().textRenderer, getPreviewStack().isEmpty() ? getStack() : getPreviewStack(), 1 + x + (sX - 18) / 2, 1 + y + (sY - 18) / 2);
-
+		BaseRenderer.getItemRenderer().renderGuiItemOverlay(MinecraftClient.getInstance().textRenderer, getPreviewStack().isEmpty() ? getStack() : getPreviewStack(), 1 + x + (sX - 18) / 2, 1 + y + (sY - 18) / 2, withSuffix(getStack().getCount()));
 		RenderSystem.disableLighting();
 	}
 }

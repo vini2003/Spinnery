@@ -4,7 +4,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.LiteralText;
 import org.lwjgl.glfw.GLFW;
-import spinnery.widget.WCollection;
 import spinnery.widget.WInterface;
 import spinnery.widget.WInterfaceHolder;
 import spinnery.widget.WWidget;
@@ -32,19 +31,6 @@ public class BaseScreen extends Screen {
 	}
 
 	@Override
-	public void resize(MinecraftClient client, int width, int height) {
-		for (WInterface wInterface : interfaceHolder.getInterfaces()) {
-			wInterface.align();
-			wInterface.onAlign();
-			for (WWidget widgetA : wInterface.getWidgets()) {
-				widgetA.align();
-				widgetA.onAlign();
-			}
-		}
-		super.resize(client, width, height);
-	}
-
-	@Override
 	public boolean keyPressed(int character, int keyCode, int keyModifier) {
 		getInterfaces().keyPressed(character, keyCode, keyModifier);
 
@@ -64,6 +50,19 @@ public class BaseScreen extends Screen {
 	@Override
 	public boolean isPauseScreen() {
 		return isPauseScreen;
+	}
+
+	@Override
+	public void resize(MinecraftClient client, int width, int height) {
+		for (WInterface wInterface : interfaceHolder.getInterfaces()) {
+			wInterface.align();
+			wInterface.onAlign();
+			for (WWidget widgetA : wInterface.getWidgets()) {
+				widgetA.align();
+				widgetA.onAlign();
+			}
+		}
+		super.resize(client, width, height);
 	}
 
 	@Override

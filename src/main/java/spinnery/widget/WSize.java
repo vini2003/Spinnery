@@ -30,14 +30,6 @@ public class WSize {
 		}
 	}
 
-	public void setX(int sizeX) {
-		this.sizes.get(0).setFirst(sizeX);
-	}
-
-	public void setY(int sizeY) {
-		this.sizes.get(0).setSecond(sizeY);
-	}
-
 	public void setX(int number, int sizeX) {
 		this.sizes.get(number).setFirst(sizeX);
 	}
@@ -50,8 +42,16 @@ public class WSize {
 		return (int) sizes.get(0).getFirst();
 	}
 
+	public void setX(int sizeX) {
+		this.sizes.get(0).setFirst(sizeX);
+	}
+
 	public int getY() {
 		return (int) sizes.get(0).getSecond();
+	}
+
+	public void setY(int sizeY) {
+		this.sizes.get(0).setSecond(sizeY);
 	}
 
 	public int getX(int number) {

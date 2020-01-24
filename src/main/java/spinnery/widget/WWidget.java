@@ -252,12 +252,12 @@ public class WWidget implements Tickable {
 		this.linkedInterface = linkedInterface;
 	}
 
-	public void setSize(WSize size) {
-		this.size = size;
-	}
-
 	public WSize getSize() {
 		return size;
+	}
+
+	public void setSize(WSize size) {
+		this.size = size;
 	}
 
 	public int getWidth() {

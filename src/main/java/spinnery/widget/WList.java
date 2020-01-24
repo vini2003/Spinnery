@@ -92,6 +92,13 @@ public class WList extends WWidget implements WClient, WCollection {
 	}
 
 	@Override
+	public void align() {
+		super.align();
+
+		updatePositions();
+	}
+
+	@Override
 	public boolean scanFocus(int mouseX, int mouseY) {
 		setFocus(isWithinBounds(mouseX, mouseY) && getWidgets().stream().noneMatch((WWidget::getFocus)));
 
@@ -152,13 +159,6 @@ public class WList extends WWidget implements WClient, WCollection {
 		}
 
 		GL11.glDisable(GL11.GL_SCISSOR_TEST);
-	}
-
-	@Override
-	public void align() {
-		super.align();
-
-		updatePositions();
 	}
 
 	public void updatePositions() {

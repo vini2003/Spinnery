@@ -1,7 +1,5 @@
 package spinnery.widget;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.server.MinecraftServer;
 import spinnery.client.BaseRenderer;
 import spinnery.common.BaseContainer;
 
@@ -14,10 +12,12 @@ public class WInterface extends WWidget {
 	public static final int HIGHLIGHT = 2;
 	public static final int OUTLINE = 3;
 	public static final int LABEL = 4;
+	public static final boolean INSTANCE_CLIENT = false;
+	public static final boolean INSTANCE_SERVER = true;
 	protected BaseContainer linkedContainer;
 	protected WWidgetHolder widgetHolder = new WWidgetHolder();
 	protected boolean isClientside;
-	protected Class<?> instanceType;
+	protected boolean instanceType;
 
 	public WInterface(BaseContainer linkedContainer) {
 		setContainer(linkedContainer);
@@ -30,7 +30,7 @@ public class WInterface extends WWidget {
 
 		setClientside(true);
 
-		setInstanceType(MinecraftClient.class);
+		setInstanceType(INSTANCE_CLIENT);
 
 		setTheme("light");
 	}
@@ -42,7 +42,7 @@ public class WInterface extends WWidget {
 
 		setClientside(true);
 
-		setInstanceType(MinecraftClient.class);
+		setInstanceType(INSTANCE_CLIENT);
 
 		setTheme("light");
 	}
@@ -57,9 +57,9 @@ public class WInterface extends WWidget {
 		setClientside(false);
 
 		if (getContainer().getLinkedWorld().isClient()) {
-			setInstanceType(MinecraftClient.class);
+			setInstanceType(INSTANCE_CLIENT);
 		} else {
-			setInstanceType(MinecraftServer.class);
+			setInstanceType(INSTANCE_SERVER);
 		}
 
 		setTheme("light");
@@ -75,20 +75,20 @@ public class WInterface extends WWidget {
 		return theme;
 	}
 
-	public Class<?> getInstanceType() {
+	public boolean getInstanceType() {
 		return instanceType;
 	}
 
-	public void setInstanceType(Class<?> instanceType) {
+	public void setInstanceType(boolean instanceType) {
 		this.instanceType = instanceType;
 	}
 
 	public boolean isClient() {
-		return instanceType == MinecraftClient.class;
+		return instanceType == INSTANCE_CLIENT;
 	}
 
 	public boolean isServer() {
-		return instanceType == MinecraftServer.class;
+		return instanceType == INSTANCE_SERVER;
 	}
 
 	public Boolean isClientside() {

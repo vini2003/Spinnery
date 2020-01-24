@@ -33,6 +33,6 @@ public class InGameHudMixin implements InGameHudScreen.Acessor {
 
 	@Override
 	public InGameHud getInGameHud() {
-		return (InGameHud)(Object)this;
+		return (InGameHud) (Object) this;
 	}
 }

@@ -100,6 +100,13 @@ public class WDropdown extends WWidget implements WClient, WCollection {
 	}
 
 	@Override
+	public void align() {
+		super.align();
+
+		updatePositions();
+	}
+
+	@Override
 	public boolean scanFocus(int mouseX, int mouseY) {
 		super.scanFocus(mouseX, mouseY);
 
@@ -158,13 +165,6 @@ public class WDropdown extends WWidget implements WClient, WCollection {
 				}
 			}
 		}
-	}
-
-	@Override
-	public void align() {
-		super.align();
-
-		updatePositions();
 	}
 
 	public void updatePositions() {

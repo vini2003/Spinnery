@@ -50,28 +50,28 @@ public class WPosition {
 		}
 	}
 
-	public void setX(int x) {
-		this.x = x;
-	}
-
-	public void setY(int y) {
-		this.y = y;
-	}
-
-	public void setZ(int z) {
-		this.z = z;
-	}
-
 	public int getX() {
 		return x;
+	}
+
+	public void setX(int x) {
+		this.x = x;
 	}
 
 	public int getY() {
 		return y;
 	}
 
+	public void setY(int y) {
+		this.y = y;
+	}
+
 	public int getZ() {
 		return z;
+	}
+
+	public void setZ(int z) {
+		this.z = z;
 	}
 
 	public void setRaw(int x, int y, int z) {
@@ -80,27 +80,27 @@ public class WPosition {
 		setRawZ(z);
 	}
 
-	public void setRawX(int rawX) {
-		this.rawX = rawX;
-	}
-
-	public void setRawY(int rawY) {
-		this.rawY = rawY;
-	}
-
-	public void setRawZ(int rawZ) {
-		this.rawZ = rawZ;
-	}
-
 	public int getRawX() {
 		return rawX;
+	}
+
+	public void setRawX(int rawX) {
+		this.rawX = rawX;
 	}
 
 	public int getRawY() {
 		return rawY;
 	}
 
+	public void setRawY(int rawY) {
+		this.rawY = rawY;
+	}
+
 	public int getRawZ() {
 		return rawZ;
+	}
+
+	public void setRawZ(int rawZ) {
+		this.rawZ = rawZ;
 	}
 }

@@ -31,7 +31,6 @@ public class WDynamicText extends WWidget implements WClient {
 		setInterface(linkedInterface);
 
 
-
 		setPosition(position);
 
 		setSize(size);

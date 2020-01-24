@@ -16,7 +16,7 @@ public class WVerticalSlider extends WWidget implements WClient {
 	public static final int TEXT = 7;
 	protected int limit = 0;
 	protected float progress = 0;
-	protected String slidTotal;
+	protected String slidTotal = "0";
 	protected int slidStringPosition;
 
 	public WVerticalSlider(WPosition position, WSize size, WInterface linkedInterface, int limit) {

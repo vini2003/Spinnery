@@ -21,7 +21,6 @@ public class WTabHolder extends WWidget implements WClient, WCollection {
 		setInterface(linkedInterface);
 
 
-
 		setPosition(position);
 
 		setSize(size);
@@ -76,6 +75,15 @@ public class WTabHolder extends WWidget implements WClient, WCollection {
 	}
 
 	@Override
+	public void align() {
+		super.align();
+
+		for (WWidget widget : getWidgets()) {
+			widget.align();
+		}
+	}
+
+	@Override
 	public void center() {
 		super.center();
 
@@ -111,15 +119,6 @@ public class WTabHolder extends WWidget implements WClient, WCollection {
 			if (!(widget instanceof WTabToggle)) {
 				widget.draw();
 			}
-		}
-	}
-
-	@Override
-	public void align() {
-		super.align();
-
-		for (WWidget widget : getWidgets()) {
-			widget.align();
 		}
 	}
 

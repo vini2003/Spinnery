@@ -16,7 +16,7 @@ public class WHorizontalSlider extends WWidget implements WClient {
 	public static final int TEXT = 7;
 	protected int limit = 0;
 	protected float progress = 0;
-	protected String total;
+	protected String total = "0";
 	protected int tX;
 
 	public WHorizontalSlider(WPosition position, WSize size, WInterface linkedInterface, int limit) {

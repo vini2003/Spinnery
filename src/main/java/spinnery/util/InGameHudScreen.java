@@ -6,22 +6,15 @@ import spinnery.widget.WInterfaceHolder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.Consumer;
 
 public class InGameHudScreen {
-	public interface Acessor {
-		WInterfaceHolder getHolder();
-		InGameHud getInGameHud();
-	}
-
 	protected static WInterfaceHolder interfaceHolder = null;
 	protected static InGameHud inGameHudCache = null;
-
 	protected static List<Runnable> onInitialize = new ArrayList<>();
 
 	public static void onInitialize(InGameHud inGameHud) {
 		inGameHudCache = inGameHud;
-		interfaceHolder = ((InGameHudScreen.Acessor)inGameHud).getHolder();
+		interfaceHolder = ((InGameHudScreen.Acessor) inGameHud).getHolder();
 		for (Runnable r : onInitialize) {
 			r.run();
 		}
@@ -41,5 +34,11 @@ public class InGameHudScreen {
 
 	public static InGameHud getInGameHude() {
 		return inGameHudCache;
+	}
+
+	public interface Acessor {
+		WInterfaceHolder getHolder();
+
+		InGameHud getInGameHud();
 	}
 }
