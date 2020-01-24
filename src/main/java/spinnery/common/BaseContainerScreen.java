@@ -1,7 +1,7 @@
 package spinnery.common;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.ingame.AbstractContainerScreen;
+import net.minecraft.client.gui.screen.ingame.ContainerScreen;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
 import org.lwjgl.glfw.GLFW;
@@ -10,7 +10,7 @@ import spinnery.widget.WInterfaceHolder;
 import spinnery.widget.WSlot;
 import spinnery.widget.WWidget;
 
-public class BaseContainerScreen<T extends BaseContainer> extends AbstractContainerScreen<T> {
+public class BaseContainerScreen<T extends BaseContainer> extends ContainerScreen<T> {
 	int tooltipX = 0;
 	int tooltipY = 0;
 	WSlot drawSlot;

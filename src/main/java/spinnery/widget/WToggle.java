@@ -18,8 +18,6 @@ public class WToggle extends WWidget implements WClient {
 	public WToggle(WPosition position, WSize size, WInterface linkedInterface) {
 		setInterface(linkedInterface);
 
-
-
 		setPosition(position);
 
 		setSize(size);
