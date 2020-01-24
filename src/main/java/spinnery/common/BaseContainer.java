@@ -199,7 +199,7 @@ public class BaseContainer extends CraftingContainer<Inventory> implements Ticka
 				for (WWidget widget : widgets) {
 					if (widget != slotA && widget instanceof WSlot && ((WSlot) widget).getLinkedInventory() != slotA.getLinkedInventory()) {
 						ItemStack stackC = ((WSlot) widget).getStack();
-						if (stackC.getCount() < ((WSlot) widget).getMaximumCount() && !slotA.getStack().isEmpty()) { // Merge with existing // LFSHIFT + LMB
+						if ((stackC.getCount() < ((WSlot) widget).getMaximumCount() || stackC.getCount() < ((WSlot) widget).getStack().getMaxCount()) && !slotA.getStack().isEmpty()) { // Merge with existing // LFSHIFT + LMB
 							Pair<ItemStack, ItemStack> result = clamp(slotA.getStack(), ((WSlot) widget).getStack(), slotA.getMaximumCount(), ((WSlot) widget).getMaximumCount());
 							stackA = result.getFirst();
 							((WSlot) widget).setStack(result.getSecond());
