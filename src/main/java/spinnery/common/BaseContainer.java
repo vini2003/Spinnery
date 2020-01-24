@@ -62,7 +62,7 @@ public class BaseContainer extends CraftingContainer<Inventory> implements Ticka
 		return true;
 	}
 
-	public void mergeStacks(ItemStack stackA, ItemStack stackB, int maxA, int maxB) {
+	public static void mergeStacks(ItemStack stackA, ItemStack stackB, int maxA, int maxB) {
 		int countA = stackA.getCount();
 		int countB = stackB.getCount();
 
@@ -80,7 +80,7 @@ public class BaseContainer extends CraftingContainer<Inventory> implements Ticka
 	 * @param maxB   Max. count of stackB
 	 * @return Results
 	 */
-	public Pair<ItemStack, ItemStack> clamp(ItemStack stackA, ItemStack stackB, int maxA, int maxB) {
+	public static Pair<ItemStack, ItemStack> clamp(ItemStack stackA, ItemStack stackB, int maxA, int maxB) {
 		Item itemA = stackA.getItem();
 		Item itemB = stackB.getItem();
 

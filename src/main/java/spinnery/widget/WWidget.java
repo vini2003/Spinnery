@@ -296,7 +296,7 @@ public class WWidget implements Tickable {
 		this.position = position;
 	}
 
-	public WPosition get() {
+	public WPosition getPosition() {
 		return position;
 	}
 
