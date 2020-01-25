@@ -112,7 +112,7 @@ public class BaseContainer extends CraftingContainer<Inventory> implements Ticka
 	public void onSlotClicked(int slotNumber, int inventoryNumber, int button, SlotActionType action, PlayerEntity player) {
 		Optional<WWidget> optionalWSlot = getInterfaces().getWidgets().stream().filter((widget) ->
 				(widget instanceof WSlot && ((WSlot) widget).getSlotNumber() == slotNumber && ((WSlot) widget).getInventoryNumber() == inventoryNumber)
-						|| (widget instanceof WCollection && ((WCollection) widget).getWidgets().stream().anyMatch(slot -> ((WSlot) slot).getSlotNumber() == slotNumber && ((WSlot) slot).getInventoryNumber() == inventoryNumber))).findFirst();
+						|| (widget instanceof WCollection && ((WCollection) widget).getWidgets().stream().anyMatch(slot -> widget instanceof  WSlot && ((WSlot) slot).getSlotNumber() == slotNumber && ((WSlot) slot).getInventoryNumber() == inventoryNumber))).findFirst();
 
 		WSlot slotA;
 		if (optionalWSlot.isPresent()) {
@@ -199,7 +199,7 @@ public class BaseContainer extends CraftingContainer<Inventory> implements Ticka
 				for (WWidget widget : widgets) {
 					if (widget != slotA && widget instanceof WSlot && ((WSlot) widget).getLinkedInventory() != slotA.getLinkedInventory()) {
 						ItemStack stackC = ((WSlot) widget).getStack();
-						if ((stackC.getCount() < ((WSlot) widget).getMaximumCount() || stackC.getCount() < ((WSlot) widget).getStack().getMaxCount()) && !slotA.getStack().isEmpty()) { // Merge with existing // LFSHIFT + LMB
+						if ((stackC.getCount() < ((WSlot) widget).getMaximumCount() || stackC.getCount() < ((WSlot) widget).getStack().getMaxCount()) && !slotA.getStack().isEmpty() && (((WSlot) widget).getStack().isEmpty() || slotA.getStack().isItemEqual(((WSlot) widget).getStack()))) { // Merge with existing // LFSHIFT + LMB
 							Pair<ItemStack, ItemStack> result = clamp(slotA.getStack(), ((WSlot) widget).getStack(), slotA.getMaximumCount(), ((WSlot) widget).getMaximumCount());
 							stackA = result.getFirst();
 							((WSlot) widget).setStack(result.getSecond());
