@@ -2,6 +2,7 @@ package spinnery.util;
 
 import net.minecraft.inventory.Inventory;
 import net.minecraft.nbt.CompoundTag;
+import spinnery.common.BaseInventory;
 
 public class InventoryUtilities {
 	/**
@@ -9,7 +10,7 @@ public class InventoryUtilities {
 	 * @return Tag from inventory
 	 * @reason Support >64 ItemStack#count
 	 */
-	public static CompoundTag write(Inventory inventory) {
+	public static <T extends BaseInventory> CompoundTag write(T inventory) {
 		CompoundTag tag = new CompoundTag();
 
 		for (int i = 0; i < inventory.getInvSize(); ++i) {
@@ -24,7 +25,7 @@ public class InventoryUtilities {
 	 * @return Inventory from tag
 	 * @reeason Support >64 ItemStack#count
 	 */
-	public static Inventory read(Inventory inventory, CompoundTag tag) {
+	public static <T extends BaseInventory> T read(T inventory, CompoundTag tag) {
 		for (int i = 0; i < inventory.getInvSize(); ++i) {
 			inventory.setInvStack(i, StackUtilities.read((CompoundTag) tag.get(String.valueOf(i))));
 		}
