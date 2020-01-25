@@ -48,18 +48,18 @@ public class ResourceRegistry {
 			if (key.equals("Identifier")) {
 				name = data.get(key).get("name");
 			} else {
+				Class<? extends WWidget> widgetClass = WidgetRegistry.get(key);
 				try {
-					Class<? extends WWidget> widgetClass = WidgetRegistry.get(key);
 					if (!Objects.isNull(widgetClass)) {
 						try {
 							WWidget.Theme theme = (WWidget.Theme) widgetClass.getMethod("of", Map.class).invoke(widgetClass, data.get(key));
 							ThemeRegistry.register(name, widgetClass, theme);
 						} catch (InvocationTargetException | IllegalAccessException exception) {
-							Spinnery.logger.log(Level.ERROR, "[Spinnery] Could not invoke WWidget::of!");
+							Spinnery.logger.log(Level.ERROR, "[Spinnery] Could not invoke WWidget::of for {}!", widgetClass.getSimpleName());
 						}
 					}
 				} catch (NoSuchMethodException exception) {
-					Spinnery.logger.log(Level.ERROR, "[Spinnery] Could not find WWidget::of!");
+					Spinnery.logger.log(Level.ERROR, "[Spinnery] Could not find WWidget::of for {}!", widgetClass.getSimpleName());
 				}
 			}
 		}

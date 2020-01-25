@@ -28,7 +28,8 @@
 	"spinnery.widget.WDynamicImage": {
 	},
 	"spinnery.widget.WStaticText": {
-		"text": "0xffffff"
+		"text": "0xffffff",
+		"shadow": "0x3e3e3e"
 	},
 	"spinnery.widget.WDynamicText": {
 		"top_left": "0xff373737",

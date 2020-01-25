@@ -13,6 +13,11 @@ import org.lwjgl.opengl.GL11;
 import spinnery.widget.WColor;
 
 public class BaseRenderer {
+	public enum Font {
+		DEFAULT,
+		ENCHANTMENT,
+	}
+
 	public static void drawRectangle(double x, double y, double z, double sX, double sY, WColor color) {
 		RenderSystem.enableBlend();
 		RenderSystem.disableTexture();
@@ -65,11 +70,34 @@ public class BaseRenderer {
 		drawRectangle(x + 1, y + sY - 1, z, sX - 1, 1, bottomright);
 	}
 
-	public static void drawText(boolean hasShadow, String text, int x, int y, int color) {
-		if (hasShadow) {
-			getTextRenderer().drawWithShadow(text, x, y, color);
+	public static void drawText(String text, int x, int y, int color) {
+		drawTextTrimmed(text, x, y, null, color);
+	}
+
+	public static void drawText(boolean isShadowed, String text, int x, int y, int color) {
+		drawText(isShadowed, text, x, y, color, 0x3E3E3E);
+	}
+
+	public static void drawText(boolean isShadowed, String text, int x, int y, int color, int shadowColor) {
+		if (isShadowed) {
+			drawTextTrimmed(text, x + 1, y + 1, null, shadowColor);
+		}
+		drawTextTrimmed(text, x, y, null, color);
+	}
+
+	public static void drawTextTrimmed(String text, int x, int y, Integer maxWidth, int color) {
+		drawTextTrimmed(text, x, y, maxWidth, color, Font.DEFAULT);
+	}
+
+	public static void drawText(String text, int x, int y, int color, Font font) {
+		drawTextTrimmed(text, x, y, null, color, font);
+	}
+
+	public static void drawTextTrimmed(String text, int x, int y, Integer maxWidth, int color, Font font) {
+		if (maxWidth != null) {
+			getTextRenderer(font).drawTrimmed(text, x, y, maxWidth, color);
 		} else {
-			getTextRenderer().draw(text, x, y, color);
+			getTextRenderer(font).draw(text, x, y, color);
 		}
 	}
 
@@ -97,7 +125,18 @@ public class BaseRenderer {
 	}
 
 	public static TextRenderer getTextRenderer() {
-		return MinecraftClient.getInstance().textRenderer;
+		return getTextRenderer(Font.DEFAULT);
+	}
+
+	public static TextRenderer getTextRenderer(Font font) {
+		switch (font) {
+			case ENCHANTMENT:
+				return MinecraftClient.getInstance().getFontManager()
+						.getTextRenderer(MinecraftClient.ALT_TEXT_RENDERER_ID);
+			case DEFAULT:
+			default:
+				return MinecraftClient.getInstance().textRenderer;
+		}
 	}
 
 	public static ItemRenderer getItemRenderer() {
