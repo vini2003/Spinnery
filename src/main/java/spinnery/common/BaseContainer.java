@@ -44,7 +44,7 @@ public class BaseContainer extends CraftingContainer<Inventory> implements Ticka
 	public void onSlotClicked(int slotNumber, int inventoryNumber, int button, SlotActionType action, PlayerEntity player) {
 		Optional<WWidget> optionalWSlot = getInterfaces().getWidgets().stream().filter((widget) ->
 				(widget instanceof WSlot && ((WSlot) widget).getSlotNumber() == slotNumber && ((WSlot) widget).getInventoryNumber() == inventoryNumber)
-						|| (widget instanceof WCollection && ((WCollection) widget).getWidgets().stream().anyMatch(slot -> widget instanceof WSlot && ((WSlot) slot).getSlotNumber() == slotNumber && ((WSlot) slot).getInventoryNumber() == inventoryNumber))).findFirst();
+						|| (widget instanceof WCollection && ((WCollection) widget).getWidgets().stream().anyMatch(slot -> slot instanceof WSlot && ((WSlot) slot).getSlotNumber() == slotNumber && ((WSlot) slot).getInventoryNumber() == inventoryNumber))).findFirst();
 
 		WSlot slotA;
 		if (optionalWSlot.isPresent()) {
