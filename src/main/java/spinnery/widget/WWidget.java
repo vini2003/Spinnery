@@ -1,8 +1,6 @@
 package spinnery.widget;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.container.Slot;
-import net.minecraft.container.SlotActionType;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Tickable;
@@ -19,19 +17,18 @@ public class WWidget implements Tickable {
 	protected boolean isHidden = false;
 	protected boolean hasFocus = false;
 	protected boolean isLabelShadowed = false;
-	protected Runnable linkedRunnableOnCharTyped;
-	protected Runnable linkedRunnableOnMouseClicked;
-	protected Runnable linkedRunnableOnKeyPressed;
-	protected Runnable linkedRunnableOnKeyReleased;
-	protected Runnable linkedRunnableOnFocusGained;
-	protected Runnable linkedRunnableOnFocusReleased;
-	protected Runnable linkedRunnableOnDrawTooltip;
-	protected Runnable linkedRunnableOnMouseReleased;
-	protected Runnable linkedRunnableOnMouseMoved;
-	protected Runnable linkedRunnableOnMouseDragged;
-	protected Runnable linkedRunnableOnMouseScrolled;
-	protected Runnable linkedRunnableOnSlotClicked;
-	protected Runnable linkedRunnableOnAlign;
+	protected Runnable runnableOnCharTyped;
+	protected Runnable runnableOnMouseClicked;
+	protected Runnable runnableOnKeyPressed;
+	protected Runnable runnableOnKeyReleased;
+	protected Runnable runnableOnFocusGained;
+	protected Runnable runnableOnFocusReleased;
+	protected Runnable runnableOnDrawTooltip;
+	protected Runnable runnableOnMouseReleased;
+	protected Runnable runnableOnMouseMoved;
+	protected Runnable runnableOnMouseDragged;
+	protected Runnable runnableOnMouseScrolled;
+	protected Runnable runnableOnAlign;
 	protected String theme = "light";
 	protected Text label = new LiteralText("");
 
@@ -43,177 +40,167 @@ public class WWidget implements Tickable {
 	}
 
 	public void onCharTyped(char character) {
-		if (linkedRunnableOnCharTyped != null) {
-			linkedRunnableOnCharTyped.run();
+		if (runnableOnCharTyped != null) {
+			runnableOnCharTyped.run();
 		}
 	}
 
 	public void onKeyPressed(int keyPressed, int character, int keyModifier) {
-		if (linkedRunnableOnKeyPressed != null) {
-			linkedRunnableOnKeyPressed.run();
+		if (runnableOnKeyPressed != null) {
+			runnableOnKeyPressed.run();
 		}
 	}
 
 	public Runnable getOnKeyPressed() {
-		return linkedRunnableOnKeyPressed;
+		return runnableOnKeyPressed;
 	}
 
 	public void setOnKeyPressed(Runnable linkedRunnableOnKeyPressed) {
-		this.linkedRunnableOnKeyPressed = linkedRunnableOnKeyPressed;
+		this.runnableOnKeyPressed = linkedRunnableOnKeyPressed;
 	}
 
 	public void onKeyReleased(int keyReleased) {
-		if (linkedRunnableOnKeyReleased != null) {
-			linkedRunnableOnKeyReleased.run();
+		if (runnableOnKeyReleased != null) {
+			runnableOnKeyReleased.run();
 		}
 	}
 
 	public Runnable getOnKeyReleased() {
-		return linkedRunnableOnKeyReleased;
+		return runnableOnKeyReleased;
 	}
 
 	public void setOnKeyReleased(Runnable linkedRunnableOnKeyReleased) {
-		this.linkedRunnableOnKeyReleased = linkedRunnableOnKeyReleased;
+		this.runnableOnKeyReleased = linkedRunnableOnKeyReleased;
 	}
 
 	public void onFocusGained() {
-		if (linkedRunnableOnFocusGained != null) {
-			linkedRunnableOnFocusGained.run();
+		if (runnableOnFocusGained != null) {
+			runnableOnFocusGained.run();
 		}
 	}
 
 	public Runnable getOnFocusGained() {
-		return linkedRunnableOnFocusGained;
+		return runnableOnFocusGained;
 	}
 
 	public void setOnFocusGained(Runnable linkedRunnableOnFocusGained) {
-		this.linkedRunnableOnFocusGained = linkedRunnableOnFocusGained;
+		this.runnableOnFocusGained = linkedRunnableOnFocusGained;
 	}
 
 	public void onFocusReleased() {
-		if (linkedRunnableOnFocusReleased != null) {
-			linkedRunnableOnFocusReleased.run();
+		if (runnableOnFocusReleased != null) {
+			runnableOnFocusReleased.run();
 		}
 	}
 
 	public Runnable getOnFocusReleased() {
-		return linkedRunnableOnFocusReleased;
+		return runnableOnFocusReleased;
 	}
 
 	public void setOnFocusReleased(Runnable linkedRunnableOnFocusReleased) {
-		this.linkedRunnableOnFocusReleased = linkedRunnableOnFocusReleased;
+		this.runnableOnFocusReleased = linkedRunnableOnFocusReleased;
 	}
 
 	public void onMouseReleased(double mouseX, double mouseY, int mouseButton) {
-		if (linkedRunnableOnMouseReleased != null) {
-			linkedRunnableOnMouseReleased.run();
+		if (runnableOnMouseReleased != null) {
+			runnableOnMouseReleased.run();
 		}
 	}
 
 	public Runnable getOnMouseReleased() {
-		return linkedRunnableOnMouseReleased;
+		return runnableOnMouseReleased;
 	}
 
 	public void setOnMouseReleased(Runnable linkedRunnable) {
-		this.linkedRunnableOnMouseReleased = linkedRunnable;
+		this.runnableOnMouseReleased = linkedRunnable;
 	}
 
 	public void onMouseClicked(int mouseX, int mouseY, int mouseButton) {
-		if (linkedRunnableOnMouseClicked != null) {
-			linkedRunnableOnMouseClicked.run();
+		if (runnableOnMouseClicked != null) {
+			runnableOnMouseClicked.run();
 		}
 	}
 
 	public Runnable getOnMouseClicked() {
-		return linkedRunnableOnMouseClicked;
+		return runnableOnMouseClicked;
 	}
 
 	public void setOnMouseClicked(Runnable linkedRunnable) {
-		this.linkedRunnableOnMouseClicked = linkedRunnable;
+		this.runnableOnMouseClicked = linkedRunnable;
 	}
 
 	public void onMouseDragged(int mouseX, int mouseY, int mouseButton, double deltaX, double deltaY) {
-		if (linkedRunnableOnMouseDragged != null) {
-			linkedRunnableOnMouseDragged.run();
+		if (runnableOnMouseDragged != null) {
+			runnableOnMouseDragged.run();
 		}
 	}
 
 	public Runnable getOnMouseDragged() {
-		return linkedRunnableOnMouseDragged;
+		return runnableOnMouseDragged;
 	}
 
 	public void setOnMouseDragged(Runnable linkedRunnable) {
-		this.linkedRunnableOnMouseDragged = linkedRunnable;
+		this.runnableOnMouseDragged = linkedRunnable;
 	}
 
 	public void onMouseMoved(double mouseX, double mouseY) {
-		if (linkedRunnableOnMouseMoved != null) {
-			linkedRunnableOnMouseMoved.run();
+		if (runnableOnMouseMoved != null) {
+			runnableOnMouseMoved.run();
 		}
 	}
 
 	public Runnable getOnMouseMoved() {
-		return linkedRunnableOnMouseMoved;
+		return runnableOnMouseMoved;
 	}
 
 	public void setOnMouseMoved(Runnable linkedRunnable) {
-		this.linkedRunnableOnMouseMoved = linkedRunnable;
+		this.runnableOnMouseMoved = linkedRunnable;
 	}
 
 	public void onMouseScrolled(int mouseX, int mouseY, double deltaY) {
-		if (linkedRunnableOnMouseScrolled != null) {
-			linkedRunnableOnMouseScrolled.run();
+		if (runnableOnMouseScrolled != null) {
+			runnableOnMouseScrolled.run();
 		}
 	}
 
 	public Runnable getOnMouseScrolled() {
-		return linkedRunnableOnMouseScrolled;
+		return runnableOnMouseScrolled;
 	}
 
 	public void setOnMouseScrolled(Runnable linkedRunnable) {
-		this.linkedRunnableOnMouseScrolled = linkedRunnable;
-	}
-
-	public void onSlotClicked(Slot slot, int slotX, int slotY, SlotActionType slotActionType) {
-		if (linkedRunnableOnSlotClicked != null) {
-			linkedRunnableOnSlotClicked.run();
-		}
-	}
-
-	public Runnable getOnSlotClicked() {
-		return linkedRunnableOnSlotClicked;
-	}
-
-	public void setOnSlotClicked(Runnable linkedRunnable) {
-		this.linkedRunnableOnSlotClicked = linkedRunnable;
+		this.runnableOnMouseScrolled = linkedRunnable;
 	}
 
 	public void onDrawTooltip() {
-		if (linkedRunnableOnDrawTooltip != null) {
-			linkedRunnableOnDrawTooltip.run();
+		if (runnableOnDrawTooltip != null) {
+			runnableOnDrawTooltip.run();
 		}
 	}
 
 	public Runnable getOnDrawTooltip() {
-		return linkedRunnableOnDrawTooltip;
+		return runnableOnDrawTooltip;
 	}
 
 	public void setOnDrawTooltip(Runnable linkedRunnableOnDrawTooltip) {
-		this.linkedRunnableOnDrawTooltip = linkedRunnableOnDrawTooltip;
+		this.runnableOnDrawTooltip = linkedRunnableOnDrawTooltip;
 	}
 
 	public void onAlign() {
-		if (linkedRunnableOnAlign != null) {
-			linkedRunnableOnAlign.run();
+		if (runnableOnAlign != null) {
+			runnableOnAlign.run();
 		}
 	}
 
 	public Runnable getOnAlign() {
-		return linkedRunnableOnAlign;
+		return runnableOnAlign;
 	}
 
 	public void setOnAlign(Runnable linkedRunnableOnAlign) {
-		this.linkedRunnableOnAlign = linkedRunnableOnAlign;
+		this.runnableOnAlign = linkedRunnableOnAlign;
+	}
+
+	public boolean hasLabel() {
+		return !label.asFormattedString().isEmpty();
 	}
 
 	public Text getLabel() {
@@ -224,16 +211,12 @@ public class WWidget implements Tickable {
 		this.label = label;
 	}
 
-	public void setLabelShadow(boolean isLabelShadowed) {
-		this.isLabelShadowed = isLabelShadowed;
-	}
-
 	public boolean isLabelShadowed() {
 		return isLabelShadowed;
 	}
 
-	public boolean hasLabel() {
-		return !label.asFormattedString().isEmpty();
+	public void setLabelShadow(boolean isLabelShadowed) {
+		this.isLabelShadowed = isLabelShadowed;
 	}
 
 	public String getTheme() {
@@ -292,12 +275,12 @@ public class WWidget implements Tickable {
 		size.setY(number, height);
 	}
 
-	public void setPosition(WPosition position) {
-		this.position = position;
-	}
-
 	public WPosition getPosition() {
 		return position;
+	}
+
+	public void setPosition(WPosition position) {
+		this.position = position;
 	}
 
 	public int getX() {
@@ -332,7 +315,7 @@ public class WWidget implements Tickable {
 		return hasFocus;
 	}
 
-	public boolean setFocus(boolean hasFocus) {
+	public void setFocus(boolean hasFocus) {
 		if (!getFocus() && hasFocus) {
 			onFocusGained();
 		}
@@ -340,7 +323,18 @@ public class WWidget implements Tickable {
 			onFocusReleased();
 		}
 		this.hasFocus = hasFocus;
-		return hasFocus;
+	}
+
+	public boolean scanFocus(int mouseX, int mouseY) {
+		if (isHidden()) {
+			return false;
+		}
+
+		Optional<? extends WWidget> optional = linkedInterface.getWidgets().stream().filter((widget) ->
+				widget.getZ() > getZ() && widget.isWithinBounds(mouseX, mouseY)
+		).findAny();
+		setFocus(!optional.isPresent() && isWithinBounds(mouseX, mouseY));
+		return getFocus();
 	}
 
 	public boolean isHidden() {
@@ -356,17 +350,6 @@ public class WWidget implements Tickable {
 				&& positionX < getX() + getWidth()
 				&& positionY > getY()
 				&& positionY < getY() + getHeight();
-	}
-
-	public boolean scanFocus(int mouseX, int mouseY) {
-		if (isHidden) {
-			return false;
-		}
-		Optional<? extends WWidget> optional = linkedInterface.getWidgets().stream().filter((widget) ->
-				widget.getZ() > getZ() && widget.isWithinBounds(mouseX, mouseY)
-		).findAny();
-		setFocus(!optional.isPresent() && isWithinBounds(mouseX, mouseY));
-		return getFocus();
 	}
 
 	public void center() {

@@ -152,7 +152,7 @@ public class WSlot extends WWidget implements WClient, WServer {
 		return getInterface().getContainer().getInventories().get(inventoryNumber);
 	}
 
-	public int getMaximumCount() {
+	public int getMaxCount() {
 		return maximumCount;
 	}
 

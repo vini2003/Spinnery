@@ -60,8 +60,6 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 		super.height = MinecraftClient.getInstance().getWindow().getScaledHeight();
 		super.x = 0;
 		super.y = 0;
-		getLinkedContainer().setPositionX(super.x);
-		getLinkedContainer().setPositionY(super.y);
 	}
 
 	public void drawTooltip() {

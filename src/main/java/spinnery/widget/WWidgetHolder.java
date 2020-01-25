@@ -11,10 +11,6 @@ public class WWidgetHolder {
 		return heldWidgets;
 	}
 
-	public boolean contains(WWidget... widgets) {
-		return heldWidgets.containsAll(Arrays.asList(widgets));
-	}
-
 	public void add(WWidget... widgets) {
 		heldWidgets.addAll(Arrays.asList(widgets));
 	}
