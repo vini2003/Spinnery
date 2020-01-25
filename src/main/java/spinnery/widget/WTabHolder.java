@@ -4,11 +4,7 @@ import net.minecraft.item.Item;
 import net.minecraft.text.Text;
 import spinnery.client.BaseRenderer;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class WTabHolder extends WWidget implements WClient, WCollection {
 	public static final int SHADOW = 0;
@@ -75,6 +71,15 @@ public class WTabHolder extends WWidget implements WClient, WCollection {
 	}
 
 	@Override
+	public List<WWidget> getAllWidgets() {
+		List<WWidget> widgets = new LinkedList<>();
+		for (int i : tabs.keySet()) {
+			widgets.addAll(tabs.get(i).getAllWidgets());
+		}
+		return widgets;
+	}
+
+	@Override
 	public void align() {
 		super.align();
 
@@ -122,7 +127,7 @@ public class WTabHolder extends WWidget implements WClient, WCollection {
 		}
 	}
 
-	public class WTab {
+	public class WTab implements WCollection {
 		Item symbol;
 		Text name;
 		int number;
@@ -142,6 +147,17 @@ public class WTabHolder extends WWidget implements WClient, WCollection {
 
 		public List<WWidget> getWidgets() {
 			return widgets;
+		}
+
+		@Override
+		public List<WWidget> getAllWidgets() {
+			List<WWidget> deepList = new ArrayList<>(widgets);
+			for (WWidget widgetA : widgets) {
+				if (widgetA instanceof WCollection) {
+					deepList.addAll(((WCollection) widgetA).getAllWidgets());
+				}
+			}
+			return deepList;
 		}
 
 		public WTabToggle getToggle() {
