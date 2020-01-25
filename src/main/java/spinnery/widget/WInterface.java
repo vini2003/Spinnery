@@ -26,7 +26,7 @@ public class WInterface extends WWidget {
 	public WInterface(WPosition position) {
 		setPosition(position);
 
-		setSize(null);
+		setSize(WSize.of(0, 0));
 
 		setClientside(true);
 
@@ -51,6 +51,24 @@ public class WInterface extends WWidget {
 		setPosition(position);
 
 		setSize(size);
+
+		setContainer(linkedContainer);
+
+		setClientside(false);
+
+		if (getContainer().getLinkedWorld().isClient()) {
+			setInstanceType(INSTANCE_CLIENT);
+		} else {
+			setInstanceType(INSTANCE_SERVER);
+		}
+
+		setTheme("light");
+	}
+
+	public WInterface(WPosition position, BaseContainer linkedContainer) {
+		setPosition(position);
+
+		setSize(WSize.of(0, 0));
 
 		setContainer(linkedContainer);
 
@@ -116,7 +134,7 @@ public class WInterface extends WWidget {
 	}
 
 	public boolean isDrawable() {
-		return size != null;
+		return size.getX() != 0 && size.getY() != 0;
 	}
 
 	public void add(WWidget... widgets) {
