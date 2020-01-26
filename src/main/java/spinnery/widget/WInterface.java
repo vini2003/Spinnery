@@ -3,10 +3,12 @@ package spinnery.widget;
 import spinnery.client.BaseRenderer;
 import spinnery.common.BaseContainer;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-public class WInterface extends WWidget {
+public class WInterface extends WWidget implements WModifiableCollection {
 	public static final int SHADOW = 0;
 	public static final int BACKGROUND = 1;
 	public static final int HIGHLIGHT = 2;
@@ -15,7 +17,7 @@ public class WInterface extends WWidget {
 	public static final boolean INSTANCE_CLIENT = false;
 	public static final boolean INSTANCE_SERVER = true;
 	protected BaseContainer linkedContainer;
-	protected WWidgetHolder widgetHolder = new WWidgetHolder();
+	protected List<WWidget> heldWidgets = new ArrayList<>();
 	protected boolean isClientside;
 	protected boolean instanceType;
 
@@ -121,6 +123,17 @@ public class WInterface extends WWidget {
 		return instanceType == INSTANCE_SERVER;
 	}
 
+	@Override
+	public List<WWidget> getWidgets() {
+		return heldWidgets;
+	}
+
+	@Override
+	public List<WWidget> getAllWidgets() {
+		return heldWidgets;
+	}
+
+	@Override
 	public void add(WWidget... widgets) {
 		for (WWidget widget : widgets) {
 			if (widget instanceof WServer && isClientside()) {
@@ -128,19 +141,21 @@ public class WInterface extends WWidget {
 			}
 		}
 
-		getHolder().add(widgets);
+		heldWidgets.addAll(Arrays.asList(widgets));
+	}
+
+	@Override
+	public void remove(WWidget... widgets) {
+		heldWidgets.removeAll(Arrays.asList(widgets));
+	}
+
+	@Override
+	public boolean contains(WWidget... widgets) {
+		return heldWidgets.containsAll(Arrays.asList(widgets));
 	}
 
 	public Boolean isClientside() {
 		return isClientside;
-	}
-
-	public WWidgetHolder getHolder() {
-		return widgetHolder;
-	}
-
-	public void remove(WWidget... WWidgets) {
-		getHolder().remove(WWidgets);
 	}
 
 	@Override
@@ -173,10 +188,6 @@ public class WInterface extends WWidget {
 
 	public boolean isDrawable() {
 		return size.getX() != 0 && size.getY() != 0;
-	}
-
-	public List<WWidget> getWidgets() {
-		return widgetHolder.getWidgets();
 	}
 
 	@Override

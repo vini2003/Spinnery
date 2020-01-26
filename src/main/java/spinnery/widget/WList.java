@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 @Environment(EnvType.CLIENT)
-public class WList extends WWidget implements WClient, WCollection {
+public class WList extends WWidget implements WClient, WModifiableCollection {
 	public static final int SHADOW = 0;
 	public static final int BACKGROUND = 1;
 	public static final int HIGHLIGHT = 2;
@@ -198,15 +198,27 @@ public class WList extends WWidget implements WClient, WCollection {
 		}
 	}
 
+	@Override
 	public void add(WWidget... widgetArray) {
 		getListWidgets().add(Arrays.asList(widgetArray));
 		updatePositions();
 		updateHidden();
 	}
 
+	@Override
 	public void remove(WWidget... widgetArray) {
 		getListWidgets().remove(Arrays.asList(widgetArray));
 		updatePositions();
 		updateHidden();
+	}
+
+	@Override
+	public boolean contains(WWidget... widgets) {
+		for (List<WWidget> widgetList : getListWidgets()) {
+			if (widgetList.containsAll(Arrays.asList(widgets))) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

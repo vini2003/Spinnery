@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 @Environment(EnvType.CLIENT)
-public class WDropdown extends WWidget implements WClient, WCollection {
+public class WDropdown extends WWidget implements WClient, WModifiableCollection {
 	public static final int SHADOW = 0;
 	public static final int BACKGROUND = 1;
 	public static final int HIGHLIGHT = 2;
@@ -110,18 +110,6 @@ public class WDropdown extends WWidget implements WClient, WCollection {
 	}
 
 	@Override
-	public List<WWidget> getAllWidgets() {
-		List<WWidget> widgets = new ArrayList<>();
-		for (List<WWidget> widgetA : getDropdownWidgets()) {
-			widgets.addAll(widgetA);
-			if (widgetA instanceof WCollection) {
-				widgets.addAll(((WCollection) widgetA).getAllWidgets());
-			}
-		}
-		return widgets;
-	}
-
-	@Override
 	public int getWidth() {
 		return getWidth(!getState() ? 0 : 1);
 	}
@@ -204,15 +192,22 @@ public class WDropdown extends WWidget implements WClient, WCollection {
 		}
 	}
 
+	@Override
 	public void add(WWidget... widgetArray) {
 		getDropdownWidgets().add(Arrays.asList(widgetArray));
 		updatePositions();
 		updateHidden();
 	}
 
+	@Override
 	public void remove(WWidget... widgetArray) {
 		getDropdownWidgets().remove(Arrays.asList(widgetArray));
 		updatePositions();
 		updateHidden();
+	}
+
+	@Override
+	public boolean contains(WWidget... widgetArray) {
+		return getDropdownWidgets().containsAll(Arrays.asList(widgetArray));
 	}
 }

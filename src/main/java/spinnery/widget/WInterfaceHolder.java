@@ -4,15 +4,24 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class WInterfaceHolder {
+public class WInterfaceHolder implements WModifiableCollection {
 	List<WInterface> heldInterfaces = new ArrayList<>();
 
+	public List<WInterface> getInterfaces() {
+		return heldInterfaces;
+	}
+
+	@Override
 	public boolean contains(WWidget... interfaces) {
 		return heldInterfaces.containsAll(Arrays.asList(interfaces));
 	}
 
-	public void add(WInterface... interfaces) {
-		heldInterfaces.addAll(Arrays.asList(interfaces));
+	@Override
+	public void add(WWidget... interfaces) {
+		for (WWidget widget : interfaces) {
+			if (!(widget instanceof WInterface)) continue;
+			heldInterfaces.add((WInterface) widget);
+		}
 	}
 
 	public void remove(WWidget... interfaces) {
@@ -27,10 +36,6 @@ public class WInterfaceHolder {
 		}
 
 		return widgets;
-	}
-
-	public List<WInterface> getInterfaces() {
-		return heldInterfaces;
 	}
 
 	public boolean onMouseClicked(int mouseX, int mouseY, int mouseButton) {
