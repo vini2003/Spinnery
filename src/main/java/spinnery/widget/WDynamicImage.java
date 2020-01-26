@@ -1,8 +1,11 @@
 package spinnery.widget;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.util.Identifier;
 import spinnery.client.BaseRenderer;
 
+@Environment(EnvType.CLIENT)
 public class WDynamicImage extends WWidget implements WClient {
 	protected Identifier[] textures;
 
@@ -27,25 +30,12 @@ public class WDynamicImage extends WWidget implements WClient {
 		return getCurrentImage();
 	}
 
-	public int previous() {
-		if (getCurrentImage() > 0) {
-			setCurrentImage(getCurrentImage() - 1);
-		} else {
-			setCurrentImage(getTextures().length - 1);
-		}
-		return getCurrentImage();
-	}
-
 	public int getCurrentImage() {
 		return currentImage;
 	}
 
 	public void setCurrentImage(int currentImage) {
 		this.currentImage = currentImage;
-	}
-
-	public Identifier getTexture() {
-		return textures[currentImage];
 	}
 
 	public Identifier[] getTextures() {
@@ -56,6 +46,15 @@ public class WDynamicImage extends WWidget implements WClient {
 		this.textures = textures;
 	}
 
+	public int previous() {
+		if (getCurrentImage() > 0) {
+			setCurrentImage(getCurrentImage() - 1);
+		} else {
+			setCurrentImage(getTextures().length - 1);
+		}
+		return getCurrentImage();
+	}
+
 	@Override
 	public void draw() {
 		if (isHidden()) {
@@ -63,5 +62,9 @@ public class WDynamicImage extends WWidget implements WClient {
 		}
 
 		BaseRenderer.drawImage(getX(), getY(), getZ(), getWidth(), getHeight(), getTexture());
+	}
+
+	public Identifier getTexture() {
+		return textures[currentImage];
 	}
 }

@@ -35,6 +35,14 @@ public class WInterface extends WWidget {
 		setTheme("light");
 	}
 
+	public void setClientside(Boolean clientside) {
+		isClientside = clientside;
+	}
+
+	public boolean isClient() {
+		return instanceType == INSTANCE_CLIENT;
+	}
+
 	public WInterface(WPosition position, WSize size) {
 		setPosition(position);
 
@@ -63,6 +71,14 @@ public class WInterface extends WWidget {
 		}
 
 		setTheme("light");
+	}
+
+	public BaseContainer getContainer() {
+		return linkedContainer;
+	}
+
+	public void setContainer(BaseContainer linkedContainer) {
+		this.linkedContainer = linkedContainer;
 	}
 
 	public WInterface(WPosition position, BaseContainer linkedContainer) {
@@ -101,40 +117,8 @@ public class WInterface extends WWidget {
 		this.instanceType = instanceType;
 	}
 
-	public boolean isClient() {
-		return instanceType == INSTANCE_CLIENT;
-	}
-
 	public boolean isServer() {
 		return instanceType == INSTANCE_SERVER;
-	}
-
-	public Boolean isClientside() {
-		return isClientside;
-	}
-
-	public void setClientside(Boolean clientside) {
-		isClientside = clientside;
-	}
-
-	public BaseContainer getContainer() {
-		return linkedContainer;
-	}
-
-	public void setContainer(BaseContainer linkedContainer) {
-		this.linkedContainer = linkedContainer;
-	}
-
-	public List<WWidget> getWidgets() {
-		return widgetHolder.getWidgets();
-	}
-
-	public WWidgetHolder getHolder() {
-		return widgetHolder;
-	}
-
-	public boolean isDrawable() {
-		return size.getX() != 0 && size.getY() != 0;
 	}
 
 	public void add(WWidget... widgets) {
@@ -147,15 +131,16 @@ public class WInterface extends WWidget {
 		getHolder().add(widgets);
 	}
 
-	public void remove(WWidget... WWidgets) {
-		getHolder().remove(WWidgets);
+	public Boolean isClientside() {
+		return isClientside;
 	}
 
-	@Override
-	public void setTheme(String theme) {
-		if (isClient()) {
-			super.setTheme(theme);
-		}
+	public WWidgetHolder getHolder() {
+		return widgetHolder;
+	}
+
+	public void remove(WWidget... WWidgets) {
+		getHolder().remove(WWidgets);
 	}
 
 	@Override
@@ -183,6 +168,21 @@ public class WInterface extends WWidget {
 
 		for (WWidget widget : getWidgets()) {
 			widget.draw();
+		}
+	}
+
+	public boolean isDrawable() {
+		return size.getX() != 0 && size.getY() != 0;
+	}
+
+	public List<WWidget> getWidgets() {
+		return widgetHolder.getWidgets();
+	}
+
+	@Override
+	public void setTheme(String theme) {
+		if (isClient()) {
+			super.setTheme(theme);
 		}
 	}
 }

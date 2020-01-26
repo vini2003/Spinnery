@@ -1,6 +1,8 @@
 package spinnery.widget;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
@@ -8,6 +10,7 @@ import spinnery.client.BaseRenderer;
 
 import java.util.Map;
 
+@Environment(EnvType.CLIENT)
 public class WTabToggle extends WToggle implements WClient {
 	public static final int SHADOW_ON = 0;
 	public static final int BACKGROUND_ON = 1;
@@ -51,14 +54,6 @@ public class WTabToggle extends WToggle implements WClient {
 		return theme;
 	}
 
-	public Item getSymbol() {
-		return symbol;
-	}
-
-	public void setSymbol(Item symbol) {
-		this.symbol = symbol;
-	}
-
 	public Text getName() {
 		return name;
 	}
@@ -97,5 +92,13 @@ public class WTabToggle extends WToggle implements WClient {
 		BaseRenderer.getItemRenderer().renderGuiItemIcon(new ItemStack(getSymbol(), 1), x + 4, y + 4);
 		RenderSystem.disableLighting();
 		BaseRenderer.drawText(isLabelShadowed(), name.asFormattedString(), x + 24, (int) (y + sY / 2 - 4.5), getColor(LABEL).RGB);
+	}
+
+	public Item getSymbol() {
+		return symbol;
+	}
+
+	public void setSymbol(Item symbol) {
+		this.symbol = symbol;
 	}
 }

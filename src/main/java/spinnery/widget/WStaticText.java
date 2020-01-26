@@ -1,10 +1,13 @@
 package spinnery.widget;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.text.Text;
 import spinnery.client.BaseRenderer;
 
 import java.util.Map;
 
+@Environment(EnvType.CLIENT)
 public class WStaticText extends WWidget implements WClient {
 
 	public static final int SHADOW = 6;
@@ -12,6 +15,10 @@ public class WStaticText extends WWidget implements WClient {
 	protected Text text;
 	protected BaseRenderer.Font font;
 	protected Integer maxWidth = null;
+
+	public WStaticText(WPosition position, WInterface linkedInterface, Text text) {
+		this(position, linkedInterface, text, BaseRenderer.Font.DEFAULT);
+	}
 
 	public WStaticText(WPosition position, WInterface linkedInterface, Text text, BaseRenderer.Font font) {
 		setInterface(linkedInterface);
@@ -25,23 +32,11 @@ public class WStaticText extends WWidget implements WClient {
 		this.font = font;
 	}
 
-	public WStaticText(WPosition position, WInterface linkedInterface, Text text) {
-		this(position, linkedInterface, text, BaseRenderer.Font.DEFAULT);
-	}
-
 	public static WWidget.Theme of(Map<String, String> rawTheme) {
 		WWidget.Theme theme = new WWidget.Theme();
 		theme.add(SHADOW, WColor.of(rawTheme.get("shadow")));
 		theme.add(TEXT, WColor.of(rawTheme.get("text")));
 		return theme;
-	}
-
-	public Text getText() {
-		return text;
-	}
-
-	public void setText(Text text) {
-		this.text = text;
 	}
 
 	public Integer getMaxWidth() {
@@ -58,13 +53,6 @@ public class WStaticText extends WWidget implements WClient {
 
 	public void setFont(BaseRenderer.Font font) {
 		this.font = font;
-	}
-
-	@Override
-	public void setTheme(String theme) {
-		if (getInterface().isClient()) {
-			super.setTheme(theme);
-		}
 	}
 
 	@Override
@@ -90,5 +78,20 @@ public class WStaticText extends WWidget implements WClient {
 			BaseRenderer.drawTextTrimmed(getText().asFormattedString(), x + 1, y + 1, maxWidth, getColor(SHADOW).RGB, font);
 		}
 		BaseRenderer.drawTextTrimmed(getText().asFormattedString(), x, y, maxWidth, getColor(TEXT).RGB, font);
+	}
+
+	public Text getText() {
+		return text;
+	}
+
+	public void setText(Text text) {
+		this.text = text;
+	}
+
+	@Override
+	public void setTheme(String theme) {
+		if (getInterface().isClient()) {
+			super.setTheme(theme);
+		}
 	}
 }

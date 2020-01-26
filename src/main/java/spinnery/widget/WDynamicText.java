@@ -1,5 +1,7 @@
 package spinnery.widget;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import org.lwjgl.glfw.GLFW;
@@ -7,6 +9,7 @@ import spinnery.client.BaseRenderer;
 
 import java.util.Map;
 
+@Environment(EnvType.CLIENT)
 public class WDynamicText extends WWidget implements WClient {
 	public static final int TOP_LEFT = 0;
 	public static final int BOTTOM_RIGHT = 1;
@@ -50,6 +53,15 @@ public class WDynamicText extends WWidget implements WClient {
 		return theme;
 	}
 
+	public String getText() {
+		return text;
+	}
+
+	public void setText(String text) {
+		this.text = text;
+		updateText();
+	}
+
 	void updateText() {
 		visible = "";
 		int sW = 0;
@@ -83,24 +95,6 @@ public class WDynamicText extends WWidget implements WClient {
 		offsetPos = Math.max(offsetA - offsetB, 0);
 	}
 
-	void clearSelection() {
-		selRightPos = -1;
-		selLeftPos = -1;
-	}
-
-	boolean hasSelection() {
-		return selRightPos != -1 && selLeftPos != -1;
-	}
-
-	public String getText() {
-		return text;
-	}
-
-	public void setText(String text) {
-		this.text = text;
-		updateText();
-	}
-
 	public boolean isEditable() {
 		return isEditable;
 	}
@@ -122,6 +116,11 @@ public class WDynamicText extends WWidget implements WClient {
 		updateText();
 
 		super.onCharTyped(character);
+	}
+
+	void clearSelection() {
+		selRightPos = -1;
+		selLeftPos = -1;
 	}
 
 	@Override
@@ -196,19 +195,16 @@ public class WDynamicText extends WWidget implements WClient {
 		super.onKeyPressed(keyPressed, character, keyModifier);
 	}
 
-	@Override
-	public void onMouseClicked(int mouseX, int mouseY, int mouseButton) {
-		if (isEditable) {
-			this.isSelected = scanFocus(mouseX, mouseY);
-		}
-		super.onMouseClicked(mouseX, mouseY, mouseButton);
+	boolean hasSelection() {
+		return selRightPos != -1 && selLeftPos != -1;
 	}
 
 	@Override
-	public void setTheme(String theme) {
-		if (getInterface().isClient()) {
-			super.setTheme(theme);
+	public void onMouseClicked(int mouseX, int mouseY, int mouseButton) {
+		if (isEditable) {
+			this.isSelected = updateFocus(mouseX, mouseY);
 		}
+		super.onMouseClicked(mouseX, mouseY, mouseButton);
 	}
 
 	@Override
@@ -267,5 +263,12 @@ public class WDynamicText extends WWidget implements WClient {
 			cursorTick = 20;
 		}
 		super.tick();
+	}
+
+	@Override
+	public void setTheme(String theme) {
+		if (getInterface().isClient()) {
+			super.setTheme(theme);
+		}
 	}
 }

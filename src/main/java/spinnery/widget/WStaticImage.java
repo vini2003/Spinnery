@@ -1,8 +1,11 @@
 package spinnery.widget;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.util.Identifier;
 import spinnery.client.BaseRenderer;
 
+@Environment(EnvType.CLIENT)
 public class WStaticImage extends WWidget implements WClient {
 	protected Identifier texture;
 
@@ -14,14 +17,6 @@ public class WStaticImage extends WWidget implements WClient {
 		setSize(size);
 
 		setTexture(texture);
-	}
-
-	public Identifier getTexture() {
-		return texture;
-	}
-
-	public void setTexture(Identifier texture) {
-		this.texture = texture;
 	}
 
 	@Override
@@ -38,5 +33,13 @@ public class WStaticImage extends WWidget implements WClient {
 		int sY = getHeight();
 
 		BaseRenderer.drawImage(x, y, z, sX, sY, getTexture());
+	}
+
+	public Identifier getTexture() {
+		return texture;
+	}
+
+	public void setTexture(Identifier texture) {
+		this.texture = texture;
 	}
 }

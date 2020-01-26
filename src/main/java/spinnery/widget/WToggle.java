@@ -1,9 +1,12 @@
 package spinnery.widget;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import spinnery.client.BaseRenderer;
 
 import java.util.Map;
 
+@Environment(EnvType.CLIENT)
 public class WToggle extends WWidget implements WClient {
 	public static final int TOP_LEFT_BACKGROUND = 0;
 	public static final int BOTTOM_RIGHT_BACKGROUND = 1;
@@ -40,17 +43,10 @@ public class WToggle extends WWidget implements WClient {
 
 	@Override
 	public void onMouseClicked(int mouseX, int mouseY, int mouseButton) {
-		if (scanFocus(mouseX, mouseY)) {
+		if (updateFocus(mouseX, mouseY)) {
 			setToggleState(!getToggleState());
 		}
 		super.onMouseClicked(mouseX, mouseY, mouseButton);
-	}
-
-	@Override
-	public void setTheme(String theme) {
-		if (getInterface().isClient()) {
-			super.setTheme(theme);
-		}
 	}
 
 	@Override
@@ -82,6 +78,13 @@ public class WToggle extends WWidget implements WClient {
 
 		if (hasLabel()) {
 			BaseRenderer.drawText(isLabelShadowed(), getLabel().asFormattedString(), x + sX + 2, (int) (y + sY / 2 - 4.5), getColor(LABEL).RGB);
+		}
+	}
+
+	@Override
+	public void setTheme(String theme) {
+		if (getInterface().isClient()) {
+			super.setTheme(theme);
 		}
 	}
 

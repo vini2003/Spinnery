@@ -1,5 +1,7 @@
 package spinnery.widget;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.item.Item;
 import net.minecraft.text.Text;
 import spinnery.client.BaseRenderer;
@@ -11,6 +13,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+@Environment(EnvType.CLIENT)
 public class WTabHolder extends WWidget implements WClient, WCollection {
 	public static final int SHADOW = 0;
 	public static final int BACKGROUND = 1;
@@ -67,6 +70,15 @@ public class WTabHolder extends WWidget implements WClient, WCollection {
 	}
 
 	@Override
+	public void align() {
+		super.align();
+
+		for (WWidget widget : getWidgets()) {
+			widget.align();
+		}
+	}
+
+	@Override
 	public List<WWidget> getWidgets() {
 		List<WWidget> widgets = new LinkedList<>();
 		for (int i : tabs.keySet()) {
@@ -82,15 +94,6 @@ public class WTabHolder extends WWidget implements WClient, WCollection {
 			widgets.addAll(tabs.get(i).getAllWidgets());
 		}
 		return widgets;
-	}
-
-	@Override
-	public void align() {
-		super.align();
-
-		for (WWidget widget : getWidgets()) {
-			widget.align();
-		}
 	}
 
 	@Override
@@ -150,6 +153,19 @@ public class WTabHolder extends WWidget implements WClient, WCollection {
 			});
 		}
 
+		public WTabToggle getToggle() {
+			return (WTabToggle) widgets.get(0);
+		}
+
+		public void add(WWidget... widgets) {
+			this.widgets.addAll(Arrays.asList(widgets));
+			for (WWidget widget : getWidgets()) {
+				if (!(widget instanceof WTabToggle)) {
+					widget.setHidden(true);
+				}
+			}
+		}
+
 		public List<WWidget> getWidgets() {
 			return widgets;
 		}
@@ -163,19 +179,6 @@ public class WTabHolder extends WWidget implements WClient, WCollection {
 				}
 			}
 			return deepList;
-		}
-
-		public WTabToggle getToggle() {
-			return (WTabToggle) widgets.get(0);
-		}
-
-		public void add(WWidget... widgets) {
-			this.widgets.addAll(Arrays.asList(widgets));
-			for (WWidget widget : getWidgets()) {
-				if (!(widget instanceof WTabToggle)) {
-					widget.setHidden(true);
-				}
-			}
 		}
 
 		public void remove(WWidget... widgets) {

@@ -1,10 +1,13 @@
 package spinnery.widget;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import org.lwjgl.glfw.GLFW;
 import spinnery.client.BaseRenderer;
 
 import java.util.Map;
 
+@Environment(EnvType.CLIENT)
 public class WHorizontalSlider extends WWidget implements WClient {
 	public static final int TOP_LEFT_BACKGROUND = 0;
 	public static final int BOTTOM_RIGHT_BACKGROUND = 1;
@@ -44,30 +47,6 @@ public class WHorizontalSlider extends WWidget implements WClient {
 		return theme;
 	}
 
-	public int getLimit() {
-		return limit;
-	}
-
-	public void setLimit(int limit) {
-		this.limit = limit;
-	}
-
-	public float getProgress() {
-		return progress;
-	}
-
-	public void setProgress(float progress) {
-		this.progress = progress;
-		total = Integer.toString(Math.round(getProgress()));
-		tX = getX() + (getWidth() + 7) / 2 - BaseRenderer.getTextRenderer().getStringWidth(Integer.toString((int) getProgress())) / 2;
-	}
-
-	public void updatePosition(int mouseX, int mouseY) {
-		if (scanFocus(mouseX, mouseY)) {
-			setProgress(((mouseX - getX()) * ((float) getLimit() / (float) (getWidth()))));
-		}
-	}
-
 	@Override
 	public void onKeyPressed(int keyPressed, int character, int keyModifier) {
 		if (getFocus() && keyPressed == GLFW.GLFW_KEY_KP_SUBTRACT) {
@@ -79,23 +58,40 @@ public class WHorizontalSlider extends WWidget implements WClient {
 		super.onKeyPressed(keyPressed, character, keyModifier);
 	}
 
+	public float getProgress() {
+		return progress;
+	}
+
+	public int getLimit() {
+		return limit;
+	}
+
+	public void setLimit(int limit) {
+		this.limit = limit;
+	}
+
+	public void setProgress(float progress) {
+		this.progress = progress;
+		total = Integer.toString(Math.round(getProgress()));
+		tX = getX() + (getWidth() + 7) / 2 - BaseRenderer.getTextRenderer().getStringWidth(Integer.toString((int) getProgress())) / 2;
+	}
+
 	@Override
 	public void onMouseClicked(int mouseX, int mouseY, int mouseButton) {
 		updatePosition(mouseX, mouseY);
 		super.onMouseClicked(mouseX, mouseY, mouseButton);
 	}
 
+	public void updatePosition(int mouseX, int mouseY) {
+		if (updateFocus(mouseX, mouseY)) {
+			setProgress(((mouseX - getX()) * ((float) getLimit() / (float) (getWidth()))));
+		}
+	}
+
 	@Override
 	public void onMouseDragged(int mouseX, int mouseY, int mouseButton, double deltaX, double deltaY) {
 		updatePosition(mouseX, mouseY);
 		super.onMouseDragged(mouseX, mouseY, mouseButton, deltaX, deltaY);
-	}
-
-	@Override
-	public void setTheme(String theme) {
-		if (getInterface().isClient()) {
-			super.setTheme(theme);
-		}
 	}
 
 	@Override
@@ -126,5 +122,12 @@ public class WHorizontalSlider extends WWidget implements WClient {
 		BaseRenderer.drawRectangle(x + ((sX) / l) * p, y + 1, z, (sX) - ((sX) / l) * p, sY - 1, getColor(BACKGROUND_OFF));
 
 		BaseRenderer.drawBeveledPanel(Math.min(x + sX - 7, x + (sX / l) * p), y - 1, z, 8, sY + 3, getColor(TOP_LEFT_FOREGROUND), getColor(FOREGROUND), getColor(BOTTOM_RIGHT_FOREGROUND));
+	}
+
+	@Override
+	public void setTheme(String theme) {
+		if (getInterface().isClient()) {
+			super.setTheme(theme);
+		}
 	}
 }

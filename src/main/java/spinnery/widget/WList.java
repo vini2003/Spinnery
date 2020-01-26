@@ -1,5 +1,7 @@
 package spinnery.widget;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
 import org.lwjgl.opengl.GL11;
@@ -10,6 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+@Environment(EnvType.CLIENT)
 public class WList extends WWidget implements WClient, WCollection {
 	public static final int SHADOW = 0;
 	public static final int BACKGROUND = 1;
@@ -39,31 +42,6 @@ public class WList extends WWidget implements WClient, WCollection {
 	}
 
 	@Override
-	public List<WWidget> getWidgets() {
-		List<WWidget> widgets = new ArrayList<>();
-		for (List<WWidget> widgetA : getListWidgets()) {
-			widgets.addAll(widgetA);
-		}
-		return widgets;
-	}
-
-	@Override
-	public List<WWidget> getAllWidgets() {
-		List<WWidget> widgets = new ArrayList<>();
-		for (List<WWidget> widgetA : getListWidgets()) {
-			widgets.addAll(widgetA);
-			if (widgetA instanceof WCollection) {
-				widgets.addAll(((WCollection) widgetA).getAllWidgets());
-			}
-		}
-		return widgets;
-	}
-
-	public List<List<WWidget>> getListWidgets() {
-		return listWidgets;
-	}
-
-	@Override
 	public void onMouseScrolled(int mouseX, int mouseY, double deltaY) {
 		if (!isWithinBounds(mouseX, mouseY) || getListWidgets().size() == 0) {
 			return;
@@ -89,18 +67,36 @@ public class WList extends WWidget implements WClient, WCollection {
 		super.onMouseScrolled(mouseX, mouseY, deltaY);
 	}
 
+	public List<List<WWidget>> getListWidgets() {
+		return listWidgets;
+	}
+
+	@Override
+	public List<WWidget> getWidgets() {
+		List<WWidget> widgets = new ArrayList<>();
+		for (List<WWidget> widgetA : getListWidgets()) {
+			widgets.addAll(widgetA);
+		}
+		return widgets;
+	}
+
+	@Override
+	public List<WWidget> getAllWidgets() {
+		List<WWidget> widgets = new ArrayList<>();
+		for (List<WWidget> widgetA : getListWidgets()) {
+			widgets.addAll(widgetA);
+			if (widgetA instanceof WCollection) {
+				widgets.addAll(((WCollection) widgetA).getAllWidgets());
+			}
+		}
+		return widgets;
+	}
+
 	@Override
 	public void setLabel(Text label) {
 		super.setLabel(label);
 		updatePositions();
 		updateHidden();
-	}
-
-	@Override
-	public void setTheme(String theme) {
-		if (getInterface().isClient()) {
-			super.setTheme(theme);
-		}
 	}
 
 	@Override
@@ -111,7 +107,7 @@ public class WList extends WWidget implements WClient, WCollection {
 	}
 
 	@Override
-	public boolean scanFocus(int mouseX, int mouseY) {
+	public boolean updateFocus(int mouseX, int mouseY) {
 		setFocus(isWithinBounds(mouseX, mouseY) && getWidgets().stream().noneMatch((WWidget::getFocus)));
 
 		return getFocus();
@@ -171,6 +167,13 @@ public class WList extends WWidget implements WClient, WCollection {
 		}
 
 		GL11.glDisable(GL11.GL_SCISSOR_TEST);
+	}
+
+	@Override
+	public void setTheme(String theme) {
+		if (getInterface().isClient()) {
+			super.setTheme(theme);
+		}
 	}
 
 	public void updatePositions() {

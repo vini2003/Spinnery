@@ -28,7 +28,7 @@ public class BaseContainer extends CraftingContainer<Inventory> implements Ticka
 	public Map<Integer, Inventory> linkedInventories = new HashMap<>();
 
 	protected World linkedWorld;
-	protected WInterfaceHolder interfaceHolder = new WInterfaceHolder();
+	protected WInterfaceHolder serverHolder = new WInterfaceHolder();
 
 	public BaseContainer(int synchronizationID, PlayerInventory linkedPlayerInventory) {
 		super(null, synchronizationID);
@@ -36,14 +36,14 @@ public class BaseContainer extends CraftingContainer<Inventory> implements Ticka
 		setLinkedWorld(linkedPlayerInventory.player.world);
 	}
 
-	public WInterfaceHolder getInterfaces() {
-		return interfaceHolder;
+	public Map<Integer, Inventory> getInventories() {
+		return linkedInventories;
 	}
 
 	public void onSlotClicked(int slotNumber, int inventoryNumber, int button, SlotActionType action, PlayerEntity player) {
 		WSlot slotA = null;
 
-		List<WWidget> checkWidgets = getInterfaces().getWidgets();
+		List<WWidget> checkWidgets = getHolder().getWidgets();
 
 		for (int i = 0; i < checkWidgets.size(); ++i) {
 			WWidget widget = checkWidgets.get(i);
@@ -124,7 +124,7 @@ public class BaseContainer extends CraftingContainer<Inventory> implements Ticka
 				break;
 			}
 			case QUICK_MOVE: {
-				List<WWidget> widgets = getInterfaces().getWidgets();
+				List<WWidget> widgets = getHolder().getWidgets();
 
 				for (int i = 0; i < widgets.size(); ++i) {
 					WWidget widget = widgets.get(i);
@@ -151,6 +151,9 @@ public class BaseContainer extends CraftingContainer<Inventory> implements Ticka
 		((PlayerInventory) linkedInventories.get(PLAYER_INVENTORY)).setCursorStack(stackB);
 	}
 
+	public WInterfaceHolder getHolder() {
+		return serverHolder;
+	}
 
 	public World getLinkedWorld() {
 		return linkedWorld;
@@ -162,10 +165,6 @@ public class BaseContainer extends CraftingContainer<Inventory> implements Ticka
 
 	public PlayerInventory getLinkedPlayerInventory() {
 		return (PlayerInventory) linkedInventories.get(PLAYER_INVENTORY);
-	}
-
-	public Map<Integer, Inventory> getInventories() {
-		return linkedInventories;
 	}
 
 	public Inventory getInventory(int inventoryNumber) {

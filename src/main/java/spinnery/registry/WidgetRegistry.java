@@ -23,10 +23,6 @@ import java.util.List;
 public class WidgetRegistry {
 	private static List<Class<? extends WWidget>> widgetClasses = new LinkedList<>();
 
-	public static void register(Class<? extends WWidget>... classes) {
-		widgetClasses.addAll(Arrays.asList(classes));
-	}
-
 	public static Class<? extends WWidget> get(String className) {
 		for (Class<? extends WWidget> widgetClass : widgetClasses) {
 			if (widgetClass.getName().equals(className)) {
@@ -52,5 +48,9 @@ public class WidgetRegistry {
 		register(WTabToggle.class);
 		register(WToggle.class);
 		register(WVerticalSlider.class);
+	}
+
+	public static void register(Class<? extends WWidget>... classes) {
+		widgetClasses.addAll(Arrays.asList(classes));
 	}
 }

@@ -1,5 +1,7 @@
 package spinnery.widget;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.text.Text;
 import org.lwjgl.glfw.GLFW;
 import spinnery.client.BaseRenderer;
@@ -9,6 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+@Environment(EnvType.CLIENT)
 public class WDropdown extends WWidget implements WClient, WCollection {
 	public static final int SHADOW = 0;
 	public static final int BACKGROUND = 1;
@@ -30,14 +33,12 @@ public class WDropdown extends WWidget implements WClient, WCollection {
 		updateHidden();
 	}
 
-	public static WWidget.Theme of(Map<String, String> rawTheme) {
-		WWidget.Theme theme = new WWidget.Theme();
-		theme.add(SHADOW, WColor.of(rawTheme.get("shadow")));
-		theme.add(BACKGROUND, WColor.of(rawTheme.get("background")));
-		theme.add(HIGHLIGHT, WColor.of(rawTheme.get("highlight")));
-		theme.add(OUTLINE, WColor.of(rawTheme.get("outline")));
-		theme.add(LABEL, WColor.of(rawTheme.get("label")));
-		return theme;
+	public void updateHidden() {
+		for (List<WWidget> widgetB : getDropdownWidgets()) {
+			for (WWidget widgetC : widgetB) {
+				widgetC.setHidden(!getState());
+			}
+		}
 	}
 
 	public List<List<WWidget>> getDropdownWidgets() {
@@ -54,6 +55,49 @@ public class WDropdown extends WWidget implements WClient, WCollection {
 
 	public void setState(boolean state) {
 		this.state = state;
+	}
+
+	public static WWidget.Theme of(Map<String, String> rawTheme) {
+		WWidget.Theme theme = new WWidget.Theme();
+		theme.add(SHADOW, WColor.of(rawTheme.get("shadow")));
+		theme.add(BACKGROUND, WColor.of(rawTheme.get("background")));
+		theme.add(HIGHLIGHT, WColor.of(rawTheme.get("highlight")));
+		theme.add(OUTLINE, WColor.of(rawTheme.get("outline")));
+		theme.add(LABEL, WColor.of(rawTheme.get("label")));
+		return theme;
+	}
+
+	@Override
+	public void onMouseClicked(int mouseX, int mouseY, int mouseButton) {
+		if (getFocus() && mouseButton == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+			setState(!getState());
+			updateHidden();
+		}
+
+		super.onMouseClicked(mouseX, mouseY, mouseButton);
+	}
+
+	@Override
+	public void setLabel(Text label) {
+		super.setLabel(label);
+		updatePositions();
+		updateHidden();
+	}
+
+	@Override
+	public void align() {
+		super.align();
+
+		updatePositions();
+	}
+
+	@Override
+	public boolean updateFocus(int mouseX, int mouseY) {
+		super.updateFocus(mouseX, mouseY);
+
+		setFocus(isWithinBounds(mouseX, mouseY) && getWidgets().stream().noneMatch((WWidget::getFocus)));
+
+		return getFocus();
 	}
 
 	@Override
@@ -78,30 +122,6 @@ public class WDropdown extends WWidget implements WClient, WCollection {
 	}
 
 	@Override
-	public void onMouseClicked(int mouseX, int mouseY, int mouseButton) {
-		if (getFocus() && mouseButton == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
-			setState(!getState());
-			updateHidden();
-		}
-
-		super.onMouseClicked(mouseX, mouseY, mouseButton);
-	}
-
-	@Override
-	public void setLabel(Text label) {
-		super.setLabel(label);
-		updatePositions();
-		updateHidden();
-	}
-
-	@Override
-	public void setTheme(String theme) {
-		if (getInterface().isClient()) {
-			super.setTheme(theme);
-		}
-	}
-
-	@Override
 	public int getWidth() {
 		return getWidth(!getState() ? 0 : 1);
 	}
@@ -109,22 +129,6 @@ public class WDropdown extends WWidget implements WClient, WCollection {
 	@Override
 	public int getHeight() {
 		return getHeight(!getState() ? 0 : 1);
-	}
-
-	@Override
-	public void align() {
-		super.align();
-
-		updatePositions();
-	}
-
-	@Override
-	public boolean scanFocus(int mouseX, int mouseY) {
-		super.scanFocus(mouseX, mouseY);
-
-		setFocus(isWithinBounds(mouseX, mouseY) && getWidgets().stream().noneMatch((WWidget::getFocus)));
-
-		return getFocus();
 	}
 
 	@Override
@@ -179,6 +183,13 @@ public class WDropdown extends WWidget implements WClient, WCollection {
 		}
 	}
 
+	@Override
+	public void setTheme(String theme) {
+		if (getInterface().isClient()) {
+			super.setTheme(theme);
+		}
+	}
+
 	public void updatePositions() {
 		int y = getY() + (hasLabel() ? 20 : 8);
 
@@ -190,14 +201,6 @@ public class WDropdown extends WWidget implements WClient, WCollection {
 				x += widgetB.getWidth() + 2;
 			}
 			y += widgetA.get(0).getHeight() + 2;
-		}
-	}
-
-	public void updateHidden() {
-		for (List<WWidget> widgetB : getDropdownWidgets()) {
-			for (WWidget widgetC : widgetB) {
-				widgetC.setHidden(!getState());
-			}
 		}
 	}
 

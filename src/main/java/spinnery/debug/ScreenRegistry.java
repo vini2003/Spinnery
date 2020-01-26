@@ -4,7 +4,6 @@ import net.fabricmc.fabric.api.client.screen.ScreenProviderRegistry;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.Identifier;
 import spinnery.client.InGameHudScreen;
-import spinnery.common.BaseContainerScreen;
 import spinnery.widget.WInterface;
 import spinnery.widget.WInterfaceHolder;
 import spinnery.widget.WPosition;
@@ -42,7 +41,7 @@ public class ScreenRegistry {
 	}
 
 	public static <I extends Identifier> I register(I ID) {
-		ScreenProviderRegistry.INSTANCE.registerFactory(ID, (syncId, identifier, player, buf) -> new BaseContainerScreen(new LiteralText("test"), new TestContainer(syncId, player.inventory), player));
+		ScreenProviderRegistry.INSTANCE.registerFactory(ID, (syncId, identifier, player, buf) -> new TestContainerScreen(new LiteralText("test"), new TestContainer(syncId, player.inventory), player));
 		return ID;
 	}
 }

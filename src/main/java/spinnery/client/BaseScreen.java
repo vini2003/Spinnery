@@ -17,10 +17,6 @@ public class BaseScreen extends Screen {
 		super(new LiteralText(""));
 	}
 
-	public WInterfaceHolder getInterfaces() {
-		return interfaceHolder;
-	}
-
 	public void setIsPauseScreen(boolean isPauseScreen) {
 		this.isPauseScreen = isPauseScreen;
 	}
@@ -28,6 +24,10 @@ public class BaseScreen extends Screen {
 	@Override
 	public void render(int mouseX, int mouseY, float tick) {
 		getInterfaces().draw();
+	}
+
+	public WInterfaceHolder getInterfaces() {
+		return interfaceHolder;
 	}
 
 	@Override

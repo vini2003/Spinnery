@@ -15,7 +15,7 @@ public class ContainerRegistry {
 	}
 
 	public static <I extends Identifier> I register(I ID) {
-		ContainerProviderRegistry.INSTANCE.registerFactory(ID, (syncId, id, player, buffer) -> new 	TestContainer(syncId, player.inventory));
+		ContainerProviderRegistry.INSTANCE.registerFactory(ID, (syncId, id, player, buffer) -> new TestContainer(syncId, player.inventory));
 		return ID;
 	}
 }

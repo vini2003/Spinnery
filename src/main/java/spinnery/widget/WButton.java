@@ -1,9 +1,12 @@
 package spinnery.widget;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import spinnery.client.BaseRenderer;
 
 import java.util.Map;
 
+@Environment(EnvType.CLIENT)
 public class WButton extends WWidget implements WClient {
 	public static final int TOP_LEFT_ON = 0;
 	public static final int BOTTOM_RIGHT_ON = 1;
@@ -12,16 +15,13 @@ public class WButton extends WWidget implements WClient {
 	public static final int BOTTOM_RIGHT_OFF = 4;
 	public static final int BACKGROUND_OFF = 5;
 	public static final int LABEL = 6;
-	protected boolean toggleState = false;
-	protected int toggleTicks = 0;
+	protected boolean lowered = false;
+	protected int ticks = 0;
 
 	public WButton(WPosition position, WSize size, WInterface linkedInterface) {
 		setInterface(linkedInterface);
-
 		setPosition(position);
-
 		setSize(size);
-
 		setTheme("light");
 	}
 
@@ -39,9 +39,8 @@ public class WButton extends WWidget implements WClient {
 
 	@Override
 	public void onMouseClicked(int mouseX, int mouseY, int mouseButton) {
-		if (scanFocus(mouseX, mouseY)) {
-			setToggleState(!getToggleState());
-			setToggleTicks(1);
+		if (getFocus()) {
+			setLowered(true);
 		}
 
 		super.onMouseClicked(mouseX, mouseY, mouseButton);
@@ -60,11 +59,12 @@ public class WButton extends WWidget implements WClient {
 			return;
 		}
 
-		if (getToggleState()) {
+		if (isLowered()) {
 			BaseRenderer.drawBeveledPanel(getX(), getY(), getZ(), getWidth(), getHeight(), getColor(TOP_LEFT_ON), getColor(BACKGROUND_ON), getColor(BOTTOM_RIGHT_ON));
 		} else {
 			BaseRenderer.drawBeveledPanel(getX(), getY(), getZ(), getWidth(), getHeight(), getColor(TOP_LEFT_OFF), getColor(BACKGROUND_OFF), getColor(BOTTOM_RIGHT_OFF));
 		}
+
 		if (hasLabel()) {
 			if (BaseRenderer.getTextRenderer().getStringWidth(getLabel().asFormattedString()) > getWidth() - 6) {
 				BaseRenderer.drawText(isLabelShadowed(), getLabel().asFormattedString(), (getX() + getWidth() + 2), (int) (getY() + getHeight() / 2 - 4.5), getColor(LABEL).RGB);
@@ -76,34 +76,19 @@ public class WButton extends WWidget implements WClient {
 
 	@Override
 	public void tick() {
-		if (getToggleTicks() > 0) {
-			decrementToggleTicks(1);
-		} else if (getToggleState()) {
-			setToggleState(!getToggleState());
+		if (isLowered() && ticks == 0) {
+			setLowered(false);
+		} else if (isLowered() && ticks > 0) {
+			--ticks;
 		}
 	}
 
-	public boolean getToggleState() {
-		return toggleState;
+	public boolean isLowered() {
+		return lowered;
 	}
 
-	public void setToggleState(boolean toggleState) {
-		this.toggleState = toggleState;
-	}
-
-	public int getToggleTicks() {
-		return toggleTicks;
-	}
-
-	public void setToggleTicks(int toggleTicks) {
-		this.toggleTicks = toggleTicks;
-	}
-
-	public void incrementToggleTicks(int increment) {
-		toggleTicks += increment;
-	}
-
-	public void decrementToggleTicks(int decrement) {
-		toggleTicks -= decrement;
+	public void setLowered(boolean toggleState) {
+		this.lowered = toggleState;
+		this.ticks = toggleState ? 2 : 0;
 	}
 }

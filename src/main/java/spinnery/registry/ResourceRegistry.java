@@ -39,7 +39,14 @@ public class ResourceRegistry {
 		return themes.get(themeID);
 	}
 
-	// Close stream after use!
+	public static void reload(InputStream... inputStream) {
+		themes.clear();
+		for (InputStream stream : inputStream) {
+			register(stream);
+		}
+		load();
+	}
+
 	public static void register(InputStream inputStream) {
 		InputStreamReader reader = new InputStreamReader(inputStream);
 		Map<String, Map<String, String>> data = new Gson().fromJson(reader, Map.class);
@@ -63,14 +70,6 @@ public class ResourceRegistry {
 				}
 			}
 		}
-	}
-
-	public static void reload(InputStream... inputStream) {
-		themes.clear();
-		for (InputStream stream : inputStream) {
-			register(stream);
-		}
-		load();
 	}
 
 	public static void load() {

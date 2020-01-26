@@ -20,19 +20,6 @@ public class WPosition {
 		return position;
 	}
 
-	public void align() {
-		switch (type) {
-			case ANCHORED:
-				setX(anchor.getX() + getRawX());
-				setY(anchor.getY() + getRawY());
-				setZ(anchor.getZ() + getRawZ());
-				break;
-			case FREE:
-				set(getRawX(), getRawY(), getRawZ());
-				break;
-		}
-	}
-
 	public void set(int x, int y, int z) {
 		switch (type) {
 			case ANCHORED:
@@ -48,30 +35,6 @@ public class WPosition {
 				setZ(getRawZ());
 				break;
 		}
-	}
-
-	public int getX() {
-		return x;
-	}
-
-	public void setX(int x) {
-		this.x = x;
-	}
-
-	public int getY() {
-		return y;
-	}
-
-	public void setY(int y) {
-		this.y = y;
-	}
-
-	public int getZ() {
-		return z;
-	}
-
-	public void setZ(int z) {
-		this.z = z;
 	}
 
 	public void setRaw(int x, int y, int z) {
@@ -102,5 +65,42 @@ public class WPosition {
 
 	public void setRawZ(int rawZ) {
 		this.rawZ = rawZ;
+	}
+
+	public void align() {
+		switch (type) {
+			case ANCHORED:
+				setX(anchor.getX() + getRawX());
+				setY(anchor.getY() + getRawY());
+				setZ(anchor.getZ() + getRawZ());
+				break;
+			case FREE:
+				set(getRawX(), getRawY(), getRawZ());
+				break;
+		}
+	}
+
+	public int getX() {
+		return x;
+	}
+
+	public void setX(int x) {
+		this.x = x;
+	}
+
+	public int getY() {
+		return y;
+	}
+
+	public void setY(int y) {
+		this.y = y;
+	}
+
+	public int getZ() {
+		return z;
+	}
+
+	public void setZ(int z) {
+		this.z = z;
 	}
 }

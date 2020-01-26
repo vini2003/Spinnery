@@ -7,10 +7,6 @@ import java.util.List;
 public class WInterfaceHolder {
 	List<WInterface> heldInterfaces = new ArrayList<>();
 
-	public List<WInterface> getInterfaces() {
-		return heldInterfaces;
-	}
-
 	public boolean contains(WWidget... interfaces) {
 		return heldInterfaces.containsAll(Arrays.asList(interfaces));
 	}
@@ -33,6 +29,17 @@ public class WInterfaceHolder {
 		return widgets;
 	}
 
+	public List<WInterface> getInterfaces() {
+		return heldInterfaces;
+	}
+
+	public boolean onMouseClicked(int mouseX, int mouseY, int mouseButton) {
+		for (WWidget widget : getAllWidgets()) {
+			widget.onMouseClicked(mouseX, mouseY, mouseButton);
+		}
+		return false;
+	}
+
 	public List<WWidget> getAllWidgets() {
 		List<WWidget> widgets = new ArrayList<>();
 		for (WInterface myInterface : getInterfaces()) {
@@ -45,14 +52,6 @@ public class WInterfaceHolder {
 		}
 		return widgets;
 	}
-
-	public boolean onMouseClicked(int mouseX, int mouseY, int mouseButton) {
-		for (WWidget widget : getAllWidgets()) {
-			widget.onMouseClicked(mouseX, mouseY, mouseButton);
-		}
-		return false;
-	}
-
 
 	public boolean onMouseReleased(int mouseX, int mouseY, int mouseButton) {
 		for (WWidget widget : getAllWidgets()) {
@@ -79,7 +78,7 @@ public class WInterfaceHolder {
 
 	public void mouseMoved(int mouseX, int mouseY) {
 		for (WWidget widget : getAllWidgets()) {
-			widget.scanFocus(mouseX, mouseY);
+			widget.updateFocus(mouseX, mouseY);
 			widget.onMouseMoved(mouseX, mouseY);
 		}
 	}

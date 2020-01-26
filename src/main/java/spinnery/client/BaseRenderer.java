@@ -13,28 +13,6 @@ import org.lwjgl.opengl.GL11;
 import spinnery.widget.WColor;
 
 public class BaseRenderer {
-	public static void drawRectangle(double x, double y, double z, double sX, double sY, WColor color) {
-		RenderSystem.enableBlend();
-		RenderSystem.disableTexture();
-		RenderSystem.blendFuncSeparate(770, 771, 1, 0);
-		RenderSystem.color4f(color.R, color.G, color.B, color.A);
-
-		getBufferBuilder().begin(GL11.GL_TRIANGLES, VertexFormats.POSITION);
-
-		getBufferBuilder().vertex(x, y, z).next();
-		getBufferBuilder().vertex(x, y + sY, z).next();
-		getBufferBuilder().vertex(x + sX, y, z).next();
-
-		getBufferBuilder().vertex(x, y + sY, z).next();
-		getBufferBuilder().vertex(x + sX, y + sY, z).next();
-		getBufferBuilder().vertex(x + sX, y, z).next();
-
-		getTesselator().draw();
-
-		RenderSystem.enableTexture();
-		RenderSystem.disableBlend();
-	}
-
 	public static void drawPanel(double x, double y, double z, double sX, double sY, WColor shadow, WColor panel, WColor hilight, WColor outline) {
 		drawRectangle(x + 3, y + 3, z, sX - 6, sY - 6, panel);
 
@@ -57,6 +35,36 @@ public class BaseRenderer {
 		drawRectangle(x + sX - 2, y + sY - 2, z, 1, 1, outline);
 	}
 
+	public static void drawRectangle(double x, double y, double z, double sX, double sY, WColor color) {
+		RenderSystem.enableBlend();
+		RenderSystem.disableTexture();
+		RenderSystem.blendFuncSeparate(770, 771, 1, 0);
+		RenderSystem.color4f(color.R, color.G, color.B, color.A);
+
+		getBufferBuilder().begin(GL11.GL_TRIANGLES, VertexFormats.POSITION);
+
+		getBufferBuilder().vertex(x, y, z).next();
+		getBufferBuilder().vertex(x, y + sY, z).next();
+		getBufferBuilder().vertex(x + sX, y, z).next();
+
+		getBufferBuilder().vertex(x, y + sY, z).next();
+		getBufferBuilder().vertex(x + sX, y + sY, z).next();
+		getBufferBuilder().vertex(x + sX, y, z).next();
+
+		getTesselator().draw();
+
+		RenderSystem.enableTexture();
+		RenderSystem.disableBlend();
+	}
+
+	public static BufferBuilder getBufferBuilder() {
+		return getTesselator().getBuffer();
+	}
+
+	public static Tessellator getTesselator() {
+		return Tessellator.getInstance();
+	}
+
 	public static void drawBeveledPanel(double x, double y, double z, double sX, double sY, WColor topleft, WColor panel, WColor bottomright) {
 		drawRectangle(x, y, z, sX, sY, panel);
 		drawRectangle(x, y, z, sX - 1, 1, topleft);
@@ -67,6 +75,29 @@ public class BaseRenderer {
 
 	public static void drawText(String text, int x, int y, int color) {
 		drawTextTrimmed(text, x, y, null, color);
+	}
+
+	public static void drawTextTrimmed(String text, int x, int y, Integer maxWidth, int color) {
+		drawTextTrimmed(text, x, y, maxWidth, color, Font.DEFAULT);
+	}
+
+	public static void drawTextTrimmed(String text, int x, int y, Integer maxWidth, int color, Font font) {
+		if (maxWidth != null) {
+			getTextRenderer(font).drawTrimmed(text, x, y, maxWidth, color);
+		} else {
+			getTextRenderer(font).draw(text, x, y, color);
+		}
+	}
+
+	public static TextRenderer getTextRenderer(Font font) {
+		switch (font) {
+			case ENCHANTMENT:
+				return MinecraftClient.getInstance().getFontManager()
+						.getTextRenderer(MinecraftClient.ALT_TEXT_RENDERER_ID);
+			case DEFAULT:
+			default:
+				return MinecraftClient.getInstance().textRenderer;
+		}
 	}
 
 	public static void drawText(boolean isShadowed, String text, int x, int y, int color) {
@@ -80,20 +111,8 @@ public class BaseRenderer {
 		drawTextTrimmed(text, x, y, null, color);
 	}
 
-	public static void drawTextTrimmed(String text, int x, int y, Integer maxWidth, int color) {
-		drawTextTrimmed(text, x, y, maxWidth, color, Font.DEFAULT);
-	}
-
 	public static void drawText(String text, int x, int y, int color, Font font) {
 		drawTextTrimmed(text, x, y, null, color, font);
-	}
-
-	public static void drawTextTrimmed(String text, int x, int y, Integer maxWidth, int color, Font font) {
-		if (maxWidth != null) {
-			getTextRenderer(font).drawTrimmed(text, x, y, maxWidth, color);
-		} else {
-			getTextRenderer(font).draw(text, x, y, color);
-		}
 	}
 
 	public static void drawImage(double x, double y, double z, double sX, double sY, Identifier texture) {
@@ -115,6 +134,10 @@ public class BaseRenderer {
 		RenderSystem.disableBlend();
 	}
 
+	public static TextureManager getTextureManager() {
+		return MinecraftClient.getInstance().getTextureManager();
+	}
+
 	public static void drawPixel(double x, double y, double z, WColor color) {
 		drawRectangle(x, y, z, 1, 1, color);
 	}
@@ -123,31 +146,8 @@ public class BaseRenderer {
 		return getTextRenderer(Font.DEFAULT);
 	}
 
-	public static TextRenderer getTextRenderer(Font font) {
-		switch (font) {
-			case ENCHANTMENT:
-				return MinecraftClient.getInstance().getFontManager()
-						.getTextRenderer(MinecraftClient.ALT_TEXT_RENDERER_ID);
-			case DEFAULT:
-			default:
-				return MinecraftClient.getInstance().textRenderer;
-		}
-	}
-
 	public static ItemRenderer getItemRenderer() {
 		return MinecraftClient.getInstance().getItemRenderer();
-	}
-
-	public static Tessellator getTesselator() {
-		return Tessellator.getInstance();
-	}
-
-	public static BufferBuilder getBufferBuilder() {
-		return getTesselator().getBuffer();
-	}
-
-	public static TextureManager getTextureManager() {
-		return MinecraftClient.getInstance().getTextureManager();
 	}
 
 	public enum Font {

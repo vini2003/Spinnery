@@ -8,26 +8,26 @@ import java.util.Map;
 public class WSize {
 	protected Map<Integer, Pair> sizes = new HashMap<>();
 
-	public static WSize of(int x, int y) {
-		WSize size = new WSize();
-		size.add(Pair.of(x, y));
-		return size;
-	}
-
 	public static WSize of(int x1, int y1, int x2, int y2) {
 		WSize size = new WSize();
 		size.add(Pair.of(x1, y1), Pair.of(x2, y2));
 		return size;
 	}
 
-	public static WSize of(WWidget widget) {
-		return WSize.of(widget.getWidth(), widget.getHeight());
-	}
-
 	public void add(Pair... pairs) {
 		for (Pair pair : pairs) {
 			sizes.put(sizes.size(), pair);
 		}
+	}
+
+	public static WSize of(WWidget widget) {
+		return WSize.of(widget.getWidth(), widget.getHeight());
+	}
+
+	public static WSize of(int x, int y) {
+		WSize size = new WSize();
+		size.add(Pair.of(x, y));
+		return size;
 	}
 
 	public void setX(int number, int sizeX) {
