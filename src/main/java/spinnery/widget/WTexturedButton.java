@@ -11,7 +11,6 @@ public class WTexturedButton extends WWidget {
 	protected Identifier textureActive;
 	protected Identifier textureDisabled;
 
-	protected boolean active = false;
 	protected boolean disabled = false;
 
 	public WTexturedButton(WPosition position, WSize size, WInterface linkedInterface, Identifier texture) {
@@ -44,12 +43,6 @@ public class WTexturedButton extends WWidget {
 	}
 
 	@Override
-	public void onMouseMoved(double mouseX, double mouseY) {
-		setActive(getFocus());
-		super.onMouseMoved(mouseX, mouseY);
-	}
-
-	@Override
 	public void draw() {
 		BaseRenderer.drawImage(getX(), getY(), getZ(), getSize().getX(), getSize().getY(), getDrawTexture());
 	}
@@ -77,7 +70,7 @@ public class WTexturedButton extends WWidget {
 	}
 
 	public boolean isActive() {
-		return active;
+		return getFocus();
 	}
 
 	public Identifier getTextureActive() {
@@ -86,10 +79,6 @@ public class WTexturedButton extends WWidget {
 
 	public void setTextureActive(Identifier textureActive) {
 		this.textureActive = textureActive;
-	}
-
-	public void setActive(boolean active) {
-		this.active = active;
 	}
 
 	public void setDisabled(boolean disabled) {
