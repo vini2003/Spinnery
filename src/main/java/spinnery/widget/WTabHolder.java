@@ -44,9 +44,9 @@ public class WTabHolder extends WWidget implements WClient, WCollection, WFocuse
 		for (int i = 0; i < tabs.size(); i++) {
 			for (WWidget widget : tabs.get(i).getWidgets()) {
 				if (widget != tabs.get(i).getToggle()) {
-					widget.setHidden(i != tabNumber);
+					widget.setHidden(i + 1 != tabNumber);
 				} else {
-					if (i != tabNumber) {
+					if (i + 1 != tabNumber) {
 						tabs.get(i).getToggle().setToggleState(false);
 					}
 				}
@@ -56,7 +56,8 @@ public class WTabHolder extends WWidget implements WClient, WCollection, WFocuse
 
 	public WTab addTab(Item symbol, Text name) {
 		int tabNumber = tabs.size() + 1;
-		tabs.add(new WTab(this, symbol, name, tabNumber));
+		WTab tab = new WTab(this, symbol, name, tabNumber);
+		tabs.add(tab);
 		int tabSize = getWidth() / tabs.size();
 		int tabOffset = 0;
 		for (int i = 0; i < tabs.size(); i++) {
@@ -65,7 +66,7 @@ public class WTabHolder extends WWidget implements WClient, WCollection, WFocuse
 			button.setPosition(WPosition.of(WType.ANCHORED, tabOffset, 0, 0, this));
 			tabOffset += tabSize;
 		}
-		return tabs.get(tabNumber);
+		return tab;
 	}
 
 	public WTab removeTab(int tabNumber) {

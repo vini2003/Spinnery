@@ -22,7 +22,7 @@ public class TestScreen extends BaseScreen {
 
 		WInterface mainInterface = new WInterface(WPosition.of(WType.FREE, 0, 0, 0));
 
-		getInterfaces().add(mainInterface);
+		getInterfaceHolder().add(mainInterface);
 
 		mainInterface.center();
 		mainInterface.setY(32);
