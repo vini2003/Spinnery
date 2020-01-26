@@ -135,9 +135,17 @@ public class WDynamicText extends WWidget implements WClient {
 			clearSelection();
 			updateText();
 		} else if (keyPressed == GLFW.GLFW_KEY_C && Screen.hasControlDown()) { // Ctrl w. C
-			if (selLeftPos >= 0 && selRightPos >= 0 && selRightPos <= text.length()) {
+			if (selLeftPos >= -1 && selRightPos >= 0 && selRightPos <= text.length()) {
 				MinecraftClient.getInstance().keyboard.setClipboard(text.substring(selLeftPos, selRightPos));
 				clearSelection();
+			}
+		} else if (keyPressed == GLFW.GLFW_KEY_X && Screen.hasControlDown()) { // Ctrl w. X
+			if (selLeftPos >= -1 && selRightPos >= 0 && selRightPos <= text.length()) {
+				MinecraftClient.getInstance().keyboard.setClipboard(text.substring(selLeftPos, selRightPos));
+				text = text.substring(0, selLeftPos) + text.substring(selRightPos + 1);
+				cursorPos = selLeftPos;
+				clearSelection();
+				updateText();
 			}
 		} else if (keyPressed == GLFW.GLFW_KEY_V && Screen.hasControlDown()) { // Ctrl w. V
 			text = new StringBuilder(text).insert(cursorPos, MinecraftClient.getInstance().keyboard.getClipboard()).toString();

@@ -85,7 +85,7 @@ public class TestContainerScreen extends BaseContainerScreen<TestContainer> {
 
 
 		// WDynamicText
-		WDynamicText dynamicTextA = new WDynamicText(WPosition.of(WType.ANCHORED, 8, 130, 2, mainInterface), WSize.of(156, 18), mainInterface);
+		WDynamicText dynamicTextA = new WDynamicText(WPosition.of(WType.ANCHORED, 8, 130, 2, mainInterface), WSize.of(156, 69), mainInterface);
 
 		dynamicTextA.setLabel(new LiteralText("§oDynamicText A..."));
 
