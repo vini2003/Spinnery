@@ -57,6 +57,7 @@ public class WSlot extends WWidget implements WClient, WServer {
 	}
 
 	public static void addPlayerInventory(WSize size, WInterface linkedInterface, int inventoryNumber) {
+		System.out.println("PlayerInventory" + linkedInterface);
 		int temporarySlotNumber = 0;
 		addArray(
 				WPosition.of(WType.ANCHORED, 4, linkedInterface.getHeight() - 82 + size.getY() * 3 + 4, 0, linkedInterface),

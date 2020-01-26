@@ -1,6 +1,7 @@
 package spinnery.widget;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Tickable;
@@ -353,15 +354,17 @@ public class WWidget implements Tickable {
 	}
 
 	public void center() {
-		int x, y;
-		if (position.type == WType.FREE) {
-			x = MinecraftClient.getInstance().getWindow().getScaledWidth() / 2 - getWidth() / 2;
-			y = MinecraftClient.getInstance().getWindow().getScaledHeight() / 2 - getHeight() / 2;
-		} else {
-			x = position.anchor.getWidth() / 2 - getWidth() / 2;
-			y = position.anchor.getHeight() / 2 - getHeight() / 2;
+		if (this instanceof WInterface && ((WInterface) this).isClient() || getInterface() != null && getInterface().isClient()) {
+			int x, y;
+			if (position.type == WType.FREE) {
+				x = MinecraftClient.getInstance().getWindow().getScaledWidth() / 2 - getWidth() / 2;
+				y = MinecraftClient.getInstance().getWindow().getScaledHeight() / 2 - getHeight() / 2;
+			} else {
+				x = position.anchor.getWidth() / 2 - getWidth() / 2;
+				y = position.anchor.getHeight() / 2 - getHeight() / 2;
+			}
+			this.position.set(x, y, getZ());
 		}
-		this.position.set(x, y, getZ());
 	}
 
 	public void draw() {
