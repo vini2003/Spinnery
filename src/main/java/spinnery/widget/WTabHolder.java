@@ -4,7 +4,12 @@ import net.minecraft.item.Item;
 import net.minecraft.text.Text;
 import spinnery.client.BaseRenderer;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 public class WTabHolder extends WWidget implements WClient, WCollection {
 	public static final int SHADOW = 0;

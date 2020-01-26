@@ -26,7 +26,9 @@ public class NetworkRegistry {
 			int button = packetByteBuffer.readInt();
 			SlotActionType action = packetByteBuffer.readEnumConstant(SlotActionType.class);
 			packetContext.getTaskQueue().execute(() -> {
-				((BaseContainer) packetContext.getPlayer().container).onSlotClicked(slotNumber, inventoryNumber, button, action, packetContext.getPlayer());
+				if (packetContext.getPlayer().container instanceof BaseContainer) {
+					((BaseContainer) packetContext.getPlayer().container).onSlotClicked(slotNumber, inventoryNumber, button, action, packetContext.getPlayer());
+				}
 			});
 		});
 	}

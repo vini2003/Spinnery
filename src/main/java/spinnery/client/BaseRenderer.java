@@ -13,11 +13,6 @@ import org.lwjgl.opengl.GL11;
 import spinnery.widget.WColor;
 
 public class BaseRenderer {
-	public enum Font {
-		DEFAULT,
-		ENCHANTMENT,
-	}
-
 	public static void drawRectangle(double x, double y, double z, double sX, double sY, WColor color) {
 		RenderSystem.enableBlend();
 		RenderSystem.disableTexture();
@@ -153,5 +148,10 @@ public class BaseRenderer {
 
 	public static TextureManager getTextureManager() {
 		return MinecraftClient.getInstance().getTextureManager();
+	}
+
+	public enum Font {
+		DEFAULT,
+		ENCHANTMENT,
 	}
 }

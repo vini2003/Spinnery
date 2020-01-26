@@ -34,16 +34,16 @@ public class WInterfaceHolder {
 	}
 
 	public List<WWidget> getAllWidgets() {
-		List<WWidget> nonConcurrentList = new ArrayList<>();
+		List<WWidget> widgets = new ArrayList<>();
 		for (WInterface myInterface : getInterfaces()) {
 			for (WWidget widgetA : myInterface.getWidgets()) {
-				nonConcurrentList.add(widgetA);
+				widgets.add(widgetA);
 				if (widgetA instanceof WCollection) {
-					nonConcurrentList.addAll(((WCollection) widgetA).getAllWidgets());
+					widgets.addAll(((WCollection) widgetA).getAllWidgets());
 				}
 			}
 		}
-		return nonConcurrentList;
+		return widgets;
 	}
 
 	public boolean onMouseClicked(int mouseX, int mouseY, int mouseButton) {

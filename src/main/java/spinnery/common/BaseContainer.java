@@ -21,7 +21,6 @@ import spinnery.widget.WWidget;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 public class BaseContainer extends CraftingContainer<Inventory> implements Tickable {
 	public static final int PLAYER_INVENTORY = 0;

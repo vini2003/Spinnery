@@ -1,6 +1,5 @@
 package spinnery.util;
 
-import net.minecraft.inventory.Inventory;
 import net.minecraft.nbt.CompoundTag;
 import spinnery.common.BaseInventory;
 
