@@ -20,7 +20,6 @@ public class WDynamicText extends WWidget implements WClient {
 	public static final int LABEL = 6;
 	protected boolean isSelected;
 	protected String text = "";
-	protected String clip = "";
 	protected String visible = "";
 	protected int selLeftPos = 0;
 	protected int selRightPos = 0;
@@ -28,7 +27,6 @@ public class WDynamicText extends WWidget implements WClient {
 	protected int offsetPos = 0;
 	protected int cursorTick = 0;
 	protected boolean isEditable = true;
-	protected boolean isCentered = true;
 
 	public WDynamicText(WPosition position, WSize size, WInterface linkedInterface) {
 		setInterface(linkedInterface);
@@ -129,24 +127,21 @@ public class WDynamicText extends WWidget implements WClient {
 			return;
 		}
 
-		long handle = MinecraftClient.getInstance().getWindow().getHandle();
-
 		if (keyPressed == GLFW.GLFW_KEY_A && Screen.hasControlDown()) { // Ctrl w. A
 			selLeftPos = 0;
 			selRightPos = text.length() - 1;
 			updateText();
 		} else if (keyPressed == GLFW.GLFW_KEY_D && Screen.hasControlDown()) { // Ctrl w. D
 			clearSelection();
-			clip = "";
 			updateText();
 		} else if (keyPressed == GLFW.GLFW_KEY_C && Screen.hasControlDown()) { // Ctrl w. C
 			if (selLeftPos >= 0 && selRightPos >= 0 && selRightPos <= text.length()) {
-				clip = text.substring(selLeftPos, selRightPos);
+				MinecraftClient.getInstance().keyboard.setClipboard(text.substring(selLeftPos, selRightPos));
 				clearSelection();
 			}
 		} else if (keyPressed == GLFW.GLFW_KEY_V && Screen.hasControlDown()) { // Ctrl w. V
-			text = new StringBuilder(text).insert(cursorPos, clip).toString();
-			cursorPos += clip.length();
+			text = new StringBuilder(text).insert(cursorPos, MinecraftClient.getInstance().keyboard.getClipboard()).toString();
+			cursorPos += MinecraftClient.getInstance().keyboard.getClipboard().length();
 			updateText();
 		} else if (keyPressed == GLFW.GLFW_KEY_RIGHT && Screen.hasShiftDown() && cursorPos < text.length()) { // Right w. Shift
 			selLeftPos = selLeftPos == -1 ? cursorPos : selLeftPos;
