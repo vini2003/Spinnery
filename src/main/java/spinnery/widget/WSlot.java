@@ -196,7 +196,7 @@ public class WSlot extends WWidget implements WClient, WServer, WFocusedMouseLis
 
 		RenderSystem.enableLighting();
 		BaseRenderer.getItemRenderer().renderGuiItem(getStack(), 1 + x + (sX - 18) / 2, 1 + y + (sY - 18) / 2);
-		BaseRenderer.getItemRenderer().renderGuiItemOverlay(MinecraftClient.getInstance().textRenderer, getStack(), 1 + x + (sX - 18) / 2, 1 + y + (sY - 18) / 2, withSuffix(getStack().getCount()));
+		BaseRenderer.getItemRenderer().renderGuiItemOverlay(MinecraftClient.getInstance().textRenderer, getStack(), 1 + x + (sX - 18) / 2, 1 + y + (sY - 18) / 2, getStack().getCount() == 1 ? "" : withSuffix(getStack().getCount()));
 		RenderSystem.disableLighting();
 	}
 
