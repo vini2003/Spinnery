@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 @Environment(EnvType.CLIENT)
-public class WDropdown extends WWidget implements WClient, WModifiableCollection {
+public class WDropdown extends WWidget implements WClient, WModifiableCollection, WFocusedMouseListener {
 	public static final int SHADOW = 0;
 	public static final int BACKGROUND = 1;
 	public static final int HIGHLIGHT = 2;
@@ -69,7 +69,7 @@ public class WDropdown extends WWidget implements WClient, WModifiableCollection
 
 	@Override
 	public void onMouseClicked(int mouseX, int mouseY, int mouseButton) {
-		if (getFocus() && mouseButton == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+		if (mouseButton == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
 			setState(!getState());
 			updateHidden();
 		}
@@ -95,7 +95,7 @@ public class WDropdown extends WWidget implements WClient, WModifiableCollection
 	public boolean updateFocus(int mouseX, int mouseY) {
 		super.updateFocus(mouseX, mouseY);
 
-		setFocus(isWithinBounds(mouseX, mouseY) && getWidgets().stream().noneMatch((WWidget::getFocus)));
+		setFocus(isWithinBounds(mouseX, mouseY) && getAllWidgets().stream().noneMatch((WWidget::getFocus)));
 
 		return getFocus();
 	}

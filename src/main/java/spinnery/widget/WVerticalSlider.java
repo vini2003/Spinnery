@@ -8,7 +8,7 @@ import spinnery.client.BaseRenderer;
 import java.util.Map;
 
 @Environment(EnvType.CLIENT)
-public class WVerticalSlider extends WWidget implements WClient {
+public class WVerticalSlider extends WWidget implements WClient, WFocusedMouseListener, WFocusedKeyboardListener {
 	public static final int TOP_LEFT_BACKGROUND = 0;
 	public static final int BOTTOM_RIGHT_BACKGROUND = 1;
 	public static final int BACKGROUND_ON = 2;
@@ -57,10 +57,10 @@ public class WVerticalSlider extends WWidget implements WClient {
 
 	@Override
 	public void onKeyPressed(int keyPressed, int character, int keyModifier) {
-		if (getFocus() && keyPressed == GLFW.GLFW_KEY_KP_SUBTRACT) {
+		if (keyPressed == GLFW.GLFW_KEY_KP_SUBTRACT) {
 			setProgress(Math.min(getProgress() + 1, getLimit() - 1));
 		}
-		if (getFocus() && keyPressed == GLFW.GLFW_KEY_KP_DIVIDE) {
+		if (keyPressed == GLFW.GLFW_KEY_KP_DIVIDE) {
 			setProgress(Math.max(getProgress() - 1, 0));
 		}
 		super.onKeyPressed(keyPressed, character, keyModifier);
@@ -91,9 +91,7 @@ public class WVerticalSlider extends WWidget implements WClient {
 	}
 
 	public void updatePosition(int mouseX, int mouseY) {
-		if (updateFocus(mouseX, mouseY)) {
-			setProgress((mouseY - getY()) * ((float) getLimit() / (float) (getWidth())));
-		}
+		setProgress((mouseY - getY()) * ((float) getLimit() / (float) (getWidth())));
 	}
 
 	@Override

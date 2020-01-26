@@ -38,13 +38,6 @@ public class WInterfaceHolder implements WModifiableCollection {
 		return widgets;
 	}
 
-	public boolean onMouseClicked(int mouseX, int mouseY, int mouseButton) {
-		for (WWidget widget : getAllWidgets()) {
-			widget.onMouseClicked(mouseX, mouseY, mouseButton);
-		}
-		return false;
-	}
-
 	public List<WWidget> getAllWidgets() {
 		List<WWidget> widgets = new ArrayList<>();
 		for (WInterface myInterface : getInterfaces()) {
@@ -58,8 +51,17 @@ public class WInterfaceHolder implements WModifiableCollection {
 		return widgets;
 	}
 
+	public boolean onMouseClicked(int mouseX, int mouseY, int mouseButton) {
+		for (WWidget widget : getAllWidgets()) {
+			if (widget instanceof WFocusedMouseListener && !widget.getFocus()) continue;
+			widget.onMouseClicked(mouseX, mouseY, mouseButton);
+		}
+		return false;
+	}
+
 	public boolean onMouseReleased(int mouseX, int mouseY, int mouseButton) {
 		for (WWidget widget : getAllWidgets()) {
+			if (widget instanceof WFocusedMouseListener && !widget.getFocus()) continue;
 			widget.onMouseReleased(mouseX, mouseY, mouseButton);
 		}
 		return false;
@@ -68,6 +70,7 @@ public class WInterfaceHolder implements WModifiableCollection {
 
 	public boolean onMouseDragged(int mouseX, int mouseY, int mouseButton, int deltaX, int deltaY) {
 		for (WWidget widget : getAllWidgets()) {
+			if (widget instanceof WFocusedMouseListener && !widget.getFocus()) continue;
 			widget.onMouseDragged(mouseX, mouseY, mouseButton, deltaX, deltaY);
 		}
 		return false;
@@ -76,6 +79,7 @@ public class WInterfaceHolder implements WModifiableCollection {
 
 	public boolean onMouseScrolled(int mouseX, int mouseY, double deltaY) {
 		for (WWidget widget : getAllWidgets()) {
+			if (widget instanceof WFocusedMouseListener && !widget.getFocus()) continue;
 			widget.onMouseScrolled(mouseX, mouseY, deltaY);
 		}
 		return false;
@@ -83,6 +87,7 @@ public class WInterfaceHolder implements WModifiableCollection {
 
 	public void mouseMoved(int mouseX, int mouseY) {
 		for (WWidget widget : getAllWidgets()) {
+			if (widget instanceof WFocusedMouseListener && !widget.getFocus()) continue;
 			widget.updateFocus(mouseX, mouseY);
 			widget.onMouseMoved(mouseX, mouseY);
 		}
@@ -91,6 +96,7 @@ public class WInterfaceHolder implements WModifiableCollection {
 
 	public boolean onKeyReleased(int character, int keyCode, int keyModifier) {
 		for (WWidget widget : getAllWidgets()) {
+			if (widget instanceof WFocusedKeyboardListener && !widget.getFocus()) continue;
 			widget.onKeyReleased(keyCode);
 			widget.onKeyReleased(keyCode);
 		}
@@ -99,6 +105,7 @@ public class WInterfaceHolder implements WModifiableCollection {
 
 	public boolean keyPressed(int character, int keyCode, int keyModifier) {
 		for (WWidget widget : getAllWidgets()) {
+			if (widget instanceof WFocusedKeyboardListener && !widget.getFocus()) continue;
 			widget.onKeyPressed(character, keyCode, keyModifier);
 		}
 		return false;
@@ -107,6 +114,7 @@ public class WInterfaceHolder implements WModifiableCollection {
 
 	public boolean onCharTyped(char character, int keyCode) {
 		for (WWidget widget : getAllWidgets()) {
+			if (widget instanceof WFocusedKeyboardListener && !widget.getFocus()) continue;
 			widget.onCharTyped(character);
 		}
 		return false;

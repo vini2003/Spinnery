@@ -11,7 +11,7 @@ import spinnery.client.BaseRenderer;
 import java.util.Map;
 
 @Environment(EnvType.CLIENT)
-public class WTabToggle extends WToggle implements WClient {
+public class WTabToggle extends WToggle {
 	public static final int SHADOW_ON = 0;
 	public static final int BACKGROUND_ON = 1;
 	public static final int HIGHLIGHT_ON = 2;

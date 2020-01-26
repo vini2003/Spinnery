@@ -6,7 +6,7 @@ import net.minecraft.util.Identifier;
 import spinnery.client.BaseRenderer;
 
 @Environment(EnvType.CLIENT)
-public class WTexturedButton extends WWidget {
+public class WTexturedButton extends WWidget implements WFocusedMouseListener {
 	protected Identifier texture;
 	protected Identifier textureActive;
 	protected Identifier textureDisabled;
@@ -83,5 +83,17 @@ public class WTexturedButton extends WWidget {
 
 	public void setDisabled(boolean disabled) {
 		this.disabled = disabled;
+	}
+
+	@Override
+	public void onMouseClicked(int mouseX, int mouseY, int mouseButton) {
+		if (disabled) return;
+		super.onMouseClicked(mouseX, mouseY, mouseButton);
+	}
+
+	@Override
+	public void onMouseReleased(double mouseX, double mouseY, int mouseButton) {
+		if (disabled) return;
+		super.onMouseReleased(mouseX, mouseY, mouseButton);
 	}
 }

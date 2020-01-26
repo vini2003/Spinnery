@@ -6,7 +6,7 @@ import net.minecraft.util.Identifier;
 import spinnery.client.BaseRenderer;
 
 @Environment(EnvType.CLIENT)
-public class WStaticImage extends WWidget implements WClient {
+public class WStaticImage extends WWidget implements WClient, WFocusedMouseListener {
 	protected Identifier texture;
 
 	public WStaticImage(WPosition position, WSize size, WInterface linkedInterface, Identifier texture) {

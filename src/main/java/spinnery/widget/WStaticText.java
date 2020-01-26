@@ -8,7 +8,7 @@ import spinnery.client.BaseRenderer;
 import java.util.Map;
 
 @Environment(EnvType.CLIENT)
-public class WStaticText extends WWidget implements WClient {
+public class WStaticText extends WWidget implements WClient, WFocusedMouseListener {
 
 	public static final int SHADOW = 6;
 	public static final int TEXT = 7;

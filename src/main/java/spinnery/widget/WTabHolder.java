@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 @Environment(EnvType.CLIENT)
-public class WTabHolder extends WWidget implements WClient, WCollection {
+public class WTabHolder extends WWidget implements WClient, WCollection, WFocusedMouseListener {
 	public static final int SHADOW = 0;
 	public static final int BACKGROUND = 1;
 	public static final int HIGHLIGHT = 2;
@@ -153,7 +153,7 @@ public class WTabHolder extends WWidget implements WClient, WCollection {
 			this.number = number;
 			this.widgets.add(new WTabToggle(WPosition.of(WType.ANCHORED, 0, 0, 0, holder), WSize.of(36, 24), getInterface(), symbol, name));
 			this.widgets.get(0).setOnMouseClicked(() -> {
-				if (getToggle().getFocus() && getToggle().getToggleState()) {
+				if (getToggle().getToggleState()) {
 					selectTab(this.number);
 				}
 			});

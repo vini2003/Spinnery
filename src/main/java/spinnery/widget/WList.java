@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 @Environment(EnvType.CLIENT)
-public class WList extends WWidget implements WClient, WModifiableCollection {
+public class WList extends WWidget implements WClient, WModifiableCollection, WFocusedMouseListener {
 	public static final int SHADOW = 0;
 	public static final int BACKGROUND = 1;
 	public static final int HIGHLIGHT = 2;
@@ -43,7 +43,7 @@ public class WList extends WWidget implements WClient, WModifiableCollection {
 
 	@Override
 	public void onMouseScrolled(int mouseX, int mouseY, double deltaY) {
-		if (!isWithinBounds(mouseX, mouseY) || getListWidgets().size() == 0) {
+		if (getListWidgets().size() == 0) {
 			return;
 		}
 

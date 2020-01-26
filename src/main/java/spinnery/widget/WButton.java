@@ -7,7 +7,7 @@ import spinnery.client.BaseRenderer;
 import java.util.Map;
 
 @Environment(EnvType.CLIENT)
-public class WButton extends WWidget implements WClient {
+public class WButton extends WWidget implements WClient, WFocusedMouseListener {
 	public static final int TOP_LEFT_ON = 0;
 	public static final int BOTTOM_RIGHT_ON = 1;
 	public static final int BACKGROUND_ON = 2;
@@ -39,10 +39,7 @@ public class WButton extends WWidget implements WClient {
 
 	@Override
 	public void onMouseClicked(int mouseX, int mouseY, int mouseButton) {
-		if (getFocus()) {
-			setLowered(true);
-		}
-
+		setLowered(true);
 		super.onMouseClicked(mouseX, mouseY, mouseButton);
 	}
 
