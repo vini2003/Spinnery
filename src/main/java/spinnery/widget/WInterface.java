@@ -3,10 +3,7 @@ package spinnery.widget;
 import spinnery.client.BaseRenderer;
 import spinnery.common.BaseContainer;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class WInterface extends WWidget implements WModifiableCollection {
 	public static final int SHADOW = 0;
@@ -181,8 +178,13 @@ public class WInterface extends WWidget implements WModifiableCollection {
 			}
 		}
 
+		Map<Integer, List<WWidget>> layers = new HashMap<>();
 		for (WWidget widget : getWidgets()) {
-			widget.draw();
+			layers.computeIfAbsent(widget.getZ(), integer -> new ArrayList<>()).add(widget);
+		}
+		NavigableSet<Integer> zIndices = new TreeSet<>(layers.keySet());
+		for (int z : zIndices) {
+			layers.get(z).forEach(WWidget::draw);
 		}
 	}
 
