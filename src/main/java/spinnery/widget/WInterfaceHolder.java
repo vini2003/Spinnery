@@ -87,8 +87,8 @@ public class WInterfaceHolder implements WModifiableCollection {
 
 	public void mouseMoved(int mouseX, int mouseY) {
 		for (WWidget widget : getAllWidgets()) {
-			if (widget instanceof WFocusedMouseListener && !widget.getFocus()) continue;
 			widget.updateFocus(mouseX, mouseY);
+			if (widget instanceof WFocusedMouseListener && !widget.getFocus()) continue;
 			widget.onMouseMoved(mouseX, mouseY);
 		}
 	}
@@ -97,7 +97,6 @@ public class WInterfaceHolder implements WModifiableCollection {
 	public boolean onKeyReleased(int character, int keyCode, int keyModifier) {
 		for (WWidget widget : getAllWidgets()) {
 			if (widget instanceof WFocusedKeyboardListener && !widget.getFocus()) continue;
-			widget.onKeyReleased(keyCode);
 			widget.onKeyReleased(keyCode);
 		}
 		return false;
