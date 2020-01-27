@@ -8,15 +8,13 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeFinder;
 import net.minecraft.util.Tickable;
 import net.minecraft.world.World;
 import spinnery.util.StackUtilities;
-import spinnery.widget.WCollection;
-import spinnery.widget.WInterfaceHolder;
-import spinnery.widget.WSlot;
-import spinnery.widget.WWidget;
+import spinnery.widget.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -38,6 +36,17 @@ public class BaseContainer extends CraftingContainer<Inventory> implements Ticka
 
 	public Map<Integer, Inventory> getInventories() {
 		return linkedInventories;
+	}
+
+	public void onInterfaceEvent(int widgetSyncId, WSynced.Event event, CompoundTag payload) {
+		List<WWidget> checkWidgets = getHolder().getAllWidgets();
+		for (WWidget widget : checkWidgets) {
+			if (!(widget instanceof WSynced)) continue;
+			if (((WSynced) widget).getSyncId() == widgetSyncId) {
+				((WSynced) widget).onInterfaceEvent(event, payload);
+				return;
+			}
+		}
 	}
 
 	public void onSlotClicked(int slotNumber, int inventoryNumber, int button, SlotActionType action, PlayerEntity player) {
