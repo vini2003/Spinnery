@@ -354,10 +354,15 @@ public class WWidget implements Tickable, Comparable<WWidget> {
 
 	@Environment(EnvType.CLIENT)
 	public boolean isWithinBounds(int positionX, int positionY) {
-		return positionX > getX()
-				&& positionX < getX() + getWidth()
-				&& positionY > getY()
-				&& positionY < getY() + getHeight();
+		return isWithinBounds(positionX, positionY, 0);
+	}
+
+	@Environment(EnvType.CLIENT)
+	public boolean isWithinBounds(int positionX, int positionY, int tolerance) {
+		return positionX + tolerance > getX()
+				&& positionX - tolerance < getX() + getWidth()
+				&& positionY + tolerance > getY()
+				&& positionY - tolerance < getY() + getHeight();
 	}
 
 	@Environment(EnvType.CLIENT)

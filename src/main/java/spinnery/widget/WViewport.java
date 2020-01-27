@@ -1,6 +1,6 @@
 package spinnery.widget;
 
-public interface WAperture {
+public interface WViewport {
     WSize getInnerSize();
     default int getInnerHeight() {
         return getInnerSize().getY();
