@@ -436,8 +436,13 @@ public class WWidget implements Tickable {
 	}
 
 	@Environment(EnvType.CLIENT)
-	public WColor getColor(int number) {
-		return ThemeRegistry.get(getTheme(), getClass()).get(number);
+	public WColor getResourceAsColor(Object key) {
+		return (WColor) ThemeRegistry.get(getTheme(), getClass()).get(key);
+	}
+
+	@Environment(EnvType.CLIENT)
+	public Object getResource(Object key) {
+		return ThemeRegistry.get(getTheme(), getClass()).get(key);
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -457,14 +462,14 @@ public class WWidget implements Tickable {
 
 	@Environment(EnvType.CLIENT)
 	public static class Theme {
-		private Map<Integer, WColor> colors = new HashMap<>();
+		private Map<Object, Object> resources = new HashMap<>();
 
-		public void add(int number, WColor color) {
-			colors.put(number, color);
+		public void put(Object objectA, Object objectB) {
+			resources.put(objectA, objectB);
 		}
 
-		public WColor get(int number) {
-			return colors.get(number);
+		public Object get(Object objectA) {
+			return resources.get(objectA);
 		}
 	}
 }

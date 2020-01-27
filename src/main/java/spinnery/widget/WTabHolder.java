@@ -33,10 +33,10 @@ public class WTabHolder extends WWidget implements WClient, WCollection, WFocuse
 
 	public static WWidget.Theme of(Map<String, String> rawTheme) {
 		WWidget.Theme theme = new WWidget.Theme();
-		theme.add(SHADOW, WColor.of(rawTheme.get("shadow")));
-		theme.add(BACKGROUND, WColor.of(rawTheme.get("background")));
-		theme.add(HIGHLIGHT, WColor.of(rawTheme.get("highlight")));
-		theme.add(OUTLINE, WColor.of(rawTheme.get("outline")));
+		theme.put(SHADOW, WColor.of(rawTheme.get("shadow")));
+		theme.put(BACKGROUND, WColor.of(rawTheme.get("background")));
+		theme.put(HIGHLIGHT, WColor.of(rawTheme.get("highlight")));
+		theme.put(OUTLINE, WColor.of(rawTheme.get("outline")));
 		return theme;
 	}
 
@@ -133,7 +133,7 @@ public class WTabHolder extends WWidget implements WClient, WCollection, WFocuse
 			tab.getToggle().draw();
 		}
 
-		BaseRenderer.drawPanel(x, y + 24, z, sX, sY - 24, getColor(SHADOW), getColor(BACKGROUND), getColor(HIGHLIGHT), getColor(OUTLINE));
+		BaseRenderer.drawPanel(x, y + 24, z, sX, sY - 24, getResourceAsColor(SHADOW), getResourceAsColor(BACKGROUND), getResourceAsColor(HIGHLIGHT), getResourceAsColor(OUTLINE));
 
 		for (WWidget widget : getWidgets()) {
 			if (!(widget instanceof WTabToggle)) {

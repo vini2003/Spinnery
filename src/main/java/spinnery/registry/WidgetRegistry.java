@@ -1,5 +1,6 @@
 package spinnery.registry;
 
+import spinnery.widget.WBar;
 import spinnery.widget.WButton;
 import spinnery.widget.WDropdown;
 import spinnery.widget.WDynamicImage;
@@ -48,6 +49,7 @@ public class WidgetRegistry {
 		register(WTabToggle.class);
 		register(WToggle.class);
 		register(WVerticalSlider.class);
+		register(WBar.class);
 	}
 
 	public static void register(Class<? extends WWidget>... classes) {

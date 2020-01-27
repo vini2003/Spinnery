@@ -16,7 +16,7 @@ public class ResourceListener implements SimpleSynchronousResourceReloadListener
 	@Override
 	public void apply(ResourceManager resourceManager) {
 		try {
-			ResourceRegistry.reload(resourceManager.getResource(new Identifier("spinnery", "default.json")).getInputStream(), resourceManager.getResource(new Identifier("spinnery", "dark.json")).getInputStream());
+			ResourceRegistry.reload(resourceManager.getResource(new Identifier("spinnery", "light.json")).getInputStream(), resourceManager.getResource(new Identifier("spinnery", "dark.json")).getInputStream());
 		} catch (IOException exception) {
 			exception.printStackTrace();
 		}

@@ -101,5 +101,9 @@
 		"highlight_off": "0xffffffff",
 		"outline_off": "0xff000000",
 		"label": "0xffffff"
+	},
+	"spinnery.widget.WBar": {
+		"background": "spinnery:textures/bar_background_light.png",
+		"foreground": "spinnery:textures/bar_foreground_light.png"
 	}
 }

@@ -5,10 +5,13 @@ import net.minecraft.item.Items;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import org.apache.commons.lang3.mutable.MutableFloat;
+import org.apache.commons.lang3.mutable.MutableInt;
 import spinnery.Spinnery;
 import spinnery.common.BaseContainer;
 import spinnery.common.BaseContainerScreen;
 import spinnery.common.BaseInventory;
+import spinnery.widget.WBar;
 import spinnery.widget.WButton;
 import spinnery.widget.WCollection;
 import spinnery.widget.WDropdown;
@@ -28,11 +31,15 @@ import spinnery.widget.WType;
 import spinnery.widget.WWidget;
 
 public class TestContainerScreen extends BaseContainerScreen<TestContainer> {
+	MutableInt mutableInt = new MutableInt(100);
+	MutableFloat mutableFloat = new MutableFloat(0);
+	boolean hitMaximum = false;
+
 	public TestContainerScreen(Text name, TestContainer linkedContainer, PlayerEntity player) {
 		super(name, linkedContainer, player);
 
 		// WInterface
-		WInterface mainInterface = new WInterface(WPosition.of(WType.FREE, 0, 0, 0), linkedContainer);
+		WInterface mainInterface = new WInterface(WPosition.of(WType.FREE, 0, 0, 0), WSize.of(170, 210), linkedContainer);
 
 		getHolder().add(mainInterface);
 
@@ -118,7 +125,12 @@ public class TestContainerScreen extends BaseContainerScreen<TestContainer> {
 		// WTexturedButton
 
 
-		mainInterface.add(dropdownA, listA, buttonA, buttonB, staticTextA, horizontalSliderA, staticImageA, tabHolderA, texturedButtonA);
+		// WBar
+		WBar barA = new WBar(WPosition.of(WType.ANCHORED, 110, 0, 0, mainInterface), WSize.of(32, 64), mainInterface, mutableInt);
+
+		barA.setProgress(mutableFloat);
+
+		mainInterface.add(dropdownA, listA, buttonA, buttonB, staticTextA, horizontalSliderA, staticImageA, barA);
 
 		mainInterface.setTheme("dark");
 
@@ -135,5 +147,17 @@ public class TestContainerScreen extends BaseContainerScreen<TestContainer> {
 				}
 			}
 		}
+	}
+
+	@Override
+	public void tick() {
+		if (mutableFloat.getValue() >= mutableInt.getValue()) {
+			hitMaximum = true;
+		}
+		if (mutableFloat.getValue() <= 0) {
+			hitMaximum = false;
+		}
+
+		mutableFloat.add(hitMaximum ? - 0.5 : + 0.5);
 	}
 }

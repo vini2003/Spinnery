@@ -42,15 +42,15 @@ public class WTabToggle extends WToggle {
 
 	public static WWidget.Theme of(Map<String, String> rawTheme) {
 		WWidget.Theme theme = new WWidget.Theme();
-		theme.add(SHADOW_ON, WColor.of(rawTheme.get("shadow_on")));
-		theme.add(BACKGROUND_ON, WColor.of(rawTheme.get("background_on")));
-		theme.add(HIGHLIGHT_ON, WColor.of(rawTheme.get("highlight_on")));
-		theme.add(OUTLINE_ON, WColor.of(rawTheme.get("outline_on")));
-		theme.add(SHADOW_OFF, WColor.of(rawTheme.get("shadow_off")));
-		theme.add(BACKGROUND_OFF, WColor.of(rawTheme.get("background_off")));
-		theme.add(HIGHLIGHT_OFF, WColor.of(rawTheme.get("highlight_off")));
-		theme.add(OUTLINE_OFF, WColor.of(rawTheme.get("outline_off")));
-		theme.add(LABEL, WColor.of(rawTheme.get("label")));
+		theme.put(SHADOW_ON, WColor.of(rawTheme.get("shadow_on")));
+		theme.put(BACKGROUND_ON, WColor.of(rawTheme.get("background_on")));
+		theme.put(HIGHLIGHT_ON, WColor.of(rawTheme.get("highlight_on")));
+		theme.put(OUTLINE_ON, WColor.of(rawTheme.get("outline_on")));
+		theme.put(SHADOW_OFF, WColor.of(rawTheme.get("shadow_off")));
+		theme.put(BACKGROUND_OFF, WColor.of(rawTheme.get("background_off")));
+		theme.put(HIGHLIGHT_OFF, WColor.of(rawTheme.get("highlight_off")));
+		theme.put(OUTLINE_OFF, WColor.of(rawTheme.get("outline_off")));
+		theme.put(LABEL, WColor.of(rawTheme.get("label")));
 		return theme;
 	}
 
@@ -83,15 +83,15 @@ public class WTabToggle extends WToggle {
 		int sY = getHeight() + 4;
 
 		if (!getToggleState()) {
-			BaseRenderer.drawPanel(x, y, z - 1, sX, sY, getColor(SHADOW_OFF), getColor(BACKGROUND_OFF), getColor(HIGHLIGHT_OFF), getColor(OUTLINE_OFF));
+			BaseRenderer.drawPanel(x, y, z - 1, sX, sY, getResourceAsColor(SHADOW_OFF), getResourceAsColor(BACKGROUND_OFF), getResourceAsColor(HIGHLIGHT_OFF), getResourceAsColor(OUTLINE_OFF));
 		} else {
-			BaseRenderer.drawPanel(x, y, z - 1, sX, sY, getColor(SHADOW_ON), getColor(BACKGROUND_ON), getColor(HIGHLIGHT_ON), getColor(OUTLINE_ON));
+			BaseRenderer.drawPanel(x, y, z - 1, sX, sY, getResourceAsColor(SHADOW_ON), getResourceAsColor(BACKGROUND_ON), getResourceAsColor(HIGHLIGHT_ON), getResourceAsColor(OUTLINE_ON));
 		}
 
 		RenderSystem.enableLighting();
 		BaseRenderer.getItemRenderer().renderGuiItemIcon(new ItemStack(getSymbol(), 1), x + 4, y + 4);
 		RenderSystem.disableLighting();
-		BaseRenderer.drawText(isLabelShadowed(), name.asFormattedString(), x + 24, (int) (y + sY / 2 - 4.5), getColor(LABEL).RGB);
+		BaseRenderer.drawText(isLabelShadowed(), name.asFormattedString(), x + 24, (int) (y + sY / 2 - 4.5), getResourceAsColor(LABEL).RGB);
 	}
 
 	public Item getSymbol() {

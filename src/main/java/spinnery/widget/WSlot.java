@@ -105,10 +105,10 @@ public class WSlot extends WWidget implements WClient, WServer, WFocusedMouseLis
 	@Environment(EnvType.CLIENT)
 	public static WWidget.Theme of(Map<String, String> rawTheme) {
 		WWidget.Theme theme = new WWidget.Theme();
-		theme.add(TOP_LEFT, WColor.of(rawTheme.get("top_left")));
-		theme.add(BOTTOM_RIGHT, WColor.of(rawTheme.get("bottom_right")));
-		theme.add(BACKGROUND_FOCUSED, WColor.of(rawTheme.get("background_focused")));
-		theme.add(BACKGROUND_UNFOCUSED, WColor.of(rawTheme.get("background_unfocused")));
+		theme.put(TOP_LEFT, WColor.of(rawTheme.get("top_left")));
+		theme.put(BOTTOM_RIGHT, WColor.of(rawTheme.get("bottom_right")));
+		theme.put(BACKGROUND_FOCUSED, WColor.of(rawTheme.get("background_focused")));
+		theme.put(BACKGROUND_UNFOCUSED, WColor.of(rawTheme.get("background_unfocused")));
 		return theme;
 	}
 
@@ -184,10 +184,10 @@ public class WSlot extends WWidget implements WClient, WServer, WFocusedMouseLis
 		int sX = getWidth();
 		int sY = getHeight();
 
-		BaseRenderer.drawBeveledPanel(x, y, z, sX, sY, getColor(TOP_LEFT), getColor(BACKGROUND_UNFOCUSED), getColor(BOTTOM_RIGHT));
+		BaseRenderer.drawBeveledPanel(x, y, z, sX, sY, getResourceAsColor(TOP_LEFT), getResourceAsColor(BACKGROUND_UNFOCUSED), getResourceAsColor(BOTTOM_RIGHT));
 
 		if (getFocus()) {
-			BaseRenderer.drawRectangle(x + 1, y + 1, z, sX - 2, sY - 2, getColor(BACKGROUND_FOCUSED));
+			BaseRenderer.drawRectangle(x + 1, y + 1, z, sX - 2, sY - 2, getResourceAsColor(BACKGROUND_FOCUSED));
 		}
 
 		if (hasPreviewTexture()) {

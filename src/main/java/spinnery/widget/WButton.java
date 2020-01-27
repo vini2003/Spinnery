@@ -27,13 +27,13 @@ public class WButton extends WWidget implements WClient, WFocusedMouseListener {
 
 	public static WWidget.Theme of(Map<String, String> rawTheme) {
 		WWidget.Theme theme = new WWidget.Theme();
-		theme.add(TOP_LEFT_ON, WColor.of(rawTheme.get("top_left_on")));
-		theme.add(BOTTOM_RIGHT_ON, WColor.of(rawTheme.get("bottom_right_on")));
-		theme.add(BACKGROUND_ON, WColor.of(rawTheme.get("background_on")));
-		theme.add(TOP_LEFT_OFF, WColor.of(rawTheme.get("top_left_off")));
-		theme.add(BOTTOM_RIGHT_OFF, WColor.of(rawTheme.get("bottom_right_off")));
-		theme.add(BACKGROUND_OFF, WColor.of(rawTheme.get("background_off")));
-		theme.add(LABEL, WColor.of(rawTheme.get("label")));
+		theme.put(TOP_LEFT_ON, WColor.of(rawTheme.get("top_left_on")));
+		theme.put(BOTTOM_RIGHT_ON, WColor.of(rawTheme.get("bottom_right_on")));
+		theme.put(BACKGROUND_ON, WColor.of(rawTheme.get("background_on")));
+		theme.put(TOP_LEFT_OFF, WColor.of(rawTheme.get("top_left_off")));
+		theme.put(BOTTOM_RIGHT_OFF, WColor.of(rawTheme.get("bottom_right_off")));
+		theme.put(BACKGROUND_OFF, WColor.of(rawTheme.get("background_off")));
+		theme.put(LABEL, WColor.of(rawTheme.get("label")));
 		return theme;
 	}
 
@@ -57,16 +57,16 @@ public class WButton extends WWidget implements WClient, WFocusedMouseListener {
 		}
 
 		if (isLowered()) {
-			BaseRenderer.drawBeveledPanel(getX(), getY(), getZ(), getWidth(), getHeight(), getColor(TOP_LEFT_ON), getColor(BACKGROUND_ON), getColor(BOTTOM_RIGHT_ON));
+			BaseRenderer.drawBeveledPanel(getX(), getY(), getZ(), getWidth(), getHeight(), getResourceAsColor(TOP_LEFT_ON), getResourceAsColor(BACKGROUND_ON), getResourceAsColor(BOTTOM_RIGHT_ON));
 		} else {
-			BaseRenderer.drawBeveledPanel(getX(), getY(), getZ(), getWidth(), getHeight(), getColor(TOP_LEFT_OFF), getColor(BACKGROUND_OFF), getColor(BOTTOM_RIGHT_OFF));
+			BaseRenderer.drawBeveledPanel(getX(), getY(), getZ(), getWidth(), getHeight(), getResourceAsColor(TOP_LEFT_OFF), getResourceAsColor(BACKGROUND_OFF), getResourceAsColor(BOTTOM_RIGHT_OFF));
 		}
 
 		if (hasLabel()) {
 			if (BaseRenderer.getTextRenderer().getStringWidth(getLabel().asFormattedString()) > getWidth() - 6) {
-				BaseRenderer.drawText(isLabelShadowed(), getLabel().asFormattedString(), (getX() + getWidth() + 2), (int) (getY() + getHeight() / 2 - 4.5), getColor(LABEL).RGB);
+				BaseRenderer.drawText(isLabelShadowed(), getLabel().asFormattedString(), (getX() + getWidth() + 2), (int) (getY() + getHeight() / 2 - 4.5), getResourceAsColor(LABEL).RGB);
 			} else {
-				BaseRenderer.drawText(isLabelShadowed(), getLabel().asFormattedString(), (getX() + 3), (int) (getY() + getHeight() / 2 - 4.5), getColor(LABEL).RGB);
+				BaseRenderer.drawText(isLabelShadowed(), getLabel().asFormattedString(), (getX() + 3), (int) (getY() + getHeight() / 2 - 4.5), getResourceAsColor(LABEL).RGB);
 			}
 		}
 	}

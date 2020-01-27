@@ -33,11 +33,11 @@ public class WList extends WWidget implements WClient, WModifiableCollection, WF
 
 	public static WWidget.Theme of(Map<String, String> rawTheme) {
 		WWidget.Theme theme = new WWidget.Theme();
-		theme.add(SHADOW, WColor.of(rawTheme.get("shadow")));
-		theme.add(BACKGROUND, WColor.of(rawTheme.get("background")));
-		theme.add(HIGHLIGHT, WColor.of(rawTheme.get("highlight")));
-		theme.add(OUTLINE, WColor.of(rawTheme.get("outline")));
-		theme.add(LABEL, WColor.of(rawTheme.get("label")));
+		theme.put(SHADOW, WColor.of(rawTheme.get("shadow")));
+		theme.put(BACKGROUND, WColor.of(rawTheme.get("background")));
+		theme.put(HIGHLIGHT, WColor.of(rawTheme.get("highlight")));
+		theme.put(OUTLINE, WColor.of(rawTheme.get("outline")));
+		theme.put(LABEL, WColor.of(rawTheme.get("label")));
 		return theme;
 	}
 
@@ -145,12 +145,12 @@ public class WList extends WWidget implements WClient, WModifiableCollection, WF
 		int sX = getWidth();
 		int sY = getHeight();
 
-		BaseRenderer.drawPanel(x, y, z, sX, sY, getColor(SHADOW), getColor(BACKGROUND), getColor(HIGHLIGHT), getColor(OUTLINE));
+		BaseRenderer.drawPanel(x, y, z, sX, sY, getResourceAsColor(SHADOW), getResourceAsColor(BACKGROUND), getResourceAsColor(HIGHLIGHT), getResourceAsColor(OUTLINE));
 
 		if (hasLabel()) {
-			BaseRenderer.drawText(isLabelShadowed(), getLabel().asFormattedString(), x + sX / 2 - BaseRenderer.getTextRenderer().getStringWidth(getLabel().asFormattedString()) / 2, y + 6, getColor(LABEL).RGB);
-			BaseRenderer.drawRectangle(x, y + 16, z, sX, 1, getColor(OUTLINE));
-			BaseRenderer.drawRectangle(x + 1, y + 17, z, sX - 2, 0.75, getColor(SHADOW));
+			BaseRenderer.drawText(isLabelShadowed(), getLabel().asFormattedString(), x + sX / 2 - BaseRenderer.getTextRenderer().getStringWidth(getLabel().asFormattedString()) / 2, y + 6, getResourceAsColor(LABEL).RGB);
+			BaseRenderer.drawRectangle(x, y + 16, z, sX, 1, getResourceAsColor(OUTLINE));
+			BaseRenderer.drawRectangle(x + 1, y + 17, z, sX - 2, 0.75, getResourceAsColor(SHADOW));
 		}
 
 		int rawHeight = MinecraftClient.getInstance().getWindow().getHeight();

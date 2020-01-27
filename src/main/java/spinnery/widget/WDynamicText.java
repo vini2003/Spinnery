@@ -41,13 +41,13 @@ public class WDynamicText extends WWidget implements WClient {
 
 	public static WWidget.Theme of(Map<String, String> rawTheme) {
 		WWidget.Theme theme = new WWidget.Theme();
-		theme.add(TOP_LEFT, WColor.of(rawTheme.get("top_left")));
-		theme.add(BOTTOM_RIGHT, WColor.of(rawTheme.get("bottom_right")));
-		theme.add(BACKGROUND, WColor.of(rawTheme.get("background")));
-		theme.add(TEXT, WColor.of(rawTheme.get("text")));
-		theme.add(HIGHLIGHT, WColor.of(rawTheme.get("highlight")));
-		theme.add(CURSOR, WColor.of(rawTheme.get("cursor")));
-		theme.add(LABEL, WColor.of(rawTheme.get("label")));
+		theme.put(TOP_LEFT, WColor.of(rawTheme.get("top_left")));
+		theme.put(BOTTOM_RIGHT, WColor.of(rawTheme.get("bottom_right")));
+		theme.put(BACKGROUND, WColor.of(rawTheme.get("background")));
+		theme.put(TEXT, WColor.of(rawTheme.get("text")));
+		theme.put(HIGHLIGHT, WColor.of(rawTheme.get("highlight")));
+		theme.put(CURSOR, WColor.of(rawTheme.get("cursor")));
+		theme.put(LABEL, WColor.of(rawTheme.get("label")));
 		return theme;
 	}
 
@@ -225,14 +225,14 @@ public class WDynamicText extends WWidget implements WClient {
 
 		int oY = 0;
 
-		BaseRenderer.drawBeveledPanel(x, y, z, sX, sY, getColor(TOP_LEFT), getColor(BACKGROUND), getColor(BOTTOM_RIGHT));
+		BaseRenderer.drawBeveledPanel(x, y, z, sX, sY, getResourceAsColor(TOP_LEFT), getResourceAsColor(BACKGROUND), getResourceAsColor(BOTTOM_RIGHT));
 
 		if (text.isEmpty() && !isSelected) {
-			BaseRenderer.drawText(isLabelShadowed(), getLabel().asFormattedString(), x + 4, y + 4 + oY, getColor(LABEL).RGB);
+			BaseRenderer.drawText(isLabelShadowed(), getLabel().asFormattedString(), x + 4, y + 4 + oY, getResourceAsColor(LABEL).RGB);
 		} else {
 			int pP = x + 4, pC = offsetPos;
 			if (visible.isEmpty() && cursorTick > 10) {
-				BaseRenderer.drawText(isLabelShadowed(), "|", pP, y + 4 + oY, getColor(CURSOR).RGB);
+				BaseRenderer.drawText(isLabelShadowed(), "|", pP, y + 4 + oY, getResourceAsColor(CURSOR).RGB);
 			}
 			for (char c : visible.toCharArray()) {
 				if (c == '\n') {
@@ -240,16 +240,16 @@ public class WDynamicText extends WWidget implements WClient {
 					pP = x + 4;
 				} else {
 					int cW = (int) BaseRenderer.getTextRenderer().getCharWidth(c);
-					BaseRenderer.drawText(isLabelShadowed(), String.valueOf(c), pP, y + 4 + oY, getColor(TEXT).RGB);
+					BaseRenderer.drawText(isLabelShadowed(), String.valueOf(c), pP, y + 4 + oY, getResourceAsColor(TEXT).RGB);
 
 					if (pC >= selLeftPos && (pC < selRightPos || pC == text.length() - 1 && pC <= selRightPos) && (selLeftPos - selRightPos != 0)) {
-						BaseRenderer.drawRectangle(pP, y + 4 + oY, 10, cW, 9, getColor(HIGHLIGHT));
+						BaseRenderer.drawRectangle(pP, y + 4 + oY, 10, cW, 9, getResourceAsColor(HIGHLIGHT));
 					}
 
 					pP += cW;
 
 					if ((pC == cursorPos - 1) && isSelected && cursorTick > 10) {
-						BaseRenderer.drawText(isLabelShadowed(), "|", pP, y + 4 + oY, getColor(CURSOR).RGB);
+						BaseRenderer.drawText(isLabelShadowed(), "|", pP, y + 4 + oY, getResourceAsColor(CURSOR).RGB);
 					}
 
 					++pC;

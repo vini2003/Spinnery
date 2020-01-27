@@ -34,8 +34,8 @@ public class WStaticText extends WWidget implements WClient, WFocusedMouseListen
 
 	public static WWidget.Theme of(Map<String, String> rawTheme) {
 		WWidget.Theme theme = new WWidget.Theme();
-		theme.add(SHADOW, WColor.of(rawTheme.get("shadow")));
-		theme.add(TEXT, WColor.of(rawTheme.get("text")));
+		theme.put(SHADOW, WColor.of(rawTheme.get("shadow")));
+		theme.put(TEXT, WColor.of(rawTheme.get("text")));
 		return theme;
 	}
 
@@ -75,9 +75,9 @@ public class WStaticText extends WWidget implements WClient, WFocusedMouseListen
 		int y = getY();
 
 		if (isLabelShadowed()) {
-			BaseRenderer.drawTextTrimmed(getText().asFormattedString(), x + 1, y + 1, maxWidth, getColor(SHADOW).RGB, font);
+			BaseRenderer.drawTextTrimmed(getText().asFormattedString(), x + 1, y + 1, maxWidth, getResourceAsColor(SHADOW).RGB, font);
 		}
-		BaseRenderer.drawTextTrimmed(getText().asFormattedString(), x, y, maxWidth, getColor(TEXT).RGB, font);
+		BaseRenderer.drawTextTrimmed(getText().asFormattedString(), x, y, maxWidth, getResourceAsColor(TEXT).RGB, font);
 	}
 
 	public Text getText() {

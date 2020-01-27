@@ -32,18 +32,20 @@ public class WHorizontalSlider extends WWidget implements WClient, WFocusedMouse
 		setTheme("light");
 
 		setLimit(limit);
+
+		updatePosition(getX(), getY());
 	}
 
 	public static WWidget.Theme of(Map<String, String> rawTheme) {
 		WWidget.Theme theme = new WWidget.Theme();
-		theme.add(TOP_LEFT_BACKGROUND, WColor.of(rawTheme.get("top_left_background")));
-		theme.add(BOTTOM_RIGHT_BACKGROUND, WColor.of(rawTheme.get("bottom_right_background")));
-		theme.add(BACKGROUND_ON, WColor.of(rawTheme.get("background_on")));
-		theme.add(BACKGROUND_OFF, WColor.of(rawTheme.get("background_off")));
-		theme.add(TOP_LEFT_FOREGROUND, WColor.of(rawTheme.get("top_left_foreground")));
-		theme.add(BOTTOM_RIGHT_FOREGROUND, WColor.of(rawTheme.get("bottom_right_foreground")));
-		theme.add(FOREGROUND, WColor.of(rawTheme.get("foreground")));
-		theme.add(TEXT, WColor.of(rawTheme.get("text")));
+		theme.put(TOP_LEFT_BACKGROUND, WColor.of(rawTheme.get("top_left_background")));
+		theme.put(BOTTOM_RIGHT_BACKGROUND, WColor.of(rawTheme.get("bottom_right_background")));
+		theme.put(BACKGROUND_ON, WColor.of(rawTheme.get("background_on")));
+		theme.put(BACKGROUND_OFF, WColor.of(rawTheme.get("background_off")));
+		theme.put(TOP_LEFT_FOREGROUND, WColor.of(rawTheme.get("top_left_foreground")));
+		theme.put(BOTTOM_RIGHT_FOREGROUND, WColor.of(rawTheme.get("bottom_right_foreground")));
+		theme.put(FOREGROUND, WColor.of(rawTheme.get("foreground")));
+		theme.put(TEXT, WColor.of(rawTheme.get("text")));
 		return theme;
 	}
 
@@ -108,18 +110,18 @@ public class WHorizontalSlider extends WWidget implements WClient, WFocusedMouse
 		int sX = getWidth();
 		int sY = getHeight();
 
-		BaseRenderer.drawText(isLabelShadowed(), total, tX, y + sY + 4, getColor(TEXT).RGB);
+		BaseRenderer.drawText(isLabelShadowed(), total, tX, y + sY + 4, getResourceAsColor(TEXT).RGB);
 
-		BaseRenderer.drawRectangle(x, y, z, (sX), 1, getColor(TOP_LEFT_BACKGROUND));
-		BaseRenderer.drawRectangle(x, y, z, 1, sY, getColor(TOP_LEFT_BACKGROUND));
+		BaseRenderer.drawRectangle(x, y, z, (sX), 1, getResourceAsColor(TOP_LEFT_BACKGROUND));
+		BaseRenderer.drawRectangle(x, y, z, 1, sY, getResourceAsColor(TOP_LEFT_BACKGROUND));
 
-		BaseRenderer.drawRectangle(x, y + sY, z, (sX), 1, getColor(BOTTOM_RIGHT_BACKGROUND));
-		BaseRenderer.drawRectangle(x + (sX), y, z, 1, sY + 1, getColor(BOTTOM_RIGHT_BACKGROUND));
+		BaseRenderer.drawRectangle(x, y + sY, z, (sX), 1, getResourceAsColor(BOTTOM_RIGHT_BACKGROUND));
+		BaseRenderer.drawRectangle(x + (sX), y, z, 1, sY + 1, getResourceAsColor(BOTTOM_RIGHT_BACKGROUND));
 
-		BaseRenderer.drawRectangle(x + 1, y + 1, z, ((sX) / l) * p - 1, sY - 1, getColor(BACKGROUND_ON));
-		BaseRenderer.drawRectangle(x + ((sX) / l) * p, y + 1, z, (sX) - ((sX) / l) * p, sY - 1, getColor(BACKGROUND_OFF));
+		BaseRenderer.drawRectangle(x + 1, y + 1, z, ((sX) / l) * p - 1, sY - 1, getResourceAsColor(BACKGROUND_ON));
+		BaseRenderer.drawRectangle(x + ((sX) / l) * p, y + 1, z, (sX) - ((sX) / l) * p, sY - 1, getResourceAsColor(BACKGROUND_OFF));
 
-		BaseRenderer.drawBeveledPanel(Math.min(x + sX - 7, x + (sX / l) * p), y - 1, z, 8, sY + 3, getColor(TOP_LEFT_FOREGROUND), getColor(FOREGROUND), getColor(BOTTOM_RIGHT_FOREGROUND));
+		BaseRenderer.drawBeveledPanel(Math.min(x + sX - 7, x + (sX / l) * p), y - 1, z, 8, sY + 3, getResourceAsColor(TOP_LEFT_FOREGROUND), getResourceAsColor(FOREGROUND), getResourceAsColor(BOTTOM_RIGHT_FOREGROUND));
 	}
 
 	@Override
