@@ -127,6 +127,7 @@ public class NetworkRegistry {
 	}
 
 	public static void initialize() {
+		// TODO: Warn or mitigate packet flooding
 		ServerSidePacketRegistry.INSTANCE.register(SLOT_CLICK_PACKET, (packetContext, packetByteBuffer) -> {
 			int slotNumber = packetByteBuffer.readInt();
 			int inventoryNumber = packetByteBuffer.readInt();
