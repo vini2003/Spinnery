@@ -2,7 +2,9 @@
 
 [![](https://jitpack.io/v/vini2003/Spinnery.svg)](https://jitpack.io/#vini2003/Spinnery)
 
-![Spinnery](https://i.imgur.com/snn8q8d.png)
+![Flowchart](https://i.imgur.com/i2PnCW6.png)
+
+![Spinnery](https://i.imgur.com/Mu1EqaK.png)
 
 Spinnery is a modern, feature-complete GUI library for Minecraft 1.15.1, with a focus on making the GUI design and user experience significantly smoother and less nonsensic.
 
