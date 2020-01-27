@@ -58,13 +58,14 @@ public class TestContainerScreen extends BaseContainerScreen<TestContainer> {
 
 		// WList
 		WList listA = new WList(WPosition.of(WType.ANCHORED, -70, 0, 1, mainInterface), WSize.of(64, 154), mainInterface);
+		listA.setScroller(true);
 
 		for (int i = 0; i < 60; i++) {
 			WToggle toggle = new WToggle(WPosition.of(WType.ANCHORED, 0, 0, 1, listA), WSize.of(18, 9), mainInterface);
 			WStaticText caption = new WStaticText(WPosition.of(WType.ANCHORED, 25, 0, 1, listA), mainInterface, new LiteralText("B" + i));
 			listA.add(toggle, caption);
 		}
-		listA.setLabel(new LiteralText("List"));
+		//listA.setLabel(new LiteralText("List"));
 		// WList
 
 
