@@ -1,20 +1,6 @@
 package spinnery.registry;
 
-import spinnery.widget.WButton;
-import spinnery.widget.WDropdown;
-import spinnery.widget.WDynamicImage;
-import spinnery.widget.WDynamicText;
-import spinnery.widget.WHorizontalSlider;
-import spinnery.widget.WInterface;
-import spinnery.widget.WList;
-import spinnery.widget.WSlot;
-import spinnery.widget.WStaticImage;
-import spinnery.widget.WStaticText;
-import spinnery.widget.WTabHolder;
-import spinnery.widget.WTabToggle;
-import spinnery.widget.WToggle;
-import spinnery.widget.WVerticalSlider;
-import spinnery.widget.WWidget;
+import spinnery.widget.*;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -47,6 +33,7 @@ public class WidgetRegistry {
 		register(WTabHolder.class);
 		register(WTabToggle.class);
 		register(WToggle.class);
+		register(WTooltip.class);
 		register(WVerticalSlider.class);
 	}
 

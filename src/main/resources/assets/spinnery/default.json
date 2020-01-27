@@ -101,5 +101,13 @@
 		"highlight_off": "0xffffffff",
 		"outline_off": "0xff000000",
 		"label": "0xffffff"
+	},
+	"spinnery.widget.WTooltip": {
+		"background_start": "0xf0100010",
+		"background_end": "0xf0100010",
+		"outline_start": "0x505000ff",
+		"outline_end": "0x5028007f",
+		"shadow_start": "0xf0100010",
+		"shadow_end": "0xf0100010"
 	}
 }
