@@ -21,6 +21,7 @@ public class WidgetRegistry {
 	public static void initialize() {
 		register(WWidget.class);
 		register(WButton.class);
+		register(WDraggableArea.class);
 		register(WDropdown.class);
 		register(WDynamicImage.class);
 		register(WDynamicText.class);
