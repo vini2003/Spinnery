@@ -24,9 +24,10 @@ public class WidgetRegistry {
 		register(WDropdown.class);
 		register(WDynamicImage.class);
 		register(WDynamicText.class);
+		register(WHorizontalList.class);
 		register(WHorizontalSlider.class);
 		register(WInterface.class);
-		register(WList.class);
+		register(WVerticalList.class);
 		register(WSlot.class);
 		register(WStaticImage.class);
 		register(WStaticText.class);

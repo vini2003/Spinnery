@@ -9,23 +9,7 @@ import spinnery.Spinnery;
 import spinnery.common.BaseContainer;
 import spinnery.common.BaseContainerScreen;
 import spinnery.common.BaseInventory;
-import spinnery.widget.WButton;
-import spinnery.widget.WCollection;
-import spinnery.widget.WDropdown;
-import spinnery.widget.WDynamicText;
-import spinnery.widget.WHorizontalSlider;
-import spinnery.widget.WInterface;
-import spinnery.widget.WList;
-import spinnery.widget.WPosition;
-import spinnery.widget.WSize;
-import spinnery.widget.WSlot;
-import spinnery.widget.WStaticImage;
-import spinnery.widget.WStaticText;
-import spinnery.widget.WTabHolder;
-import spinnery.widget.WTexturedButton;
-import spinnery.widget.WToggle;
-import spinnery.widget.WType;
-import spinnery.widget.WWidget;
+import spinnery.widget.*;
 
 public class TestContainerScreen extends BaseContainerScreen<TestContainer> {
 	public TestContainerScreen(Text name, TestContainer linkedContainer, PlayerEntity player) {
@@ -57,7 +41,7 @@ public class TestContainerScreen extends BaseContainerScreen<TestContainer> {
 
 
 		// WList
-		WList listA = new WList(WPosition.of(WType.ANCHORED, -70, 0, 1, mainInterface), WSize.of(64, 154), mainInterface);
+		WVerticalList listA = new WVerticalList(WPosition.of(WType.ANCHORED, -70, 0, 1, mainInterface), WSize.of(64, 118), mainInterface);
 		listA.setScroller(true);
 		for (int i = 0; i < 60; i++) {
 			WToggle toggle = new WToggle(WPosition.of(WType.ANCHORED, 0, 0, 1, listA), WSize.of(18, 9), mainInterface);
@@ -66,7 +50,7 @@ public class TestContainerScreen extends BaseContainerScreen<TestContainer> {
 		}
 		listA.setLabel(new LiteralText("List"));
 
-		WList listB = new WList(WPosition.of(WType.ANCHORED, -140, 0, 1, mainInterface), WSize.of(64, 154), mainInterface);
+		WHorizontalList listB = new WHorizontalList(WPosition.of(WType.ANCHORED, -160, 122, 10, mainInterface), WSize.of(154, 42), mainInterface);
 		listB.setScroller(true);
 		for (int i = 0; i < 60; i++) {
 			WToggle toggle = new WToggle(WPosition.of(WType.ANCHORED, 0, 0, 1, listB), WSize.of(18, 9), mainInterface);

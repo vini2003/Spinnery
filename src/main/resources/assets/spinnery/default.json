@@ -9,7 +9,14 @@
 		"outline": "0xff000000",
 		"label": "0xffffff"
 	},
-	"spinnery.widget.WList": {
+	"spinnery.widget.WVerticalList": {
+		"shadow": "0xff555555",
+		"background": "0xffc6c6c6",
+		"highlight": "0xffffffff",
+		"outline": "0xff000000",
+		"label": "0xffffff"
+	},
+	"spinnery.widget.WHorizontalList": {
 		"shadow": "0xff555555",
 		"background": "0xffc6c6c6",
 		"highlight": "0xffffffff",

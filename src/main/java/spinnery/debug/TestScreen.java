@@ -3,18 +3,7 @@ package spinnery.debug;
 import net.minecraft.item.Items;
 import net.minecraft.text.LiteralText;
 import spinnery.client.BaseScreen;
-import spinnery.widget.WButton;
-import spinnery.widget.WDropdown;
-import spinnery.widget.WDynamicText;
-import spinnery.widget.WHorizontalSlider;
-import spinnery.widget.WInterface;
-import spinnery.widget.WList;
-import spinnery.widget.WPosition;
-import spinnery.widget.WSize;
-import spinnery.widget.WStaticText;
-import spinnery.widget.WTabHolder;
-import spinnery.widget.WToggle;
-import spinnery.widget.WType;
+import spinnery.widget.*;
 
 public class TestScreen extends BaseScreen {
 	public TestScreen() {
@@ -44,7 +33,7 @@ public class TestScreen extends BaseScreen {
 
 
 		// WList
-		WList listA = new WList(WPosition.of(WType.ANCHORED, -70, 0, 1, mainInterface), WSize.of(64, 154), mainInterface);
+		WVerticalList listA = new WVerticalList(WPosition.of(WType.ANCHORED, -70, 0, 1, mainInterface), WSize.of(64, 154), mainInterface);
 
 		WToggle toggleB = new WToggle(WPosition.of(WType.ANCHORED, 0, 0, 1, listA), WSize.of(18, 9), mainInterface);
 
