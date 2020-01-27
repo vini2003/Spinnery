@@ -178,13 +178,10 @@ public class WInterface extends WWidget implements WModifiableCollection {
 			}
 		}
 
-		Map<Integer, List<WWidget>> layers = new HashMap<>();
-		for (WWidget widget : getWidgets()) {
-			layers.computeIfAbsent(widget.getZ(), integer -> new ArrayList<>()).add(widget);
-		}
-		NavigableSet<Integer> zIndices = new TreeSet<>(layers.keySet());
-		for (int z : zIndices) {
-			layers.get(z).forEach(WWidget::draw);
+		List<WWidget> sorted = new ArrayList<>(getWidgets());
+		Collections.sort(getWidgets());
+		for (WWidget widget : sorted) {
+			widget.draw();
 		}
 	}
 
