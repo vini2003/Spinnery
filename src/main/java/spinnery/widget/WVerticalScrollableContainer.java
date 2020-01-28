@@ -14,6 +14,8 @@ public class WVerticalScrollableContainer extends WWidget implements WClient, WM
 
     protected WVerticalScrollbar wScrollbar;
 
+    protected float scrollKineticDelta = 0;
+
     public WVerticalScrollableContainer(WPosition position, WSize size, WInterface linkedInterface) {
         setInterface(linkedInterface);
         setPosition(position);
@@ -37,7 +39,8 @@ public class WVerticalScrollableContainer extends WWidget implements WClient, WM
     @Override
     public void onMouseScrolled(int mouseX, int mouseY, double deltaY) {
         if (isWithinBounds(mouseX, mouseY)) {
-            scroll(0, deltaY * 5);
+            scrollKineticDelta += deltaY;
+            scroll(0, deltaY);
             super.onMouseScrolled(mouseX, mouseY, deltaY);
         }
     }
@@ -55,6 +58,14 @@ public class WVerticalScrollableContainer extends WWidget implements WClient, WM
         boolean hitBottom = getListWidgets().get(getListWidgets().size() - 1).stream().anyMatch(widget ->
                 widget.getY() + widget.getHeight() + deltaY <= getStartAnchorY() + getVisibleHeight()
         );
+
+        if (hitBottom && scrollKineticDelta < -2.5) {
+            scrollKineticDelta = -scrollKineticDelta;
+        }
+
+        if (hitTop && scrollKineticDelta > 2.5) {
+            scrollKineticDelta = -scrollKineticDelta;
+        }
 
         if (deltaY > 0 && hitTop) {
             scrollToStart();
@@ -285,5 +296,15 @@ public class WVerticalScrollableContainer extends WWidget implements WClient, WM
             }
         }
         return false;
+    }
+
+    @Override
+    public void tick() {
+        if (scrollKineticDelta > 0.05 || scrollKineticDelta < -0.05) {
+            scrollKineticDelta = (float) (scrollKineticDelta / 1.10);
+            scroll(0, scrollKineticDelta);
+        } else {
+            scrollKineticDelta = 0;
+        }
     }
 }

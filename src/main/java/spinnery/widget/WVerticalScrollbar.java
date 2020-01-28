@@ -1,11 +1,22 @@
 package spinnery.widget;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import spinnery.client.BaseRenderer;
+
+import java.util.Map;
 
 public class WVerticalScrollbar extends WWidget implements WClient {
     protected WVerticalScrollable parent;
     protected double clickMouseY;
     protected boolean dragging = false;
+
+    protected static final int SCROLLER_TOP_LEFT = 0;
+    protected static final int SCROLLER_BOTTOM_RIGHT = 1;
+    protected static final int SCROLLER_BACKGROUND = 2;
+    protected static final int SCROLL_LINE_TOP_LEFT = 3;
+    protected static final int SCROLL_LINE_BOTTOM_RIGHT = 4;
+    protected static final int SCROLL_LINE_BACKGROUND = 5;
 
     public WVerticalScrollbar(WInterface linkedInterface, WVerticalScrollable parent) {
         setInterface(linkedInterface);
@@ -28,8 +39,7 @@ public class WVerticalScrollbar extends WWidget implements WClient {
     }
 
     public void drawScroller() {
-        BaseRenderer.drawRectangle(getX(), getScrollerY(), getZ(), getWidth(), getScrollerHeight(), WColor.of("0x808080"));
-        BaseRenderer.drawRectangle(getX(), getScrollerY(), getZ(), getWidth() - 1, getScrollerHeight() - 1, WColor.of("0xC0C0C0"));
+        BaseRenderer.drawBeveledPanel(getX(), getScrollerY(), getZ(), getWidth(), getScrollerHeight(), getResourceAsColor(SCROLLER_TOP_LEFT), getResourceAsColor(SCROLLER_BACKGROUND), getResourceAsColor(SCROLLER_BOTTOM_RIGHT));
     }
 
     @Override
@@ -59,6 +69,7 @@ public class WVerticalScrollbar extends WWidget implements WClient {
         if (mouseButton == 0) {
             if (dragging) {
                 double scrollerOffsetY = getScrollerY() + clickMouseY - mouseY;
+                ((WVerticalScrollableContainer) parent).scrollKineticDelta += -deltaY;
                 parent.scroll(0, scrollerOffsetY);
             }
         }
@@ -68,7 +79,19 @@ public class WVerticalScrollbar extends WWidget implements WClient {
     @Override
     public void draw() {
         if (isHidden()) return;
-        BaseRenderer.drawRectangle(getX(), getY(), getZ(), getWidth(), getHeight(), WColor.of("0x000000"));
+        BaseRenderer.drawBeveledPanel(getX(), getY(), getZ(), getWidth(), getHeight(), getResourceAsColor(SCROLL_LINE_TOP_LEFT), getResourceAsColor(SCROLL_LINE_BACKGROUND), getResourceAsColor(SCROLLER_BOTTOM_RIGHT));
         drawScroller();
+    }
+
+    @Environment(EnvType.CLIENT)
+    public static WWidget.Theme of(Map<String, String> rawTheme) {
+        WWidget.Theme theme = new WWidget.Theme();
+        theme.put(SCROLLER_TOP_LEFT, WColor.of(rawTheme.get("scroller_top_left")));
+        theme.put(SCROLLER_BOTTOM_RIGHT, WColor.of(rawTheme.get("scroller_bottom_right")));
+        theme.put(SCROLLER_BACKGROUND, WColor.of(rawTheme.get("scroller_background")));
+        theme.put(SCROLL_LINE_TOP_LEFT, WColor.of(rawTheme.get("scroll_line_top_left")));
+        theme.put(SCROLL_LINE_BOTTOM_RIGHT, WColor.of(rawTheme.get("scroll_line_bottom_right")));
+        theme.put(SCROLL_LINE_BACKGROUND, WColor.of(rawTheme.get("scroll_line_background")));
+        return theme;
     }
 }

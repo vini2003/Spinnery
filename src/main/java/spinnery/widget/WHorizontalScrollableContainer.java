@@ -13,6 +13,8 @@ public class WHorizontalScrollableContainer extends WWidget implements WClient, 
 
     protected WHorizontalScrollbar wScrollbar;
 
+    protected float scrollKineticDelta = 0;
+
     public WHorizontalScrollableContainer(WPosition position, WSize size, WInterface linkedInterface) {
         setInterface(linkedInterface);
         setPosition(position);
@@ -36,6 +38,7 @@ public class WHorizontalScrollableContainer extends WWidget implements WClient, 
     @Override
     public void onMouseScrolled(int mouseX, int mouseY, double deltaY) {
         if (isWithinBounds(mouseX, mouseY)) {
+            scrollKineticDelta += deltaY;
             scroll(deltaY * 5, 0);
             super.onMouseScrolled(mouseX, mouseY, deltaY);
         }
@@ -54,6 +57,15 @@ public class WHorizontalScrollableContainer extends WWidget implements WClient, 
         boolean hitRight = getListWidgets().get(getListWidgets().size() - 1).stream().anyMatch(widget ->
                 widget.getX() + widget.getWidth() + deltaX <= getStartAnchorX() + getVisibleWidth()
         );
+
+        if (hitRight && scrollKineticDelta < -2.5) {
+            scrollKineticDelta = -scrollKineticDelta;
+        }
+
+        if (hitLeft && scrollKineticDelta > 2.5) {
+            scrollKineticDelta = -scrollKineticDelta;
+        }
+
 
         if (deltaX > 0 && hitLeft) {
             scrollToStart();
@@ -284,5 +296,15 @@ public class WHorizontalScrollableContainer extends WWidget implements WClient, 
             }
         }
         return false;
+    }
+
+    @Override
+    public void tick() {
+        if (scrollKineticDelta > 0.05 || scrollKineticDelta < -0.05) {
+            scrollKineticDelta = (float) (scrollKineticDelta / 1.10);
+            scroll(scrollKineticDelta, 0);
+        } else {
+            scrollKineticDelta = 0;
+        }
     }
 }

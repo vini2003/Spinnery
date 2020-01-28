@@ -37,6 +37,8 @@ public class WidgetRegistry {
 		register(WTooltip.class);
 		register(WVerticalSlider.class);
 		register(WBar.class);
+		register(WVerticalScrollbar.class);
+		register(WHorizontalScrollbar.class);
 	}
 
 	public static void register(Class<? extends WWidget>... classes) {

@@ -120,5 +120,21 @@
 	"spinnery.widget.WBar": {
 		"background": "spinnery:textures/bar_background_dark.png",
 		"foreground": "spinnery:textures/bar_foreground_dark.png"
+	},
+	"spinnery.widget.WVerticalScrollbar": {
+		"scroller_top_left": "0xffffffff",
+		"scroller_bottom_right": "0xff373737",
+		"scroller_background": "0xffc6c6c6",
+		"scroll_line_top_left": "0xff1B1B1B",
+		"scroll_line_bottom_right": "0xff292929",
+		"scroll_line_background": "0xff6A6A6A"
+	},
+	"spinnery.widget.WHorizontalScrollbar": {
+		"scroller_top_left": "0xffffffff",
+		"scroller_bottom_right": "0xff373737",
+		"scroller_background": "0xffc6c6c6",
+		"scroll_line_top_left": "0xff1B1B1B",
+		"scroll_line_bottom_right": "0xff292929",
+		"scroll_line_background": "0xff6A6A6A"
 	}
 }
