@@ -5,41 +5,18 @@ import net.minecraft.item.Items;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import org.apache.commons.lang3.mutable.MutableFloat;
-import org.apache.commons.lang3.mutable.MutableInt;
 import spinnery.Spinnery;
 import spinnery.common.BaseContainer;
 import spinnery.common.BaseContainerScreen;
 import spinnery.common.BaseInventory;
-import spinnery.widget.WBar;
-import spinnery.widget.WButton;
-import spinnery.widget.WCollection;
-import spinnery.widget.WDropdown;
-import spinnery.widget.WDynamicText;
-import spinnery.widget.WHorizontalSlider;
-import spinnery.widget.WInterface;
-import spinnery.widget.WList;
-import spinnery.widget.WPosition;
-import spinnery.widget.WSize;
-import spinnery.widget.WSlot;
-import spinnery.widget.WStaticImage;
-import spinnery.widget.WStaticText;
-import spinnery.widget.WTabHolder;
-import spinnery.widget.WTexturedButton;
-import spinnery.widget.WToggle;
-import spinnery.widget.WType;
-import spinnery.widget.WWidget;
+import spinnery.widget.*;
 
 public class TestContainerScreen extends BaseContainerScreen<TestContainer> {
-	MutableInt mutableInt = new MutableInt(100);
-	MutableFloat mutableFloat = new MutableFloat(0);
-	boolean hitMaximum = false;
-
 	public TestContainerScreen(Text name, TestContainer linkedContainer, PlayerEntity player) {
 		super(name, linkedContainer, player);
 
 		// WInterface
-		WInterface mainInterface = new WInterface(WPosition.of(WType.FREE, 0, 0, 0), WSize.of(170, 210), linkedContainer);
+		WInterface mainInterface = new WInterface(WPosition.of(WType.FREE, 0, 0, 0), linkedContainer);
 
 		getHolder().add(mainInterface);
 
@@ -64,12 +41,22 @@ public class TestContainerScreen extends BaseContainerScreen<TestContainer> {
 
 
 		// WList
-		WList listA = new WList(WPosition.of(WType.ANCHORED, -70, 0, 1, mainInterface), WSize.of(64, 154), mainInterface);
-
-		WToggle toggleB = new WToggle(WPosition.of(WType.ANCHORED, 0, 0, 1, listA), WSize.of(18, 9), mainInterface);
-
-		listA.add(toggleB);
+		WVerticalList listA = new WVerticalList(WPosition.of(WType.ANCHORED, -70, 0, 1, mainInterface), WSize.of(64, 118), mainInterface);
+		listA.setScroller(true);
+		for (int i = 0; i < 60; i++) {
+			WToggle toggle = new WToggle(WPosition.of(WType.ANCHORED, 0, 0, 1, listA), WSize.of(18, 9), mainInterface);
+			WStaticText caption = new WStaticText(WPosition.of(WType.ANCHORED, 25, 0, 1, listA), mainInterface, new LiteralText("B" + i));
+			listA.add(toggle, caption);
+		}
 		listA.setLabel(new LiteralText("List"));
+
+		WHorizontalList listB = new WHorizontalList(WPosition.of(WType.ANCHORED, -160, 122, 10, mainInterface), WSize.of(154, 42), mainInterface);
+		listB.setScroller(true);
+		for (int i = 0; i < 60; i++) {
+			WToggle toggle = new WToggle(WPosition.of(WType.ANCHORED, 0, 0, 1, listB), WSize.of(18, 9), mainInterface);
+			WStaticText caption = new WStaticText(WPosition.of(WType.ANCHORED, 25, 0, 1, listB), mainInterface, new LiteralText("B" + i));
+			listB.add(toggle, caption);
+		}
 		// WList
 
 
@@ -125,12 +112,7 @@ public class TestContainerScreen extends BaseContainerScreen<TestContainer> {
 		// WTexturedButton
 
 
-		// WBar
-		WBar barA = new WBar(WPosition.of(WType.ANCHORED, 110, 0, 0, mainInterface), WSize.of(32, 64), mainInterface, mutableInt);
-
-		barA.setProgress(mutableFloat);
-
-		mainInterface.add(dropdownA, listA, buttonA, buttonB, staticTextA, horizontalSliderA, staticImageA, barA);
+		mainInterface.add(dropdownA, listA, listB, buttonA, buttonB, staticTextA, horizontalSliderA, staticImageA, tabHolderA, texturedButtonA);
 
 		mainInterface.setTheme("dark");
 
@@ -147,17 +129,5 @@ public class TestContainerScreen extends BaseContainerScreen<TestContainer> {
 				}
 			}
 		}
-	}
-
-	@Override
-	public void tick() {
-		if (mutableFloat.getValue() >= mutableInt.getValue()) {
-			hitMaximum = true;
-		}
-		if (mutableFloat.getValue() <= 0) {
-			hitMaximum = false;
-		}
-
-		mutableFloat.add(hitMaximum ? - 0.5 : + 0.5);
 	}
 }

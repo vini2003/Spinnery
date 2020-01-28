@@ -1,5 +1,8 @@
 package spinnery.widget;
 
+import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
+import spinnery.registry.NetworkRegistry;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -55,6 +58,10 @@ public class WInterfaceHolder implements WModifiableCollection {
 		for (WWidget widget : getAllWidgets()) {
 			if (widget instanceof WFocusedMouseListener && !widget.getFocus()) continue;
 			widget.onMouseClicked(mouseX, mouseY, mouseButton);
+			if (widget instanceof WSynced) {
+				ClientSidePacketRegistry.INSTANCE.sendToServer(NetworkRegistry.SYNCED_WIDGET_PACKET,
+						NetworkRegistry.createMouseClickPacket(((WSynced) widget), mouseX, mouseY, mouseButton));
+			}
 		}
 		return false;
 	}
@@ -63,6 +70,10 @@ public class WInterfaceHolder implements WModifiableCollection {
 		for (WWidget widget : getAllWidgets()) {
 			if (widget instanceof WFocusedMouseListener && !widget.getFocus()) continue;
 			widget.onMouseReleased(mouseX, mouseY, mouseButton);
+			if (widget instanceof WSynced) {
+				ClientSidePacketRegistry.INSTANCE.sendToServer(NetworkRegistry.SYNCED_WIDGET_PACKET,
+						NetworkRegistry.createMouseReleasePacket(((WSynced) widget), mouseX, mouseY, mouseButton));
+			}
 		}
 		return false;
 	}
@@ -72,6 +83,10 @@ public class WInterfaceHolder implements WModifiableCollection {
 		for (WWidget widget : getAllWidgets()) {
 			if (widget instanceof WFocusedMouseListener && !widget.getFocus()) continue;
 			widget.onMouseDragged(mouseX, mouseY, mouseButton, deltaX, deltaY);
+			if (widget instanceof WSynced) {
+				ClientSidePacketRegistry.INSTANCE.sendToServer(NetworkRegistry.SYNCED_WIDGET_PACKET,
+						NetworkRegistry.createMouseDragPacket(((WSynced) widget), mouseX, mouseY, mouseButton, deltaX, deltaY));
+			}
 		}
 		return false;
 	}
@@ -81,6 +96,10 @@ public class WInterfaceHolder implements WModifiableCollection {
 		for (WWidget widget : getAllWidgets()) {
 			if (widget instanceof WFocusedMouseListener && !widget.getFocus()) continue;
 			widget.onMouseScrolled(mouseX, mouseY, deltaY);
+			if (widget instanceof WSynced) {
+				ClientSidePacketRegistry.INSTANCE.sendToServer(NetworkRegistry.SYNCED_WIDGET_PACKET,
+						NetworkRegistry.createMouseScrollPacket(((WSynced) widget), mouseX, mouseY, deltaY));
+			}
 		}
 		return false;
 	}
@@ -90,6 +109,10 @@ public class WInterfaceHolder implements WModifiableCollection {
 			widget.updateFocus(mouseX, mouseY);
 			if (widget instanceof WFocusedMouseListener && !widget.getFocus()) continue;
 			widget.onMouseMoved(mouseX, mouseY);
+			if (widget instanceof WSynced) {
+				ClientSidePacketRegistry.INSTANCE.sendToServer(NetworkRegistry.SYNCED_WIDGET_PACKET,
+						NetworkRegistry.createFocusPacket(((WSynced) widget), widget.getFocus()));
+			}
 		}
 	}
 
@@ -98,6 +121,10 @@ public class WInterfaceHolder implements WModifiableCollection {
 		for (WWidget widget : getAllWidgets()) {
 			if (widget instanceof WFocusedKeyboardListener && !widget.getFocus()) continue;
 			widget.onKeyReleased(keyCode);
+			if (widget instanceof WSynced) {
+				ClientSidePacketRegistry.INSTANCE.sendToServer(NetworkRegistry.SYNCED_WIDGET_PACKET,
+						NetworkRegistry.createKeyReleasePacket(((WSynced) widget), character, keyCode, keyModifier));
+			}
 		}
 		return false;
 	}
@@ -106,6 +133,10 @@ public class WInterfaceHolder implements WModifiableCollection {
 		for (WWidget widget : getAllWidgets()) {
 			if (widget instanceof WFocusedKeyboardListener && !widget.getFocus()) continue;
 			widget.onKeyPressed(character, keyCode, keyModifier);
+			if (widget instanceof WSynced) {
+				ClientSidePacketRegistry.INSTANCE.sendToServer(NetworkRegistry.SYNCED_WIDGET_PACKET,
+						NetworkRegistry.createKeyPressPacket(((WSynced) widget), character, keyCode, keyModifier));
+			}
 		}
 		return false;
 	}
@@ -115,6 +146,10 @@ public class WInterfaceHolder implements WModifiableCollection {
 		for (WWidget widget : getAllWidgets()) {
 			if (widget instanceof WFocusedKeyboardListener && !widget.getFocus()) continue;
 			widget.onCharTyped(character);
+			if (widget instanceof WSynced) {
+				ClientSidePacketRegistry.INSTANCE.sendToServer(NetworkRegistry.SYNCED_WIDGET_PACKET,
+						NetworkRegistry.createCharTypePacket(((WSynced) widget), character, keyCode));
+			}
 		}
 		return false;
 	}

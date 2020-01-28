@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-public class WWidget implements Tickable {
+public class WWidget implements Tickable, Comparable<WWidget> {
 	protected WInterface linkedInterface;
 
 	protected WPosition position = WPosition.of(WType.FREE, 0, 0, 0);
@@ -354,10 +354,15 @@ public class WWidget implements Tickable {
 
 	@Environment(EnvType.CLIENT)
 	public boolean isWithinBounds(int positionX, int positionY) {
-		return positionX > getX()
-				&& positionX < getX() + getWidth()
-				&& positionY > getY()
-				&& positionY < getY() + getHeight();
+		return isWithinBounds(positionX, positionY, 0);
+	}
+
+	@Environment(EnvType.CLIENT)
+	public boolean isWithinBounds(int positionX, int positionY, int tolerance) {
+		return positionX + tolerance > getX()
+				&& positionX - tolerance < getX() + getWidth()
+				&& positionY + tolerance > getY()
+				&& positionY - tolerance < getY() + getHeight();
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -458,6 +463,11 @@ public class WWidget implements Tickable {
 	@Environment(EnvType.CLIENT)
 	public static Theme of(Map<String, String> rawTheme) {
 		return null;
+	}
+
+	@Override
+	public int compareTo(WWidget o) {
+		return Integer.compare(getZ(), o.getZ());
 	}
 
 	@Environment(EnvType.CLIENT)

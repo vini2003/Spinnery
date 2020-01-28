@@ -57,6 +57,24 @@ public class BaseRenderer {
 		RenderSystem.disableBlend();
 	}
 
+	public static void drawGradient(double startX, double startY, double endX, double endY, double z, WColor colorStart, WColor colorEnd) {
+		RenderSystem.disableTexture();
+		RenderSystem.enableBlend();
+		RenderSystem.disableAlphaTest();
+		RenderSystem.defaultBlendFunc();
+		RenderSystem.shadeModel(7425);
+		getBufferBuilder().begin(7, VertexFormats.POSITION_COLOR);
+		getBufferBuilder().vertex(endX, startY, z).color(colorStart.R, colorStart.G, colorStart.B, colorStart.A).next();
+		getBufferBuilder().vertex(startX, startY, z).color(colorStart.R, colorStart.G, colorStart.B, colorStart.A).next();
+		getBufferBuilder().vertex(startX, endY, z).color(colorEnd.R, colorEnd.G, colorEnd.B, colorEnd.A).next();
+		getBufferBuilder().vertex(endX, endY, z).color(colorEnd.R, colorEnd.G, colorEnd.B, colorEnd.A).next();
+		getTesselator().draw();
+		RenderSystem.shadeModel(7424);
+		RenderSystem.disableBlend();
+		RenderSystem.enableAlphaTest();
+		RenderSystem.enableTexture();
+	}
+
 	public static BufferBuilder getBufferBuilder() {
 		return getTesselator().getBuffer();
 	}
