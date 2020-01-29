@@ -215,7 +215,7 @@ public class BaseContainer extends Container implements Tickable {
 	@Override
 	public void setStackInSlot(int slot, ItemStack stack) {
 		for (WWidget widget : getHolder().getAllWidgets()) {
-			if (widget instanceof WSlot && ((WSlot) widget).getSlotNumber() == slot) {
+			if (widget instanceof WSlot && ((WSlot) widget).getSlotNumber() == slot && ((WSlot) widget).getInventoryNumber() == PLAYER_INVENTORY) {
 				((WSlot) widget).setStack(stack);
 			}
 		}
