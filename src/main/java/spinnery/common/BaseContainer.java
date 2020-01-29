@@ -186,14 +186,27 @@ public class BaseContainer extends Container implements Tickable {
 		return linkedInventories.get(inventoryNumber);
 	}
 
+	public Map<Integer, Map<Integer, ItemStack>> cachedInventories = new HashMap<>();
+
 	@Override
 	public void sendContentUpdates() {
 		for (WWidget widget : getHolder().getAllWidgets()) {
 			if (widget instanceof WSlot) {
-				for (ContainerListener listener : ((ContainerAccessorInterface) this).getListeners()) {
-					listener.onContainerSlotUpdate(this, ((WSlot) widget).getSlotNumber(), ((WSlot) widget).getStack());
-				}
+				WSlot slotA = ((WSlot) widget);
 
+				if (cachedInventories.get(slotA.getInventoryNumber()) != null && cachedInventories.get(slotA.getInventoryNumber()).get(slotA.getSlotNumber()) != null) {
+					if (slotA.getStack() != cachedInventories.get(slotA.getInventoryNumber()).get(slotA.getSlotNumber())) {
+						for (ContainerListener listener : ((ContainerAccessorInterface) this).getListeners()) {
+							listener.onContainerSlotUpdate(this, slotA.getSlotNumber(), slotA.getStack());
+						}
+					}
+
+					cachedInventories.get(slotA.getInventoryNumber()).put(slotA.getSlotNumber(), slotA.getStack());
+				} else {
+					cachedInventories.computeIfAbsent(slotA.getInventoryNumber(), value -> new HashMap<>());
+
+					cachedInventories.get(slotA.getInventoryNumber()).put(slotA.getSlotNumber(), slotA.getStack());
+				}
 			}
 		}
 	}
