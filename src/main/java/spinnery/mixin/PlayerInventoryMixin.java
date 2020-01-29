@@ -13,9 +13,6 @@ import spinnery.common.BaseContainer;
 
 @Mixin(PlayerInventory.class)
 public class PlayerInventoryMixin {
-
-	@Shadow @Final public PlayerEntity player;
-
 	@Inject(method = "insertStack(Lnet/minecraft/item/ItemStack;)Z", at = @At("RETURN"))
 	public void updateSpinneryContainer(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
 		PlayerInventory inventory = ((PlayerInventory) (Object) this);
@@ -26,7 +23,6 @@ public class PlayerInventoryMixin {
 			for (int i : container.linkedInventories.keySet()) {
 				container.linkedInventories.get(i).markDirty();
 			}
-			System.out.println("nani");
 		}
 	}
 

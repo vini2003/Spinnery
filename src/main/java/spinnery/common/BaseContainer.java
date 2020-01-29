@@ -1,6 +1,7 @@
 package spinnery.common;
 
 import com.mojang.datafixers.util.Pair;
+import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.container.Container;
 import net.minecraft.container.ContainerListener;
 import net.minecraft.container.CraftingContainer;
@@ -195,7 +196,7 @@ public class BaseContainer extends Container implements Tickable {
 				WSlot slotA = ((WSlot) widget);
 
 				if (cachedInventories.get(slotA.getInventoryNumber()) != null && cachedInventories.get(slotA.getInventoryNumber()).get(slotA.getSlotNumber()) != null) {
-					if (slotA.getStack() != cachedInventories.get(slotA.getInventoryNumber()).get(slotA.getSlotNumber())) {
+					if (slotA.getStack() != cachedInventories.get(slotA.getInventoryNumber()).get(slotA.getSlotNumber()) && slotA.getInventoryNumber() == PLAYER_INVENTORY) {
 						for (ContainerListener listener : ((ContainerAccessorInterface) this).getListeners()) {
 							listener.onContainerSlotUpdate(this, slotA.getSlotNumber(), slotA.getStack());
 						}

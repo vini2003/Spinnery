@@ -111,6 +111,7 @@ public class TestContainerScreen extends BaseContainerScreen<TestContainer> {
 		WTexturedButton texturedButtonA = new WTexturedButton(WPosition.of(WType.ANCHORED, 0, 0, 0, mainInterface), WSize.of(200, 20), mainInterface, new Identifier(Spinnery.MOD_ID, "textures/button_inactive.png"), new Identifier(Spinnery.MOD_ID, "textures/button_active.png"), new Identifier(Spinnery.MOD_ID, "textures/button_disabled.png"));
 		// WTexturedButton
 
+		mainInterface.add(new WSlot(WPosition.of(WType.FREE, 0, 0, 0), WSize.of(18, 18), mainInterface, 0, 1));
 
 		mainInterface.add(dropdownA, listA, listB, buttonA, buttonB, staticTextA, horizontalSliderA, staticImageA, tabHolderA, texturedButtonA);
 
