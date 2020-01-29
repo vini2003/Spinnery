@@ -15,12 +15,12 @@ public class InGameHudMixin implements InGameHudScreen.Acessor {
 	WInterfaceHolder interfaceHolder = new WInterfaceHolder();
 
 	@Inject(method = "<init>", at = @At("RETURN"))
-	public void onInitialize(MinecraftClient client, CallbackInfo ci) {
+	public void onInitialize(MinecraftClient client, CallbackInfo callback) {
 		InGameHudScreen.onInitialize(getInGameHud());
 	}
 
 	@Inject(method = "render", at = @At("RETURN"))
-	public void renderInterfaces(float tickDelta, CallbackInfo ci) {
+	public void renderInterfaces(float tickDelta, CallbackInfo callback) {
 		for (WInterface wInterface : getHolder().getInterfaces()) {
 			wInterface.draw();
 		}

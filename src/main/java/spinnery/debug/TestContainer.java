@@ -1,8 +1,11 @@
 package spinnery.debug;
 
+import net.minecraft.container.Slot;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.item.ItemStack;
 import spinnery.common.BaseContainer;
 import spinnery.widget.WInterface;
+import spinnery.widget.WSize;
 import spinnery.widget.WSlot;
 
 public class TestContainer extends BaseContainer {

@@ -16,7 +16,7 @@ public class TestContainerScreen extends BaseContainerScreen<TestContainer> {
 		super(name, linkedContainer, player);
 
 		// WInterface
-		WInterface mainInterface = new WInterface(WPosition.of(WType.FREE, 0, 0, 0), linkedContainer);
+		WInterface mainInterface = new WInterface(WPosition.of(WType.FREE, 0, 0, 0), WSize.of(170, 210), linkedContainer);
 
 		getHolder().add(mainInterface);
 

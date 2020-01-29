@@ -1,7 +1,10 @@
 package spinnery.common;
 
 import com.mojang.datafixers.util.Pair;
+import net.minecraft.container.Container;
+import net.minecraft.container.ContainerListener;
 import net.minecraft.container.CraftingContainer;
+import net.minecraft.container.Property;
 import net.minecraft.container.Slot;
 import net.minecraft.container.SlotActionType;
 import net.minecraft.entity.player.PlayerEntity;
@@ -13,14 +16,18 @@ import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeFinder;
 import net.minecraft.util.Tickable;
 import net.minecraft.world.World;
+import spinnery.mixin.ContainerAccessorMixin;
+import spinnery.util.ContainerAccessorInterface;
 import spinnery.util.StackUtilities;
 import spinnery.widget.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-public class BaseContainer extends CraftingContainer<Inventory> implements Tickable {
+public class BaseContainer extends Container implements Tickable {
 	public static final int PLAYER_INVENTORY = 0;
 
 	public Map<Integer, Inventory> linkedInventories = new HashMap<>();
@@ -180,6 +187,38 @@ public class BaseContainer extends CraftingContainer<Inventory> implements Ticka
 		return linkedInventories.get(inventoryNumber);
 	}
 
+	public Map<Integer, Map<Integer, ItemStack>> cachedInventories = new HashMap<>();
+
+	@Override
+	public void sendContentUpdates() {
+		for (WWidget widget : getHolder().getAllWidgets()) {
+			if (widget instanceof WSlot) {
+				WSlot slotA = ((WSlot) widget);
+
+				if (cachedInventories.get(slotA.getInventoryNumber()) != null && cachedInventories.get(slotA.getInventoryNumber()).get(slotA.getSlotNumber()) != null) {
+					if (slotA.getStack() != cachedInventories.get(slotA.getInventoryNumber()).get(slotA.getSlotNumber())) {
+						for (ContainerListener listener : ((ContainerAccessorInterface) this).getListeners()) {
+							listener.onContainerSlotUpdate(this, slotA.getSlotNumber(), slotA.getStack());
+						}
+					}
+
+					cachedInventories.get(slotA.getInventoryNumber()).put(slotA.getSlotNumber(), slotA.getStack());
+				} else {
+					cachedInventories.computeIfAbsent(slotA.getInventoryNumber(), value -> new HashMap<>());
+				}
+			}
+		}
+	}
+
+	@Override
+	public void setStackInSlot(int slot, ItemStack stack) {
+		for (WWidget widget : getHolder().getAllWidgets()) {
+			if (widget instanceof WSlot && ((WSlot) widget).getSlotNumber() == slot) {
+				((WSlot) widget).setStack(stack);
+			}
+		}
+	}
+
 	@Deprecated
 	@Override
 	public Slot addSlot(Slot slot) {
@@ -196,47 +235,6 @@ public class BaseContainer extends CraftingContainer<Inventory> implements Ticka
 	@Override
 	public boolean canUse(PlayerEntity entity) {
 		return true;
-	}
-
-	@Deprecated
-	@Override
-	public void populateRecipeFinder(RecipeFinder recipeFinder) {
-		return;
-	}
-
-	@Deprecated
-	@Override
-	public void clearCraftingSlots() {
-	}
-
-	@Deprecated
-	@Override
-	public boolean matches(Recipe<? super Inventory> recipe) {
-		return false;
-	}
-
-	@Deprecated
-	@Override
-	public int getCraftingResultSlotIndex() {
-		return -1;
-	}
-
-	@Deprecated
-	@Override
-	public int getCraftingWidth() {
-		return 0;
-	}
-
-	@Deprecated
-	@Override
-	public int getCraftingHeight() {
-		return 0;
-	}
-
-	@Deprecated
-	@Override
-	public int getCraftingSlotCount() {
-		return 0;
 	}
 
 	@Override
