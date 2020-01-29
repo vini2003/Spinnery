@@ -16,10 +16,10 @@ import spinnery.common.BaseContainer;
 public class ServerPlayerEntityMixin {
 
 	@Inject(method = "Lnet/minecraft/server/network/ServerPlayerEntity;onContainerSlotUpdate(Lnet/minecraft/container/Container;ILnet/minecraft/item/ItemStack;)V", at = @At("HEAD"), cancellable = true)
-	public void onContainerSlotUpdate(Container container, int slotId, ItemStack itemStack, CallbackInfo callback) {
+	public void onContainerSlotUpdate(Container container, int slotId, ItemStack itemStack, CallbackInfo ci) {
 		if (container instanceof BaseContainer) {
 			((ServerPlayerEntity) (Object) this).networkHandler.sendPacket(new ContainerSlotUpdateS2CPacket(container.syncId, slotId, itemStack));
-			callback.cancel();
+			ci.cancel();
 		}
 	}
 }

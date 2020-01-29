@@ -301,7 +301,7 @@ public class WVerticalScrollableContainer extends WWidget implements WClient, WM
     @Override
     public void tick() {
         if (scrollKineticDelta > 0.05 || scrollKineticDelta < -0.05) {
-            scrollKineticDelta = (float) (scrollKineticDelta / 1.10);
+            scrollKineticDelta = (float) (scrollKineticDelta / 1.25);
             scroll(0, scrollKineticDelta);
         } else {
             scrollKineticDelta = 0;
