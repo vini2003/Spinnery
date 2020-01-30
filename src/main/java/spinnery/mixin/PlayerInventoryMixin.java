@@ -13,8 +13,8 @@ import spinnery.common.BaseContainer;
 
 @Mixin(PlayerInventory.class)
 public class PlayerInventoryMixin {
-	@Inject(method = "insertStack(Lnet/minecraft/item/ItemStack;)Z", at = @At("RETURN"))
-	public void updateSpinneryContainer(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
+	@Inject(method = "Lnet/minecraft/entity/player/PlayerInventory;insertStack(ILnet/minecraft/item/ItemStack;)Z", at = @At("RETURN"))
+	public void updateSpinneryContainer(int slot, ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
 		PlayerInventory inventory = ((PlayerInventory) (Object) this);
 		PlayerEntity player = inventory.player;
 

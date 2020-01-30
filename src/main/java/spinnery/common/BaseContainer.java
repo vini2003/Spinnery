@@ -195,8 +195,12 @@ public class BaseContainer extends Container implements Tickable {
 			if (widget instanceof WSlot) {
 				WSlot slotA = ((WSlot) widget);
 
+
 				if (cachedInventories.get(slotA.getInventoryNumber()) != null && cachedInventories.get(slotA.getInventoryNumber()).get(slotA.getSlotNumber()) != null) {
-					if (slotA.getStack() != cachedInventories.get(slotA.getInventoryNumber()).get(slotA.getSlotNumber()) && slotA.getInventoryNumber() == PLAYER_INVENTORY) {
+					ItemStack stackA = slotA.getStack();
+					ItemStack stackB = cachedInventories.get(slotA.getInventoryNumber()).get(slotA.getSlotNumber());
+
+					if ((!stackA.isEmpty() || !stackB.isEmpty() && (stackA.getCount() != stackB.getCount() || !stackA.isItemEqual(stackB))) && slotA.getInventoryNumber() == PLAYER_INVENTORY) {
 						for (ContainerListener listener : ((ContainerAccessorInterface) this).getListeners()) {
 							listener.onContainerSlotUpdate(this, slotA.getSlotNumber(), slotA.getStack());
 						}
