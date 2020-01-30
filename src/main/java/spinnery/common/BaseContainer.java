@@ -1,6 +1,7 @@
 package spinnery.common;
 
 import com.mojang.datafixers.util.Pair;
+import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.container.Container;
 import net.minecraft.container.ContainerListener;
@@ -18,6 +19,7 @@ import net.minecraft.recipe.RecipeFinder;
 import net.minecraft.util.Tickable;
 import net.minecraft.world.World;
 import spinnery.mixin.ContainerAccessorMixin;
+import spinnery.registry.NetworkRegistry;
 import spinnery.util.ContainerAccessorInterface;
 import spinnery.util.StackUtilities;
 import spinnery.widget.*;
@@ -26,6 +28,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class BaseContainer extends Container implements Tickable {
 	public static final int PLAYER_INVENTORY = 0;
@@ -190,7 +193,7 @@ public class BaseContainer extends Container implements Tickable {
 	public Map<Integer, Map<Integer, ItemStack>> cachedInventories = new HashMap<>();
 
 	@Override
-	public void sendContentUpdates() {
+	public void onContentChanged(Inventory inventory) {
 		for (WWidget widget : getHolder().getAllWidgets()) {
 			if (widget instanceof WSlot) {
 				WSlot slotA = ((WSlot) widget);
@@ -201,14 +204,19 @@ public class BaseContainer extends Container implements Tickable {
 					ItemStack stackB = cachedInventories.get(slotA.getInventoryNumber()).get(slotA.getSlotNumber());
 
 					if ((!stackA.isEmpty() || !stackB.isEmpty() && (stackA.getCount() != stackB.getCount() || !stackA.isItemEqual(stackB))) && slotA.getInventoryNumber() == PLAYER_INVENTORY) {
-						for (ContainerListener listener : ((ContainerAccessorInterface) this).getListeners()) {
-							listener.onContainerSlotUpdate(this, slotA.getSlotNumber(), slotA.getStack());
-						}
+						ServerSidePacketRegistry.INSTANCE.sendToPlayer(this.getLinkedPlayerInventory().player, NetworkRegistry.SLOT_UPDATE_PACKET, NetworkRegistry.createSlotUpdatePacket(slotA.getSlotNumber(), slotA.getInventoryNumber(), slotA.getStack()));
 					}
 
 					cachedInventories.get(slotA.getInventoryNumber()).put(slotA.getSlotNumber(), slotA.getStack());
 				} else {
 					cachedInventories.computeIfAbsent(slotA.getInventoryNumber(), value -> new HashMap<>());
+
+					ItemStack stackA = slotA.getStack();
+					ItemStack stackB = Optional.ofNullable(cachedInventories.get(slotA.getInventoryNumber()).get(slotA.getSlotNumber())).orElse(ItemStack.EMPTY);
+
+					if ((!stackA.isEmpty() || !stackB.isEmpty() && (stackA.getCount() != stackB.getCount() || !stackA.isItemEqual(stackB))) && slotA.getInventoryNumber() == PLAYER_INVENTORY) {
+						ServerSidePacketRegistry.INSTANCE.sendToPlayer(this.getLinkedPlayerInventory().player, NetworkRegistry.SLOT_UPDATE_PACKET, NetworkRegistry.createSlotUpdatePacket(slotA.getSlotNumber(), slotA.getInventoryNumber(), slotA.getStack()));
+					}
 
 					cachedInventories.get(slotA.getInventoryNumber()).put(slotA.getSlotNumber(), slotA.getStack());
 				}

@@ -1,16 +1,23 @@
 package spinnery.registry;
 
 import io.netty.buffer.Unpooled;
+import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.container.SlotActionType;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.PacketByteBuf;
 import spinnery.common.BaseContainer;
+import spinnery.util.StackUtilities;
+import spinnery.widget.WSlot;
 import spinnery.widget.WSynced;
+import spinnery.widget.WWidget;
 
 public class NetworkRegistry {
 	public static final Identifier SLOT_CLICK_PACKET = new Identifier("spinnery", "slot_click");
+	public static final Identifier SLOT_UPDATE_PACKET = new Identifier("spinnery", "slot_update");
 	public static final Identifier SYNCED_WIDGET_PACKET = new Identifier("spinnery", "synced_widget");
 
 	public static PacketByteBuf createSlotClickPacket(int slotNumber, int inventoryNumber, int button, SlotActionType action) {
@@ -19,6 +26,14 @@ public class NetworkRegistry {
 		buffer.writeInt(inventoryNumber);
 		buffer.writeInt(button);
 		buffer.writeEnumConstant(action);
+		return buffer;
+	}
+
+	public static PacketByteBuf createSlotUpdatePacket(int slotNumber, int inventoryNumber, ItemStack stack) {
+		PacketByteBuf buffer = new PacketByteBuf(Unpooled.buffer());
+		buffer.writeInt(slotNumber);
+		buffer.writeInt(inventoryNumber);
+		buffer.writeCompoundTag(StackUtilities.write(stack));
 		return buffer;
 	}
 
@@ -139,6 +154,31 @@ public class NetworkRegistry {
 				}
 			});
 		});
+
+		ClientSidePacketRegistry.INSTANCE.register(SLOT_UPDATE_PACKET, (packetContext, packetByteBuffer) -> {
+			int slotNumber = packetByteBuffer.readInt();
+			int inventoryNumber = packetByteBuffer.readInt();
+			CompoundTag tag = packetByteBuffer.readCompoundTag();
+			ItemStack stack = StackUtilities.read(tag);
+
+			packetContext.getTaskQueue().execute(() -> {
+				if (MinecraftClient.getInstance().player.container instanceof BaseContainer) {
+					BaseContainer container = (BaseContainer) MinecraftClient.getInstance().player.container;
+
+					container.getInventory(inventoryNumber).setInvStack(slotNumber, stack);
+
+					for (WWidget widget : container.getHolder().getAllWidgets()) {
+						if (widget instanceof WSlot && ((WSlot) widget).getInventoryNumber() == inventoryNumber && ((WSlot) widget).getSlotNumber() == slotNumber) {
+							((WSlot) widget).setStack(container.getInventory(inventoryNumber).getInvStack(slotNumber));
+						}
+					}
+				}
+			});
+
+
+			}
+		);
+
 		ServerSidePacketRegistry.INSTANCE.register(SYNCED_WIDGET_PACKET, (packetContext, packetByteBuf) -> {
 			int widgetSyncId = packetByteBuf.readInt();
 			WSynced.Event event = packetByteBuf.readEnumConstant(WSynced.Event.class);

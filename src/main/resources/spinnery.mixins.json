@@ -4,8 +4,7 @@
 	"compatibilityLevel": "JAVA_8",
 	"mixins": [
 		"PlayerInventoryMixin",
-		"ContainerAccessorMixin",
-		"ServerPlayerEntityMixin"
+		"ContainerAccessorMixin"
 	],
 	"client": [
 		"InGameHudMixin"
