@@ -18,6 +18,7 @@ import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeFinder;
 import net.minecraft.util.Tickable;
 import net.minecraft.world.World;
+import spinnery.Spinnery;
 import spinnery.mixin.ContainerAccessorMixin;
 import spinnery.registry.NetworkRegistry;
 import spinnery.util.ContainerAccessorInterface;
@@ -79,6 +80,12 @@ public class BaseContainer extends Container implements Tickable {
 
 		ItemStack stackA = slotA.getStack();
 		ItemStack stackB = player.inventory.getCursorStack();
+
+		String debugString = new String();
+
+		if (Spinnery.IS_DEBUG) {
+			debugString += "?\nAction:\t" + action + "\n";
+		}
 
 		switch (action) {
 			case PICKUP: {
@@ -158,6 +165,7 @@ public class BaseContainer extends Container implements Tickable {
 								Pair<ItemStack, ItemStack> result = StackUtilities.clamp(stackA, stackC, slotA.getMaxCount(), slotB.getMaxCount());
 								stackA = result.getFirst();
 								slotB.setStack(result.getSecond());
+								debugString += "Slot B:\t" + slotB.getStack().toString() + ", " + slotB.getLinkedInventory().getClass().getSimpleName()  + "\n";
 								break;
 							}
 						}
@@ -166,8 +174,13 @@ public class BaseContainer extends Container implements Tickable {
 				break;
 			}
 		}
+
 		slotA.setStack(stackA);
 		((PlayerInventory) linkedInventories.get(PLAYER_INVENTORY)).setCursorStack(stackB);
+
+		if (Spinnery.IS_DEBUG) {
+			 System.out.println(debugString += "Slot A:\t" + slotA.getStack().toString() + ", " + slotA.getLinkedInventory().getClass().getSimpleName() + "\nCursor:\t" + ((PlayerInventory) linkedInventories.get(PLAYER_INVENTORY)).getCursorStack().toString() + ", " + PlayerInventory.class.getSimpleName());
+		}
 	}
 
 	public WInterfaceHolder getHolder() {
@@ -203,7 +216,7 @@ public class BaseContainer extends Container implements Tickable {
 					ItemStack stackA = slotA.getStack();
 					ItemStack stackB = cachedInventories.get(slotA.getInventoryNumber()).get(slotA.getSlotNumber());
 
-					if ((!stackA.isEmpty() || !stackB.isEmpty() && (stackA.getCount() != stackB.getCount() || !stackA.isItemEqual(stackB))) && slotA.getInventoryNumber() == PLAYER_INVENTORY) {
+					if ((!stackA.isEmpty() || !stackB.isEmpty() && (stackA.getCount() != stackB.getCount() || !stackA.isItemEqual(stackB)))) {
 						ServerSidePacketRegistry.INSTANCE.sendToPlayer(this.getLinkedPlayerInventory().player, NetworkRegistry.SLOT_UPDATE_PACKET, NetworkRegistry.createSlotUpdatePacket(slotA.getSlotNumber(), slotA.getInventoryNumber(), slotA.getStack()));
 					}
 
@@ -214,7 +227,7 @@ public class BaseContainer extends Container implements Tickable {
 					ItemStack stackA = slotA.getStack();
 					ItemStack stackB = Optional.ofNullable(cachedInventories.get(slotA.getInventoryNumber()).get(slotA.getSlotNumber())).orElse(ItemStack.EMPTY);
 
-					if ((!stackA.isEmpty() || !stackB.isEmpty() && (stackA.getCount() != stackB.getCount() || !stackA.isItemEqual(stackB))) && slotA.getInventoryNumber() == PLAYER_INVENTORY) {
+					if ((!stackA.isEmpty() || !stackB.isEmpty() && (stackA.getCount() != stackB.getCount() || !stackA.isItemEqual(stackB)))) {
 						ServerSidePacketRegistry.INSTANCE.sendToPlayer(this.getLinkedPlayerInventory().player, NetworkRegistry.SLOT_UPDATE_PACKET, NetworkRegistry.createSlotUpdatePacket(slotA.getSlotNumber(), slotA.getInventoryNumber(), slotA.getStack()));
 					}
 

@@ -9,6 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.PacketByteBuf;
+import spinnery.Spinnery;
 import spinnery.common.BaseContainer;
 import spinnery.util.StackUtilities;
 import spinnery.widget.WSlot;
@@ -148,6 +149,11 @@ public class NetworkRegistry {
 			int inventoryNumber = packetByteBuffer.readInt();
 			int button = packetByteBuffer.readInt();
 			SlotActionType action = packetByteBuffer.readEnumConstant(SlotActionType.class);
+
+			if (Spinnery.IS_DEBUG) {
+				//System.out.println("C2S\n" + "[" + SLOT_CLICK_PACKET + "]\n" + "Slot:\t" + slotNumber + "\nInventory:\t" + inventoryNumber + "\nButton\t" + button + "\nAction:\t" + action);
+			}
+
 			packetContext.getTaskQueue().execute(() -> {
 				if (packetContext.getPlayer().container instanceof BaseContainer) {
 					((BaseContainer) packetContext.getPlayer().container).onSlotClicked(slotNumber, inventoryNumber, button, action, packetContext.getPlayer());
@@ -160,6 +166,10 @@ public class NetworkRegistry {
 			int inventoryNumber = packetByteBuffer.readInt();
 			CompoundTag tag = packetByteBuffer.readCompoundTag();
 			ItemStack stack = StackUtilities.read(tag);
+
+			if (Spinnery.IS_DEBUG) {
+				//System.out.println("S2C\n" + "[" + SLOT_UPDATE_PACKET + "]\n" + "Slot:\t" + slotNumber + "\nInventory:\t" + inventoryNumber + "\nTag:\t" + tag.toString() + "\nAction:\t" + stack.toString());
+			}
 
 			packetContext.getTaskQueue().execute(() -> {
 				if (MinecraftClient.getInstance().player.container instanceof BaseContainer) {

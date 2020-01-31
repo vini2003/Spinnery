@@ -3,6 +3,7 @@ package spinnery.widget;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import spinnery.client.BaseRenderer;
+import spinnery.registry.ThemeRegistry;
 
 import java.util.Map;
 

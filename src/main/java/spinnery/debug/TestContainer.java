@@ -25,10 +25,16 @@ public class TestContainer extends BaseContainer {
 
 		WSlot.addPlayerInventory(mainInterface, PLAYER_INVENTORY);
 
-		BaseInventory inv = new BaseInventory(1);
+		BaseInventory inventory = new BaseInventory(6);
 
-		getInventories().put(1, inv);
-		mainInterface.add(new WSlot(mainInterface, 0, 1));
+		getInventories().put(1, inventory);
+
+		WSlot.addArray(mainInterface, 0, 1, 3, 2);
 		// WInterface
+	}
+
+	@Override
+	public void tick() {
+		System.out.println(getInventory(1));
 	}
 }

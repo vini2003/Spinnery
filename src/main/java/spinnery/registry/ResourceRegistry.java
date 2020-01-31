@@ -62,11 +62,11 @@ public class ResourceRegistry {
 							WWidget.Theme theme = (WWidget.Theme) widgetClass.getMethod("of", Map.class).invoke(widgetClass, data.get(key));
 							ThemeRegistry.register(name, widgetClass, theme);
 						} catch (InvocationTargetException | IllegalAccessException exception) {
-							Spinnery.logger.log(Level.ERROR, "[Spinnery] Could not invoke WWidget::of for {}!", widgetClass.getSimpleName());
+							Spinnery.LOGGER.log(Level.ERROR, "[Spinnery] Could not invoke WWidget::of for {}!", widgetClass.getSimpleName());
 						}
 					}
 				} catch (NoSuchMethodException exception) {
-					Spinnery.logger.log(Level.ERROR, "[Spinnery] Could not find WWidget::of for {}!", widgetClass.getSimpleName());
+					Spinnery.LOGGER.log(Level.ERROR, "[Spinnery] Could not find WWidget::of for {}!", widgetClass.getSimpleName());
 				}
 			}
 		}
@@ -92,10 +92,10 @@ public class ResourceRegistry {
 
 				});
 			} catch (NullPointerException exception) {
-				Spinnery.logger.log(Level.INFO, "[Spinnery] No custom themes found.");
+				Spinnery.LOGGER.log(Level.INFO, "[Spinnery] No custom themes found.");
 			}
 		} catch (IOException exception) {
-			Spinnery.logger.log(Level.INFO, "[Spinnery] No custom themes found.");
+			Spinnery.LOGGER.log(Level.INFO, "[Spinnery] No custom themes found.");
 		}
 	}
 }

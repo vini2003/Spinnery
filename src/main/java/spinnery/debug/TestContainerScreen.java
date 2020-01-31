@@ -16,7 +16,7 @@ public class TestContainerScreen extends BaseContainerScreen<TestContainer> {
 		super(name, linkedContainer, player);
 
 		// WInterface
-		WInterface mainInterface = new WInterface(WPosition.of(WType.FREE, 0, 0, 0), WSize.of(170, 210), linkedContainer);
+		WInterface mainInterface = new WInterface(WPosition.of(WType.FREE, 0, 0, 0), WSize.of(170, 170), linkedContainer);
 
 		getHolder().add(mainInterface);
 
@@ -50,7 +50,7 @@ public class TestContainerScreen extends BaseContainerScreen<TestContainer> {
 		}
 		listA.setLabel(new LiteralText("List"));
 
-		WHorizontalList listB = new WHorizontalList(WPosition.of(WType.ANCHORED, -160, 122, 10, mainInterface), WSize.of(154, 42), mainInterface);
+		WHorizontalList listB = new WHorizontalList(WPosition.of(WType.ANCHORED, -70, 122, 10, mainInterface), WSize.of(64, 42), mainInterface);
 		listB.setScroller(true);
 		for (int i = 0; i < 60; i++) {
 			WToggle toggle = new WToggle(WPosition.of(WType.ANCHORED, 0, 0, 1, listB), WSize.of(18, 9), mainInterface);
@@ -61,7 +61,7 @@ public class TestContainerScreen extends BaseContainerScreen<TestContainer> {
 
 
 		// WTabHolder
-		WTabHolder tabHolderA = new WTabHolder(WPosition.of(WType.ANCHORED, 0, 100, 1, mainInterface), WSize.of(170, 64), mainInterface);
+		WTabHolder tabHolderA = new WTabHolder(WPosition.of(WType.ANCHORED, 0, 174, 1, mainInterface), WSize.of(170, 48), mainInterface);
 
 		WTabHolder.WTab tabA = tabHolderA.addTab(Items.EMERALD, new LiteralText("Tab A"));
 		WTabHolder.WTab tabB = tabHolderA.addTab(Items.EMERALD, new LiteralText("Tab B"));
@@ -103,17 +103,25 @@ public class TestContainerScreen extends BaseContainerScreen<TestContainer> {
 
 
 		/// WStaticImage
-		WStaticImage staticImageA = new WStaticImage(WPosition.of(WType.ANCHORED, 8, 84, 3, mainInterface), WSize.of(32, 32), mainInterface, new Identifier(Spinnery.MOD_ID, "textures/kirby.png"));
+		WStaticImage staticImageA = new WStaticImage(WPosition.of(WType.ANCHORED, 80, 54, 3, mainInterface), WSize.of(32, 32), mainInterface, new Identifier(Spinnery.MOD_ID, "textures/kirby.png"));
 		// WStaticImage
 
 
 		// WTexturedButton
-		WTexturedButton texturedButtonA = new WTexturedButton(WPosition.of(WType.ANCHORED, 0, 0, 0, mainInterface), WSize.of(200, 20), mainInterface, new Identifier(Spinnery.MOD_ID, "textures/button_inactive.png"), new Identifier(Spinnery.MOD_ID, "textures/button_active.png"), new Identifier(Spinnery.MOD_ID, "textures/button_disabled.png"));
+		//WTexturedButton texturedButtonA = new WTexturedButton(WPosition.of(WType.ANCHORED, 0, 0, 0, mainInterface), WSize.of(200, 20), mainInterface, new Identifier(Spinnery.MOD_ID, "textures/button_inactive.png"), new Identifier(Spinnery.MOD_ID, "textures/button_active.png"), new Identifier(Spinnery.MOD_ID, "textures/button_disabled.png"));
 		// WTexturedButton
 
-		mainInterface.add(new WSlot(WPosition.of(WType.FREE, 0, 0, 0), WSize.of(18, 18), mainInterface, 0, 1));
 
-		mainInterface.add(dropdownA, listA, listB, buttonA, buttonB, staticTextA, horizontalSliderA, staticImageA, tabHolderA, texturedButtonA);
+
+		// WSlot Array
+		WSlot.addArray(WPosition.of(WType.ANCHORED, 80, 8, 0, mainInterface), WSize.of(18, 18), mainInterface, 0, 1, 3, 2);
+		// WSlot Array
+
+		mainInterface.add(dropdownA, listA, listB, buttonA, buttonB, staticTextA, horizontalSliderA, staticImageA, tabHolderA);
+
+		buttonA.setOnMouseClicked(() -> {
+			System.out.println(linkedContainer.getInventory(1));
+		});
 
 		mainInterface.setTheme("dark");
 

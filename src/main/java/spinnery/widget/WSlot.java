@@ -122,9 +122,15 @@ public class WSlot extends WWidget implements WClient, WServer, WFocusedMouseLis
 		PlayerEntity playerEntity = getInterface().getContainer().getLinkedPlayerInventory().player;
 
 		if (!ignoreOnRelease && mouseButton == 0 && !Screen.hasShiftDown() && !playerEntity.inventory.getCursorStack().isEmpty()) {
+			if (Spinnery.IS_DEBUG) {
+				System.out.println("\n" + SlotActionType.PICKUP + "\n");
+			}
 			getInterface().getContainer().onSlotClicked(getSlotNumber(), getInventoryNumber(), 0, SlotActionType.PICKUP, playerEntity);
 			ClientSidePacketRegistry.INSTANCE.sendToServer(NetworkRegistry.SLOT_CLICK_PACKET, NetworkRegistry.createSlotClickPacket(getSlotNumber(), getInventoryNumber(), 0, SlotActionType.PICKUP));
 		} else if (!ignoreOnRelease && mouseButton == 1 && !Screen.hasShiftDown() && !playerEntity.inventory.getCursorStack().isEmpty()) {
+			if (Spinnery.IS_DEBUG) {
+				System.out.println("\n" + SlotActionType.PICKUP + "\n");
+			}
 			getInterface().getContainer().onSlotClicked(getSlotNumber(), getInventoryNumber(), 1, SlotActionType.PICKUP, playerEntity);
 			ClientSidePacketRegistry.INSTANCE.sendToServer(NetworkRegistry.SLOT_CLICK_PACKET, NetworkRegistry.createSlotClickPacket(getSlotNumber(), getInventoryNumber(), 1, SlotActionType.PICKUP));
 		}
@@ -161,8 +167,9 @@ public class WSlot extends WWidget implements WClient, WServer, WFocusedMouseLis
 	@Environment(EnvType.CLIENT)
 	public void onMouseDragged(int mouseX, int mouseY, int mouseButton, double deltaX, double deltaY) {
 		if (Screen.hasShiftDown() && mouseButton == 0) {
-			PlayerEntity playerEntity = getInterface().getContainer().getLinkedPlayerInventory().player;
-
+			if (Spinnery.IS_DEBUG) {
+				System.out.println("\n" + SlotActionType.QUICK_MOVE + "\n");
+			}
 			getInterface().getContainer().onSlotClicked(getSlotNumber(), getInventoryNumber(), mouseButton, SlotActionType.QUICK_MOVE, MinecraftClient.getInstance().player);
 			ClientSidePacketRegistry.INSTANCE.sendToServer(NetworkRegistry.SLOT_CLICK_PACKET, NetworkRegistry.createSlotClickPacket(getSlotNumber(), getInventoryNumber(), mouseButton, SlotActionType.QUICK_MOVE));
 		}
@@ -225,7 +232,7 @@ public class WSlot extends WWidget implements WClient, WServer, WFocusedMouseLis
 		try {
 			return getLinkedInventory().getInvStack(getSlotNumber());
 		} catch (ArrayIndexOutOfBoundsException exception) {
-			Spinnery.logger.log(Level.ERROR, "Cannot access slot " + getSlotNumber() + ", as it does exist in the inventory!");
+			Spinnery.LOGGER.log(Level.ERROR, "Cannot access slot " + getSlotNumber() + ", as it does exist in the inventory!");
 			return ItemStack.EMPTY;
 		}
 	}
@@ -248,7 +255,7 @@ public class WSlot extends WWidget implements WClient, WServer, WFocusedMouseLis
 				setMaximumCount(stack.getMaxCount());
 			}
 		} catch (ArrayIndexOutOfBoundsException exception) {
-			Spinnery.logger.log(Level.ERROR, "Cannot access slot " + getSlotNumber() + ", as it does exist in the inventory!");
+			Spinnery.LOGGER.log(Level.ERROR, "Cannot access slot " + getSlotNumber() + ", as it does exist in the inventory!");
 		}
 	}
 
