@@ -79,6 +79,7 @@ public class StackUtilities {
 				int countB = stackB.getCount();
 
 				stackA = new ItemStack(itemB, Math.min(countB, availableA));
+				stackA.setTag(stackB.getTag());
 				stackB.decrement(Math.min(countB, availableA));
 			} else if (stackB.isEmpty() && !stackA.isEmpty()) {
 				int countB = stackB.getCount();
@@ -87,6 +88,7 @@ public class StackUtilities {
 				int countA = stackA.getCount();
 
 				stackB = new ItemStack(itemA, Math.min(countA, availableB));
+				stackB.setTag(stackA.getTag());
 				stackA.decrement(Math.min(countA, availableB));
 			}
 		}

@@ -89,7 +89,7 @@ public class BaseContainer extends Container implements Tickable {
 
 		switch (action) {
 			case PICKUP: {
-				if (!stackA.isItemEqual(stackB)) {
+				if (!stackA.isItemEqual(stackB) || stackA.getTag() != stackB.getTag()) {
 					if (button == 0) { // Swap with existing // LMB
 						if (slotA.isOverrideMaximumCount()) {
 							if (stackA.isEmpty()) {
@@ -119,6 +119,7 @@ public class BaseContainer extends Container implements Tickable {
 					} else if (button == 1 && !stackB.isEmpty()) { // Add to existing // RMB
 						if (stackA.isEmpty()) { // If existing is empty, initialize it // RMB
 							stackA = new ItemStack(stackB.getItem(), 1);
+							stackA.setTag(stackB.getTag());
 							stackB.decrement(1);
 						}
 					} else if (button == 1) { // Split existing // RMB
@@ -146,6 +147,7 @@ public class BaseContainer extends Container implements Tickable {
 			case CLONE: {
 				if (player.isCreative()) {
 					stackB = new ItemStack(stackA.getItem(), stackA.getMaxCount()); // Clone existing // MMB
+					stackB.setTag(stackA.getTag());
 				}
 				break;
 			}
@@ -161,7 +163,7 @@ public class BaseContainer extends Container implements Tickable {
 						ItemStack stackC = slotB.getStack();
 
 						if (!stackA.isEmpty() && (stackC.getCount() < slotB.getMaxCount() || stackC.getCount() < stackA.getMaxCount())) {
-							if (stackC.isEmpty() || stackA.isItemEqual(stackC)) {
+							if (stackC.isEmpty() || (stackA.isItemEqual(stackC) && stackA.getTag() == stackB.getTag())) {
 								Pair<ItemStack, ItemStack> result = StackUtilities.clamp(stackA, stackC, slotA.getMaxCount(), slotB.getMaxCount());
 								stackA = result.getFirst();
 								slotB.setStack(result.getSecond());
@@ -216,8 +218,8 @@ public class BaseContainer extends Container implements Tickable {
 					ItemStack stackA = slotA.getStack();
 					ItemStack stackB = cachedInventories.get(slotA.getInventoryNumber()).get(slotA.getSlotNumber());
 
-					if ((!stackA.isEmpty() || !stackB.isEmpty() && (stackA.getCount() != stackB.getCount() || !stackA.isItemEqual(stackB)))) {
-						ServerSidePacketRegistry.INSTANCE.sendToPlayer(this.getLinkedPlayerInventory().player, NetworkRegistry.SLOT_UPDATE_PACKET, NetworkRegistry.createSlotUpdatePacket(slotA.getSlotNumber(), slotA.getInventoryNumber(), slotA.getStack()));
+					if ((!stackA.isEmpty() || !stackB.isEmpty()) || (stackA.getCount() != stackB.getCount()) || !stackA.isItemEqual(stackB)) {
+						ServerSidePacketRegistry.INSTANCE.sendToPlayer(this.getLinkedPlayerInventory().player, NetworkRegistry.SLOT_UPDATE_PACKET, NetworkRegistry.createSlotUpdatePacket(syncId, slotA.getSlotNumber(), slotA.getInventoryNumber(), slotA.getStack()));
 					}
 
 					cachedInventories.get(slotA.getInventoryNumber()).put(slotA.getSlotNumber(), slotA.getStack());
@@ -227,8 +229,8 @@ public class BaseContainer extends Container implements Tickable {
 					ItemStack stackA = slotA.getStack();
 					ItemStack stackB = Optional.ofNullable(cachedInventories.get(slotA.getInventoryNumber()).get(slotA.getSlotNumber())).orElse(ItemStack.EMPTY);
 
-					if ((!stackA.isEmpty() || !stackB.isEmpty() && (stackA.getCount() != stackB.getCount() || !stackA.isItemEqual(stackB)))) {
-						ServerSidePacketRegistry.INSTANCE.sendToPlayer(this.getLinkedPlayerInventory().player, NetworkRegistry.SLOT_UPDATE_PACKET, NetworkRegistry.createSlotUpdatePacket(slotA.getSlotNumber(), slotA.getInventoryNumber(), slotA.getStack()));
+					if ((!stackA.isEmpty() || !stackB.isEmpty()) || (stackA.getCount() != stackB.getCount()) || !stackA.isItemEqual(stackB)) {
+						ServerSidePacketRegistry.INSTANCE.sendToPlayer(this.getLinkedPlayerInventory().player, NetworkRegistry.SLOT_UPDATE_PACKET, NetworkRegistry.createSlotUpdatePacket(syncId, slotA.getSlotNumber(), slotA.getInventoryNumber(), slotA.getStack()));
 					}
 
 					cachedInventories.get(slotA.getInventoryNumber()).put(slotA.getSlotNumber(), slotA.getStack());

@@ -30,8 +30,9 @@ public class NetworkRegistry {
 		return buffer;
 	}
 
-	public static PacketByteBuf createSlotUpdatePacket(int slotNumber, int inventoryNumber, ItemStack stack) {
+	public static PacketByteBuf createSlotUpdatePacket(int syncId, int slotNumber, int inventoryNumber, ItemStack stack) {
 		PacketByteBuf buffer = new PacketByteBuf(Unpooled.buffer());
+		buffer.writeInt(syncId);
 		buffer.writeInt(slotNumber);
 		buffer.writeInt(inventoryNumber);
 		buffer.writeCompoundTag(StackUtilities.write(stack));
@@ -162,6 +163,7 @@ public class NetworkRegistry {
 		});
 
 		ClientSidePacketRegistry.INSTANCE.register(SLOT_UPDATE_PACKET, (packetContext, packetByteBuffer) -> {
+			int syncId = packetByteBuffer.readInt();
 			int slotNumber = packetByteBuffer.readInt();
 			int inventoryNumber = packetByteBuffer.readInt();
 			CompoundTag tag = packetByteBuffer.readCompoundTag();
@@ -172,7 +174,7 @@ public class NetworkRegistry {
 			}
 
 			packetContext.getTaskQueue().execute(() -> {
-				if (MinecraftClient.getInstance().player.container instanceof BaseContainer) {
+				if (MinecraftClient.getInstance().player.container instanceof BaseContainer && MinecraftClient.getInstance().player.container.syncId == syncId) {
 					BaseContainer container = (BaseContainer) MinecraftClient.getInstance().player.container;
 
 					container.getInventory(inventoryNumber).setInvStack(slotNumber, stack);
