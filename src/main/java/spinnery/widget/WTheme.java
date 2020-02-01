@@ -30,29 +30,35 @@ public class WTheme {
 		return obj;
 	}
 
-	// Recursively populate objects with $ references
-	private static Map<String, JsonElement> lookupRefs(JsonObject object, Map<String, JsonElement> refs) {
-		Map<String, JsonElement> outObj = new HashMap<>();
-		for (String property : object.keySet()) {
-			JsonElement el = object.get(property);
-			if (el instanceof JsonObject) {
-				outObj.put(property, createObject(lookupRefs((JsonObject) el, refs)));
-				continue;
-			}
+	// Dereference $ vars
+	private static void processRefs(Map<String, JsonElement> style, Map<String, JsonElement> refs) {
+		for (String property : style.keySet()) {
+			JsonElement el = style.get(property);
 			String strValue = JanksonOps.INSTANCE.getStringValue(el).orElse("");
 			// Look up variables
 			if (strValue.startsWith("$") && !strValue.startsWith("$$")) {
-				outObj.put(property, refs.get(strValue));
+				style.put(property, refs.get(strValue));
 				continue;
 			}
 
 			if (strValue.startsWith("$$")) {
-				outObj.put(property, JanksonOps.INSTANCE.createString(strValue.substring(1)));
+				style.put(property, JanksonOps.INSTANCE.createString(strValue.substring(1)));
 			} else {
-				outObj.put(property, el);
+				style.put(property, el);
 			}
 		}
-		return outObj;
+	}
+
+	private static void flattenObject(Map<String, JsonElement> collector, String rootKey, JsonObject object) {
+		String prefix = rootKey == null ? "" : rootKey + ".";
+		for (String key : object.keySet()) {
+			JsonElement element = object.get(key);
+			if (element instanceof JsonObject) {
+				flattenObject(collector, key, (JsonObject) element);
+			} else {
+				collector.put(prefix + key, element);
+			}
+		}
 	}
 
 	public static WTheme of(JsonObject themeDef) throws SyntaxError {
@@ -80,9 +86,11 @@ public class WTheme {
 		Map<String, JsonObject> prototypes = new HashMap<>();
 		if (themePrototypes != null) {
 			for (String varKey : themePrototypes.keySet()) {
+				Map<String, JsonElement> flatProto = new HashMap<>();
 				JsonObject protoObj = themePrototypes.getObject(varKey);
 				if (protoObj == null) continue;
-				prototypes.put("$" + varKey, createObject(lookupRefs(protoObj, vars)));
+				flattenObject(flatProto, null, protoObj);
+				prototypes.put("$" + varKey, createObject(flatProto));
 			}
 		}
 
@@ -97,21 +105,20 @@ public class WTheme {
 			}
 
 			// Apply prototypes
-			if (widgetProps.get("$extend") != null) {
-				JsonElement protoArray = widgetProps.get("$extend");
-				if (protoArray instanceof JsonArray) {
-					((JsonArray) protoArray).forEach(el -> {
-						String protoName = JanksonOps.INSTANCE.getStringValue(el).orElse("");
-						JsonObject protoObj = prototypes.get(protoName);
-						if (!protoName.isEmpty() && protoObj != null) {
-							properties.putAll(protoObj);
-						}
-					});
+			JsonElement protoArray = widgetProps.remove("$extend");
+			if (protoArray instanceof JsonArray) {
+				for (JsonElement el : (JsonArray) protoArray) {
+					String protoName = JanksonOps.INSTANCE.getStringValue(el).orElse("");
+					JsonObject protoObj = prototypes.get(protoName);
+					if (!protoName.isEmpty() && protoObj != null) {
+						properties.putAll(protoObj);
+					}
 				}
 			}
 
 			// Apply actual values
-			properties.putAll(lookupRefs(widgetProps, vars));
+			flattenObject(properties, null, widgetProps);
+			processRefs(properties, vars);
 			styles.put(new Identifier(widgetId), new WStyle(properties));
 		}
 		return new WTheme(new Identifier(themeId), themeName, styles);

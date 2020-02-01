@@ -2,7 +2,6 @@ package spinnery.widget;
 
 import blue.endless.jankson.JsonArray;
 import blue.endless.jankson.JsonElement;
-import blue.endless.jankson.JsonObject;
 import io.github.cottonmc.jankson.JanksonOps;
 import net.minecraft.util.Identifier;
 import spinnery.Spinnery;
@@ -29,28 +28,8 @@ public class WStyle {
 	public WStyle() {
 	}
 
-	protected Map<String, JsonElement> getRootMap(String key) {
-		Map<String, JsonElement> pointer = properties;
-		String[] keys = key.split("\\.");
-		if (keys.length < 2) return pointer;
-		for (int i = 0; i < keys.length - 1; i++) {
-			Object nextPointer = pointer.get(keys[i]);
-			if (!(nextPointer instanceof JsonObject)) return pointer;
-			pointer = (JsonObject) nextPointer;
-		}
-		return pointer;
-	}
-
 	protected JsonElement getElement(String key) {
-		String[] keys = key.split("\\.");
-		String element = keys[keys.length - 1];
-		return getRootMap(key).get(element);
-	}
-
-	protected void putElement(String key, JsonElement value) {
-		String[] keys = key.split("\\.");
-		String element = keys[keys.length - 1];
-		getRootMap(key).put(element, value);
+		return properties.get(key);
 	}
 
 	// GETTERS
@@ -171,7 +150,7 @@ public class WStyle {
 	public <T> void override(String property, T value) {
 		Function<T, JsonElement> ser = getSerializer(value);
 		if (ser != null) {
-			putElement(property, ser.apply(value));
+			properties.put(property, ser.apply(value));
 		} else {
 			Spinnery.LOGGER.warn("Failed to override {}: themes do not support values of class {}",
 					property, value.getClass().getSimpleName());
