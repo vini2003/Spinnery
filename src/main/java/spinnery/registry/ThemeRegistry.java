@@ -14,14 +14,9 @@ import java.util.Map;
 @Environment(EnvType.CLIENT)
 public class ThemeRegistry {
     public static final Identifier DEFAULT_THEME = new Identifier("spinnery", "default");
-    public static final ResourceListener RESOURCE_LISTENER = new ResourceListener();
 
     private static WTheme defaultTheme;
     private static final Map<Identifier, WTheme> themes = new HashMap<>();
-
-    public static void initialize() {
-        ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(RESOURCE_LISTENER);
-    }
 
     public static void clear() {
         themes.clear();

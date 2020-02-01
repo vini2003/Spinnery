@@ -15,7 +15,7 @@ public class WHorizontalScrollbar extends WWidget implements WClient {
     public int getScrollerWidth() {
         double outerWidth = getWidth();
         double innerWidth = parent.getInnerWidth();
-        return (int) (outerWidth * (outerWidth / innerWidth));
+        return (int) (outerWidth * (outerWidth / (Math.max(innerWidth, outerWidth))));
     }
 
     public int getScrollerX() {
