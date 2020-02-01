@@ -40,7 +40,8 @@ public class WWidget implements Tickable, Comparable<WWidget> {
 	protected Runnable runnableOnMouseScrolled;
 	protected Runnable runnableOnAlign;
 
-	protected Identifier theme = DEFAULT_THEME;
+	protected Identifier theme;
+	protected WStyle styleOverrides;
 
 	protected Text label = new LiteralText("");
 
@@ -48,7 +49,14 @@ public class WWidget implements Tickable, Comparable<WWidget> {
 	}
 
 	public WStyle getStyle() {
-		return ThemeRegistry.getStyle(theme, WidgetRegistry.getId(getClass()));
+		if (styleOverrides == null) {
+			styleOverrides = ThemeRegistry.getStyle(getTheme(), WidgetRegistry.getId(getClass()));
+		}
+		return styleOverrides;
+	}
+
+	public <T> void overrideStyle(String property, T value) {
+		getStyle().override(property, value);
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -450,7 +458,9 @@ public class WWidget implements Tickable, Comparable<WWidget> {
 
 	@Environment(EnvType.CLIENT)
 	public Identifier getTheme() {
-		return theme;
+		if (theme != null) return theme;
+		if (linkedInterface.theme != null) return linkedInterface.theme;
+		return DEFAULT_THEME;
 	}
 
 	@Environment(EnvType.CLIENT)

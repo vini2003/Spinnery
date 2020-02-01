@@ -3,38 +3,57 @@ package spinnery.widget;
 import blue.endless.jankson.JsonArray;
 import blue.endless.jankson.JsonElement;
 import blue.endless.jankson.JsonObject;
-import com.google.common.collect.ImmutableMap;
 import io.github.cottonmc.jankson.JanksonOps;
 import net.minecraft.util.Identifier;
+import spinnery.Spinnery;
 
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.IntStream;
 
+@SuppressWarnings("unused")
 public class WStyle {
-	protected final ImmutableMap<String, JsonElement> properties;
+	protected final Map<String, JsonElement> properties = new HashMap<>();
 
 	public WStyle(Map<String, JsonElement> properties) {
-		this.properties = ImmutableMap.copyOf(properties);
+		this.properties.putAll(properties);
+	}
+
+	public WStyle(WStyle other) {
+		this.properties.putAll(other.properties);
 	}
 
 	public WStyle() {
-		this.properties = ImmutableMap.of();
+	}
+
+	protected Map<String, JsonElement> getRootMap(String key) {
+		Map<String, JsonElement> pointer = properties;
+		String[] keys = key.split("\\.");
+		if (keys.length < 2) return pointer;
+		for (int i = 0; i < keys.length - 1; i++) {
+			Object nextPointer = pointer.get(keys[i]);
+			if (!(nextPointer instanceof JsonObject)) return pointer;
+			pointer = (JsonObject) nextPointer;
+		}
+		return pointer;
 	}
 
 	protected JsonElement getElement(String key) {
 		String[] keys = key.split("\\.");
-		JsonElement pointer = properties.get(keys[0]);
-		if (pointer == null) {
-			return JanksonOps.INSTANCE.createString("");
-		}
-		if (keys.length > 1) {
-			for (int i = 1; i < keys.length; i++) {
-				if (!(pointer instanceof JsonObject)) return pointer;
-				pointer = ((JsonObject) pointer).get(keys[i]);
-			}
-		}
-		return pointer;
+		String element = keys[keys.length - 1];
+		return getRootMap(key).get(element);
 	}
+
+	protected void putElement(String key, JsonElement value) {
+		String[] keys = key.split("\\.");
+		String element = keys[keys.length - 1];
+		getRootMap(key).put(element, value);
+	}
+
+	// GETTERS
 
 	public String asString(String property) {
 		return JanksonOps.INSTANCE.getStringValue(getElement(property)).orElse("");
@@ -110,5 +129,52 @@ public class WStyle {
 
 	public Identifier asIdentifier(String property) {
 		return new Identifier(asString(property));
+	}
+
+	// SETTERS
+
+	protected static Map<Class<?>, Function<?, JsonElement>> jsonSerializers = new HashMap<>();
+	protected static <T> void registerSerializer(Class<T> vClass, Function<T, JsonElement> serializer) {
+		jsonSerializers.put(vClass, serializer);
+	}
+	@SuppressWarnings("unchecked")
+	protected static <T> Function<T, JsonElement> getSerializer(T value) {
+		for (Class<?> serClass : jsonSerializers.keySet()) {
+			if (serClass.isAssignableFrom(value.getClass())) {
+				return (Function<T, JsonElement>) jsonSerializers.get(serClass);
+			}
+		}
+		return null;
+	}
+	static {
+		registerSerializer(Number.class, JanksonOps.INSTANCE::createNumeric);
+		registerSerializer(String.class, JanksonOps.INSTANCE::createString);
+		registerSerializer(Boolean.class, JanksonOps.INSTANCE::createBoolean);
+		registerSerializer(WPosition.class, v -> JanksonOps.INSTANCE.createIntList(IntStream.of(v.rawX, v.rawY, v.rawZ)));
+		registerSerializer(WSize.class, v -> {
+			int[] values = new int[4];
+			for (int i : v.sizes.keySet()) {
+				if (i == 0) {
+					values[0] = v.getX(0);
+					values[1] = v.getY(0);
+				}
+				if (i == 1) {
+					values[2] = v.getX(1);
+					values[3] = v.getY(1);
+				}
+			}
+			return JanksonOps.INSTANCE.createIntList(IntStream.of(values).filter(Objects::nonNull));
+		});
+		registerSerializer(WColor.class, v -> JanksonOps.INSTANCE.createLong(v.ARGB));
+	}
+
+	public <T> void override(String property, T value) {
+		Function<T, JsonElement> ser = getSerializer(value);
+		if (ser != null) {
+			putElement(property, ser.apply(value));
+		} else {
+			Spinnery.LOGGER.warn("Failed to override {}: themes do not support values of class {}",
+					property, value.getClass().getSimpleName());
+		}
 	}
 }
