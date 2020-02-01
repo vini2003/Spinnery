@@ -13,7 +13,7 @@ import java.util.Set;
 public class WVerticalScrollableContainer extends WWidget implements WClient, WModifiableCollection, WVerticalScrollable {
     public List<List<WWidget>> listWidgets = new ArrayList<>();
 
-    protected WVerticalScrollbar wScrollbar;
+    protected WVerticalScrollbar scrollbar;
 
     protected float scrollKineticDelta = 0;
 
@@ -22,9 +22,9 @@ public class WVerticalScrollableContainer extends WWidget implements WClient, WM
         setPosition(position);
         setSize(size);
 
-        wScrollbar = new WVerticalScrollbar(linkedInterface, this);
-        wScrollbar.setHidden(true);
-        linkedInterface.add(wScrollbar);
+        scrollbar = new WVerticalScrollbar(linkedInterface, this);
+        scrollbar.setHidden(true);
+        linkedInterface.add(scrollbar);
         updateScrollbar();
     }
 
@@ -33,8 +33,8 @@ public class WVerticalScrollableContainer extends WWidget implements WClient, WM
         int scrollBarHeight = getHeight();
         int scrollBarX = getX() + getWidth() - scrollBarWidth;
         int scrollBarY = getY();
-        wScrollbar.setPosition(WPosition.of(WType.FREE, scrollBarX, scrollBarY, getZ()));
-        wScrollbar.setSize(WSize.of(scrollBarWidth, scrollBarHeight));
+        scrollbar.setPosition(WPosition.of(WType.FREE, scrollBarX, scrollBarY, getZ()));
+        scrollbar.setSize(WSize.of(scrollBarWidth, scrollBarHeight));
     }
 
     @Override
@@ -115,11 +115,11 @@ public class WVerticalScrollableContainer extends WWidget implements WClient, WM
     }
 
     public boolean hasScrollbar() {
-        return !wScrollbar.isHidden();
+        return !scrollbar.isHidden();
     }
 
     public void setScrollbarVisible(boolean visible) {
-        wScrollbar.setHidden(!visible);
+        scrollbar.setHidden(!visible);
     }
 
     @Override
@@ -135,7 +135,7 @@ public class WVerticalScrollableContainer extends WWidget implements WClient, WM
 
     @Override
     public WSize getVisibleSize() {
-        return WSize.of(getWidth() - (!wScrollbar.isHidden() ? wScrollbar.getWidth() : 0), getHeight());
+        return WSize.of(getWidth() - (!scrollbar.isHidden() ? scrollbar.getWidth() : 0), getHeight());
     }
 
     @Override
@@ -231,10 +231,7 @@ public class WVerticalScrollableContainer extends WWidget implements WClient, WM
 
         GL11.glDisable(GL11.GL_SCISSOR_TEST);
 
-        wScrollbar.draw();
-
-        //BaseRenderer.drawRectangle(getX() + 4, getStartAnchorY() - getStartOffset(), 100, getInnerWidth(), getInnerHeight(), WColor.of("0x4000ff00"));
-        //BaseRenderer.drawRectangle(getX() + 4, getStartAnchorY(), 101, getVisibleWidth(), getVisibleHeight(), WColor.of("0x80ff0000"));
+        scrollbar.draw();
     }
 
     public void scrollToStart() {

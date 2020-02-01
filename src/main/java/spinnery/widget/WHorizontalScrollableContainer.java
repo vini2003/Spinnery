@@ -13,7 +13,7 @@ import java.util.Set;
 public class WHorizontalScrollableContainer extends WWidget implements WClient, WModifiableCollection, WHorizontalScrollable {
     public List<List<WWidget>> listWidgets = new ArrayList<>();
 
-    protected WHorizontalScrollbar wScrollbar;
+    protected WHorizontalScrollbar scrollbar;
 
     protected float scrollKineticDelta = 0;
 
@@ -22,9 +22,9 @@ public class WHorizontalScrollableContainer extends WWidget implements WClient, 
         setPosition(position);
         setSize(size);
 
-        wScrollbar = new WHorizontalScrollbar(linkedInterface, this);
-        wScrollbar.setHidden(true);
-        linkedInterface.add(wScrollbar);
+        scrollbar = new WHorizontalScrollbar(linkedInterface, this);
+        scrollbar.setHidden(true);
+        linkedInterface.add(scrollbar);
         updateScrollbar();
     }
 
@@ -33,8 +33,8 @@ public class WHorizontalScrollableContainer extends WWidget implements WClient, 
         int scrollBarHeight = 6;
         int scrollBarX = getX();
         int scrollBarY = getY() + getHeight() - scrollBarHeight;
-        wScrollbar.setPosition(WPosition.of(WType.FREE, scrollBarX, scrollBarY, getZ() + 1));
-        wScrollbar.setSize(WSize.of(scrollBarWidth, scrollBarHeight));
+        scrollbar.setPosition(WPosition.of(WType.FREE, scrollBarX, scrollBarY, getZ() + 1));
+        scrollbar.setSize(WSize.of(scrollBarWidth, scrollBarHeight));
     }
 
     @Override
@@ -116,11 +116,11 @@ public class WHorizontalScrollableContainer extends WWidget implements WClient, 
     }
 
     public boolean hasScrollbar() {
-        return !wScrollbar.isHidden();
+        return !scrollbar.isHidden();
     }
 
     public void setScrollbarVisible(boolean visible) {
-        wScrollbar.setHidden(!visible);
+        scrollbar.setHidden(!visible);
     }
 
     @Override
@@ -136,7 +136,7 @@ public class WHorizontalScrollableContainer extends WWidget implements WClient, 
 
     @Override
     public WSize getVisibleSize() {
-        return WSize.of(getWidth(), getHeight() - (!wScrollbar.isHidden() ? wScrollbar.getHeight() : 0));
+        return WSize.of(getWidth(), getHeight() - (!scrollbar.isHidden() ? scrollbar.getHeight() : 0));
     }
 
     @Override
@@ -232,10 +232,8 @@ public class WHorizontalScrollableContainer extends WWidget implements WClient, 
 
         GL11.glDisable(GL11.GL_SCISSOR_TEST);
 
-        wScrollbar.draw();
+        scrollbar.draw();
 
-        //BaseRenderer.drawRectangle(getX() + 4, getStartAnchorY() - getStartOffset(), 100, getInnerWidth(), getInnerHeight(), WColor.of("0x4000ff00"));
-        //BaseRenderer.drawRectangle(getX() + 4, getStartAnchorY(), 101, getVisibleWidth(), getVisibleHeight(), WColor.of("0x80ff0000"));
     }
 
     public void scrollToStart() {
@@ -245,7 +243,7 @@ public class WHorizontalScrollableContainer extends WWidget implements WClient, 
             int y = getY();
             for (WWidget widgetB : widgetA) {
                 widgetB.setX(x);
-                widgetB.setY(y);
+                widgetB.setY(y + 4);
                 y += widgetB.getHeight() + 2;
             }
             x += widgetA.get(0).getWidth() + 2;
@@ -259,7 +257,7 @@ public class WHorizontalScrollableContainer extends WWidget implements WClient, 
             int y = getY();
             for (WWidget widgetB : widgetA) {
                 widgetB.setX(x);
-                widgetB.setY(y);
+                widgetB.setY(y + 4);
                 y += widgetB.getHeight() + 2;
             }
             x += widgetA.get(0).getWidth() + 2;
