@@ -14,6 +14,10 @@ public class WDraggableContainer extends WWidget implements WClient, WModifiable
         WVerticalScrollable, WHorizontalScrollable {
     private List<WWidget> widgets = new ArrayList<>();
 
+    protected boolean dragging = false;
+    protected float scrollKineticDeltaX = 0;
+    protected float scrollKineticDeltaY = 0;
+
     public WDraggableContainer(WPosition position, WSize size, WInterface linkedInterface) {
         setPosition(position);
         setSize(size);
@@ -76,8 +80,28 @@ public class WDraggableContainer extends WWidget implements WClient, WModifiable
     }
 
     @Override
-    public void onMouseDragged(int mouseX, int mouseY, int mouseButton, double deltaX, double deltaY) {
+    public void onMouseClicked(int mouseX, int mouseY, int mouseButton) {
         if (mouseButton == 0 && isWithinBounds(mouseX, mouseY)) {
+            dragging = true;
+        }
+    }
+
+    @Override
+    public void onMouseReleased(double mouseX, double mouseY, int mouseButton) {
+        dragging = false;
+    }
+
+    @Override
+    public void onMouseDragged(int mouseX, int mouseY, int mouseButton, double deltaX, double deltaY) {
+        if (mouseButton == 0 && dragging) {
+            scrollKineticDeltaX += (float) deltaX;
+            scrollKineticDeltaY += (float) deltaY;
+            if (Math.abs(scrollKineticDeltaX) > 5) {
+                scrollKineticDeltaX = (scrollKineticDeltaX / Math.abs(scrollKineticDeltaX)) * 5F;
+            }
+            if (Math.abs(scrollKineticDeltaY) > 5) {
+                scrollKineticDeltaY = (scrollKineticDeltaY / Math.abs(scrollKineticDeltaY)) * 5F;
+            }
             scroll(deltaX, deltaY);
         }
         super.onMouseDragged(mouseX, mouseY, mouseButton, deltaX, deltaY);
@@ -183,5 +207,17 @@ public class WDraggableContainer extends WWidget implements WClient, WModifiable
     @Override
     public List<WWidget> getWidgets() {
         return widgets;
+    }
+
+    @Override
+    public void tick() {
+        if (scrollKineticDeltaX > 0.05 || scrollKineticDeltaX < -0.05 || scrollKineticDeltaY > 0.05 || scrollKineticDeltaY < -0.05) {
+            scrollKineticDeltaX = (float) (scrollKineticDeltaX / 1.50);
+            scrollKineticDeltaY = (float) (scrollKineticDeltaY / 1.50);
+            scroll(scrollKineticDeltaX, scrollKineticDeltaY);
+        } else {
+            scrollKineticDeltaX = 0;
+            scrollKineticDeltaY = 0;
+        }
     }
 }
