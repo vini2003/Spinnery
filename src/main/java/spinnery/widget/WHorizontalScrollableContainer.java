@@ -59,11 +59,11 @@ public class WHorizontalScrollableContainer extends WWidget implements WClient, 
         );
 
         if (hitRight && scrollKineticDelta < -2.5) {
-            scrollKineticDelta = -scrollKineticDelta;
+            scrollKineticDelta = 0;
         }
 
         if (hitLeft && scrollKineticDelta > 2.5) {
-            scrollKineticDelta = -scrollKineticDelta;
+            scrollKineticDelta = 0;
         }
 
 

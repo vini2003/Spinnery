@@ -60,11 +60,11 @@ public class WVerticalScrollableContainer extends WWidget implements WClient, WM
         );
 
         if (hitBottom && scrollKineticDelta < -2.5) {
-            scrollKineticDelta = -scrollKineticDelta;
+            scrollKineticDelta = 0;
         }
 
         if (hitTop && scrollKineticDelta > 2.5) {
-            scrollKineticDelta = -scrollKineticDelta;
+            scrollKineticDelta = 0;
         }
 
         if (deltaY > 0 && hitTop) {
