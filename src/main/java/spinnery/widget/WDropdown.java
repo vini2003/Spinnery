@@ -8,7 +8,9 @@ import spinnery.client.BaseRenderer;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 @Environment(EnvType.CLIENT)
 public class WDropdown extends WWidget implements WClient, WModifiableCollection, WFocusedMouseListener {
@@ -80,8 +82,8 @@ public class WDropdown extends WWidget implements WClient, WModifiableCollection
 	}
 
 	@Override
-	public List<WWidget> getWidgets() {
-		List<WWidget> widgets = new ArrayList<>();
+	public Set<WWidget> getWidgets() {
+		Set<WWidget> widgets = new LinkedHashSet<>();
 		for (List<WWidget> widgetA : getDropdownWidgets()) {
 			widgets.addAll(widgetA);
 		}

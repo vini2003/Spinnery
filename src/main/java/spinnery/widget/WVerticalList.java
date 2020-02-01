@@ -5,7 +5,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.text.Text;
 import spinnery.client.BaseRenderer;
 
-import java.util.List;
+import java.util.Set;
 
 @Environment(EnvType.CLIENT)
 public class WVerticalList extends WWidget implements WClient, WModifiableCollection {
@@ -24,12 +24,12 @@ public class WVerticalList extends WWidget implements WClient, WModifiableCollec
 	}
 
 	@Override
-	public List<WWidget> getWidgets() {
+	public Set<WWidget> getWidgets() {
 		return container.getWidgets();
 	}
 
 	@Override
-	public List<WWidget> getAllWidgets() {
+	public Set<WWidget> getAllWidgets() {
 		return container.getAllWidgets();
 	}
 

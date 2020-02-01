@@ -2,11 +2,7 @@ package spinnery.common;
 
 import com.mojang.datafixers.util.Pair;
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
-import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.container.Container;
-import net.minecraft.container.ContainerListener;
-import net.minecraft.container.CraftingContainer;
-import net.minecraft.container.Property;
 import net.minecraft.container.Slot;
 import net.minecraft.container.SlotActionType;
 import net.minecraft.entity.player.PlayerEntity;
@@ -14,22 +10,17 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.recipe.Recipe;
-import net.minecraft.recipe.RecipeFinder;
 import net.minecraft.util.Tickable;
 import net.minecraft.world.World;
 import spinnery.Spinnery;
-import spinnery.mixin.ContainerAccessorMixin;
 import spinnery.registry.NetworkRegistry;
-import spinnery.util.ContainerAccessorInterface;
 import spinnery.util.StackUtilities;
 import spinnery.widget.*;
 
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 public class BaseContainer extends Container implements Tickable {
 	public static final int PLAYER_INVENTORY = 0;
@@ -50,7 +41,7 @@ public class BaseContainer extends Container implements Tickable {
 	}
 
 	public void onInterfaceEvent(int widgetSyncId, WSynced.Event event, CompoundTag payload) {
-		List<WWidget> checkWidgets = getHolder().getAllWidgets();
+		Set<WWidget> checkWidgets = getHolder().getAllWidgets();
 		for (WWidget widget : checkWidgets) {
 			if (!(widget instanceof WSynced)) continue;
 			if (((WSynced) widget).getSyncId() == widgetSyncId) {
@@ -63,13 +54,8 @@ public class BaseContainer extends Container implements Tickable {
 	public void onSlotClicked(int slotNumber, int inventoryNumber, int button, SlotActionType action, PlayerEntity player) {
 		WSlot slotA = null;
 
-		List<WWidget> checkWidgets = getHolder().getWidgets();
-
-		for (int i = 0; i < checkWidgets.size(); ++i) {
-			WWidget widget = checkWidgets.get(i);
-			if (widget instanceof WCollection) {
-				checkWidgets.addAll(((WCollection) widget).getWidgets());
-			} else if (widget instanceof WSlot && ((WSlot) widget).getSlotNumber() == slotNumber && ((WSlot) widget).getInventoryNumber() == inventoryNumber) {
+		for (WWidget widget : getHolder().getAllWidgets()) {
+			if (widget instanceof WSlot && ((WSlot) widget).getSlotNumber() == slotNumber && ((WSlot) widget).getInventoryNumber() == inventoryNumber) {
 				slotA = (WSlot) widget;
 			}
 		}
@@ -152,23 +138,19 @@ public class BaseContainer extends Container implements Tickable {
 				break;
 			}
 			case QUICK_MOVE: {
-				List<WWidget> widgets = getHolder().getWidgets();
+				for (WWidget widget : getHolder().getAllWidgets()) {
+						if (widget instanceof WSlot && ((WSlot) widget).getLinkedInventory() != slotA.getLinkedInventory()) {
+							WSlot slotB = ((WSlot) widget);
+							ItemStack stackC = slotB.getStack();
 
-				for (int i = 0; i < widgets.size(); ++i) {
-					WWidget widget = widgets.get(i);
-					if (widget instanceof WCollection) {
-						widgets.addAll(((WCollection) widget).getWidgets());
-					} else if (widget instanceof WSlot && ((WSlot) widget).getLinkedInventory() != slotA.getLinkedInventory()) {
-						WSlot slotB = ((WSlot) widget);
-						ItemStack stackC = slotB.getStack();
+							if (!stackA.isEmpty() && (stackC.getCount() < slotB.getMaxCount() || stackC.getCount() < stackA.getMaxCount())) {
+								if (stackC.isEmpty() || (stackA.isItemEqual(stackC) && stackA.getTag() == stackB.getTag())) {
+									Pair<ItemStack, ItemStack> result = StackUtilities.clamp(stackA, stackC, slotA.getMaxCount(), slotB.getMaxCount());
+									stackA = result.getFirst();
+									slotB.setStack(result.getSecond());
+									debugString += "Slot B:\t" + slotB.getStack().toString() + ", " + slotB.getLinkedInventory().getClass().getSimpleName()  + "\n";
+									break;
 
-						if (!stackA.isEmpty() && (stackC.getCount() < slotB.getMaxCount() || stackC.getCount() < stackA.getMaxCount())) {
-							if (stackC.isEmpty() || (stackA.isItemEqual(stackC) && stackA.getTag() == stackB.getTag())) {
-								Pair<ItemStack, ItemStack> result = StackUtilities.clamp(stackA, stackC, slotA.getMaxCount(), slotB.getMaxCount());
-								stackA = result.getFirst();
-								slotB.setStack(result.getSecond());
-								debugString += "Slot B:\t" + slotB.getStack().toString() + ", " + slotB.getLinkedInventory().getClass().getSimpleName()  + "\n";
-								break;
 							}
 						}
 					}

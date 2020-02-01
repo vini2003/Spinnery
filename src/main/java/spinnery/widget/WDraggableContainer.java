@@ -7,12 +7,13 @@ import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Environment(EnvType.CLIENT)
 public class WDraggableContainer extends WWidget implements WClient, WModifiableCollection,
         WVerticalScrollable, WHorizontalScrollable {
-    private List<WWidget> widgets = new ArrayList<>();
+    private Set<WWidget> widgets = new LinkedHashSet<>();
 
     protected boolean dragging = false;
     protected float scrollKineticDeltaX = 0;
@@ -205,7 +206,7 @@ public class WDraggableContainer extends WWidget implements WClient, WModifiable
     }
 
     @Override
-    public List<WWidget> getWidgets() {
+    public Set<WWidget> getWidgets() {
         return widgets;
     }
 

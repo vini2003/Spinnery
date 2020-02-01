@@ -4,10 +4,11 @@ import spinnery.client.BaseRenderer;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 public class WTooltip extends WWidget implements WModifiableCollection {
-    private List<WWidget> widgets = new ArrayList<>();
+    private Set<WWidget> widgets = new LinkedHashSet<>();
 
     public WTooltip(WPosition position, WSize size, WInterface linkedInterface) {
         setPosition(position);
@@ -65,7 +66,7 @@ public class WTooltip extends WWidget implements WModifiableCollection {
     }
 
     @Override
-    public List<WWidget> getWidgets() {
+    public Set<WWidget> getWidgets() {
         return widgets;
     }
 }

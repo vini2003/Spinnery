@@ -1,13 +1,14 @@
 package spinnery.widget;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 public interface WCollection {
-	List<WWidget> getWidgets();
+	Set<WWidget> getWidgets();
 
-	default List<WWidget> getAllWidgets() {
-		List<WWidget> allWidgets = new ArrayList<>(getWidgets());
+	default Set<WWidget> getAllWidgets() {
+		Set<WWidget> allWidgets = new LinkedHashSet<>(getWidgets());
 		for (WWidget widget : getWidgets()) {
 			if (widget instanceof WCollection) {
 				allWidgets.addAll(((WCollection) widget).getAllWidgets());

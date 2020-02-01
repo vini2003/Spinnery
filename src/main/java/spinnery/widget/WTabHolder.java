@@ -8,8 +8,10 @@ import spinnery.client.BaseRenderer;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 @Environment(EnvType.CLIENT)
 public class WTabHolder extends WWidget implements WClient, WCollection, WFocusedMouseListener {
@@ -64,8 +66,8 @@ public class WTabHolder extends WWidget implements WClient, WCollection, WFocuse
 	}
 
 	@Override
-	public List<WWidget> getWidgets() {
-		List<WWidget> widgets = new LinkedList<>();
+	public Set<WWidget> getWidgets() {
+		Set<WWidget> widgets = new LinkedHashSet<>();
 		for (WTab tab : tabs) {
 			widgets.addAll(tab.getWidgets());
 		}
@@ -73,8 +75,8 @@ public class WTabHolder extends WWidget implements WClient, WCollection, WFocuse
 	}
 
 	@Override
-	public List<WWidget> getAllWidgets() {
-		List<WWidget> widgets = new LinkedList<>();
+	public Set<WWidget> getAllWidgets() {
+		Set<WWidget> widgets = new LinkedHashSet<>();
 		for (WTab tab : tabs) {
 			widgets.addAll(tab.getAllWidgets());
 		}
@@ -127,26 +129,26 @@ public class WTabHolder extends WWidget implements WClient, WCollection, WFocuse
 		Item symbol;
 		Text name;
 		int number;
-		List<WWidget> widgets = new LinkedList<>();
+		Set<WWidget> widgets = new LinkedHashSet<>();
 
 		public WTab(WTabHolder holder, Item symbol, Text name, int number) {
 			this.symbol = symbol;
 			this.name = name;
 			this.number = number;
 			this.widgets.add(new WTabToggle(WPosition.of(WType.ANCHORED, 0, 0, 0, holder), WSize.of(36, 24), getInterface(), symbol, name));
-			this.widgets.get(0).setOnMouseClicked(() -> {
+			this.widgets.iterator().next().setOnMouseClicked(() -> {
 				if (getToggle().getToggleState()) {
 					selectTab(this.number);
 				}
 			});
 		}
 
-		public List<WWidget> getWidgets() {
+		public Set<WWidget> getWidgets() {
 			return widgets;
 		}
 
 		public WTabToggle getToggle() {
-			return (WTabToggle) widgets.get(0);
+			return (WTabToggle) widgets.iterator().next();
 		}
 
 		@Override

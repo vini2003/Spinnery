@@ -9,7 +9,7 @@ public class WInterface extends WWidget implements WModifiableCollection {
 	public static final boolean INSTANCE_CLIENT = false;
 	public static final boolean INSTANCE_SERVER = true;
 	protected BaseContainer linkedContainer;
-	protected List<WWidget> heldWidgets = new ArrayList<>();
+	protected Set<WWidget> heldWidgets = new LinkedHashSet<>();
 	protected boolean isClientside;
 	protected boolean instanceType;
 
@@ -86,12 +86,12 @@ public class WInterface extends WWidget implements WModifiableCollection {
 	}
 
 	@Override
-	public List<WWidget> getWidgets() {
+	public Set<WWidget> getWidgets() {
 		return heldWidgets;
 	}
 
 	@Override
-	public List<WWidget> getAllWidgets() {
+	public Set<WWidget> getAllWidgets() {
 		return heldWidgets;
 	}
 
@@ -143,9 +143,11 @@ public class WInterface extends WWidget implements WModifiableCollection {
 			}
 		}
 
-		List<WWidget> sorted = new ArrayList<>(getWidgets());
-		Collections.sort(getWidgets());
-		for (WWidget widget : sorted) {
+		List<WWidget> widgets = new ArrayList<>(getAllWidgets());
+		Collections.sort(widgets);
+		Collections.reverse(widgets);
+
+		for (WWidget widget : widgets) {
 			widget.draw();
 		}
 	}

@@ -5,7 +5,9 @@ import spinnery.registry.NetworkRegistry;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 public class WInterfaceHolder implements WModifiableCollection {
 	List<WInterface> heldInterfaces = new ArrayList<>();
@@ -31,8 +33,8 @@ public class WInterfaceHolder implements WModifiableCollection {
 		heldInterfaces.removeAll(Arrays.asList(interfaces));
 	}
 
-	public List<WWidget> getWidgets() {
-		List<WWidget> widgets = new ArrayList<>();
+	public Set<WWidget> getWidgets() {
+		Set<WWidget> widgets = new LinkedHashSet<>();
 
 		for (WInterface myInterface : getInterfaces()) {
 			widgets.addAll(myInterface.getWidgets());
@@ -41,8 +43,8 @@ public class WInterfaceHolder implements WModifiableCollection {
 		return widgets;
 	}
 
-	public List<WWidget> getAllWidgets() {
-		List<WWidget> widgets = new ArrayList<>();
+	public Set<WWidget> getAllWidgets() {
+		Set<WWidget> widgets = new LinkedHashSet<>();
 		for (WInterface myInterface : getInterfaces()) {
 			for (WWidget widgetA : myInterface.getWidgets()) {
 				widgets.add(widgetA);

@@ -6,7 +6,9 @@ import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 public class WHorizontalScrollableContainer extends WWidget implements WClient, WModifiableCollection, WHorizontalScrollable {
     public List<List<WWidget>> listWidgets = new ArrayList<>();
@@ -85,8 +87,8 @@ public class WHorizontalScrollableContainer extends WWidget implements WClient, 
     }
 
     @Override
-    public List<WWidget> getWidgets() {
-        List<WWidget> widgets = new ArrayList<>();
+    public Set<WWidget> getWidgets() {
+        Set<WWidget> widgets = new LinkedHashSet<>();
         for (List<WWidget> widgetA : getListWidgets()) {
             widgets.addAll(widgetA);
         }
@@ -94,8 +96,8 @@ public class WHorizontalScrollableContainer extends WWidget implements WClient, 
     }
 
     @Override
-    public List<WWidget> getAllWidgets() {
-        List<WWidget> widgets = new ArrayList<>();
+    public Set<WWidget> getAllWidgets() {
+        Set<WWidget> widgets = new LinkedHashSet<>();
         for (List<WWidget> widgetA : getListWidgets()) {
             widgets.addAll(widgetA);
             if (widgetA instanceof WCollection) {
