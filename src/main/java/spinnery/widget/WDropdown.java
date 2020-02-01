@@ -9,27 +9,16 @@ import spinnery.client.BaseRenderer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 @Environment(EnvType.CLIENT)
 public class WDropdown extends WWidget implements WClient, WModifiableCollection, WFocusedMouseListener {
-	public static final int SHADOW = 0;
-	public static final int BACKGROUND = 1;
-	public static final int HIGHLIGHT = 2;
-	public static final int OUTLINE = 3;
-	public static final int LABEL = 4;
 	public List<List<WWidget>> dropdownWidgets = new ArrayList<>();
 	protected boolean state = false;
 
 	public WDropdown(WPosition position, WSize size, WInterface linkedInterface) {
 		setInterface(linkedInterface);
-
 		setPosition(position);
-
 		setSize(size);
-
-		setTheme("light");
-
 		updateHidden();
 	}
 
@@ -55,16 +44,6 @@ public class WDropdown extends WWidget implements WClient, WModifiableCollection
 
 	public void setState(boolean state) {
 		this.state = state;
-	}
-
-	public static WWidget.Theme of(Map<String, String> rawTheme) {
-		WWidget.Theme theme = new WWidget.Theme();
-		theme.put(SHADOW, WColor.of(rawTheme.get("shadow")));
-		theme.put(BACKGROUND, WColor.of(rawTheme.get("background")));
-		theme.put(HIGHLIGHT, WColor.of(rawTheme.get("highlight")));
-		theme.put(OUTLINE, WColor.of(rawTheme.get("outline")));
-		theme.put(LABEL, WColor.of(rawTheme.get("label")));
-		return theme;
 	}
 
 	@Override
@@ -151,14 +130,14 @@ public class WDropdown extends WWidget implements WClient, WModifiableCollection
 		int sX = getWidth();
 		int sY = getHeight();
 
-		BaseRenderer.drawPanel(getX(), getY(), getZ(), getWidth(), getHeight() + 1.75, getResourceAsColor(SHADOW), getResourceAsColor(BACKGROUND), getResourceAsColor(HIGHLIGHT), getResourceAsColor(OUTLINE));
+		BaseRenderer.drawPanel(getX(), getY(), getZ(), getWidth(), getHeight() + 1.75, getStyle().asColor("shadow"), getStyle().asColor("background"), getStyle().asColor("highlight"), getStyle().asColor("outline"));
 
 		if (hasLabel()) {
-			BaseRenderer.drawText(isLabelShadowed(), getLabel().asFormattedString(), x + sX / 2 - BaseRenderer.getTextRenderer().getStringWidth(getLabel().asFormattedString()) / 2, y + 6, getResourceAsColor(LABEL).RGB);
+			BaseRenderer.drawText(isLabelShadowed(), getLabel().asFormattedString(), x + sX / 2 - BaseRenderer.getTextRenderer().getStringWidth(getLabel().asFormattedString()) / 2, y + 6, getStyle().asColor("label"));
 
 			if (getState()) {
-				BaseRenderer.drawRectangle(x, y + 16, z, sX, 1, getResourceAsColor(OUTLINE));
-				BaseRenderer.drawRectangle(x + 1, y + 17, z, sX - 2, 0.75, getResourceAsColor(SHADOW));
+				BaseRenderer.drawRectangle(x, y + 16, z, sX, 1, getStyle().asColor("outline"));
+				BaseRenderer.drawRectangle(x + 1, y + 17, z, sX - 2, 0.75, getStyle().asColor("shadow"));
 			}
 		}
 
@@ -168,13 +147,6 @@ public class WDropdown extends WWidget implements WClient, WModifiableCollection
 					widgetC.draw();
 				}
 			}
-		}
-	}
-
-	@Override
-	public void setTheme(String theme) {
-		if (getInterface().isClient()) {
-			super.setTheme(theme);
 		}
 	}
 

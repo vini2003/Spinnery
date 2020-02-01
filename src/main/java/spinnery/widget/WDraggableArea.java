@@ -6,17 +6,9 @@ import net.minecraft.text.Text;
 import spinnery.client.BaseRenderer;
 
 import java.util.List;
-import java.util.Map;
 
 @Environment(EnvType.CLIENT)
 public class WDraggableArea extends WWidget implements WClient, WModifiableCollection {
-	public static final int SHADOW = 0;
-	public static final int BACKGROUND = 1;
-	public static final int HIGHLIGHT = 2;
-	public static final int OUTLINE = 3;
-	public static final int LABEL = 4;
-	public static final int AREA_START = 5;
-	public static final int AREA_END = 6;
 	public static final int LABEL_HEIGHT = 16; // add to theme config?
 
 	protected WDraggableContainer container;
@@ -25,23 +17,10 @@ public class WDraggableArea extends WWidget implements WClient, WModifiableColle
 		setInterface(linkedInterface);
 		setPosition(position);
 		setSize(size);
-		setTheme("light");
 
 		container = new WDraggableContainer(WPosition.of(WType.ANCHORED, 4, 4, getZ(), this),
 				WSize.of(getWidth() - 8, getHeight() - 8), linkedInterface);
 		linkedInterface.add(container);
-	}
-
-	public static Theme of(Map<String, String> rawTheme) {
-		Theme theme = new Theme();
-		theme.put(SHADOW, WColor.of(rawTheme.get("shadow")));
-		theme.put(BACKGROUND, WColor.of(rawTheme.get("background")));
-		theme.put(HIGHLIGHT, WColor.of(rawTheme.get("highlight")));
-		theme.put(OUTLINE, WColor.of(rawTheme.get("outline")));
-		theme.put(LABEL, WColor.of(rawTheme.get("label")));
-		theme.put(AREA_START, WColor.of(rawTheme.get("area_start")));
-		theme.put(AREA_END, WColor.of(rawTheme.get("area_end")));
-		return theme;
 	}
 
 	@Override
@@ -81,24 +60,17 @@ public class WDraggableArea extends WWidget implements WClient, WModifiableColle
 		int sX = getWidth();
 		int sY = getHeight();
 
-		BaseRenderer.drawPanel(x, y, z, sX, sY, getResourceAsColor(SHADOW), getResourceAsColor(BACKGROUND), getResourceAsColor(HIGHLIGHT), getResourceAsColor(OUTLINE));
+		BaseRenderer.drawPanel(x, y, z, sX, sY, getStyle().asColor("shadow"), getStyle().asColor("background"), getStyle().asColor("highlight"), getStyle().asColor("outline"));
 
 		if (hasLabel()) {
-			BaseRenderer.drawText(isLabelShadowed(), getLabel().asFormattedString(), x + sX / 2 - BaseRenderer.getTextRenderer().getStringWidth(getLabel().asFormattedString()) / 2, y + 6, getResourceAsColor(LABEL).RGB);
-			BaseRenderer.drawRectangle(x, y + LABEL_HEIGHT, z, sX, 1, getResourceAsColor(OUTLINE));
-			BaseRenderer.drawRectangle(x + 1, y + LABEL_HEIGHT + 1, z, sX - 2, 0.75, getResourceAsColor(SHADOW));
+			BaseRenderer.drawText(isLabelShadowed(), getLabel().asFormattedString(), x + sX / 2 - BaseRenderer.getTextRenderer().getStringWidth(getLabel().asFormattedString()) / 2, y + 6, getStyle().asColor("label"));
+			BaseRenderer.drawRectangle(x, y + LABEL_HEIGHT, z, sX, 1, getStyle().asColor("outline"));
+			BaseRenderer.drawRectangle(x + 1, y + LABEL_HEIGHT + 1, z, sX - 2, 0.75, getStyle().asColor("shadow"));
 		}
 
 		BaseRenderer.drawGradient(container.getX(), container.getY(),
 				container.getX() + container.getWidth(), container.getY() + container.getHeight(),
-				z, getResourceAsColor(AREA_START), getResourceAsColor(AREA_END));
-	}
-
-	@Override
-	public void setTheme(String theme) {
-		if (getInterface().isClient()) {
-			super.setTheme(theme);
-		}
+				z, getStyle().asColor("area.start"), getStyle().asColor("area.end"));
 	}
 
 	@Override

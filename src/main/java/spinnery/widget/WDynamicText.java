@@ -7,17 +7,8 @@ import net.minecraft.client.gui.screen.Screen;
 import org.lwjgl.glfw.GLFW;
 import spinnery.client.BaseRenderer;
 
-import java.util.Map;
-
 @Environment(EnvType.CLIENT)
 public class WDynamicText extends WWidget implements WClient {
-	public static final int TOP_LEFT = 0;
-	public static final int BOTTOM_RIGHT = 1;
-	public static final int BACKGROUND = 2;
-	public static final int TEXT = 3;
-	public static final int HIGHLIGHT = 4;
-	public static final int CURSOR = 5;
-	public static final int LABEL = 6;
 	protected boolean isSelected;
 	protected String text = "";
 	protected String visible = "";
@@ -30,25 +21,8 @@ public class WDynamicText extends WWidget implements WClient {
 
 	public WDynamicText(WPosition position, WSize size, WInterface linkedInterface) {
 		setInterface(linkedInterface);
-
-
 		setPosition(position);
-
 		setSize(size);
-
-		setTheme("light");
-	}
-
-	public static WWidget.Theme of(Map<String, String> rawTheme) {
-		WWidget.Theme theme = new WWidget.Theme();
-		theme.put(TOP_LEFT, WColor.of(rawTheme.get("top_left")));
-		theme.put(BOTTOM_RIGHT, WColor.of(rawTheme.get("bottom_right")));
-		theme.put(BACKGROUND, WColor.of(rawTheme.get("background")));
-		theme.put(TEXT, WColor.of(rawTheme.get("text")));
-		theme.put(HIGHLIGHT, WColor.of(rawTheme.get("highlight")));
-		theme.put(CURSOR, WColor.of(rawTheme.get("cursor")));
-		theme.put(LABEL, WColor.of(rawTheme.get("label")));
-		return theme;
 	}
 
 	public String getText() {
@@ -225,14 +199,14 @@ public class WDynamicText extends WWidget implements WClient {
 
 		int oY = 0;
 
-		BaseRenderer.drawBeveledPanel(x, y, z, sX, sY, getResourceAsColor(TOP_LEFT), getResourceAsColor(BACKGROUND), getResourceAsColor(BOTTOM_RIGHT));
+		BaseRenderer.drawBeveledPanel(x, y, z, sX, sY, getStyle().asColor("top_left"), getStyle().asColor("background"), getStyle().asColor("bottom_right"));
 
 		if (text.isEmpty() && !isSelected) {
-			BaseRenderer.drawText(isLabelShadowed(), getLabel().asFormattedString(), x + 4, y + 4 + oY, getResourceAsColor(LABEL).RGB);
+			BaseRenderer.drawText(isLabelShadowed(), getLabel().asFormattedString(), x + 4, y + 4 + oY, getStyle().asColor("label"));
 		} else {
 			int pP = x + 4, pC = offsetPos;
 			if (visible.isEmpty() && cursorTick > 10) {
-				BaseRenderer.drawText(isLabelShadowed(), "|", pP, y + 4 + oY, getResourceAsColor(CURSOR).RGB);
+				BaseRenderer.drawText(isLabelShadowed(), "|", pP, y + 4 + oY, getStyle().asColor("cursor"));
 			}
 			for (char c : visible.toCharArray()) {
 				if (c == '\n') {
@@ -240,16 +214,16 @@ public class WDynamicText extends WWidget implements WClient {
 					pP = x + 4;
 				} else {
 					int cW = (int) BaseRenderer.getTextRenderer().getCharWidth(c);
-					BaseRenderer.drawText(isLabelShadowed(), String.valueOf(c), pP, y + 4 + oY, getResourceAsColor(TEXT).RGB);
+					BaseRenderer.drawText(isLabelShadowed(), String.valueOf(c), pP, y + 4 + oY, getStyle().asColor("text"));
 
 					if (pC >= selLeftPos && (pC < selRightPos || pC == text.length() - 1 && pC <= selRightPos) && (selLeftPos - selRightPos != 0)) {
-						BaseRenderer.drawRectangle(pP, y + 4 + oY, 10, cW, 9, getResourceAsColor(HIGHLIGHT));
+						BaseRenderer.drawRectangle(pP, y + 4 + oY, 10, cW, 9, getStyle().asColor("highlight"));
 					}
 
 					pP += cW;
 
 					if ((pC == cursorPos - 1) && isSelected && cursorTick > 10) {
-						BaseRenderer.drawText(isLabelShadowed(), "|", pP, y + 4 + oY, getResourceAsColor(CURSOR).RGB);
+						BaseRenderer.drawText(isLabelShadowed(), "|", pP, y + 4 + oY, getStyle().asColor("cursor"));
 					}
 
 					++pC;
@@ -266,12 +240,5 @@ public class WDynamicText extends WWidget implements WClient {
 			cursorTick = 20;
 		}
 		super.tick();
-	}
-
-	@Override
-	public void setTheme(String theme) {
-		if (getInterface().isClient()) {
-			super.setTheme(theme);
-		}
 	}
 }

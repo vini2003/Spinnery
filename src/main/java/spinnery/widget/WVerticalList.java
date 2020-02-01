@@ -6,15 +6,9 @@ import net.minecraft.text.Text;
 import spinnery.client.BaseRenderer;
 
 import java.util.List;
-import java.util.Map;
 
 @Environment(EnvType.CLIENT)
 public class WVerticalList extends WWidget implements WClient, WModifiableCollection {
-	public static final int SHADOW = 0;
-	public static final int BACKGROUND = 1;
-	public static final int HIGHLIGHT = 2;
-	public static final int OUTLINE = 3;
-	public static final int LABEL = 4;
 	public static final int LABEL_HEIGHT = 16; // add to theme config? yes
 
 	protected WVerticalScrollableContainer container;
@@ -23,21 +17,10 @@ public class WVerticalList extends WWidget implements WClient, WModifiableCollec
 		setInterface(linkedInterface);
 		setPosition(position);
 		setSize(size);
-		setTheme("light");
 
 		container = new WVerticalScrollableContainer(WPosition.of(WType.ANCHORED, 4, 6, getZ(), this),
 				WSize.of(getWidth() - 8, getHeight() - 12), linkedInterface);
 		linkedInterface.add(container);
-	}
-
-	public static WWidget.Theme of(Map<String, String> rawTheme) {
-		WWidget.Theme theme = new WWidget.Theme();
-		theme.put(SHADOW, WColor.of(rawTheme.get("shadow")));
-		theme.put(BACKGROUND, WColor.of(rawTheme.get("background")));
-		theme.put(HIGHLIGHT, WColor.of(rawTheme.get("highlight")));
-		theme.put(OUTLINE, WColor.of(rawTheme.get("outline")));
-		theme.put(LABEL, WColor.of(rawTheme.get("label")));
-		return theme;
 	}
 
 	@Override
@@ -93,19 +76,12 @@ public class WVerticalList extends WWidget implements WClient, WModifiableCollec
 		int sX = getWidth();
 		int sY = getHeight();
 
-		BaseRenderer.drawPanel(x, y, z, sX, sY, getResourceAsColor(SHADOW), getResourceAsColor(BACKGROUND), getResourceAsColor(HIGHLIGHT), getResourceAsColor(OUTLINE));
+		BaseRenderer.drawPanel(x, y, z, sX, sY, getStyle().asColor("shadow"), getStyle().asColor("background"), getStyle().asColor("highlight"), getStyle().asColor("outline"));
 
 		if (hasLabel()) {
-			BaseRenderer.drawText(isLabelShadowed(), getLabel().asFormattedString(), x + sX / 2 - BaseRenderer.getTextRenderer().getStringWidth(getLabel().asFormattedString()) / 2, y + 6, getResourceAsColor(LABEL).RGB);
-			BaseRenderer.drawRectangle(x, y + LABEL_HEIGHT, z, sX, 1, getResourceAsColor(OUTLINE));
-			BaseRenderer.drawRectangle(x + 1, y + LABEL_HEIGHT + 1, z, sX - 2, 0.75, getResourceAsColor(SHADOW));
-		}
-	}
-
-	@Override
-	public void setTheme(String theme) {
-		if (getInterface().isClient()) {
-			super.setTheme(theme);
+			BaseRenderer.drawText(isLabelShadowed(), getLabel().asFormattedString(), x + sX / 2 - BaseRenderer.getTextRenderer().getStringWidth(getLabel().asFormattedString()) / 2, y + 6, getStyle().asColor("label"));
+			BaseRenderer.drawRectangle(x, y + LABEL_HEIGHT, z, sX, 1, getStyle().asColor("outline"));
+			BaseRenderer.drawRectangle(x + 1, y + LABEL_HEIGHT + 1, z, sX - 2, 0.75, getStyle().asColor("shadow"));
 		}
 	}
 

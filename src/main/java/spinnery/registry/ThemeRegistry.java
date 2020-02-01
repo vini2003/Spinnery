@@ -2,21 +2,43 @@ package spinnery.registry;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import spinnery.widget.WWidget;
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+import net.minecraft.resource.ResourceType;
+import net.minecraft.util.Identifier;
+import spinnery.util.ResourceListener;
+import spinnery.widget.*;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @Environment(EnvType.CLIENT)
 public class ThemeRegistry {
-	public static Map<String, Map<Class<? extends WWidget>, WWidget.Theme>> widgetThemes = new HashMap<>();
+    public static final Identifier DEFAULT_THEME = new Identifier("spinnery", "default");
+    public static final ResourceListener RESOURCE_LISTENER = new ResourceListener();
 
-	public static <W extends WWidget> WWidget.Theme get(String name, Class<W> widgetClass) {
-		return widgetThemes.get(name).get(widgetClass);
-	}
+    private static WTheme defaultTheme;
+    private static final Map<Identifier, WTheme> themes = new HashMap<>();
 
-	public static <T extends WWidget.Theme> void register(String name, Class<? extends WWidget> widgetClass, T theme) {
-		widgetThemes.putIfAbsent(name, new HashMap<>());
-		widgetThemes.get(name).put(widgetClass, theme);
-	}
+    public static void initialize() {
+        ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(RESOURCE_LISTENER);
+    }
+
+    public static void clear() {
+        themes.clear();
+    }
+
+    public static void register(WTheme theme) {
+        if (theme == null) return;
+        if (theme.getId().equals(DEFAULT_THEME)) {
+            defaultTheme = theme;
+        } else {
+            themes.put(theme.getId(), theme);
+        }
+    }
+
+    public static WStyle getStyle(Identifier themeId, Identifier widgetId) {
+        WTheme theme = themes.get(themeId);
+        if (theme == null) theme = defaultTheme;
+        return theme.getStyle(widgetId);
+    }
 }

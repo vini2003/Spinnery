@@ -5,40 +5,14 @@ import spinnery.client.BaseRenderer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 public class WTooltip extends WWidget implements WModifiableCollection {
-    public static final int BACKGROUND_START = 0;
-    public static final int BACKGROUND_END = 1;
-    public static final int OUTLINE_START = 2;
-    public static final int OUTLINE_END = 3;
-    public static final int SHADOW_START = 4;
-    public static final int SHADOW_END = 5;
     private List<WWidget> widgets = new ArrayList<>();
 
     public WTooltip(WPosition position, WSize size, WInterface linkedInterface) {
         setPosition(position);
         setSize(size);
         setInterface(linkedInterface);
-        setTheme("light");
-    }
-
-    @Override
-    public void setTheme(String theme) {
-        if (getInterface().isClient()) {
-            super.setTheme(theme);
-        }
-    }
-
-    public static WWidget.Theme of(Map<String, String> rawTheme) {
-        WWidget.Theme theme = new WWidget.Theme();
-        theme.put(BACKGROUND_START, WColor.of(rawTheme.get("background_start")));
-        theme.put(BACKGROUND_END, WColor.of(rawTheme.get("background_end")));
-        theme.put(OUTLINE_START, WColor.of(rawTheme.get("outline_start")));
-        theme.put(OUTLINE_END, WColor.of(rawTheme.get("outline_end")));
-        theme.put(SHADOW_START, WColor.of(rawTheme.get("shadow_start")));
-        theme.put(SHADOW_END, WColor.of(rawTheme.get("shadow_end")));
-        return theme;
     }
 
     @Override
@@ -51,12 +25,12 @@ public class WTooltip extends WWidget implements WModifiableCollection {
         int width = size.getX();
         int height = size.getY();
 
-        WColor backgroundStart = getResourceAsColor(BACKGROUND_START);
-        WColor backgroundEnd = getResourceAsColor(BACKGROUND_END);
-        WColor colorStart = getResourceAsColor(OUTLINE_START);
-        WColor colorEnd = getResourceAsColor(OUTLINE_END);
-        WColor shadowStart = getResourceAsColor(SHADOW_START);
-        WColor shadowEnd = getResourceAsColor(SHADOW_END);
+        WColor backgroundStart = getStyle().asColor("background.start");
+        WColor backgroundEnd = getStyle().asColor("background.end");
+        WColor colorStart = getStyle().asColor("outline.start");
+        WColor colorEnd = getStyle().asColor("outline.end");
+        WColor shadowStart = getStyle().asColor("shadow.start");
+        WColor shadowEnd = getStyle().asColor("shadow.end");
 
         // Vanilla drawing process
         BaseRenderer.drawGradient(x - 3, y - 4, x + width + 3, y - 3, z, shadowStart, shadowStart); // top border

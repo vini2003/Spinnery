@@ -13,11 +13,8 @@ public class WDynamicImage extends WWidget implements WClient, WFocusedMouseList
 
 	public WDynamicImage(WPosition position, WSize size, WInterface linkedInterface, Identifier... textures) {
 		setInterface(linkedInterface);
-
 		setPosition(position);
-
 		setSize(size);
-
 		setTextures(textures);
 	}
 

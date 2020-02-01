@@ -10,34 +10,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 @Environment(EnvType.CLIENT)
 public class WTabHolder extends WWidget implements WClient, WCollection, WFocusedMouseListener {
-	public static final int SHADOW = 0;
-	public static final int BACKGROUND = 1;
-	public static final int HIGHLIGHT = 2;
-	public static final int OUTLINE = 3;
 	List<WTab> tabs = new ArrayList<>();
 
 	public WTabHolder(WPosition position, WSize size, WInterface linkedInterface) {
 		setInterface(linkedInterface);
-
-
 		setPosition(position);
-
 		setSize(size);
-
-		setTheme("light");
-	}
-
-	public static WWidget.Theme of(Map<String, String> rawTheme) {
-		WWidget.Theme theme = new WWidget.Theme();
-		theme.put(SHADOW, WColor.of(rawTheme.get("shadow")));
-		theme.put(BACKGROUND, WColor.of(rawTheme.get("background")));
-		theme.put(HIGHLIGHT, WColor.of(rawTheme.get("highlight")));
-		theme.put(OUTLINE, WColor.of(rawTheme.get("outline")));
-		return theme;
 	}
 
 	public void selectTab(int tabNumber) {
@@ -133,7 +114,7 @@ public class WTabHolder extends WWidget implements WClient, WCollection, WFocuse
 			tab.getToggle().draw();
 		}
 
-		BaseRenderer.drawPanel(x, y + 24, z, sX, sY - 24, getResourceAsColor(SHADOW), getResourceAsColor(BACKGROUND), getResourceAsColor(HIGHLIGHT), getResourceAsColor(OUTLINE));
+		BaseRenderer.drawPanel(x, y + 24, z, sX, sY - 24, getStyle().asColor("shadow"), getStyle().asColor("background"), getStyle().asColor("highlight"), getStyle().asColor("outline"));
 
 		for (WWidget widget : getWidgets()) {
 			if (!(widget instanceof WTabToggle)) {

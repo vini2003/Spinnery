@@ -3,7 +3,6 @@ package spinnery.widget;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
 import org.lwjgl.opengl.GL11;
-import spinnery.client.BaseRenderer;
 
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -5,18 +5,8 @@ import net.fabricmc.api.Environment;
 import org.lwjgl.glfw.GLFW;
 import spinnery.client.BaseRenderer;
 
-import java.util.Map;
-
 @Environment(EnvType.CLIENT)
 public class WVerticalSlider extends WWidget implements WClient, WFocusedMouseListener, WFocusedKeyboardListener {
-	public static final int TOP_LEFT_BACKGROUND = 0;
-	public static final int BOTTOM_RIGHT_BACKGROUND = 1;
-	public static final int BACKGROUND_ON = 2;
-	public static final int BACKGROUND_OFF = 3;
-	public static final int TOP_LEFT_FOREGROUND = 4;
-	public static final int BOTTOM_RIGHT_FOREGROUND = 5;
-	public static final int FOREGROUND = 6;
-	public static final int TEXT = 7;
 	protected int limit = 0;
 	protected float progress = 0;
 	protected String slidTotal = "0";
@@ -24,27 +14,9 @@ public class WVerticalSlider extends WWidget implements WClient, WFocusedMouseLi
 
 	public WVerticalSlider(WPosition position, WSize size, WInterface linkedInterface, int limit) {
 		setInterface(linkedInterface);
-
 		setPosition(position);
-
 		setSize(size);
-
-		setTheme("light");
-
 		setLimit(limit);
-	}
-
-	public static WWidget.Theme of(Map<String, String> rawTheme) {
-		WWidget.Theme theme = new WWidget.Theme();
-		theme.put(TOP_LEFT_BACKGROUND, WColor.of(rawTheme.get("top_left_background")));
-		theme.put(BOTTOM_RIGHT_BACKGROUND, WColor.of(rawTheme.get("bottom_right_background")));
-		theme.put(BACKGROUND_ON, WColor.of(rawTheme.get("background_on")));
-		theme.put(BACKGROUND_OFF, WColor.of(rawTheme.get("background_off")));
-		theme.put(TOP_LEFT_FOREGROUND, WColor.of(rawTheme.get("top_left_foreground")));
-		theme.put(BOTTOM_RIGHT_FOREGROUND, WColor.of(rawTheme.get("bottom_right_foreground")));
-		theme.put(FOREGROUND, WColor.of(rawTheme.get("foreground")));
-		theme.put(TEXT, WColor.of(rawTheme.get("text")));
-		return theme;
 	}
 
 	public int getSlidStringPosition() {
@@ -118,16 +90,16 @@ public class WVerticalSlider extends WWidget implements WClient, WFocusedMouseLi
 
 		BaseRenderer.drawText(isLabelShadowed(), getSlidTotal(), x + sX + 4, y + sY / 2, 0xffffff);
 
-		BaseRenderer.drawRectangle(x, y, z, sX, 1, getResourceAsColor(TOP_LEFT_BACKGROUND));
-		BaseRenderer.drawRectangle(x, y, z, 1, (sY), getResourceAsColor(TOP_LEFT_BACKGROUND));
+		BaseRenderer.drawRectangle(x, y, z, sX, 1, getStyle().asColor("top_left.background"));
+		BaseRenderer.drawRectangle(x, y, z, 1, (sY), getStyle().asColor("top_left.background"));
 
-		BaseRenderer.drawRectangle(x, y + (sY) - 1, z, sX, 1, getResourceAsColor(BOTTOM_RIGHT_BACKGROUND));
-		BaseRenderer.drawRectangle(x + sX, y, z, 1, (sY + 7), getResourceAsColor(BOTTOM_RIGHT_BACKGROUND));
+		BaseRenderer.drawRectangle(x, y + (sY) - 1, z, sX, 1, getStyle().asColor("bottom_right.background"));
+		BaseRenderer.drawRectangle(x + sX, y, z, 1, (sY + 7), getStyle().asColor("bottom_right.background"));
 
-		BaseRenderer.drawRectangle(x + 1, y + 1, z, sX - 1, ((sY) / l) * p - 2, getResourceAsColor(BACKGROUND_ON));
-		BaseRenderer.drawRectangle(x + 1, y + ((sY) / l) * p - 1, z, sX - 1, (sY) - ((sY) / l) * p, getResourceAsColor(BACKGROUND_OFF));
+		BaseRenderer.drawRectangle(x + 1, y + 1, z, sX - 1, ((sY) / l) * p - 2, getStyle().asColor("background.on"));
+		BaseRenderer.drawRectangle(x + 1, y + ((sY) / l) * p - 1, z, sX - 1, (sY) - ((sY) / l) * p, getStyle().asColor("background.off"));
 
-		BaseRenderer.drawBeveledPanel(x - 1, Math.min(y + sY - 7, y + (sY / l) * p), z, sX + 3, 8, getResourceAsColor(TOP_LEFT_FOREGROUND), getResourceAsColor(FOREGROUND), getResourceAsColor(BOTTOM_RIGHT_FOREGROUND));
+		BaseRenderer.drawBeveledPanel(x - 1, Math.min(y + sY - 7, y + (sY / l) * p), z, sX + 3, 8, getStyle().asColor("top_left.foreground"), getStyle().asColor("foreground"), getStyle().asColor("bottom_right.foreground"));
 	}
 
 	public String getSlidTotal() {
@@ -136,12 +108,5 @@ public class WVerticalSlider extends WWidget implements WClient, WFocusedMouseLi
 
 	public void setSlidTotal(String slidTotal) {
 		this.slidTotal = slidTotal;
-	}
-
-	@Override
-	public void setTheme(String theme) {
-		if (getInterface().isClient()) {
-			super.setTheme(theme);
-		}
 	}
 }

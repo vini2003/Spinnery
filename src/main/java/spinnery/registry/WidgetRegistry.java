@@ -1,16 +1,15 @@
 package spinnery.registry;
 
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
+import net.minecraft.util.Identifier;
 import spinnery.widget.*;
 
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-
 public class WidgetRegistry {
-	private static List<Class<? extends WWidget>> widgetClasses = new LinkedList<>();
+	private static BiMap<Identifier, Class<? extends WWidget>> widgetMap = HashBiMap.create();
 
 	public static Class<? extends WWidget> get(String className) {
-		for (Class<? extends WWidget> widgetClass : widgetClasses) {
+		for (Class<? extends WWidget> widgetClass : widgetMap.values()) {
 			if (widgetClass.getName().equals(className)) {
 				return widgetClass;
 			}
@@ -18,31 +17,39 @@ public class WidgetRegistry {
 		return null;
 	}
 
-	public static void initialize() {
-		register(WWidget.class);
-		register(WButton.class);
-		register(WDraggableArea.class);
-		register(WDropdown.class);
-		register(WDynamicImage.class);
-		register(WDynamicText.class);
-		register(WHorizontalList.class);
-		register(WHorizontalSlider.class);
-		register(WInterface.class);
-		register(WVerticalList.class);
-		register(WSlot.class);
-		register(WStaticImage.class);
-		register(WStaticText.class);
-		register(WTabHolder.class);
-		register(WTabToggle.class);
-		register(WToggle.class);
-		register(WTooltip.class);
-		register(WVerticalSlider.class);
-		register(WBar.class);
-		register(WVerticalScrollbar.class);
-		register(WHorizontalScrollbar.class);
+	public static Class<? extends WWidget> get(Identifier id) {
+		return widgetMap.get(id);
 	}
 
-	public static void register(Class<? extends WWidget>... classes) {
-		widgetClasses.addAll(Arrays.asList(classes));
+	public static Identifier getId(Class<? extends WWidget> wClass) {
+		return widgetMap.inverse().get(wClass);
+	}
+
+	public static void initialize() {
+		register(new Identifier("spinnery", "widget"), WWidget.class);
+		register(new Identifier("spinnery", "button"), WButton.class);
+		register(new Identifier("spinnery", "draggable_area"), WDraggableArea.class);
+		register(new Identifier("spinnery", "dropdown"), WDropdown.class);
+		register(new Identifier("spinnery", "dynamic_image"), WDynamicImage.class);
+		register(new Identifier("spinnery", "dynamic_text"), WDynamicText.class);
+		register(new Identifier("spinnery", "horizontal_list"), WHorizontalList.class);
+		register(new Identifier("spinnery", "horizontal_slider"), WHorizontalSlider.class);
+		register(new Identifier("spinnery", "interface"), WInterface.class);
+		register(new Identifier("spinnery", "vertical_list"), WVerticalList.class);
+		register(new Identifier("spinnery", "slot"), WSlot.class);
+		register(new Identifier("spinnery", "static_image"), WStaticImage.class);
+		register(new Identifier("spinnery", "static_text"), WStaticText.class);
+		register(new Identifier("spinnery", "tab_holder"), WTabHolder.class);
+		register(new Identifier("spinnery", "tab_toggle"), WTabToggle.class);
+		register(new Identifier("spinnery", "toggle"), WToggle.class);
+		register(new Identifier("spinnery", "tooltip"), WTooltip.class);
+		register(new Identifier("spinnery", "vertical_slider"), WVerticalSlider.class);
+		register(new Identifier("spinnery", "bar"), WBar.class);
+		register(new Identifier("spinnery", "vertical_scrollbar"), WVerticalScrollbar.class);
+		register(new Identifier("spinnery", "horizontal_scrollbar"), WHorizontalScrollbar.class);
+	}
+
+	public static void register(Identifier id, Class<? extends WWidget> wClass) {
+		widgetMap.put(id, wClass);
 	}
 }

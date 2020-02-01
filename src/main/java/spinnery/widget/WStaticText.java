@@ -5,13 +5,8 @@ import net.fabricmc.api.Environment;
 import net.minecraft.text.Text;
 import spinnery.client.BaseRenderer;
 
-import java.util.Map;
-
 @Environment(EnvType.CLIENT)
 public class WStaticText extends WWidget implements WClient, WFocusedMouseListener {
-
-	public static final int SHADOW = 6;
-	public static final int TEXT = 7;
 	protected Text text;
 	protected BaseRenderer.Font font;
 	protected Integer maxWidth = null;
@@ -22,21 +17,9 @@ public class WStaticText extends WWidget implements WClient, WFocusedMouseListen
 
 	public WStaticText(WPosition position, WInterface linkedInterface, Text text, BaseRenderer.Font font) {
 		setInterface(linkedInterface);
-
 		setPosition(position);
-
 		setText(text);
-
-		setTheme("light");
-
 		this.font = font;
-	}
-
-	public static WWidget.Theme of(Map<String, String> rawTheme) {
-		WWidget.Theme theme = new WWidget.Theme();
-		theme.put(SHADOW, WColor.of(rawTheme.get("shadow")));
-		theme.put(TEXT, WColor.of(rawTheme.get("text")));
-		return theme;
 	}
 
 	public Integer getMaxWidth() {
@@ -75,9 +58,9 @@ public class WStaticText extends WWidget implements WClient, WFocusedMouseListen
 		int y = getY();
 
 		if (isLabelShadowed()) {
-			BaseRenderer.drawTextTrimmed(getText().asFormattedString(), x + 1, y + 1, maxWidth, getResourceAsColor(SHADOW).RGB, font);
+			BaseRenderer.drawTextTrimmed(getText().asFormattedString(), x + 1, y + 1, maxWidth, getStyle().asColor("shadow"), font);
 		}
-		BaseRenderer.drawTextTrimmed(getText().asFormattedString(), x, y, maxWidth, getResourceAsColor(TEXT).RGB, font);
+		BaseRenderer.drawTextTrimmed(getText().asFormattedString(), x, y, maxWidth, getStyle().asColor("text"), font);
 	}
 
 	public Text getText() {
@@ -86,12 +69,5 @@ public class WStaticText extends WWidget implements WClient, WFocusedMouseListen
 
 	public void setText(Text text) {
 		this.text = text;
-	}
-
-	@Override
-	public void setTheme(String theme) {
-		if (getInterface().isClient()) {
-			super.setTheme(theme);
-		}
 	}
 }

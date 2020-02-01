@@ -8,50 +8,18 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import spinnery.client.BaseRenderer;
 
-import java.util.Map;
-
 @Environment(EnvType.CLIENT)
 public class WTabToggle extends WToggle {
-	public static final int SHADOW_ON = 0;
-	public static final int BACKGROUND_ON = 1;
-	public static final int HIGHLIGHT_ON = 2;
-	public static final int OUTLINE_ON = 3;
-	public static final int SHADOW_OFF = 4;
-	public static final int BACKGROUND_OFF = 5;
-	public static final int HIGHLIGHT_OFF = 6;
-	public static final int OUTLINE_OFF = 7;
-	public static final int LABEL = 8;
 	Item symbol;
 	Text name;
 
 	public WTabToggle(WPosition position, WSize size, WInterface linkedInterface, Item symbol, Text name) {
 		super(position, size, linkedInterface);
-
 		setInterface(linkedInterface);
-
 		setPosition(position);
-
 		setSize(size);
-
 		setSymbol(symbol);
-
 		setName(name);
-
-		setTheme("light");
-	}
-
-	public static WWidget.Theme of(Map<String, String> rawTheme) {
-		WWidget.Theme theme = new WWidget.Theme();
-		theme.put(SHADOW_ON, WColor.of(rawTheme.get("shadow_on")));
-		theme.put(BACKGROUND_ON, WColor.of(rawTheme.get("background_on")));
-		theme.put(HIGHLIGHT_ON, WColor.of(rawTheme.get("highlight_on")));
-		theme.put(OUTLINE_ON, WColor.of(rawTheme.get("outline_on")));
-		theme.put(SHADOW_OFF, WColor.of(rawTheme.get("shadow_off")));
-		theme.put(BACKGROUND_OFF, WColor.of(rawTheme.get("background_off")));
-		theme.put(HIGHLIGHT_OFF, WColor.of(rawTheme.get("highlight_off")));
-		theme.put(OUTLINE_OFF, WColor.of(rawTheme.get("outline_off")));
-		theme.put(LABEL, WColor.of(rawTheme.get("label")));
-		return theme;
 	}
 
 	public Text getName() {
@@ -83,15 +51,15 @@ public class WTabToggle extends WToggle {
 		int sY = getHeight() + 4;
 
 		if (!getToggleState()) {
-			BaseRenderer.drawPanel(x, y, z - 1, sX, sY, getResourceAsColor(SHADOW_OFF), getResourceAsColor(BACKGROUND_OFF), getResourceAsColor(HIGHLIGHT_OFF), getResourceAsColor(OUTLINE_OFF));
+			BaseRenderer.drawPanel(x, y, z - 1, sX, sY, getStyle().asColor("shadow.off"), getStyle().asColor("background.off"), getStyle().asColor("highlight.off"), getStyle().asColor("outline.off"));
 		} else {
-			BaseRenderer.drawPanel(x, y, z - 1, sX, sY, getResourceAsColor(SHADOW_ON), getResourceAsColor(BACKGROUND_ON), getResourceAsColor(HIGHLIGHT_ON), getResourceAsColor(OUTLINE_ON));
+			BaseRenderer.drawPanel(x, y, z - 1, sX, sY, getStyle().asColor("shadow.on"), getStyle().asColor("background.on"), getStyle().asColor("highlight.on"), getStyle().asColor("outline.on"));
 		}
 
 		RenderSystem.enableLighting();
 		BaseRenderer.getItemRenderer().renderGuiItemIcon(new ItemStack(getSymbol(), 1), x + 4, y + 4);
 		RenderSystem.disableLighting();
-		BaseRenderer.drawText(isLabelShadowed(), name.asFormattedString(), x + 24, (int) (y + sY / 2 - 4.5), getResourceAsColor(LABEL).RGB);
+		BaseRenderer.drawText(isLabelShadowed(), name.asFormattedString(), x + 24, (int) (y + sY / 2 - 4.5), getStyle().asColor("label"));
 	}
 
 	public Item getSymbol() {

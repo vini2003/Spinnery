@@ -91,6 +91,18 @@ public class BaseRenderer {
 		drawRectangle(x + 1, y + sY - 1, z, sX - 1, 1, bottomright);
 	}
 
+	public static void drawText(String text, int x, int y, WColor color) {
+		drawText(text, x, y, color.RGB);
+	}
+
+	public static void drawTextTrimmed(String text, int x, int y, Integer maxWidth, WColor color) {
+		drawTextTrimmed(text, x, y, maxWidth, color, Font.DEFAULT);
+	}
+
+	public static void drawTextTrimmed(String text, int x, int y, Integer maxWidth, WColor color, Font font) {
+		drawTextTrimmed(text, x, y, maxWidth, color.RGB, font);
+	}
+
 	public static void drawText(String text, int x, int y, int color) {
 		drawTextTrimmed(text, x, y, null, color);
 	}
@@ -118,8 +130,16 @@ public class BaseRenderer {
 		}
 	}
 
+	public static void drawText(boolean isShadowed, String text, int x, int y, WColor color) {
+		drawText(isShadowed, text, x, y, color.RGB);
+	}
+
 	public static void drawText(boolean isShadowed, String text, int x, int y, int color) {
 		drawText(isShadowed, text, x, y, color, 0x3E3E3E);
+	}
+
+	public static void drawText(boolean isShadowed, String text, int x, int y, WColor color, WColor shadowColor) {
+		drawText(isShadowed, text, x, y, color.RGB, shadowColor.RGB);
 	}
 
 	public static void drawText(boolean isShadowed, String text, int x, int y, int color, int shadowColor) {

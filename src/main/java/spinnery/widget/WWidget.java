@@ -5,12 +5,16 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.Tickable;
 import spinnery.registry.ThemeRegistry;
+import spinnery.registry.WidgetRegistry;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+
+import static spinnery.registry.ThemeRegistry.DEFAULT_THEME;
 
 public class WWidget implements Tickable, Comparable<WWidget> {
 	protected WInterface linkedInterface;
@@ -36,11 +40,15 @@ public class WWidget implements Tickable, Comparable<WWidget> {
 	protected Runnable runnableOnMouseScrolled;
 	protected Runnable runnableOnAlign;
 
-	protected String theme = "light";
+	protected Identifier theme = DEFAULT_THEME;
 
 	protected Text label = new LiteralText("");
 
 	public WWidget() {
+	}
+
+	public WStyle getStyle() {
+		return ThemeRegistry.getStyle(theme, WidgetRegistry.getId(getClass()));
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -441,28 +449,13 @@ public class WWidget implements Tickable, Comparable<WWidget> {
 	}
 
 	@Environment(EnvType.CLIENT)
-	public WColor getResourceAsColor(Object key) {
-		return (WColor) ThemeRegistry.get(getTheme(), getClass()).get(key);
-	}
-
-	@Environment(EnvType.CLIENT)
-	public Object getResource(Object key) {
-		return ThemeRegistry.get(getTheme(), getClass()).get(key);
-	}
-
-	@Environment(EnvType.CLIENT)
-	public String getTheme() {
+	public Identifier getTheme() {
 		return theme;
 	}
 
 	@Environment(EnvType.CLIENT)
-	public void setTheme(String theme) {
+	public void setTheme(Identifier theme) {
 		this.theme = theme;
-	}
-
-	@Environment(EnvType.CLIENT)
-	public static Theme of(Map<String, String> rawTheme) {
-		return null;
 	}
 
 	@Override

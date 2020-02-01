@@ -6,11 +6,6 @@ import spinnery.common.BaseContainer;
 import java.util.*;
 
 public class WInterface extends WWidget implements WModifiableCollection {
-	public static final int SHADOW = 0;
-	public static final int BACKGROUND = 1;
-	public static final int HIGHLIGHT = 2;
-	public static final int OUTLINE = 3;
-	public static final int LABEL = 4;
 	public static final boolean INSTANCE_CLIENT = false;
 	public static final boolean INSTANCE_SERVER = true;
 	protected BaseContainer linkedContainer;
@@ -24,14 +19,9 @@ public class WInterface extends WWidget implements WModifiableCollection {
 
 	public WInterface(WPosition position) {
 		setPosition(position);
-
 		setSize(WSize.of(0, 0));
-
 		setClientside(true);
-
 		setInstanceType(INSTANCE_CLIENT);
-
-		setTheme("light");
 	}
 
 	public void setClientside(Boolean clientside) {
@@ -44,23 +34,15 @@ public class WInterface extends WWidget implements WModifiableCollection {
 
 	public WInterface(WPosition position, WSize size) {
 		setPosition(position);
-
 		setSize(size);
-
 		setClientside(true);
-
 		setInstanceType(INSTANCE_CLIENT);
-
-		setTheme("light");
 	}
 
 	public WInterface(WPosition position, WSize size, BaseContainer linkedContainer) {
 		setPosition(position);
-
 		setSize(size);
-
 		setContainer(linkedContainer);
-
 		setClientside(false);
 
 		if (getContainer().getLinkedWorld().isClient()) {
@@ -68,8 +50,6 @@ public class WInterface extends WWidget implements WModifiableCollection {
 		} else {
 			setInstanceType(INSTANCE_SERVER);
 		}
-
-		setTheme("light");
 	}
 
 	public BaseContainer getContainer() {
@@ -82,11 +62,8 @@ public class WInterface extends WWidget implements WModifiableCollection {
 
 	public WInterface(WPosition position, BaseContainer linkedContainer) {
 		setPosition(position);
-
 		setSize(WSize.of(0, 0));
-
 		setContainer(linkedContainer);
-
 		setClientside(false);
 
 		if (getContainer().getLinkedWorld().isClient()) {
@@ -94,18 +71,6 @@ public class WInterface extends WWidget implements WModifiableCollection {
 		} else {
 			setInstanceType(INSTANCE_SERVER);
 		}
-
-		setTheme("light");
-	}
-
-	public static WWidget.Theme of(Map<String, String> rawTheme) {
-		WWidget.Theme theme = new WWidget.Theme();
-		theme.put(SHADOW, WColor.of(rawTheme.get("shadow")));
-		theme.put(BACKGROUND, WColor.of(rawTheme.get("background")));
-		theme.put(HIGHLIGHT, WColor.of(rawTheme.get("highlight")));
-		theme.put(OUTLINE, WColor.of(rawTheme.get("outline")));
-		theme.put(LABEL, WColor.of(rawTheme.get("label")));
-		return theme;
 	}
 
 	public boolean getInstanceType() {
@@ -169,12 +134,12 @@ public class WInterface extends WWidget implements WModifiableCollection {
 			int sX = getWidth();
 			int sY = getHeight();
 
-			BaseRenderer.drawPanel(x, y, z, sX, sY, getResourceAsColor(SHADOW), getResourceAsColor(BACKGROUND), getResourceAsColor(HIGHLIGHT), getResourceAsColor(OUTLINE));
+			BaseRenderer.drawPanel(x, y, z, sX, sY, getStyle().asColor("shadow"), getStyle().asColor("background"), getStyle().asColor("highlight"), getStyle().asColor("outline"));
 
 			if (hasLabel()) {
-				BaseRenderer.drawText(isLabelShadowed(), getLabel().asFormattedString(), x + sX / 2 - BaseRenderer.getTextRenderer().getStringWidth(getLabel().asFormattedString()) / 2, y + 6, getResourceAsColor(LABEL).RGB);
-				BaseRenderer.drawRectangle(x, y + 16, z, sX, 1, getResourceAsColor(OUTLINE));
-				BaseRenderer.drawRectangle(x + 1, y + 17, z, sX - 2, 0.75, getResourceAsColor(SHADOW));
+				BaseRenderer.drawText(isLabelShadowed(), getLabel().asFormattedString(), x + sX / 2 - BaseRenderer.getTextRenderer().getStringWidth(getLabel().asFormattedString()) / 2, y + 6, getStyle().asColor("label"));
+				BaseRenderer.drawRectangle(x, y + 16, z, sX, 1, getStyle().asColor("outline"));
+				BaseRenderer.drawRectangle(x + 1, y + 17, z, sX - 2, 0.75, getStyle().asColor("shadow"));
 			}
 		}
 
@@ -187,12 +152,5 @@ public class WInterface extends WWidget implements WModifiableCollection {
 
 	public boolean isDrawable() {
 		return size.getX() != 0 && size.getY() != 0;
-	}
-
-	@Override
-	public void setTheme(String theme) {
-		if (isClient()) {
-			super.setTheme(theme);
-		}
 	}
 }

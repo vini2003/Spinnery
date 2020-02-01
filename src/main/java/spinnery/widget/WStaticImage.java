@@ -11,11 +11,8 @@ public class WStaticImage extends WWidget implements WClient, WFocusedMouseListe
 
 	public WStaticImage(WPosition position, WSize size, WInterface linkedInterface, Identifier texture) {
 		setInterface(linkedInterface);
-
 		setPosition(position);
-
 		setSize(size);
-
 		setTexture(texture);
 	}
 

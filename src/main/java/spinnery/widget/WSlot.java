@@ -16,14 +16,7 @@ import spinnery.Spinnery;
 import spinnery.client.BaseRenderer;
 import spinnery.registry.NetworkRegistry;
 
-import java.util.Map;
-
 public class WSlot extends WWidget implements WClient, WServer, WFocusedMouseListener {
-
-	public static final int TOP_LEFT = 0;
-	public static final int BOTTOM_RIGHT = 1;
-	public static final int BACKGROUND_FOCUSED = 2;
-	public static final int BACKGROUND_UNFOCUSED = 3;
 	protected int slotNumber;
 	protected Identifier previewTexture;
 	protected int maximumCount = 0;
@@ -38,7 +31,6 @@ public class WSlot extends WWidget implements WClient, WServer, WFocusedMouseLis
 		setSize(size);
 		setSlotNumber(slotNumber);
 		setInventoryNumber(inventoryNumber);
-		setTheme("light");
 	}
 
 	public WSlot(WInterface linkedInterface, int slotNumber, int inventoryNumber) {
@@ -100,16 +92,6 @@ public class WSlot extends WWidget implements WClient, WServer, WFocusedMouseLis
 
 	public static void addSingle(WInterface linkedInterface, int slotNumber, int inventoryNumber) {
 		linkedInterface.add(new WSlot(linkedInterface, slotNumber, inventoryNumber));
-	}
-
-	@Environment(EnvType.CLIENT)
-	public static WWidget.Theme of(Map<String, String> rawTheme) {
-		WWidget.Theme theme = new WWidget.Theme();
-		theme.put(TOP_LEFT, WColor.of(rawTheme.get("top_left")));
-		theme.put(BOTTOM_RIGHT, WColor.of(rawTheme.get("bottom_right")));
-		theme.put(BACKGROUND_FOCUSED, WColor.of(rawTheme.get("background_focused")));
-		theme.put(BACKGROUND_UNFOCUSED, WColor.of(rawTheme.get("background_unfocused")));
-		return theme;
 	}
 
 	public int getMaxCount() {
@@ -191,10 +173,10 @@ public class WSlot extends WWidget implements WClient, WServer, WFocusedMouseLis
 		int sX = getWidth();
 		int sY = getHeight();
 
-		BaseRenderer.drawBeveledPanel(x, y, z, sX, sY, getResourceAsColor(TOP_LEFT), getResourceAsColor(BACKGROUND_UNFOCUSED), getResourceAsColor(BOTTOM_RIGHT));
+		BaseRenderer.drawBeveledPanel(x, y, z, sX, sY, getStyle().asColor("top_left"), getStyle().asColor("background.unfocused"), getStyle().asColor("bottom_right"));
 
 		if (getFocus()) {
-			BaseRenderer.drawRectangle(x + 1, y + 1, z, sX - 2, sY - 2, getResourceAsColor(BACKGROUND_FOCUSED));
+			BaseRenderer.drawRectangle(x + 1, y + 1, z, sX - 2, sY - 2, getStyle().asColor("background.focused"));
 		}
 
 		if (hasPreviewTexture()) {
@@ -205,12 +187,6 @@ public class WSlot extends WWidget implements WClient, WServer, WFocusedMouseLis
 		BaseRenderer.getItemRenderer().renderGuiItem(getStack(), 1 + x + (sX - 18) / 2, 1 + y + (sY - 18) / 2);
 		BaseRenderer.getItemRenderer().renderGuiItemOverlay(MinecraftClient.getInstance().textRenderer, getStack(), 1 + x + (sX - 18) / 2, 1 + y + (sY - 18) / 2, getStack().getCount() == 1 ? "" : withSuffix(getStack().getCount()));
 		RenderSystem.disableLighting();
-	}
-
-	@Override
-	@Environment(EnvType.CLIENT)
-	public void setTheme(String theme) {
-		super.setTheme(theme);
 	}
 
 	@Environment(EnvType.CLIENT)
