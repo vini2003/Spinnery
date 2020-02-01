@@ -1,6 +1,9 @@
 package spinnery.widget;
 
 import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.util.Window;
+import spinnery.client.BaseRenderer;
 import spinnery.registry.NetworkRegistry;
 
 import java.util.ArrayList;
@@ -168,8 +171,11 @@ public class WInterfaceHolder implements WModifiableCollection {
 		}
 	}
 
-
 	public void draw() {
+		Window window =  MinecraftClient.getInstance().getWindow();
+
+		BaseRenderer.drawRectangle(0, 0, 0, window.getWidth(), window.getHeight(), WColor.of(0x90000000));
+
 		for (WInterface myInterface : getInterfaces()) {
 			myInterface.draw();
 		}
