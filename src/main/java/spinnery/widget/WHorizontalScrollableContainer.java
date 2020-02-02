@@ -94,18 +94,6 @@ public class WHorizontalScrollableContainer extends WWidget implements WClient, 
     }
 
     @Override
-    public List<WWidget> getAllWidgets() {
-        List<WWidget> widgets = new ArrayList<>();
-        for (List<WWidget> widgetA : getListWidgets()) {
-            widgets.addAll(widgetA);
-            if (widgetA instanceof WCollection) {
-                widgets.addAll(((WCollection) widgetA).getAllWidgets());
-            }
-        }
-        return widgets;
-    }
-
-    @Override
     public void setLabel(Text label) {
         super.setLabel(label);
         scrollToStart();
