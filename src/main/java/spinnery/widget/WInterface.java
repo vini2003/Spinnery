@@ -10,6 +10,7 @@ public class WInterface extends WWidget implements WModifiableCollection {
 	public static final boolean INSTANCE_SERVER = true;
 	protected BaseContainer linkedContainer;
 	protected Set<WWidget> heldWidgets = new LinkedHashSet<>();
+	protected Map<Object, WWidget> cachedWidgets = new HashMap<>();
 	protected boolean isClientside;
 	protected boolean instanceType;
 

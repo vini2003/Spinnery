@@ -1,12 +1,17 @@
 package spinnery.common;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.ContainerScreen;
+import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
 import org.lwjgl.glfw.GLFW;
+import spinnery.client.BaseRenderer;
 import spinnery.widget.WCollection;
+import spinnery.widget.WInterface;
 import spinnery.widget.WInterfaceHolder;
 import spinnery.widget.WSlot;
 import spinnery.widget.WWidget;
@@ -21,6 +26,10 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 	@Environment(EnvType.CLIENT)
 	public BaseContainerScreen(Text name, T linkedContainer, PlayerEntity player) {
 		super(linkedContainer, player.inventory, name);
+		this.x = Integer.MIN_VALUE;
+		this.y = Integer.MIN_VALUE;
+		this.containerHeight = Integer.MAX_VALUE;
+		this.containerWidth = Integer.MIN_VALUE;
 	}
 
 	@Override
@@ -30,7 +39,11 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 
 		drawTooltip();
 
-		super.render(mouseX, mouseY, tick);
+		if (!playerInventory.getCursorStack().isEmpty()) {
+			RenderSystem.translatef(0, 0, 100);
+			MinecraftClient.getInstance().getItemRenderer().renderGuiItem(playerInventory.getCursorStack(), mouseX - 8, mouseY - 8);
+			MinecraftClient.getInstance().getItemRenderer().renderGuiItemOverlay(MinecraftClient.getInstance().textRenderer, playerInventory.getCursorStack(), mouseX - 8, mouseY - 8);
+		}
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -198,5 +211,18 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 				}
 			}
 		}
+	}
+
+	@Override
+	public void resize(MinecraftClient client, int width, int height) {
+		for (WInterface wInterface : getLinkedContainer().getHolder().getInterfaces()) {
+			wInterface.align();
+			wInterface.onAlign();
+			for (WWidget widgetA : wInterface.getWidgets()) {
+				widgetA.align();
+				widgetA.onAlign();
+			}
+		}
+		super.resize(client, width, height);
 	}
 }

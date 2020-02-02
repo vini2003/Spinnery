@@ -127,7 +127,8 @@ public class WSlot extends WWidget implements WClient, WServer, WFocusedMouseLis
 	public void onMouseClicked(int mouseX, int mouseY, int mouseButton) {
 		PlayerEntity playerEntity = getInterface().getContainer().getLinkedPlayerInventory().player;
 
-		if (mouseButton == 0 && Screen.hasShiftDown()) {
+		if (mouseButton == 0 && Screen.hasShiftDown() && getInterface().cachedWidgets.get(WSlot.class) != this) {
+			getInterface().cachedWidgets.put(WSlot.class, this);
 			getInterface().getContainer().onSlotClicked(getSlotNumber(), getInventoryNumber(), 0, SlotActionType.QUICK_MOVE, playerEntity);
 			ClientSidePacketRegistry.INSTANCE.sendToServer(NetworkRegistry.SLOT_CLICK_PACKET, NetworkRegistry.createSlotClickPacket(getSlotNumber(), getInventoryNumber(), 0, SlotActionType.QUICK_MOVE));
 		} else if (mouseButton == 0 && !Screen.hasShiftDown() && playerEntity.inventory.getCursorStack().isEmpty()) {

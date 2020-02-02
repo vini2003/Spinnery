@@ -459,7 +459,7 @@ public class WWidget implements Tickable, Comparable<WWidget> {
 	@Environment(EnvType.CLIENT)
 	public Identifier getTheme() {
 		if (theme != null) return theme;
-		if (linkedInterface.theme != null) return linkedInterface.theme;
+		if (linkedInterface != null && linkedInterface.theme != null) return linkedInterface.theme;
 		return DEFAULT_THEME;
 	}
 
