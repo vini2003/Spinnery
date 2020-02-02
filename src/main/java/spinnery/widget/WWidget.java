@@ -51,6 +51,16 @@ public class WWidget implements Tickable, Comparable<WWidget> {
 	}
 
 	@Environment(EnvType.CLIENT)
+	public Runnable getOnCharTyped() {
+		return runnableOnCharTyped;
+	}
+
+	@Environment(EnvType.CLIENT)
+	public void setOnCharTyped(Runnable linkedRunnableOnCharTyped) {
+		this.runnableOnCharTyped = linkedRunnableOnCharTyped;
+	}
+
+	@Environment(EnvType.CLIENT)
 	public void onKeyPressed(int keyPressed, int character, int keyModifier) {
 		if (runnableOnKeyPressed != null) {
 			runnableOnKeyPressed.run();
