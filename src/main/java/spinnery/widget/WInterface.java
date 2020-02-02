@@ -1,5 +1,6 @@
 package spinnery.widget;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import spinnery.client.BaseRenderer;
 import spinnery.common.BaseContainer;
 
@@ -24,6 +25,8 @@ public class WInterface extends WWidget implements WModifiableCollection {
 		setClientside(true);
 		setInstanceType(INSTANCE_CLIENT);
 	}
+
+
 
 	public void setClientside(Boolean clientside) {
 		isClientside = clientside;

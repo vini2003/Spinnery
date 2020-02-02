@@ -470,7 +470,7 @@ public class WWidget implements Tickable, Comparable<WWidget> {
 
 	@Override
 	public int compareTo(WWidget o) {
-		return Integer.compare(getZ(), o.getZ());
+		return Integer.compare(o.getZ(), getZ());
 	}
 
 	@Environment(EnvType.CLIENT)

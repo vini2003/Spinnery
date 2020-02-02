@@ -5,6 +5,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.Window;
 import spinnery.client.BaseRenderer;
 import spinnery.registry.NetworkRegistry;
+import spinnery.util.MouseUtilities;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -110,6 +111,8 @@ public class WInterfaceHolder implements WModifiableCollection {
 	}
 
 	public void mouseMoved(int mouseX, int mouseY) {
+		MouseUtilities.mouseX = mouseX;
+		MouseUtilities.mouseY = mouseY;
 		for (WWidget widget : getAllWidgets()) {
 			widget.updateFocus(mouseX, mouseY);
 			if (widget instanceof WFocusedMouseListener && !widget.getFocus()) continue;
