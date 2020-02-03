@@ -1,92 +1,115 @@
 package spinnery.widget.api;
 
-import spinnery.widget.WWidget;
+public class WPosition implements WPositioned {
+	public static final WPosition ORIGIN = new WPosition();
 
-public class WPosition {
-	protected WWidget anchor;
+	protected WPositioned anchor = ORIGIN;
 	protected int x;
 	protected int y;
 	protected int z;
-	protected int rawX;
-	protected int rawY;
-	protected int rawZ;
+	protected int offsetX;
+	protected int offsetY;
+	protected int offsetZ;
 
-	public WPosition anchor(WWidget anchor) {
+	protected WPosition() {
+	}
+
+	public static WPosition of(WPositioned source) {
+		return new WPosition().set(source.getX(), source.getY(), source.getZ());
+	}
+
+	public static WPosition of(int x, int y, int z) {
+		return new WPosition().set(x, y, z);
+	}
+
+	public static WPosition of(WPositioned anchor, int x, int y, int z) {
+		return new WPosition().anchor(anchor).set(x, y, z);
+	}
+
+	public WPosition anchor(WPositioned anchor) {
 		this.anchor = anchor;
 		return this;
 	}
 
-	public WPosition position(int x, int y, int z) {
-		setRawX(x);
-		setRawY(y);
-		setRawZ(z);
+	public WPosition set(int x, int y, int z) {
+		setOffsetX(x);
+		setOffsetY(y);
+		setOffsetZ(z);
 
-		if (anchor == null) return this;
-
-		setX(anchor.getX() + getRawX());
-		setY(anchor.getY() + getRawY());
-		setZ(anchor.getZ() + getRawZ());
+		setX(anchor.getX() + x);
+		setY(anchor.getY() + y);
+		setZ(anchor.getZ() + z);
 
 		return this;
 	}
 
-	public void align() {
-		if (anchor == null) return;
+	public WPosition add(int x, int y, int z) {
+		WPosition newPos = WPosition.of(this);
+		newPos.set(newPos.x + x, newPos.y + y, newPos.z + z);
+		return newPos;
+	}
 
-		setX(anchor.getX() + getRawX());
-		setY(anchor.getY() + getRawY());
-		setZ(anchor.getZ() + getRawZ());
+	public void align() {
+		setX(anchor.getX() + getOffsetX());
+		setY(anchor.getY() + getOffsetY());
+		setZ(anchor.getZ() + getOffsetZ());
+	}
+
+	public WPositioned getAnchor() {
+		return anchor;
 	}
 
 	public int getX() {
 		return x;
 	}
 
-	public void setX(int x) {
-		this.x = x;
-	}
-
 	public int getY() {
 		return y;
-	}
-
-	public void setY(int y) {
-		this.y = y;
 	}
 
 	public int getZ() {
 		return z;
 	}
 
-	public void setZ(int z) {
+	public int getOffsetX() {
+		return offsetX;
+	}
+
+	public int getOffsetY() {
+		return offsetY;
+	}
+
+	public int getOffsetZ() {
+		return offsetZ;
+	}
+
+	public WPosition setX(int x) {
+		this.x = x;
+		return this;
+	}
+
+	public WPosition setY(int y) {
+		this.y = y;
+		return this;
+	}
+
+	public WPosition setZ(int z) {
 		this.z = z;
+		return this;
 	}
 
-	public int getRawX() {
-		return rawX;
+	public WPosition setOffsetX(int offsetX) {
+		this.offsetX = offsetX;
+		return this;
 	}
 
-	public void setRawX(int rawX) {
-		this.rawX = rawX;
+	public WPosition setOffsetY(int offsetY) {
+		this.offsetY = offsetY;
+		return this;
 	}
 
-	public int getRawY() {
-		return rawY;
-	}
-
-	public void setRawY(int rawY) {
-		this.rawY = rawY;
-	}
-
-	public int getRawZ() {
-		return rawZ;
-	}
-
-	public void setRawZ(int rawZ) {
-		this.rawZ = rawZ;
-	}
-
-	public WWidget getAnchor() {
-		return anchor;
+	public WPosition setOffsetZ(int offsetZ) {
+		this.offsetZ = offsetZ;
+		return this;
 	}
 }

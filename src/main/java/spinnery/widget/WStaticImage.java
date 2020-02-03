@@ -16,10 +16,6 @@ public class WStaticImage extends WWidget {
 		return this;
 	}
 
-	public WStaticImage build() {
-		return this;
-	}
-
 	@Override
 	public void draw() {
 		if (isHidden()) {

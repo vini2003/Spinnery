@@ -26,10 +26,6 @@ public class WTabToggle extends WToggle {
 		return this;
 	}
 
-	public WTabToggle build() {
-		return this;
-	}
-
 	public Text getName() {
 		return name;
 	}

@@ -2,6 +2,7 @@ package spinnery.widget;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import spinnery.client.TextRenderer;
 import spinnery.widget.api.WFocusedMouseListener;
@@ -9,7 +10,7 @@ import spinnery.widget.api.WFocusedMouseListener;
 @Environment(EnvType.CLIENT)
 @WFocusedMouseListener
 public class WStaticText extends WWidget {
-	protected Text text;
+	protected Text text = new LiteralText("");
 	protected TextRenderer.Font font = TextRenderer.Font.DEFAULT;
 	protected Integer maxWidth = null;
 
@@ -20,10 +21,6 @@ public class WStaticText extends WWidget {
 
 	public WStaticText text(Text text) {
 		this.text = text;
-		return this;
-	}
-
-	public WStaticText build() {
 		return this;
 	}
 

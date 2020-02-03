@@ -8,6 +8,7 @@ import spinnery.client.BaseRenderer;
 import spinnery.client.TextRenderer;
 import spinnery.widget.api.WFocusedMouseListener;
 import spinnery.widget.api.WModifiableCollection;
+import spinnery.widget.api.WSize;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,10 +21,11 @@ import java.util.Set;
 public class WDropdown extends WWidget implements WModifiableCollection {
 	public List<List<WWidget>> dropdownWidgets = new ArrayList<>();
 	protected boolean state = false;
+	protected WSize dropdownSize;
 
-	public WDropdown build() {
+	@Override
+	public void onLayoutChange() {
 		updateHidden();
-		return this;
 	}
 
 	public void updateHidden() {
@@ -94,12 +96,21 @@ public class WDropdown extends WWidget implements WModifiableCollection {
 
 	@Override
 	public int getWidth() {
-		return getWidth(!getState() ? 0 : 1);
+		return Math.max(super.getWidth(), state ? dropdownSize.getWidth() : 0);
 	}
 
 	@Override
 	public int getHeight() {
-		return getHeight(!getState() ? 0 : 1);
+		return super.getHeight() + (state ? dropdownSize.getHeight() : 0);
+	}
+
+	public WSize getDropdownSize() {
+		return dropdownSize;
+	}
+
+	public WDropdown dropdownSize(WSize dropdownSize) {
+		this.dropdownSize = dropdownSize;
+		return this;
 	}
 
 	@Override

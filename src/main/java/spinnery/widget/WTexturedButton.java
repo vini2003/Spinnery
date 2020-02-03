@@ -32,10 +32,6 @@ public class WTexturedButton extends WWidget {
 		return this;
 	}
 
-	public WTexturedButton build() {
-		return this;
-	}
-
 	public WTexturedButton(WPosition position, WSize size, WInterface linkedInterface, Identifier texture, Identifier textureActive, Identifier textureDisabled) {
 		this(position, size, linkedInterface);
 		setInactive(texture);
@@ -63,7 +59,7 @@ public class WTexturedButton extends WWidget {
 
 	@Override
 	public void draw() {
-		BaseRenderer.drawImage(getX(), getY(), getZ(), getSize().getX(), getSize().getY(), getDrawTexture());
+		BaseRenderer.drawImage(getX(), getY(), getZ(), getWidth(), getHeight(), getDrawTexture());
 	}
 
 	protected Identifier getDrawTexture() {

@@ -22,10 +22,6 @@ import java.util.Set;
 public class WTabHolder extends WWidget implements WCollection {
 	List<WTab> tabs = new ArrayList<>();
 
-	public WTabHolder build() {
-		return this;
-	}
-
 	public void selectTab(int tabNumber) {
 		for (int i = 0; i < tabs.size(); i++) {
 			for (WWidget widget : tabs.get(i).getWidgets()) {
@@ -49,7 +45,7 @@ public class WTabHolder extends WWidget implements WCollection {
 		for (int i = 0; i < tabs.size(); i++) {
 			WTabToggle button = tabs.get(i).getToggle();
 			button.setWidth(tabSize);
-			button.setPosition(new WPosition().anchor(this).position(tabOffset, 0, 0));
+			button.setPosition(WPosition.of(this, tabOffset, 0, 0));
 			tabOffset += tabSize;
 		}
 		return tab;
@@ -138,10 +134,12 @@ public class WTabHolder extends WWidget implements WCollection {
 			this.symbol = symbol;
 			this.name = name;
 			this.number = number;
-			this.widgets.add(getInterface().getFactory().build(WTabToggle.class, new WPosition().anchor(holder).position(0, 0, 0), new WSize().put(36, 24))
-						.symbol(symbol)
-						.name(name)
-						.build());
+			WTabToggle tabToggle = createChild(WTabToggle.class, WPosition.of(holder, 0, 0, 0), WSize.of(36, 24))
+					.symbol(symbol)
+					.name(name);
+			tabToggle.setParent(holder);
+			tabToggle.setInterface(holder.getInterface());
+			this.widgets.add(tabToggle);
 			this.widgets.iterator().next().setOnMouseClicked(() -> {
 				if (getToggle().getToggleState()) {
 					selectTab(this.number);

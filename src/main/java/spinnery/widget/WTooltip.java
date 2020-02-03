@@ -11,19 +11,15 @@ import java.util.Set;
 public class WTooltip extends WWidget implements WModifiableCollection {
     private Set<WWidget> widgets = new LinkedHashSet<>();
 
-    public WTooltip build() {
-        return this;
-    }
-
     @Override
     public void draw() {
         if (isHidden()) return;
 
         int x = position.getX();
         int y = position.getY();
-        int z = position.getRawZ();
-        int width = size.getX();
-        int height = size.getY();
+        int z = position.getOffsetZ();
+        int width = size.getWidth();
+        int height = size.getHeight();
 
         WColor backgroundStart = getStyle().asColor("background.start");
         WColor backgroundEnd = getStyle().asColor("background.end");

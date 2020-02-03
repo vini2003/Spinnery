@@ -17,10 +17,23 @@ public class WVerticalList extends WWidget implements WModifiableCollection {
 
 	protected WVerticalScrollableContainer container;
 
-	public WVerticalList build() {
-		container = getInterface().getFactory().build(WVerticalScrollableContainer.class, new WPosition().anchor(this).position(6, 4, getZ()), new WSize().put(getWidth() - 8, getHeight() - 12))
-				.build();
-		return this;
+	public WVerticalList() {
+		container = getFactory().build(WVerticalScrollableContainer.class, WPosition.of(this, 6, 4, 0), WSize.of(getWidth() - 8, getHeight() - 12));
+		container.setParent(this);
+	}
+
+	@Override
+	public void onLayoutChange() {
+		if (hasLabel()) {
+			container.setPosition(WPosition.of(this, 4, 16 + 2 + 3, container.getPosition().getOffsetZ()));
+			container.setSize(WSize.of(getWidth() - 8, getHeight() - (16 + 2 + 3) - 6));
+		} else {
+			container.setPosition(WPosition.of(this, 6, 4, container.getPosition().getOffsetZ()));
+			container.setSize(WSize.of(getWidth() - 8, getHeight() - 12));
+		}
+		container.scrollToStart();
+		container.updateHidden();
+		container.updateScrollbar();
 	}
 
 	@Override
@@ -36,6 +49,16 @@ public class WVerticalList extends WWidget implements WModifiableCollection {
 	@Override
 	public void onMouseScrolled(int mouseX, int mouseY, double deltaY) {
 		container.onMouseScrolled(mouseX, mouseY, deltaY);
+	}
+
+	@Override
+	public void onMouseClicked(int mouseX, int mouseY, int mouseButton) {
+		container.onMouseClicked(mouseX, mouseY, mouseButton);
+	}
+
+	@Override
+	public void onMouseDragged(int mouseX, int mouseY, int mouseButton, double deltaX, double deltaY) {
+		container.onMouseDragged(mouseX, mouseY, mouseButton, deltaX, deltaY);
 	}
 
 	public boolean hasScrollbar() {
@@ -61,11 +84,7 @@ public class WVerticalList extends WWidget implements WModifiableCollection {
 	@Override
 	public void setLabel(Text label) {
 		super.setLabel(label);
-		container.setPosition(new WPosition().anchor(this).position(4, 16 + 2 + 3, container.getZ()));
-		container.setHeight(getHeight() - (16 + 2 + 3) - 6);
-		container.scrollToStart();
-		container.updateHidden();
-		container.updateScrollbar();
+		onLayoutChange();
 	}
 
 	@Override

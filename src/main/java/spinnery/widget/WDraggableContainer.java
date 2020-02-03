@@ -126,7 +126,7 @@ public class WDraggableContainer extends WWidget implements WModifiableCollectio
                 bottommostY = widget.getY() + widget.getHeight();
             }
         }
-        return new WSize().put(rightmostX - leftmostX, bottommostY - topmostY);
+        return WSize.of(rightmostX - leftmostX, bottommostY - topmostY);
     }
 
     @Override

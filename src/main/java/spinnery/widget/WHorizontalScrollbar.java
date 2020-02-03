@@ -4,29 +4,25 @@ import spinnery.client.BaseRenderer;
 import spinnery.widget.api.WHorizontalScrollable;
 
 public class WHorizontalScrollbar extends WWidget {
-    protected WHorizontalScrollable parent;
+    protected WHorizontalScrollable scrollable;
     protected double clickMouseX;
     protected boolean dragging = false;
 
-    public WHorizontalScrollbar parent(WHorizontalScrollable parent) {
-        this.parent = parent;
-        return this;
-    }
-
-    public WHorizontalScrollbar build() {
+    public WHorizontalScrollbar scrollable(WHorizontalScrollable scrollable) {
+        this.scrollable = scrollable;
         return this;
     }
 
     public int getScrollerWidth() {
         double outerWidth = getWidth();
-        double innerWidth = parent.getInnerWidth();
+        double innerWidth = scrollable.getInnerWidth();
         return (int) (outerWidth * (outerWidth / (Math.max(innerWidth, outerWidth))));
     }
 
     public int getScrollerX() {
         double outerWidth = getWidth();
-        double innerWidth = parent.getInnerWidth();
-        double leftOffset = parent.getStartOffsetX();
+        double innerWidth = scrollable.getInnerWidth();
+        double leftOffset = scrollable.getStartOffsetX();
         double percentToEnd = leftOffset / (innerWidth - outerWidth);
         double maximumOffset = getWidth() - getScrollerWidth();
         return getX() + (int) (maximumOffset * percentToEnd);
@@ -46,9 +42,9 @@ public class WHorizontalScrollbar extends WWidget {
                 } else {
                     dragging = false;
                     if (mouseX > getScrollerX()) {
-                        parent.scroll(-50, 0);
+                        scrollable.scroll(-50, 0);
                     } else {
-                        parent.scroll(50, 0);
+                        scrollable.scroll(50, 0);
                     }
                 }
             } else {
@@ -63,8 +59,8 @@ public class WHorizontalScrollbar extends WWidget {
         if (mouseButton == 0) {
             if (dragging) {
                 double scrollerOffsetX = getScrollerX() + clickMouseX - mouseX;
-                ((WHorizontalScrollableContainer) parent).scrollKineticDelta += -deltaX;
-                parent.scroll(scrollerOffsetX, 0);
+                ((WHorizontalScrollableContainer) scrollable).scrollKineticDelta += -deltaX;
+                scrollable.scroll(scrollerOffsetX, 0);
             }
         }
         super.onMouseDragged(mouseX, mouseY, mouseButton, deltaX, deltaY);

@@ -18,10 +18,6 @@ public class WDynamicImage extends WWidget {
 		return this;
 	}
 
-	public WDynamicImage build() {
-		return this;
-	}
-
 	public int next() {
 		if (getCurrentImage() < getTextures().length - 1) {
 			setCurrentImage(getCurrentImage() + 1);

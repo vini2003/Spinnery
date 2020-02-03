@@ -5,11 +5,19 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 
 @Environment(EnvType.CLIENT)
-public class WVirtualArea implements WPositioned, WSized {
+public class WVirtualArea implements WLayoutElement {
+	protected final WLayoutElement parent;
 	protected final WPosition position;
 	protected final WSize size;
 
+	public WVirtualArea(WLayoutElement parent, WPosition position, WSize size) {
+		this.parent = parent;
+		this.position = position;
+		this.size = size;
+	}
+
 	public WVirtualArea(WPosition position, WSize size) {
+		this.parent = null;
 		this.position = position;
 		this.size = size;
 	}
@@ -31,12 +39,12 @@ public class WVirtualArea implements WPositioned, WSized {
 
 	public void center() {
 		int x, y;
-		if (position.getAnchor() == null) {
+		if (parent == null) {
 			x = MinecraftClient.getInstance().getWindow().getScaledWidth() / 2 - getWidth() / 2;
 			y = MinecraftClient.getInstance().getWindow().getScaledHeight() / 2 - getHeight() / 2;
 		} else {
-			x = position.getAnchor().getWidth() / 2 - getWidth() / 2;
-			y = position.getAnchor().getHeight() / 2 - getHeight() / 2;
+			x = parent.getWidth() / 2 - getWidth() / 2;
+			y = parent.getHeight() / 2 - getHeight() / 2;
 		}
 		position.setX(x);
 		position.setY(y);
@@ -44,11 +52,15 @@ public class WVirtualArea implements WPositioned, WSized {
 
 	@Override
 	public int getWidth() {
-		return size.getX();
+		return size.getWidth();
 	}
 
 	@Override
 	public int getHeight() {
-		return size.getY();
+		return size.getHeight();
+	}
+
+	@Override
+	public void draw() {
 	}
 }

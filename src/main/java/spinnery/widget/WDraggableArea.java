@@ -17,9 +17,21 @@ public class WDraggableArea extends WWidget implements WModifiableCollection {
 
 	protected WDraggableContainer container;
 
-	public WDraggableArea build() {
-		container = getInterface().getFactory().build(WDraggableContainer.class, new WPosition().anchor(this).position(4, 4, getZ()), new WSize().put(getWidth() - 8, getHeight() - 8));
-		return this;
+	public WDraggableArea() {
+		container = getFactory().build(WDraggableContainer.class, WPosition.of(this, 4, 4, 0), WSize.of(getWidth() - 8, getHeight() - 8));
+		container.setParent(this);
+	}
+
+	@Override
+	public void onLayoutChange() {
+		if (hasLabel()) {
+			container.setPosition(WPosition.of(this, 6, 16 + 2 + 3, container.getPosition().getOffsetZ()));
+			container.setSize(WSize.of(getWidth() - 8, getHeight() - (16 + 2 + 3) - 6));
+		} else {
+			container.setPosition(WPosition.of(this, 4, 4, 0));
+			container.setSize(WSize.of(getWidth() - 8, getHeight() - 8));
+		}
+		container.updateHidden();
 	}
 
 	@Override
@@ -35,9 +47,6 @@ public class WDraggableArea extends WWidget implements WModifiableCollection {
 	@Override
 	public void setLabel(Text label) {
 		super.setLabel(label);
-		container.setPosition(new WPosition().anchor(this).position(6, 16 + 2 + 3, container.getZ()));
-		container.setHeight(getHeight() - (16 + 2 + 3) - 6);
-		container.updateHidden();
 	}
 
 	@Override

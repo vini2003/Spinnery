@@ -51,26 +51,19 @@ public class WSlot extends WWidget {
 		return this;
 	}
 
-	public WSlot build() {
-		return this;
-	}
-
 	@Environment(EnvType.CLIENT)
-	public static void addPalyerInventory(WPosition position, WSize size, WModifiableCollection parent) {
-		int temporarySlotNumber = 0;
-		addArray(position, size, parent, temporarySlotNumber, BaseContainer.PLAYER_INVENTORY, 9, 1);
-		temporarySlotNumber = 9;
-		addArray(position, size, parent, temporarySlotNumber, BaseContainer.PLAYER_INVENTORY, 9, 3);
+	public static void addPlayerInventory(WPosition position, WSize size, WModifiableCollection parent) {
+		addArray(position, size, parent, 9, BaseContainer.PLAYER_INVENTORY, 9, 3);
+		addArray(position.add(0, size.getHeight() * 3 + 3, 0), size, parent, 0, BaseContainer.PLAYER_INVENTORY, 9, 1);
 	}
 
 	@Environment(EnvType.CLIENT)
 	public static void addArray(WPosition position, WSize size, WModifiableCollection parent, int slotNumber, int inventoryNumber, int arrayWidth, int arrayHeight) {
 		for (int y = 0; y < arrayHeight; ++y) {
 			for (int x = 0; x < arrayWidth; ++x) {
-				parent.getFactory().build(WSlot.class, new WPosition().position(position.getX() + (size.getX() * x), position.getY() + (size.getY() * y), position.getZ()), size)
-						.slot(slotNumber)
-						.inventory(inventoryNumber)
-						.build();
+				parent.createChild(WSlot.class, WPosition.of(position.getX() + (size.getWidth() * x), position.getY() + (size.getHeight() * y), position.getZ()), size)
+						.slot(slotNumber + y * arrayWidth + x)
+						.inventory(inventoryNumber);
 			}
 		}
 	}
@@ -85,10 +78,7 @@ public class WSlot extends WWidget {
 	public static void addHeadlessArray(WModifiableCollection parent, int slotNumber, int inventoryNumber, int arrayWidth, int arrayHeight) {
 		for (int y = 0; y < arrayHeight; ++y) {
 			for (int x = 0; x < arrayWidth; ++x) {
-				parent.getFactory().build(WSlot.class, null, null)
-						.slot(slotNumber)
-						.inventory(inventoryNumber)
-						.build();
+				parent.createChild(WSlot.class).slot(slotNumber + y * arrayWidth + x).inventory(inventoryNumber);
 			}
 		}
 	}

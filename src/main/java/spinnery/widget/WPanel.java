@@ -6,9 +6,6 @@ import spinnery.client.BaseRenderer;
 import spinnery.client.TextRenderer;
 import spinnery.widget.api.WFocusedMouseListener;
 import spinnery.widget.api.WModifiableCollection;
-import spinnery.widget.api.WPosition;
-import spinnery.widget.api.WSize;
-import spinnery.widget.api.WType;
 
 import java.util.Arrays;
 import java.util.LinkedHashSet;
@@ -18,12 +15,6 @@ import java.util.Set;
 @WFocusedMouseListener
 public class WPanel extends WWidget implements WModifiableCollection {
 	protected Set<WWidget> heldWidgets = new LinkedHashSet<>();
-
-	public WPanel(WPosition position, WSize size, WInterface linkedInterface) {
-		setPosition(position);
-		setSize(size);
-		setInterface(linkedInterface);
-	}
 
 	@Override
 	public void draw() {

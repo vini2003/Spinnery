@@ -17,10 +17,23 @@ public class WHorizontalList extends WWidget implements WModifiableCollection {
 
 	protected WHorizontalScrollableContainer container;
 
-	public WHorizontalList build() {
-		container = getInterface().getFactory().build(WHorizontalScrollableContainer.class, new WPosition().anchor(this).position(6, 4, getZ()), new WSize().put(getWidth() - 12, getHeight() - 8))
-				.build();
-		return this;
+	public WHorizontalList() {
+		container = getFactory().build(WHorizontalScrollableContainer.class, WPosition.of(this, 6, 4, 0), WSize.of(getWidth() - 12, getHeight() - 8));
+		container.setParent(this);
+	}
+
+	@Override
+	public void onLayoutChange() {
+		if (hasLabel()) {
+			container.setPosition(WPosition.of(this, 6, 16 + 2 + 3, container.getPosition().getOffsetZ()));
+			container.setSize(WSize.of(getWidth() - 12, getHeight() - (16 + 2 + 3) - 6));
+		} else {
+			container.setPosition(WPosition.of(this, 6, 4, container.getPosition().getOffsetZ()));
+			container.setSize(WSize.of(getWidth() - 12, getHeight() - 8));
+		}
+		container.scrollToStart();
+		container.updateHidden();
+		container.updateScrollbar();
 	}
 
 	@Override
@@ -64,6 +77,16 @@ public class WHorizontalList extends WWidget implements WModifiableCollection {
 	}
 
 	@Override
+	public void onMouseClicked(int mouseX, int mouseY, int mouseButton) {
+		container.onMouseClicked(mouseX, mouseY, mouseButton);
+	}
+
+	@Override
+	public void onMouseDragged(int mouseX, int mouseY, int mouseButton, double deltaX, double deltaY) {
+		container.onMouseDragged(mouseX, mouseY, mouseButton, deltaX, deltaY);
+	}
+
+	@Override
 	public void add(WWidget... widgetArray) {
 		container.add(widgetArray);
 	}
@@ -76,11 +99,7 @@ public class WHorizontalList extends WWidget implements WModifiableCollection {
 	@Override
 	public void setLabel(Text label) {
 		super.setLabel(label);
-		container.setPosition(new WPosition().anchor(this).position(6, 16 + 2 + 3, container.getZ()));
-		container.setHeight(getHeight() - (16 + 2 + 3) - 6);
-		container.scrollToStart();
-		container.updateHidden();
-		container.updateScrollbar();
+		onLayoutChange();
 	}
 
 	@Override

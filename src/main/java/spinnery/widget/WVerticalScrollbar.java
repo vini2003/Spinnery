@@ -4,29 +4,25 @@ import spinnery.client.BaseRenderer;
 import spinnery.widget.api.WVerticalScrollable;
 
 public class WVerticalScrollbar extends WWidget {
-    protected WVerticalScrollable parent;
+    protected WVerticalScrollable scrollable;
     protected double clickMouseY;
     protected boolean dragging = false;
 
-    public WVerticalScrollbar parent(WVerticalScrollable parent) {
-        this.parent = parent;
-        return this;
-    }
-
-    public WVerticalScrollbar build() {
+    public WVerticalScrollbar scrollable(WVerticalScrollable scrollable) {
+        this.scrollable = scrollable;
         return this;
     }
 
     public int getScrollerHeight() {
         double outerHeight = getHeight();
-        double innerHeight = parent.getInnerSize().getY();
+        double innerHeight = scrollable.getInnerHeight();
         return (int) (outerHeight * (outerHeight / Math.max(innerHeight, outerHeight)));
     }
 
     public int getScrollerY() {
         double outerHeight = getHeight();
-        double innerHeight = parent.getInnerSize().getY();
-        double topOffset = parent.getStartOffsetY();
+        double innerHeight = scrollable.getInnerHeight();
+        double topOffset = scrollable.getStartOffsetY();
         double percentToEnd = topOffset / (innerHeight - outerHeight);
         double maximumOffset = getHeight() - getScrollerHeight();
         return getY() + (int) (maximumOffset * percentToEnd);
@@ -46,9 +42,9 @@ public class WVerticalScrollbar extends WWidget {
                 } else {
                     dragging = false;
                     if (mouseY > getScrollerY()) {
-                        parent.scroll(0, -50);
+                        scrollable.scroll(0, -50);
                     } else {
-                        parent.scroll(0, 50);
+                        scrollable.scroll(0, 50);
                     }
                 }
             } else {
@@ -63,8 +59,8 @@ public class WVerticalScrollbar extends WWidget {
         if (mouseButton == 0) {
             if (dragging) {
                 double scrollerOffsetY = getScrollerY() + clickMouseY - mouseY;
-                ((WVerticalScrollableContainer) parent).scrollKineticDelta += -deltaY;
-                parent.scroll(0, scrollerOffsetY);
+                ((WVerticalScrollableContainer) scrollable).scrollKineticDelta += -deltaY;
+                scrollable.scroll(0, scrollerOffsetY);
             }
         }
         super.onMouseDragged(mouseX, mouseY, mouseButton, deltaX, deltaY);
@@ -75,5 +71,13 @@ public class WVerticalScrollbar extends WWidget {
         if (isHidden()) return;
         BaseRenderer.drawBeveledPanel(getX(), getY(), getZ(), getWidth(), getHeight(), getStyle().asColor("scroll_line.top_left"), getStyle().asColor("scroll_line.background"), getStyle().asColor("scroll_line.bottom_right"));
         drawScroller();
+    }
+
+    public WVerticalScrollable getScrollableParent() {
+        return scrollable;
+    }
+
+    public void setScrollableParent(WVerticalScrollable parent) {
+        this.scrollable = parent;
     }
 }

@@ -5,11 +5,11 @@ import blue.endless.jankson.JsonElement;
 import io.github.cottonmc.jankson.JanksonOps;
 import net.minecraft.util.Identifier;
 import spinnery.Spinnery;
+import spinnery.util.MutablePair;
 import spinnery.widget.WWidget;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.IntStream;
@@ -78,45 +78,47 @@ public class WStyle {
 
 	public WSize asSize(String property) {
 		JsonElement el = getElement(property);
-		if (!(el instanceof JsonArray)) return new WSize().put(0, 0);
+		if (!(el instanceof JsonArray)) return WSize.of(0, 0);
 		JsonArray array = (JsonArray) el;
-		return new WSize().put(array.getInt(0, 0), array.getInt(1, 0));
+		return WSize.of(array.getInt(0, 0), array.getInt(1, 0));
 	}
 
-	public WSize asSidedSize(String property) {
+	// Clockwise from top, returns <vertical, horizontal>
+	public MutablePair<WSize, WSize> asSidedSize(String property) {
 		JsonElement el = getElement(property);
 		Optional<Number> singleValue = JanksonOps.INSTANCE.getNumberValue(el);
+		MutablePair<WSize, WSize> pair = MutablePair.of(WSize.of(0, 0), WSize.of(0, 0));
 		if (singleValue.isPresent()) {
 			int intValue = singleValue.get().intValue();
-			return new WSize().put(intValue, intValue).put(intValue, intValue);
+			WSize size = WSize.of(intValue, intValue);
+			return MutablePair.of(size, size);
 		}
 
-		if (!(el instanceof JsonArray)) return new WSize().put(0, 0).put(0, 0);
+		if (!(el instanceof JsonArray)) return pair;
 		JsonArray array = (JsonArray) el;
 
 		if (array.size() == 1) {
-			return new WSize().put(array.getInt(0, 0), array.getInt(0, 0)).put(array.getInt(0, 0), array.getInt(0, 0));
+			return MutablePair.of(WSize.of(array.getInt(0, 0), array.getInt(0, 0)), WSize.of(array.getInt(0, 0), array.getInt(0, 0)));
 		} else if (array.size() == 2) {
-			return new WSize().put(array.getInt(0, 0), array.getInt(1, 0)).put(array.getInt(0, 0), array.getInt(1, 0));
+			return MutablePair.of(WSize.of(array.getInt(0, 0), array.getInt(0, 0)), WSize.of(array.getInt(1, 0), array.getInt(1, 0)));
 		} else if (array.size() >= 4) {
-			return new WSize().put(array.getInt(0, 0), array.getInt(1, 0)).put(array.getInt(2, 0), array.getInt(3, 0));
-		} else {
-			return new WSize().put(0, 0).put(0, 0);
+			return MutablePair.of(WSize.of(array.getInt(0, 0), array.getInt(2, 0)), WSize.of(array.getInt(1, 0), array.getInt(3, 0)));
 		}
+		return pair;
 	}
 
 	public WPosition asPosition(String property) {
 		JsonElement el = getElement(property);
-		if (!(el instanceof JsonArray)) return new WPosition().position(0, 0, 0);
+		if (!(el instanceof JsonArray)) return new WPosition().set(0, 0, 0);
 		JsonArray array = (JsonArray) el;
-		return new WPosition().position(array.getInt(0, 0), array.getInt(1, 0), array.getInt(2, 0));
+		return new WPosition().set(array.getInt(0, 0), array.getInt(1, 0), array.getInt(2, 0));
 	}
 
 	public WPosition asAnchoredPosition(String property, WWidget anchor) {
 		JsonElement el = getElement(property);
-		if (!(el instanceof JsonArray)) return new WPosition().anchor(anchor).position(0, 0, 0);
+		if (!(el instanceof JsonArray)) return new WPosition().anchor(anchor).set(0, 0, 0);
 		JsonArray array = (JsonArray) el;
-		return new WPosition().anchor(anchor).position(array.getInt(0, 0), array.getInt(1, 0), array.getInt(2, 0));
+		return new WPosition().anchor(anchor).set(array.getInt(0, 0), array.getInt(1, 0), array.getInt(2, 0));
 	}
 
 	public Identifier asIdentifier(String property) {
@@ -142,22 +144,10 @@ public class WStyle {
 		registerSerializer(Number.class, JanksonOps.INSTANCE::createNumeric);
 		registerSerializer(String.class, JanksonOps.INSTANCE::createString);
 		registerSerializer(Boolean.class, JanksonOps.INSTANCE::createBoolean);
-		registerSerializer(WPosition.class, v -> JanksonOps.INSTANCE.createIntList(IntStream.of(v.rawX, v.rawY, v.rawZ)));
-		registerSerializer(WSize.class, v -> {
-			int[] values = new int[4];
-			for (int i : v.sizes.keySet()) {
-				if (i == 0) {
-					values[0] = v.getX(0);
-					values[1] = v.getY(0);
-				}
-				if (i == 1) {
-					values[2] = v.getX(1);
-					values[3] = v.getY(1);
-				}
-			}
-			return JanksonOps.INSTANCE.createIntList(IntStream.of(values).filter(Objects::nonNull));
-		});
+		registerSerializer(WPosition.class, v -> JanksonOps.INSTANCE.createIntList(IntStream.of(v.offsetX, v.offsetY, v.offsetZ)));
+		registerSerializer(WSize.class, v -> JanksonOps.INSTANCE.createIntList(IntStream.of(v.getWidth(), v.getHeight())));
 		registerSerializer(WColor.class, v -> JanksonOps.INSTANCE.createLong(v.ARGB));
+		// TODO: sided size serialization
 	}
 
 	public <T> void override(String property, T value) {

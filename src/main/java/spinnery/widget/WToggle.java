@@ -11,10 +11,6 @@ import spinnery.widget.api.WFocusedMouseListener;
 public class WToggle extends WWidget {
 	protected boolean toggleState = false;
 
-	public WToggle build() {
-		return this;
-	}
-
 	@Override
 	public void onMouseClicked(int mouseX, int mouseY, int mouseButton) {
 		setToggleState(!getToggleState());

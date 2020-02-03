@@ -29,11 +29,6 @@ public class WVerticalSlider extends WWidget {
 		return this;
 	}
 
-	public WVerticalSlider build() {
-		updatePosition(getX(), getY());
-		return this;
-	}
-
 	@Override
 	public void onKeyPressed(int keyPressed, int character, int keyModifier) {
 		if (keyPressed == GLFW.GLFW_KEY_KP_SUBTRACT) {

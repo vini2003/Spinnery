@@ -3,6 +3,7 @@ package spinnery.widget;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import org.apache.commons.lang3.mutable.Mutable;
+import org.apache.commons.lang3.mutable.MutableInt;
 import org.lwjgl.glfw.GLFW;
 import spinnery.client.BaseRenderer;
 import spinnery.client.TextRenderer;
@@ -13,24 +14,24 @@ import spinnery.widget.api.WFocusedMouseListener;
 @WFocusedKeyboardListener
 @WFocusedMouseListener
 public class WHorizontalSlider extends WWidget {
-	protected Mutable<Number> limit;
-	protected Mutable<Number> progress;
+	protected Mutable<Number> limit = new MutableInt(0);
+	protected Mutable<Number> progress = new MutableInt(0);
 
 	protected String total = "0";
 	protected int tX;
 
-	public WHorizontalSlider limit(Mutable<Number> limit) {
-		this.limit = limit;
+	@Override
+	public void onLayoutChange() {
+		tX = getX() + (getWidth() + 7) / 2 - TextRenderer.width(String.valueOf(getProgress().getValue().intValue())) / 2;
+	}
+
+	public WHorizontalSlider limit(float limit) {
+		this.limit.setValue(limit);
 		return this;
 	}
 
-	public WHorizontalSlider progress(Mutable<Number> progress) {
-		this.progress = progress;
-		return this;
-	}
-
-	public WHorizontalSlider build() {
-		updatePosition(getX(), getY());
+	public WHorizontalSlider progress(float progress) {
+		this.progress.setValue(progress);
 		return this;
 	}
 
@@ -53,14 +54,14 @@ public class WHorizontalSlider extends WWidget {
 		return limit;
 	}
 
-	public void setLimit(Mutable<Number> limit) {
-		this.limit = limit;
+	public void setLimit(float value) {
+		this.limit.setValue(value);
 	}
 
-	public void setProgress(Mutable<Number> progress) {
-		this.progress = progress;
+	public void setProgress(float value) {
+		this.progress.setValue(value);
 		total = Integer.toString(Math.round(getProgress().getValue().floatValue()));
-		tX = getX() + (getWidth() + 7) / 2 - TextRenderer.width(String.valueOf(getProgress().getValue().intValue())) / 2;
+		onLayoutChange();
 	}
 
 	@Override
@@ -70,7 +71,7 @@ public class WHorizontalSlider extends WWidget {
 	}
 
 	public void updatePosition(int mouseX, int mouseY) {
-		progress.setValue((mouseX - getX()) * (getLimit().getValue().floatValue() / (float) (getWidth())));
+		setProgress((mouseX - getX()) * (getLimit().getValue().floatValue() / (float) (getWidth())));
 	}
 
 	@Override

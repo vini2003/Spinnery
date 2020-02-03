@@ -1,53 +1,37 @@
 package spinnery.widget.api;
 
-import spinnery.util.MutablePair;
-import spinnery.widget.WWidget;
+public class WSize implements WSized {
+	protected int width;
+	protected int height;
 
-import java.util.HashMap;
-import java.util.Map;
+	protected WSize(int width, int height) {
+		this.width = width;
+		this.height = height;
+	}
 
-public class WSize {
-	protected Map<Integer, MutablePair<Integer, Integer>> sizes = new HashMap<>();
+	public static WSize of(int width, int height) {
+		return new WSize(width, height);
+	}
 
-	public WSize put(int x, int y) {
-		sizes.put(sizes.size(), MutablePair.of(x, y));
+	public static WSize of(WSized widget) {
+		return new WSize(widget.getWidth(), widget.getHeight());
+	}
+
+	public int getWidth() {
+		return width;
+	}
+
+	public WSize setWidth(int width) {
+		this.width = width;
 		return this;
 	}
 
-	public WSize put(WWidget widget) {
-		sizes = widget.getSize().sizes;
+	public int getHeight() {
+		return height;
+	}
+
+	public WSize setHeight(int height) {
+		this.height = height;
 		return this;
-	}
-
-	public void setX(int number, int sizeX) {
-		this.sizes.get(number).setFirst(sizeX);
-	}
-
-	public void setY(int number, int sizeY) {
-		this.sizes.get(number).setSecond(sizeY);
-	}
-
-	public int getX() {
-		return sizes.get(0).getFirst();
-	}
-
-	public void setX(int sizeX) {
-		this.sizes.get(0).setFirst(sizeX);
-	}
-
-	public int getY() {
-		return sizes.get(0).getSecond();
-	}
-
-	public void setY(int sizeY) {
-		this.sizes.get(0).setSecond(sizeY);
-	}
-
-	public int getX(int number) {
-		return sizes.get(number).getFirst();
-	}
-
-	public int getY(int number) {
-		return sizes.get(number).getSecond();
 	}
 }

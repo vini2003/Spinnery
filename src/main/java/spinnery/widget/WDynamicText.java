@@ -21,10 +21,6 @@ public class WDynamicText extends WWidget {
 	protected boolean isEditable = true;
 	protected int currentLine = 0;
 
-	public WDynamicText build() {
-		return this;
-	}
-
 	public String getText() {
 		return text;
 	}

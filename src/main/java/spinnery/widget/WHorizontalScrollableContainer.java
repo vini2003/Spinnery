@@ -22,22 +22,23 @@ public class WHorizontalScrollableContainer extends WWidget implements WModifiab
 
     protected float scrollKineticDelta = 0;
 
-    public WHorizontalScrollableContainer build() {
-        scrollbar = getInterface().getFactory().build(WHorizontalScrollbar.class, null, null)
-                .hidden(true)
-                .morph(WHorizontalScrollbar.class)
-                .build();
+    public WHorizontalScrollableContainer() {
+        scrollbar = getFactory().build(WHorizontalScrollbar.class, null, null).scrollable(this);
+        scrollbar.setParent(this);
+    }
+
+    @Override
+    public void onLayoutChange() {
         updateScrollbar();
-        return this;
     }
 
     public void updateScrollbar() {
         int scrollBarWidth = getVisibleWidth();
         int scrollBarHeight = 6;
-        int scrollBarX = getX();
-        int scrollBarY = getY() + getHeight() - scrollBarHeight;
-        scrollbar.setPosition(new WPosition().position(scrollBarX, scrollBarY, scrollbar.getZ()));
-        scrollbar.setSize(new WSize().put(scrollBarWidth, scrollBarHeight));
+        int scrollBarOffsetX = 0;
+        int scrollBarOffsetY = getHeight() - scrollBarHeight;
+        scrollbar.setPosition(WPosition.of(this, scrollBarOffsetX, scrollBarOffsetY, scrollbar.getPosition().getOffsetZ()));
+        scrollbar.setSize(WSize.of(scrollBarWidth, scrollBarHeight));
     }
 
     @Override
@@ -47,6 +48,18 @@ public class WHorizontalScrollableContainer extends WWidget implements WModifiab
             scroll(deltaY * 5, 0);
             super.onMouseScrolled(mouseX, mouseY, deltaY);
         }
+    }
+
+    @Override
+    public void onMouseClicked(int mouseX, int mouseY, int mouseButton) {
+        scrollbar.onMouseClicked(mouseX, mouseY, mouseButton);
+        super.onMouseClicked(mouseX, mouseY, mouseButton);
+    }
+
+    @Override
+    public void onMouseDragged(int mouseX, int mouseY, int mouseButton, double deltaX, double deltaY) {
+        scrollbar.onMouseDragged(mouseX, mouseY, mouseButton, deltaX, deltaY);
+        super.onMouseDragged(mouseX, mouseY, mouseButton, deltaX, deltaY);
     }
 
     @Override
@@ -139,7 +152,7 @@ public class WHorizontalScrollableContainer extends WWidget implements WModifiab
 
     @Override
     public WSize getVisibleSize() {
-        return new WSize().put(getWidth(), getHeight() - (!scrollbar.isHidden() ? scrollbar.getHeight() : 0));
+        return WSize.of(getWidth(), getHeight() - (!scrollbar.isHidden() ? scrollbar.getHeight() : 0));
     }
 
     @Override
@@ -162,7 +175,7 @@ public class WHorizontalScrollableContainer extends WWidget implements WModifiab
             }
         }
 
-        return new WSize().put(rightmostX - leftmostX, getVisibleHeight());
+        return WSize.of(rightmostX - leftmostX, getVisibleHeight());
     }
 
     @Override

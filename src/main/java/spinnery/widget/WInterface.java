@@ -1,13 +1,13 @@
 package spinnery.widget;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.Identifier;
 import spinnery.common.BaseContainer;
 import spinnery.registry.NetworkRegistry;
-import spinnery.widget.api.WFocusedKeyboardListener;
-import spinnery.widget.api.WFocusedMouseListener;
-import spinnery.widget.api.WModifiableCollection;
-import spinnery.widget.api.WNetworked;
+import spinnery.widget.api.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class WInterface implements WModifiableCollection {
+public class WInterface implements WModifiableCollection, WLayoutElement, WThemable {
 	protected BaseContainer linkedContainer;
 	protected Set<WWidget> heldWidgets = new LinkedHashSet<>();
 	protected Map<Object, WWidget> cachedWidgets = new HashMap<>();
@@ -52,6 +52,7 @@ public class WInterface implements WModifiableCollection {
 		this.linkedContainer = linkedContainer;
 	}
 
+	@Override
 	public Identifier getTheme() {
 		return theme;
 	}
@@ -202,6 +203,7 @@ public class WInterface implements WModifiableCollection {
 		}
 	}
 
+	@Override
 	public void draw() {
 		List<WWidget> widgets = new ArrayList<>(getWidgets());
 		Collections.sort(widgets);
@@ -209,5 +211,35 @@ public class WInterface implements WModifiableCollection {
 		for (WWidget widget : widgets) {
 			widget.draw();
 		}
+	}
+
+	@Override
+	@Environment(EnvType.CLIENT)
+	public int getX() {
+		return 0;
+	}
+
+	@Override
+	@Environment(EnvType.CLIENT)
+	public int getY() {
+		return 0;
+	}
+
+	@Override
+	@Environment(EnvType.CLIENT)
+	public int getZ() {
+		return 0;
+	}
+
+	@Override
+	@Environment(EnvType.CLIENT)
+	public int getWidth() {
+		return MinecraftClient.getInstance().getWindow().getScaledWidth();
+	}
+
+	@Override
+	@Environment(EnvType.CLIENT)
+	public int getHeight() {
+		return MinecraftClient.getInstance().getWindow().getScaledHeight();
 	}
 }

@@ -2,31 +2,27 @@ package spinnery.widget;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Tickable;
 import spinnery.registry.ThemeRegistry;
 import spinnery.registry.WidgetRegistry;
-import spinnery.widget.api.WPosition;
-import spinnery.widget.api.WPositioned;
-import spinnery.widget.api.WSize;
-import spinnery.widget.api.WStyle;
-import spinnery.widget.api.WStyleProvider;
+import spinnery.widget.api.*;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 import static spinnery.registry.ThemeRegistry.DEFAULT_THEME;
 
-public class WWidget implements Tickable, Comparable<WWidget>, WPositioned, WStyleProvider {
+@SuppressWarnings("unchecked")
+public class WWidget implements Tickable, Comparable<WWidget>, WLayoutElement, WThemable, WStyleProvider {
 	protected WInterface linkedInterface;
+	protected WLayoutElement parent;
 
-	protected WPosition position = null;
+	protected WPosition position = WPosition.ORIGIN;
 
-	protected WSize size = null;
+	protected WSize size = WSize.of(0, 0);
 
 	protected boolean isHidden = false;
 	protected boolean hasFocus = false;
@@ -50,28 +46,26 @@ public class WWidget implements Tickable, Comparable<WWidget>, WPositioned, WSty
 
 	protected Text label = new LiteralText("");
 
-	public WWidget label(Text label) {
+	public WWidget() {
+	}
+
+	public <T extends WWidget> T label(Text label) {
 		this.label = label;
-		return this;
+		return (T) this;
 	}
 
-	public WWidget theme(Identifier theme) {
+	public <T extends WWidget> T theme(Identifier theme) {
 		this.theme = theme;
-		return this;
+		return (T) this;
 	}
 
-	public WWidget hidden(boolean isHidden) {
+	public <T extends WWidget> T hidden(boolean isHidden) {
 		this.isHidden = isHidden;
-		return this;
+		return (T) this;
 	}
 
-	public WWidget shadow(boolean isLabelShadowed) {
+	public <T extends WWidget> T shadow(boolean isLabelShadowed) {
 		this.isLabelShadowed = isLabelShadowed;
-		return this;
-	}
-
-	@SuppressWarnings("unchecked")
-	public <T extends WWidget> T morph(Class<T> tClass) {
 		return (T) this;
 	}
 
@@ -267,6 +261,7 @@ public class WWidget implements Tickable, Comparable<WWidget>, WPositioned, WSty
 		if (runnableOnAlign != null) {
 			runnableOnAlign.run();
 		}
+		onLayoutChange();
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -315,6 +310,7 @@ public class WWidget implements Tickable, Comparable<WWidget>, WPositioned, WSty
 	@Environment(EnvType.CLIENT)
 	public void setSize(WSize size) {
 		this.size = size;
+		onLayoutChange();
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -324,7 +320,7 @@ public class WWidget implements Tickable, Comparable<WWidget>, WPositioned, WSty
 
 	@Environment(EnvType.CLIENT)
 	public void setX(int x) {
-		position.setX(x);
+		setPosition(WPosition.of(position).setX(x));
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -334,7 +330,7 @@ public class WWidget implements Tickable, Comparable<WWidget>, WPositioned, WSty
 
 	@Environment(EnvType.CLIENT)
 	public void setY(int y) {
-		position.setY(y);
+		setPosition(WPosition.of(position).setY(y));
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -344,27 +340,27 @@ public class WWidget implements Tickable, Comparable<WWidget>, WPositioned, WSty
 
 	@Environment(EnvType.CLIENT)
 	public void setZ(int z) {
-		position.setZ(z);
+		setPosition(WPosition.of(position).setZ(z));
 	}
 
 	@Environment(EnvType.CLIENT)
 	public int getWidth() {
-		return size.getX();
+		return size.getWidth();
 	}
 
 	@Environment(EnvType.CLIENT)
 	public void setWidth(int width) {
-		size.setX(width);
+		setSize(WSize.of(size).setWidth(width));
 	}
 
 	@Environment(EnvType.CLIENT)
 	public int getHeight() {
-		return size.getY();
+		return size.getHeight();
 	}
 
 	@Environment(EnvType.CLIENT)
 	public void setHeight(int height) {
-		size.setY(height);
+		setSize(WSize.of(size).setHeight(height));
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -375,26 +371,7 @@ public class WWidget implements Tickable, Comparable<WWidget>, WPositioned, WSty
 	@Environment(EnvType.CLIENT)
 	public void setPosition(WPosition position) {
 		this.position = position;
-	}
-
-	@Environment(EnvType.CLIENT)
-	public int getWidth(int number) {
-		return size.getX(number);
-	}
-
-	@Environment(EnvType.CLIENT)
-	public void setWidth(int number, int width) {
-		size.setX(number, width);
-	}
-
-	@Environment(EnvType.CLIENT)
-	public int getHeight(int number) {
-		return size.getY(number);
-	}
-
-	@Environment(EnvType.CLIENT)
-	public void setHeight(int number, int height) {
-		size.setY(number, height);
+		onLayoutChange();
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -416,10 +393,7 @@ public class WWidget implements Tickable, Comparable<WWidget>, WPositioned, WSty
 			return false;
 		}
 
-		Optional<? extends WWidget> optional = linkedInterface.getWidgets().stream().filter((widget) ->
-				widget.getZ() > getZ() && widget.isWithinBounds(mouseX, mouseY)
-		).findAny();
-		setFocus(!optional.isPresent() && isWithinBounds(mouseX, mouseY));
+		setFocus(isWithinBounds(mouseX, mouseY));
 		return getFocus();
 	}
 
@@ -450,24 +424,26 @@ public class WWidget implements Tickable, Comparable<WWidget>, WPositioned, WSty
 	}
 
 	@Environment(EnvType.CLIENT)
+	public WLayoutElement getParent() {
+		return parent;
+	}
+
+	@Environment(EnvType.CLIENT)
+	public void setParent(WLayoutElement parent) {
+		this.parent = parent;
+	}
+
+	@Environment(EnvType.CLIENT)
 	public void align() {
 		position.align();
 	}
 
 	@Environment(EnvType.CLIENT)
 	public void center() {
-		if (getInterface() != null && getInterface().isClient()) {
-			int x, y;
-			if (position.getAnchor() == null) {
-				x = MinecraftClient.getInstance().getWindow().getScaledWidth() / 2 - getWidth() / 2;
-				y = MinecraftClient.getInstance().getWindow().getScaledHeight() / 2 - getHeight() / 2;
-			} else {
-				x = position.getAnchor().getWidth() / 2 - getWidth() / 2;
-				y = position.getAnchor().getHeight() / 2 - getHeight() / 2;
-			}
-			position.setX(x);
-			position.setY(y);
-		}
+		setPosition(WPosition.of(getParent(),
+				getParent().getWidth() / 2 - getWidth() / 2,
+				getParent().getHeight() / 2 - getHeight() / 2,
+				getPosition().getOffsetZ()));
 	}
 
 	public WInterface getInterface() {
@@ -482,14 +458,17 @@ public class WWidget implements Tickable, Comparable<WWidget>, WPositioned, WSty
 	public void tick() {
 	}
 
+	@Override
 	@Environment(EnvType.CLIENT)
 	public void draw() {
 	}
 
+	@Override
 	@Environment(EnvType.CLIENT)
 	public Identifier getTheme() {
 		if (theme != null) return theme;
-		if (linkedInterface != null && linkedInterface.theme != null) return linkedInterface.theme;
+		if (parent != null && parent instanceof WThemable) return ((WThemable) parent).getTheme();
+		if (linkedInterface != null && linkedInterface.getTheme() != null) return linkedInterface.getTheme();
 		return DEFAULT_THEME;
 	}
 

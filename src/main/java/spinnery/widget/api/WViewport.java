@@ -3,16 +3,16 @@ package spinnery.widget.api;
 public interface WViewport {
     WSize getInnerSize();
     default int getInnerHeight() {
-        return getInnerSize().getY();
+        return getInnerSize().getHeight();
     }
     default int getInnerWidth() {
-        return getInnerSize().getX();
+        return getInnerSize().getWidth();
     }
     WSize getVisibleSize();
     default int getVisibleHeight() {
-        return getVisibleSize().getY();
+        return getVisibleSize().getHeight();
     }
     default int getVisibleWidth() {
-        return getVisibleSize().getX();
+        return getVisibleSize().getWidth();
     }
 }

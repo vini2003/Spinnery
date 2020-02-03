@@ -7,9 +7,7 @@ import spinnery.Spinnery;
 
 @Environment(EnvType.CLIENT)
 public final class WKibbySprite extends WStaticImage {
-	@Override
-	public WKibbySprite build() {
+	public WKibbySprite() {
 		setTexture(new Identifier(Spinnery.MOD_ID, "textures/kirby.png"));
-		return this;
 	}
 }

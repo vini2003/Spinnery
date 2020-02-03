@@ -36,10 +36,6 @@ public class WBar extends WWidget {
 		return this;
 	}
 
-	public WBar build() {
-		return this;
-	}
-
 	public Mutable<Number> getLimit() {
 		return limit;
 	}
@@ -94,11 +90,11 @@ public class WBar extends WWidget {
 
 		GL11.glScissor((int) (x * scale), (int) (rawHeight - ((y + sY - sBGY) * scale)), (int) (sX * scale), (int) ((sY - sBGY) * scale));
 
-		BaseRenderer.drawImage(getX(), getY(), z, getSize().getX(), getSize().getY(), getBackgroundTexture());
+		BaseRenderer.drawImage(getX(), getY(), z, getWidth(), getHeight(), getBackgroundTexture());
 
 		GL11.glScissor((int) (x * scale), (int) (rawHeight - ((y + sY) * scale)), (int) (sX * scale), (int) (sBGY * scale));
 
-		BaseRenderer.drawImage(getX(), getY(), z, getSize().getX(), getSize().getY(), getForegroundTexture());
+		BaseRenderer.drawImage(getX(), getY(), z, getWidth(), getHeight(), getForegroundTexture());
 
 		GL11.glDisable(GL11.GL_SCISSOR_TEST);
 	}
