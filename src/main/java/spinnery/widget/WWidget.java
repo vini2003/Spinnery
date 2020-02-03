@@ -253,6 +253,29 @@ public class WWidget implements Tickable, Comparable<WWidget>, WLayoutElement, W
 		return position.getZ();
 	}
 
+	@Environment(EnvType.CLIENT)
+	public <T extends WWidget> T setPosition(WPosition position) {
+		this.position = position;
+		onLayoutChange();
+		return (T) this;
+	}
+
+	@Environment(EnvType.CLIENT)
+	public <T extends WWidget> T setX(int x) {
+		return setPosition(WPosition.of(position).setX(x));
+	}
+
+	@Environment(EnvType.CLIENT)
+	public <T extends WWidget> T setY(int y) {
+		return setPosition(WPosition.of(position).setY(y));
+	}
+
+	@Environment(EnvType.CLIENT)
+	public <T extends WWidget> T setZ(int z) {
+		setPosition(WPosition.of(position).setZ(z));
+		return (T) this;
+	}
+
 	// WSized
 
 	@Environment(EnvType.CLIENT)
@@ -271,40 +294,20 @@ public class WWidget implements Tickable, Comparable<WWidget>, WLayoutElement, W
 	}
 
 	@Environment(EnvType.CLIENT)
-	public void setSize(WSize size) {
+	public <T extends WWidget> T setSize(WSize size) {
 		this.size = size;
 		onLayoutChange();
+		return (T) this;
 	}
 
 	@Environment(EnvType.CLIENT)
-	public void setWidth(int width) {
-		setSize(WSize.of(size).setWidth(width));
+	public <T extends WWidget> T setWidth(int width) {
+		return setSize(WSize.of(size).setWidth(width));
 	}
 
 	@Environment(EnvType.CLIENT)
-	public void setHeight(int height) {
-		setSize(WSize.of(size).setHeight(height));
-	}
-
-	@Environment(EnvType.CLIENT)
-	public void setPosition(WPosition position) {
-		this.position = position;
-		onLayoutChange();
-	}
-
-	@Environment(EnvType.CLIENT)
-	public void setX(int x) {
-		setPosition(WPosition.of(position).setX(x));
-	}
-
-	@Environment(EnvType.CLIENT)
-	public void setY(int y) {
-		setPosition(WPosition.of(position).setY(y));
-	}
-
-	@Environment(EnvType.CLIENT)
-	public void setZ(int z) {
-		setPosition(WPosition.of(position).setZ(z));
+	public <T extends WWidget> T setHeight(int height) {
+		return setSize(WSize.of(size).setHeight(height));
 	}
 
 	// Event runners
