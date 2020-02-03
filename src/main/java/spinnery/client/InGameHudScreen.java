@@ -1,20 +1,20 @@
 package spinnery.client;
 
 import net.minecraft.client.gui.hud.InGameHud;
-import spinnery.widget.WInterfaceHolder;
+import spinnery.widget.WInterface;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class InGameHudScreen {
-	protected static WInterfaceHolder interfaceHolder = null;
+	protected static WInterface hudInterface = null;
 	protected static InGameHud inGameHudCache = null;
 	protected static List<Runnable> onInitialize = new ArrayList<>();
 
 	public static void onInitialize(InGameHud inGameHud) {
 		inGameHudCache = inGameHud;
-		interfaceHolder = ((InGameHudScreen.Acessor) inGameHud).getHolder();
+		hudInterface = ((Accessor) inGameHud).getInterface();
 		for (Runnable r : onInitialize) {
 			r.run();
 		}
@@ -28,16 +28,16 @@ public class InGameHudScreen {
 		onInitialize.removeAll(Arrays.asList(r));
 	}
 
-	public static WInterfaceHolder getHolder() {
-		return interfaceHolder;
+	public static WInterface getHolder() {
+		return hudInterface;
 	}
 
 	public static InGameHud getInGameHude() {
 		return inGameHudCache;
 	}
 
-	public interface Acessor {
-		WInterfaceHolder getHolder();
+	public interface Accessor {
+		WInterface getInterface();
 
 		InGameHud getInGameHud();
 	}

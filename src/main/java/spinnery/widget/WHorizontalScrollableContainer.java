@@ -3,6 +3,11 @@ package spinnery.widget;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
 import org.lwjgl.opengl.GL11;
+import spinnery.widget.api.WCollection;
+import spinnery.widget.api.WHorizontalScrollable;
+import spinnery.widget.api.WModifiableCollection;
+import spinnery.widget.api.WPosition;
+import spinnery.widget.api.WSize;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -10,22 +15,20 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-public class WHorizontalScrollableContainer extends WWidget implements WClient, WModifiableCollection, WHorizontalScrollable {
+public class WHorizontalScrollableContainer extends WWidget implements WModifiableCollection, WHorizontalScrollable {
     public List<List<WWidget>> listWidgets = new ArrayList<>();
 
     protected WHorizontalScrollbar scrollbar;
 
     protected float scrollKineticDelta = 0;
 
-    public WHorizontalScrollableContainer(WPosition position, WSize size, WInterface linkedInterface) {
-        setInterface(linkedInterface);
-        setPosition(position);
-        setSize(size);
-
-        scrollbar = new WHorizontalScrollbar(linkedInterface, this);
-        scrollbar.setHidden(true);
-        linkedInterface.add(scrollbar);
+    public WHorizontalScrollableContainer build() {
+        scrollbar = getInterface().getFactory().build(WHorizontalScrollbar.class, null, null)
+                .hidden(true)
+                .morph(WHorizontalScrollbar.class)
+                .build();
         updateScrollbar();
+        return this;
     }
 
     public void updateScrollbar() {
@@ -33,8 +36,8 @@ public class WHorizontalScrollableContainer extends WWidget implements WClient, 
         int scrollBarHeight = 6;
         int scrollBarX = getX();
         int scrollBarY = getY() + getHeight() - scrollBarHeight;
-        scrollbar.setPosition(WPosition.of(WType.FREE, scrollBarX, scrollBarY, getZ() + 1));
-        scrollbar.setSize(WSize.of(scrollBarWidth, scrollBarHeight));
+        scrollbar.setPosition(new WPosition().position(scrollBarX, scrollBarY, scrollbar.getZ()));
+        scrollbar.setSize(new WSize().put(scrollBarWidth, scrollBarHeight));
     }
 
     @Override
@@ -136,7 +139,7 @@ public class WHorizontalScrollableContainer extends WWidget implements WClient, 
 
     @Override
     public WSize getVisibleSize() {
-        return WSize.of(getWidth(), getHeight() - (!scrollbar.isHidden() ? scrollbar.getHeight() : 0));
+        return new WSize().put(getWidth(), getHeight() - (!scrollbar.isHidden() ? scrollbar.getHeight() : 0));
     }
 
     @Override
@@ -159,7 +162,7 @@ public class WHorizontalScrollableContainer extends WWidget implements WClient, 
             }
         }
 
-        return WSize.of(rightmostX - leftmostX, getVisibleHeight());
+        return new WSize().put(rightmostX - leftmostX, getVisibleHeight());
     }
 
     @Override

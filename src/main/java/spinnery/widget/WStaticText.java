@@ -3,23 +3,28 @@ package spinnery.widget;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.text.Text;
-import spinnery.client.BaseRenderer;
+import spinnery.client.TextRenderer;
+import spinnery.widget.api.WFocusedMouseListener;
 
 @Environment(EnvType.CLIENT)
-public class WStaticText extends WWidget implements WClient, WFocusedMouseListener {
+@WFocusedMouseListener
+public class WStaticText extends WWidget {
 	protected Text text;
-	protected BaseRenderer.Font font;
+	protected TextRenderer.Font font = TextRenderer.Font.DEFAULT;
 	protected Integer maxWidth = null;
 
-	public WStaticText(WPosition position, WInterface linkedInterface, Text text) {
-		this(position, linkedInterface, text, BaseRenderer.Font.DEFAULT);
+	public WStaticText font(TextRenderer.Font font) {
+		this.font = font;
+		return this;
 	}
 
-	public WStaticText(WPosition position, WInterface linkedInterface, Text text, BaseRenderer.Font font) {
-		setInterface(linkedInterface);
-		setPosition(position);
-		setText(text);
-		this.font = font;
+	public WStaticText text(Text text) {
+		this.text = text;
+		return this;
+	}
+
+	public WStaticText build() {
+		return this;
 	}
 
 	public Integer getMaxWidth() {
@@ -30,22 +35,22 @@ public class WStaticText extends WWidget implements WClient, WFocusedMouseListen
 		this.maxWidth = maxWidth;
 	}
 
-	public BaseRenderer.Font getFont() {
+	public TextRenderer.Font getFont() {
 		return font;
 	}
 
-	public void setFont(BaseRenderer.Font font) {
+	public void setFont(TextRenderer.Font font) {
 		this.font = font;
 	}
 
 	@Override
 	public int getWidth() {
-		return BaseRenderer.getTextRenderer(font).getStringWidth(text.asString());
+		return TextRenderer.width(text);
 	}
 
 	@Override
 	public int getHeight() {
-		return BaseRenderer.getTextRenderer(font).fontHeight;
+		return TextRenderer.height(font);
 	}
 
 	@Override
@@ -56,11 +61,11 @@ public class WStaticText extends WWidget implements WClient, WFocusedMouseListen
 
 		int x = getX();
 		int y = getY();
+		int z = getZ();
 
-		if (isLabelShadowed()) {
-			BaseRenderer.drawTextTrimmed(getText().asFormattedString(), x + 1, y + 1, maxWidth, getStyle().asColor("shadow"), font);
-		}
-		BaseRenderer.drawTextTrimmed(getText().asFormattedString(), x, y, maxWidth, getStyle().asColor("text"), font);
+		TextRenderer.pass().shadow(isLabelShadowed()).text(getText()).font(font).at(x, y, z).maxWidth(maxWidth)
+				.shadow(getStyle().asBoolean("shadow")).shadowColor(getStyle().asColor("shadowColor"))
+				.color(getStyle().asColor("text")).render();
 	}
 
 	public Text getText() {

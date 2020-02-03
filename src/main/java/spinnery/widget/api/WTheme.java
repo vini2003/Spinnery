@@ -1,4 +1,4 @@
-package spinnery.widget;
+package spinnery.widget.api;
 
 import blue.endless.jankson.JsonArray;
 import blue.endless.jankson.JsonElement;

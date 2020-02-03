@@ -7,19 +7,27 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import spinnery.client.BaseRenderer;
+import spinnery.client.TextRenderer;
+import spinnery.widget.api.WFocusedMouseListener;
 
 @Environment(EnvType.CLIENT)
+@WFocusedMouseListener
 public class WTabToggle extends WToggle {
 	Item symbol;
 	Text name;
 
-	public WTabToggle(WPosition position, WSize size, WInterface linkedInterface, Item symbol, Text name) {
-		super(position, size, linkedInterface);
-		setInterface(linkedInterface);
-		setPosition(position);
-		setSize(size);
-		setSymbol(symbol);
-		setName(name);
+	public WTabToggle symbol(Item symbol) {
+		this.symbol = symbol;
+		return this;
+	}
+
+	public WTabToggle name(Text name) {
+		this.name = name;
+		return this;
+	}
+
+	public WTabToggle build() {
+		return this;
 	}
 
 	public Text getName() {
@@ -59,7 +67,8 @@ public class WTabToggle extends WToggle {
 		RenderSystem.enableLighting();
 		BaseRenderer.getItemRenderer().renderGuiItemIcon(new ItemStack(getSymbol(), 1), x + 4, y + 4);
 		RenderSystem.disableLighting();
-		BaseRenderer.drawText(isLabelShadowed(), name.asFormattedString(), x + 24, (int) (y + sY / 2 - 4.5), getStyle().asColor("label"));
+		TextRenderer.pass().shadow(isLabelShadowed()).text(name).at(x + 24, y + sY / 2 - 4.5, z)
+				.color(getStyle().asColor("label.color")).shadowColor(getStyle().asColor("label.shadow_color")).render();
 	}
 
 	public Item getSymbol() {

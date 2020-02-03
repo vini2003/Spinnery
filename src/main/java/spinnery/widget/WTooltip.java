@@ -1,8 +1,9 @@
 package spinnery.widget;
 
 import spinnery.client.BaseRenderer;
+import spinnery.widget.api.WColor;
+import spinnery.widget.api.WModifiableCollection;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -10,10 +11,8 @@ import java.util.Set;
 public class WTooltip extends WWidget implements WModifiableCollection {
     private Set<WWidget> widgets = new LinkedHashSet<>();
 
-    public WTooltip(WPosition position, WSize size, WInterface linkedInterface) {
-        setPosition(position);
-        setSize(size);
-        setInterface(linkedInterface);
+    public WTooltip build() {
+        return this;
     }
 
     @Override

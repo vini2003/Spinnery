@@ -8,11 +8,10 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import spinnery.client.InGameHudScreen;
 import spinnery.widget.WInterface;
-import spinnery.widget.WInterfaceHolder;
 
 @Mixin(InGameHud.class)
-public class InGameHudMixin implements InGameHudScreen.Acessor {
-	WInterfaceHolder interfaceHolder = new WInterfaceHolder();
+public class InGameHudMixin implements InGameHudScreen.Accessor {
+	WInterface hudInterface = new WInterface();
 
 	@Inject(method = "<init>", at = @At("RETURN"))
 	public void onInitialize(MinecraftClient client, CallbackInfo ci) {
@@ -21,14 +20,12 @@ public class InGameHudMixin implements InGameHudScreen.Acessor {
 
 	@Inject(method = "render", at = @At("RETURN"))
 	public void renderInterfaces(float tickDelta, CallbackInfo ci) {
-		for (WInterface wInterface : getHolder().getInterfaces()) {
-			wInterface.draw();
-		}
+		hudInterface.draw();
 	}
 
 	@Override
-	public WInterfaceHolder getHolder() {
-		return interfaceHolder;
+	public WInterface getInterface() {
+		return hudInterface;
 	}
 
 	@Override

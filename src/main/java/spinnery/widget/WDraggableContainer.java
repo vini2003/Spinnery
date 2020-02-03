@@ -4,26 +4,23 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import org.lwjgl.opengl.GL11;
+import spinnery.widget.api.WHorizontalScrollable;
+import spinnery.widget.api.WModifiableCollection;
+import spinnery.widget.api.WSize;
+import spinnery.widget.api.WVerticalScrollable;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Environment(EnvType.CLIENT)
-public class WDraggableContainer extends WWidget implements WClient, WModifiableCollection,
+public class WDraggableContainer extends WWidget implements WModifiableCollection,
         WVerticalScrollable, WHorizontalScrollable {
     private Set<WWidget> widgets = new LinkedHashSet<>();
 
     protected boolean dragging = false;
     protected float scrollKineticDeltaX = 0;
     protected float scrollKineticDeltaY = 0;
-
-    public WDraggableContainer(WPosition position, WSize size, WInterface linkedInterface) {
-        setPosition(position);
-        setSize(size);
-        setInterface(linkedInterface);
-    }
 
     @Override
     public int getStartAnchorX() {
@@ -129,7 +126,7 @@ public class WDraggableContainer extends WWidget implements WClient, WModifiable
                 bottommostY = widget.getY() + widget.getHeight();
             }
         }
-        return WSize.of(rightmostX - leftmostX, bottommostY - topmostY);
+        return new WSize().put(rightmostX - leftmostX, bottommostY - topmostY);
     }
 
     @Override
@@ -160,9 +157,11 @@ public class WDraggableContainer extends WWidget implements WClient, WModifiable
 
     public void updateHidden() {
         for (WWidget w : getWidgets()) {
-            boolean startContained = isWithinBounds(w.getX(), w.getY(), 1)
-                    || isWithinBounds(w.getX() + w.getWidth(), w.getY() + w.getHeight(), 1);
-            w.setHidden(!startContained);
+            boolean hidden = (w.getX() + w.getWidth() < getX())
+                    || (w.getX() > getX() + getWidth())
+                    || (w.getY() + w.getHeight() < getY())
+                    || (w.getY() > getY() + getHeight());
+            w.setHidden(hidden);
         }
     }
 

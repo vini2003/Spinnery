@@ -3,15 +3,16 @@ package spinnery.widget;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import spinnery.client.BaseRenderer;
+import spinnery.client.TextRenderer;
+import spinnery.widget.api.WFocusedMouseListener;
 
 @Environment(EnvType.CLIENT)
-public class WToggle extends WWidget implements WClient, WFocusedMouseListener {
+@WFocusedMouseListener
+public class WToggle extends WWidget {
 	protected boolean toggleState = false;
 
-	public WToggle(WPosition position, WSize size, WInterface linkedInterface) {
-		setInterface(linkedInterface);
-		setPosition(position);
-		setSize(size);
+	public WToggle build() {
+		return this;
 	}
 
 	@Override
@@ -48,7 +49,9 @@ public class WToggle extends WWidget implements WClient, WFocusedMouseListener {
 		}
 
 		if (hasLabel()) {
-			BaseRenderer.drawText(isLabelShadowed(), getLabel().asFormattedString(), x + sX + 2, (int) (y + sY / 2 - 4.5), getStyle().asColor("label"));
+			TextRenderer.pass().shadow(isLabelShadowed())
+					.text(getLabel()).at(x + sX + 2, y + sY / 2 - 4.5, z)
+					.color(getStyle().asColor("label.color")).shadowColor(getStyle().asColor("label.shadow_color")).render();
 		}
 	}
 

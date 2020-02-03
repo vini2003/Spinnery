@@ -1,20 +1,21 @@
 package spinnery.widget;
 
 import net.minecraft.nbt.CompoundTag;
+import spinnery.widget.api.WNetworked;
 
 import java.util.function.BiConsumer;
 
-public abstract class WWidgetSynced extends WWidget implements WSynced {
-    protected BiConsumer<Event, CompoundTag> consumerOnInterfaceEvent;
-    protected final int syncId;
+public class WWidgetNetworked extends WWidget implements WNetworked {
+	protected BiConsumer<Event, CompoundTag> consumerOnInterfaceEvent;
+	protected final int syncId;
 
-    public WWidgetSynced(int syncId) {
-        this.syncId = syncId;
-    }
+	public WWidgetNetworked(int syncId) {
+		this.syncId = syncId;
+	}
 
-    @Override
-    public int getSyncId() {
-        return syncId;
+	@Override
+	public int getSyncId() {
+		return syncId;
     }
 
     @Override

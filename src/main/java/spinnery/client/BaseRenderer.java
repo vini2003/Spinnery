@@ -2,7 +2,6 @@ package spinnery.client;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexFormats;
@@ -10,7 +9,7 @@ import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.texture.TextureManager;
 import net.minecraft.util.Identifier;
 import org.lwjgl.opengl.GL11;
-import spinnery.widget.WColor;
+import spinnery.widget.api.WColor;
 
 public class BaseRenderer {
 	public static void drawPanel(double x, double y, double z, double sX, double sY, WColor shadow, WColor panel, WColor hilight, WColor outline) {
@@ -91,68 +90,6 @@ public class BaseRenderer {
 		drawRectangle(x + 1, y + sY - 1, z, sX - 1, 1, bottomright);
 	}
 
-	public static void drawText(String text, int x, int y, WColor color) {
-		drawText(text, x, y, color.RGB);
-	}
-
-	public static void drawTextTrimmed(String text, int x, int y, Integer maxWidth, WColor color) {
-		drawTextTrimmed(text, x, y, maxWidth, color, Font.DEFAULT);
-	}
-
-	public static void drawTextTrimmed(String text, int x, int y, Integer maxWidth, WColor color, Font font) {
-		drawTextTrimmed(text, x, y, maxWidth, color.RGB, font);
-	}
-
-	public static void drawText(String text, int x, int y, int color) {
-		drawTextTrimmed(text, x, y, null, color);
-	}
-
-	public static void drawTextTrimmed(String text, int x, int y, Integer maxWidth, int color) {
-		drawTextTrimmed(text, x, y, maxWidth, color, Font.DEFAULT);
-	}
-
-	public static void drawTextTrimmed(String text, int x, int y, Integer maxWidth, int color, Font font) {
-		if (maxWidth != null) {
-			getTextRenderer(font).drawTrimmed(text, x, y, maxWidth, color);
-		} else {
-			getTextRenderer(font).draw(text, x, y, color);
-		}
-	}
-
-	public static TextRenderer getTextRenderer(Font font) {
-		switch (font) {
-			case ENCHANTMENT:
-				return MinecraftClient.getInstance().getFontManager()
-						.getTextRenderer(MinecraftClient.ALT_TEXT_RENDERER_ID);
-			case DEFAULT:
-			default:
-				return MinecraftClient.getInstance().textRenderer;
-		}
-	}
-
-	public static void drawText(boolean isShadowed, String text, int x, int y, WColor color) {
-		drawText(isShadowed, text, x, y, color.RGB);
-	}
-
-	public static void drawText(boolean isShadowed, String text, int x, int y, int color) {
-		drawText(isShadowed, text, x, y, color, 0x3E3E3E);
-	}
-
-	public static void drawText(boolean isShadowed, String text, int x, int y, WColor color, WColor shadowColor) {
-		drawText(isShadowed, text, x, y, color.RGB, shadowColor.RGB);
-	}
-
-	public static void drawText(boolean isShadowed, String text, int x, int y, int color, int shadowColor) {
-		if (isShadowed) {
-			drawTextTrimmed(text, x + 1, y + 1, null, shadowColor);
-		}
-		drawTextTrimmed(text, x, y, null, color);
-	}
-
-	public static void drawText(String text, int x, int y, int color, Font font) {
-		drawTextTrimmed(text, x, y, null, color, font);
-	}
-
 	public static void drawImage(double x, double y, double z, double sX, double sY, Identifier texture) {
 		getTextureManager().bindTexture(texture);
 
@@ -180,16 +117,7 @@ public class BaseRenderer {
 		drawRectangle(x, y, z, 1, 1, color);
 	}
 
-	public static TextRenderer getTextRenderer() {
-		return getTextRenderer(Font.DEFAULT);
-	}
-
 	public static ItemRenderer getItemRenderer() {
 		return MinecraftClient.getInstance().getItemRenderer();
-	}
-
-	public enum Font {
-		DEFAULT,
-		ENCHANTMENT,
 	}
 }

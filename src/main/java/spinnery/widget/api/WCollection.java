@@ -1,6 +1,7 @@
-package spinnery.widget;
+package spinnery.widget.api;
 
-import java.util.ArrayList;
+import spinnery.widget.WWidget;
+
 import java.util.LinkedHashSet;
 import java.util.Set;
 

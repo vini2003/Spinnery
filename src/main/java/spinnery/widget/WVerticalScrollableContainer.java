@@ -3,6 +3,11 @@ package spinnery.widget;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
 import org.lwjgl.opengl.GL11;
+import spinnery.widget.api.WCollection;
+import spinnery.widget.api.WModifiableCollection;
+import spinnery.widget.api.WPosition;
+import spinnery.widget.api.WSize;
+import spinnery.widget.api.WVerticalScrollable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -10,31 +15,28 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-public class WVerticalScrollableContainer extends WWidget implements WClient, WModifiableCollection, WVerticalScrollable {
+public class WVerticalScrollableContainer extends WWidget implements WModifiableCollection, WVerticalScrollable {
     public List<List<WWidget>> listWidgets = new ArrayList<>();
 
     protected WVerticalScrollbar scrollbar;
 
     protected float scrollKineticDelta = 0;
 
-    public WVerticalScrollableContainer(WPosition position, WSize size, WInterface linkedInterface) {
-        setInterface(linkedInterface);
-        setPosition(position);
-        setSize(size);
-
-        scrollbar = new WVerticalScrollbar(linkedInterface, this);
-        scrollbar.setHidden(true);
-        linkedInterface.add(scrollbar);
+    public WVerticalScrollableContainer build() {
+        scrollbar = getInterface().getFactory().build(WVerticalScrollbar.class, null, null)
+                .hidden(true)
+                .morph(WVerticalScrollbar.class)
+                .build();
         updateScrollbar();
+        return this;
     }
-
     public void updateScrollbar() {
         int scrollBarWidth = 6;
         int scrollBarHeight = getHeight();
         int scrollBarX = getX() + getWidth() - scrollBarWidth;
         int scrollBarY = getY();
-        scrollbar.setPosition(WPosition.of(WType.FREE, scrollBarX, scrollBarY, getZ()));
-        scrollbar.setSize(WSize.of(scrollBarWidth, scrollBarHeight));
+        scrollbar.setPosition(new WPosition().position(scrollBarX, scrollBarY, getZ()));
+        scrollbar.setSize(new WSize().put(scrollBarWidth, scrollBarHeight));
     }
 
     @Override
@@ -135,7 +137,7 @@ public class WVerticalScrollableContainer extends WWidget implements WClient, WM
 
     @Override
     public WSize getVisibleSize() {
-        return WSize.of(getWidth() - (!scrollbar.isHidden() ? scrollbar.getWidth() : 0), getHeight());
+        return new WSize().put(getWidth() - (!scrollbar.isHidden() ? scrollbar.getWidth() : 0), getHeight());
     }
 
     @Override
@@ -158,7 +160,7 @@ public class WVerticalScrollableContainer extends WWidget implements WClient, WM
             }
         }
 
-        return WSize.of(getVisibleWidth(), bottommostY - topmostY);
+        return new WSize().put(getVisibleWidth(), bottommostY - topmostY);
     }
 
     @Override

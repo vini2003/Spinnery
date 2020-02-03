@@ -3,7 +3,27 @@ package spinnery.registry;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import net.minecraft.util.Identifier;
-import spinnery.widget.*;
+import spinnery.widget.WBar;
+import spinnery.widget.WButton;
+import spinnery.widget.WDraggableArea;
+import spinnery.widget.WDropdown;
+import spinnery.widget.WDynamicImage;
+import spinnery.widget.WDynamicText;
+import spinnery.widget.WHorizontalList;
+import spinnery.widget.WHorizontalScrollbar;
+import spinnery.widget.WHorizontalSlider;
+import spinnery.widget.WPanel;
+import spinnery.widget.WSlot;
+import spinnery.widget.WStaticImage;
+import spinnery.widget.WStaticText;
+import spinnery.widget.WTabHolder;
+import spinnery.widget.WTabToggle;
+import spinnery.widget.WToggle;
+import spinnery.widget.WTooltip;
+import spinnery.widget.WVerticalList;
+import spinnery.widget.WVerticalScrollbar;
+import spinnery.widget.WVerticalSlider;
+import spinnery.widget.WWidget;
 
 public class WidgetRegistry {
 	private static BiMap<Identifier, Class<? extends WWidget>> widgetMap = HashBiMap.create();
@@ -34,7 +54,7 @@ public class WidgetRegistry {
 		register(new Identifier("spinnery", "dynamic_text"), WDynamicText.class);
 		register(new Identifier("spinnery", "horizontal_list"), WHorizontalList.class);
 		register(new Identifier("spinnery", "horizontal_slider"), WHorizontalSlider.class);
-		register(new Identifier("spinnery", "interface"), WInterface.class);
+		register(new Identifier("spinnery", "panel"), WPanel.class);
 		register(new Identifier("spinnery", "vertical_list"), WVerticalList.class);
 		register(new Identifier("spinnery", "slot"), WSlot.class);
 		register(new Identifier("spinnery", "static_image"), WStaticImage.class);

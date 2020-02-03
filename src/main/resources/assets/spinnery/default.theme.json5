@@ -35,9 +35,11 @@
     }
   },
   theme: {
-    "spinnery:interface": {
-      $extend: ["$panel"]
-    },
+    "spinnery:panel": {
+		$extend: [
+			"$panel"
+		]
+	},
     "spinnery:vertical_list": {
       $extend: ["$panel"]
     },

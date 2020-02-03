@@ -1,4 +1,4 @@
-package spinnery.widget;
+package spinnery.widget.api;
 
 public interface WHorizontalScrollable extends WScrollable {
     int getStartAnchorX();

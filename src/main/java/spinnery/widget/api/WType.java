@@ -1,4 +1,4 @@
-package spinnery.widget;
+package spinnery.widget.api;
 
 public enum WType {
 	ANCHORED,

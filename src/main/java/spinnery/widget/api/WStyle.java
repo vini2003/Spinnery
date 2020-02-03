@@ -1,10 +1,11 @@
-package spinnery.widget;
+package spinnery.widget.api;
 
 import blue.endless.jankson.JsonArray;
 import blue.endless.jankson.JsonElement;
 import io.github.cottonmc.jankson.JanksonOps;
 import net.minecraft.util.Identifier;
 import spinnery.Spinnery;
+import spinnery.widget.WWidget;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,7 +33,15 @@ public class WStyle {
 		return properties.get(key);
 	}
 
+	public boolean contains(String key) {
+		return properties.get(key) != null;
+	}
+
 	// GETTERS
+
+	public boolean asBoolean(String property) {
+		return JanksonOps.INSTANCE.getNumberValue(getElement(property)).orElse(0).intValue() == 1;
+	}
 
 	public String asString(String property) {
 		return JanksonOps.INSTANCE.getStringValue(getElement(property)).orElse("");
@@ -59,15 +68,19 @@ public class WStyle {
 	}
 
 	public WColor asColor(String property) {
+		return asColor(property, WColor.of("0xff000000"));
+	}
+
+	public WColor asColor(String property, WColor defaultColor) {
 		return JanksonOps.INSTANCE.getNumberValue(getElement(property))
-				.map(WColor::of).orElse(WColor.of("0x000000"));
+				.map(WColor::of).orElse(defaultColor);
 	}
 
 	public WSize asSize(String property) {
 		JsonElement el = getElement(property);
-		if (!(el instanceof JsonArray)) return WSize.of(0, 0);
+		if (!(el instanceof JsonArray)) return new WSize().put(0, 0);
 		JsonArray array = (JsonArray) el;
-		return WSize.of(array.getInt(0, 0), array.getInt(1, 0));
+		return new WSize().put(array.getInt(0, 0), array.getInt(1, 0));
 	}
 
 	public WSize asSidedSize(String property) {
@@ -75,35 +88,35 @@ public class WStyle {
 		Optional<Number> singleValue = JanksonOps.INSTANCE.getNumberValue(el);
 		if (singleValue.isPresent()) {
 			int intValue = singleValue.get().intValue();
-			return WSize.of(intValue, intValue, intValue, intValue);
+			return new WSize().put(intValue, intValue).put(intValue, intValue);
 		}
 
-		if (!(el instanceof JsonArray)) return WSize.of(0, 0, 0, 0);
+		if (!(el instanceof JsonArray)) return new WSize().put(0, 0).put(0, 0);
 		JsonArray array = (JsonArray) el;
 
 		if (array.size() == 1) {
-			return WSize.of(array.getInt(0, 0), array.getInt(0, 0), array.getInt(0, 0), array.getInt(0, 0));
+			return new WSize().put(array.getInt(0, 0), array.getInt(0, 0)).put(array.getInt(0, 0), array.getInt(0, 0));
 		} else if (array.size() == 2) {
-			return WSize.of(array.getInt(0, 0), array.getInt(1, 0), array.getInt(0, 0), array.getInt(1, 0));
+			return new WSize().put(array.getInt(0, 0), array.getInt(1, 0)).put(array.getInt(0, 0), array.getInt(1, 0));
 		} else if (array.size() >= 4) {
-			return WSize.of(array.getInt(0, 0), array.getInt(1, 0), array.getInt(2, 0), array.getInt(3, 0));
+			return new WSize().put(array.getInt(0, 0), array.getInt(1, 0)).put(array.getInt(2, 0), array.getInt(3, 0));
 		} else {
-			return WSize.of(0, 0, 0, 0);
+			return new WSize().put(0, 0).put(0, 0);
 		}
 	}
 
 	public WPosition asPosition(String property) {
 		JsonElement el = getElement(property);
-		if (!(el instanceof JsonArray)) return WPosition.of(WType.FREE, 0, 0, 0);
+		if (!(el instanceof JsonArray)) return new WPosition().position(0, 0, 0);
 		JsonArray array = (JsonArray) el;
-		return WPosition.of(WType.FREE, array.getInt(0, 0), array.getInt(1, 0), array.getInt(2, 0));
+		return new WPosition().position(array.getInt(0, 0), array.getInt(1, 0), array.getInt(2, 0));
 	}
 
 	public WPosition asAnchoredPosition(String property, WWidget anchor) {
 		JsonElement el = getElement(property);
-		if (!(el instanceof JsonArray)) return WPosition.of(WType.ANCHORED, 0, 0, 0, anchor);
+		if (!(el instanceof JsonArray)) return new WPosition().anchor(anchor).position(0, 0, 0);
 		JsonArray array = (JsonArray) el;
-		return WPosition.of(WType.ANCHORED, array.getInt(0, 0), array.getInt(1, 0), array.getInt(2, 0), anchor);
+		return new WPosition().anchor(anchor).position(array.getInt(0, 0), array.getInt(1, 0), array.getInt(2, 0));
 	}
 
 	public Identifier asIdentifier(String property) {

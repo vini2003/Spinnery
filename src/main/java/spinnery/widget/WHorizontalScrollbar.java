@@ -1,15 +1,20 @@
 package spinnery.widget;
 
 import spinnery.client.BaseRenderer;
+import spinnery.widget.api.WHorizontalScrollable;
 
-public class WHorizontalScrollbar extends WWidget implements WClient {
+public class WHorizontalScrollbar extends WWidget {
     protected WHorizontalScrollable parent;
     protected double clickMouseX;
     protected boolean dragging = false;
 
-    public WHorizontalScrollbar(WInterface linkedInterface, WHorizontalScrollable parent) {
-        setInterface(linkedInterface);
+    public WHorizontalScrollbar parent(WHorizontalScrollable parent) {
         this.parent = parent;
+        return this;
+    }
+
+    public WHorizontalScrollbar build() {
+        return this;
     }
 
     public int getScrollerWidth() {

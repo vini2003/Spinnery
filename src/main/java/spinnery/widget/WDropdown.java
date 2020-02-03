@@ -5,6 +5,9 @@ import net.fabricmc.api.Environment;
 import net.minecraft.text.Text;
 import org.lwjgl.glfw.GLFW;
 import spinnery.client.BaseRenderer;
+import spinnery.client.TextRenderer;
+import spinnery.widget.api.WFocusedMouseListener;
+import spinnery.widget.api.WModifiableCollection;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,15 +16,14 @@ import java.util.List;
 import java.util.Set;
 
 @Environment(EnvType.CLIENT)
-public class WDropdown extends WWidget implements WClient, WModifiableCollection, WFocusedMouseListener {
+@WFocusedMouseListener
+public class WDropdown extends WWidget implements WModifiableCollection {
 	public List<List<WWidget>> dropdownWidgets = new ArrayList<>();
 	protected boolean state = false;
 
-	public WDropdown(WPosition position, WSize size, WInterface linkedInterface) {
-		setInterface(linkedInterface);
-		setPosition(position);
-		setSize(size);
+	public WDropdown build() {
 		updateHidden();
+		return this;
 	}
 
 	public void updateHidden() {
@@ -135,7 +137,9 @@ public class WDropdown extends WWidget implements WClient, WModifiableCollection
 		BaseRenderer.drawPanel(getX(), getY(), getZ(), getWidth(), getHeight() + 1.75, getStyle().asColor("shadow"), getStyle().asColor("background"), getStyle().asColor("highlight"), getStyle().asColor("outline"));
 
 		if (hasLabel()) {
-			BaseRenderer.drawText(isLabelShadowed(), getLabel().asFormattedString(), x + sX / 2 - BaseRenderer.getTextRenderer().getStringWidth(getLabel().asFormattedString()) / 2, y + 6, getStyle().asColor("label"));
+			TextRenderer.pass().shadow(isLabelShadowed())
+					.text(getLabel()).at(x + sX / 2 - TextRenderer.width(getLabel()) / 2, y + 6, z)
+					.color(getStyle().asColor("label.color")).shadowColor(getStyle().asColor("label.shadow_color")).render();
 
 			if (getState()) {
 				BaseRenderer.drawRectangle(x, y + 16, z, sX, 1, getStyle().asColor("outline"));
@@ -144,10 +148,8 @@ public class WDropdown extends WWidget implements WClient, WModifiableCollection
 		}
 
 		if (getState()) {
-			for (List<WWidget> widgetB : getDropdownWidgets()) {
-				for (WWidget widgetC : widgetB) {
-					widgetC.draw();
-				}
+			for (WWidget widgetC : getAllWidgets()) {
+				widgetC.draw();
 			}
 		}
 	}

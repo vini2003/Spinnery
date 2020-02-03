@@ -4,39 +4,55 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.Identifier;
-import org.apache.commons.lang3.mutable.MutableFloat;
-import org.apache.commons.lang3.mutable.MutableInt;
+import org.apache.commons.lang3.mutable.Mutable;
 import org.lwjgl.opengl.GL11;
 import spinnery.client.BaseRenderer;
 
 @Environment(EnvType.CLIENT)
 public class WBar extends WWidget {
-	protected MutableInt limit = new MutableInt(0);
-	protected MutableFloat progress = new MutableFloat(0);
+	protected Mutable<Number> limit;
+	protected Mutable<Number> progress;
 
 	protected Identifier backgroundTexture;
 	protected Identifier foregroundTexture;
 
-	public WBar(WPosition position, WSize size, WInterface linkedInterface, MutableInt limit) {
-		setInterface(linkedInterface);
-		setPosition(position);
-		setSize(size);
-		setLimit(limit);
+	public WBar limit(Mutable<Number> limit) {
+		this.limit = limit;
+		return this;
 	}
 
-	public MutableInt getLimit() {
+	public WBar progress(Mutable<Number> progress) {
+		this.progress = progress;
+		return this;
+	}
+
+	public WBar foreground(Identifier foregroundTexture) {
+		this.foregroundTexture = foregroundTexture;
+		return this;
+	}
+
+	public WBar background(Identifier backgroundTexture) {
+		this.backgroundTexture = backgroundTexture;
+		return this;
+	}
+
+	public WBar build() {
+		return this;
+	}
+
+	public Mutable<Number> getLimit() {
 		return limit;
 	}
 
-	public void setLimit(MutableInt limit) {
+	public void setLimit(Mutable<Number> limit) {
 		this.limit = limit;
 	}
 
-	public MutableFloat getProgress() {
+	public Mutable<Number> getProgress() {
 		return progress;
 	}
 
-	public void setProgress(MutableFloat progress) {
+	public void setProgress(Mutable<Number> progress) {
 		this.progress = progress;
 	}
 
@@ -72,7 +88,7 @@ public class WBar extends WWidget {
 		int rawHeight = MinecraftClient.getInstance().getWindow().getHeight();
 		double scale = MinecraftClient.getInstance().getWindow().getScaleFactor();
 
-		int sBGY = (int) ((((float) sY / limit.getValue()) * progress.getValue()));
+		int sBGY = (int) ((((float) sY / limit.getValue().intValue()) * progress.getValue().intValue()));
 
 		GL11.glEnable(GL11.GL_SCISSOR_TEST);
 

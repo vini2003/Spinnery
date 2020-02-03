@@ -15,7 +15,10 @@ import net.minecraft.world.World;
 import spinnery.Spinnery;
 import spinnery.registry.NetworkRegistry;
 import spinnery.util.StackUtilities;
-import spinnery.widget.*;
+import spinnery.widget.WInterface;
+import spinnery.widget.WSlot;
+import spinnery.widget.WWidget;
+import spinnery.widget.api.WNetworked;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,24 +31,25 @@ public class BaseContainer extends Container implements Tickable {
 	public Map<Integer, Inventory> linkedInventories = new HashMap<>();
 
 	protected World linkedWorld;
-	protected WInterfaceHolder serverHolder = new WInterfaceHolder();
+	protected final WInterface serverInterface;
 
 	public BaseContainer(int synchronizationID, PlayerInventory linkedPlayerInventory) {
 		super(null, synchronizationID);
 		getInventories().put(PLAYER_INVENTORY, linkedPlayerInventory);
 		setLinkedWorld(linkedPlayerInventory.player.world);
+		serverInterface = new WInterface(this);
 	}
 
 	public Map<Integer, Inventory> getInventories() {
 		return linkedInventories;
 	}
 
-	public void onInterfaceEvent(int widgetSyncId, WSynced.Event event, CompoundTag payload) {
-		Set<WWidget> checkWidgets = getHolder().getAllWidgets();
+	public void onInterfaceEvent(int widgetSyncId, WNetworked.Event event, CompoundTag payload) {
+		Set<WWidget> checkWidgets = serverInterface.getAllWidgets();
 		for (WWidget widget : checkWidgets) {
-			if (!(widget instanceof WSynced)) continue;
-			if (((WSynced) widget).getSyncId() == widgetSyncId) {
-				((WSynced) widget).onInterfaceEvent(event, payload);
+			if (!(widget instanceof WNetworked)) continue;
+			if (((WNetworked) widget).getSyncId() == widgetSyncId) {
+				((WNetworked) widget).onInterfaceEvent(event, payload);
 				return;
 			}
 		}
@@ -54,7 +58,7 @@ public class BaseContainer extends Container implements Tickable {
 	public void onSlotClicked(int slotNumber, int inventoryNumber, int button, SlotActionType action, PlayerEntity player) {
 		WSlot slotA = null;
 
-		for (WWidget widget : getHolder().getAllWidgets()) {
+		for (WWidget widget : serverInterface.getAllWidgets()) {
 			if (widget instanceof WSlot && ((WSlot) widget).getSlotNumber() == slotNumber && ((WSlot) widget).getInventoryNumber() == inventoryNumber) {
 				slotA = (WSlot) widget;
 			}
@@ -67,7 +71,7 @@ public class BaseContainer extends Container implements Tickable {
 		ItemStack stackA = slotA.getStack();
 		ItemStack stackB = player.inventory.getCursorStack();
 
-		String debugString = new String();
+		String debugString = "";
 
 		if (Spinnery.IS_DEBUG) {
 			debugString += "?\nAction:\t" + action + "\n";
@@ -138,17 +142,17 @@ public class BaseContainer extends Container implements Tickable {
 				break;
 			}
 			case QUICK_MOVE: {
-				for (WWidget widget : getHolder().getAllWidgets()) {
-						if (widget instanceof WSlot && ((WSlot) widget).getLinkedInventory() != slotA.getLinkedInventory()) {
-							WSlot slotB = ((WSlot) widget);
-							ItemStack stackC = slotB.getStack();
+				for (WWidget widget : serverInterface.getAllWidgets()) {
+					if (widget instanceof WSlot && ((WSlot) widget).getLinkedInventory() != slotA.getLinkedInventory()) {
+						WSlot slotB = ((WSlot) widget);
+						ItemStack stackC = slotB.getStack();
 
-							if (!stackA.isEmpty() && (stackC.getCount() < slotB.getMaxCount() || stackC.getCount() < stackA.getMaxCount())) {
-								if (stackC.isEmpty() || (stackA.isItemEqual(stackC) && stackA.getTag() == stackB.getTag())) {
-									Pair<ItemStack, ItemStack> result = StackUtilities.clamp(stackA, stackC, slotA.getMaxCount(), slotB.getMaxCount());
-									stackA = result.getFirst();
-									slotB.setStack(result.getSecond());
-									debugString += "Slot B:\t" + slotB.getStack().toString() + ", " + slotB.getLinkedInventory().getClass().getSimpleName()  + "\n";
+						if (!stackA.isEmpty() && (stackC.getCount() < slotB.getMaxCount() || stackC.getCount() < stackA.getMaxCount())) {
+							if (stackC.isEmpty() || (stackA.isItemEqual(stackC) && stackA.getTag() == stackB.getTag())) {
+								Pair<ItemStack, ItemStack> result = StackUtilities.clamp(stackA, stackC, slotA.getMaxCount(), slotB.getMaxCount());
+								stackA = result.getFirst();
+								slotB.setStack(result.getSecond());
+								debugString += "Slot B:\t" + slotB.getStack().toString() + ", " + slotB.getLinkedInventory().getClass().getSimpleName() + "\n";
 									break;
 
 							}
@@ -163,12 +167,12 @@ public class BaseContainer extends Container implements Tickable {
 		((PlayerInventory) linkedInventories.get(PLAYER_INVENTORY)).setCursorStack(stackB);
 
 		if (Spinnery.IS_DEBUG) {
-			 System.out.println(debugString += "Slot A:\t" + slotA.getStack().toString() + ", " + slotA.getLinkedInventory().getClass().getSimpleName() + "\nCursor:\t" + ((PlayerInventory) linkedInventories.get(PLAYER_INVENTORY)).getCursorStack().toString() + ", " + PlayerInventory.class.getSimpleName());
+			System.out.println(debugString + "Slot A:\t" + slotA.getStack().toString() + ", " + slotA.getLinkedInventory().getClass().getSimpleName() + "\nCursor:\t" + ((PlayerInventory) linkedInventories.get(PLAYER_INVENTORY)).getCursorStack().toString() + ", " + PlayerInventory.class.getSimpleName());
 		}
 	}
 
-	public WInterfaceHolder getHolder() {
-		return serverHolder;
+	public WInterface getInterface() {
+		return serverInterface;
 	}
 
 	public World getLinkedWorld() {
@@ -191,7 +195,7 @@ public class BaseContainer extends Container implements Tickable {
 
 	@Override
 	public void onContentChanged(Inventory inventory) {
-		for (WWidget widget : getHolder().getAllWidgets()) {
+		for (WWidget widget : serverInterface.getAllWidgets()) {
 			if (widget instanceof WSlot) {
 				WSlot slotA = ((WSlot) widget);
 
@@ -223,7 +227,7 @@ public class BaseContainer extends Container implements Tickable {
 
 	@Override
 	public void setStackInSlot(int slot, ItemStack stack) {
-		for (WWidget widget : getHolder().getAllWidgets()) {
+		for (WWidget widget : serverInterface.getAllWidgets()) {
 			if (widget instanceof WSlot && ((WSlot) widget).getSlotNumber() == slot && ((WSlot) widget).getInventoryNumber() == PLAYER_INVENTORY) {
 				((WSlot) widget).setStack(stack);
 			}

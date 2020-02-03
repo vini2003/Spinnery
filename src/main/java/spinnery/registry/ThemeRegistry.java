@@ -2,11 +2,9 @@ package spinnery.registry;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
-import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
-import spinnery.util.ResourceListener;
-import spinnery.widget.*;
+import spinnery.widget.api.WStyle;
+import spinnery.widget.api.WTheme;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -4,24 +4,43 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.util.Identifier;
 import spinnery.client.BaseRenderer;
+import spinnery.widget.api.WFocusedMouseListener;
+import spinnery.widget.api.WPosition;
+import spinnery.widget.api.WSize;
 
 @Environment(EnvType.CLIENT)
-public class WTexturedButton extends WWidget implements WFocusedMouseListener {
-	protected Identifier texture;
-	protected Identifier textureActive;
-	protected Identifier textureDisabled;
+@WFocusedMouseListener
+public class WTexturedButton extends WWidget {
+	protected Identifier inactive;
+	protected Identifier active;
+	protected Identifier disabled;
 
-	protected boolean disabled = false;
+	protected boolean isDisabledf = false;
 
-	public WTexturedButton(WPosition position, WSize size, WInterface linkedInterface, Identifier texture) {
-		this(position, size, linkedInterface, texture, null, null);
+	public WTexturedButton inactive(Identifier inactive) {
+		this.inactive = inactive;
+		return this;
+	}
+
+	public WTexturedButton active(Identifier active) {
+		this.active = active;
+		return this;
+	}
+
+	public WTexturedButton disabled(Identifier disabled) {
+		this.disabled = disabled;
+		return this;
+	}
+
+	public WTexturedButton build() {
+		return this;
 	}
 
 	public WTexturedButton(WPosition position, WSize size, WInterface linkedInterface, Identifier texture, Identifier textureActive, Identifier textureDisabled) {
 		this(position, size, linkedInterface);
-		setTexture(texture);
-		setTextureActive(textureActive);
-		setTextureDisabled(textureDisabled);
+		setInactive(texture);
+		setActive(textureActive);
+		setDisabled(textureDisabled);
 	}
 
 	protected WTexturedButton(WPosition position, WSize size, WInterface linkedInterface) {
@@ -34,12 +53,12 @@ public class WTexturedButton extends WWidget implements WFocusedMouseListener {
 		this(position, size, linkedInterface, texture, textureActive, null);
 	}
 
-	public Identifier getTexture() {
-		return texture;
+	public Identifier getInactive() {
+		return inactive;
 	}
 
-	public void setTexture(Identifier texture) {
-		this.texture = texture;
+	public void setInactive(Identifier inactive) {
+		this.inactive = inactive;
 	}
 
 	@Override
@@ -48,52 +67,52 @@ public class WTexturedButton extends WWidget implements WFocusedMouseListener {
 	}
 
 	protected Identifier getDrawTexture() {
-		if (isDisabled() && getTextureDisabled() != null) {
-			return textureDisabled;
+		if (isDisabledf() && getDisabled() != null) {
+			return disabled;
 		}
-		if (isActive() && getTextureActive() != null) {
-			return textureActive;
+		if (isActive() && getActive() != null) {
+			return active;
 		}
-		return texture;
+		return inactive;
 	}
 
-	public boolean isDisabled() {
+	public boolean isDisabledf() {
+		return isDisabledf;
+	}
+
+	public Identifier getDisabled() {
 		return disabled;
 	}
 
-	public Identifier getTextureDisabled() {
-		return textureDisabled;
-	}
-
-	public void setTextureDisabled(Identifier textureDisabled) {
-		this.textureDisabled = textureDisabled;
+	public void setDisabled(Identifier disabled) {
+		this.disabled = disabled;
 	}
 
 	public boolean isActive() {
 		return getFocus();
 	}
 
-	public Identifier getTextureActive() {
-		return textureActive;
+	public Identifier getActive() {
+		return active;
 	}
 
-	public void setTextureActive(Identifier textureActive) {
-		this.textureActive = textureActive;
+	public void setActive(Identifier active) {
+		this.active = active;
 	}
 
-	public void setDisabled(boolean disabled) {
-		this.disabled = disabled;
+	public void setDisabledf(boolean disabledf) {
+		this.isDisabledf = disabledf;
 	}
 
 	@Override
 	public void onMouseClicked(int mouseX, int mouseY, int mouseButton) {
-		if (disabled) return;
+		if (isDisabledf) return;
 		super.onMouseClicked(mouseX, mouseY, mouseButton);
 	}
 
 	@Override
 	public void onMouseReleased(double mouseX, double mouseY, int mouseButton) {
-		if (disabled) return;
+		if (isDisabledf) return;
 		super.onMouseReleased(mouseX, mouseY, mouseButton);
 	}
 }

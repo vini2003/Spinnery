@@ -1,54 +1,44 @@
 package spinnery.common;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.ContainerScreen;
-import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
 import org.lwjgl.glfw.GLFW;
-import spinnery.client.BaseRenderer;
-import spinnery.widget.WCollection;
 import spinnery.widget.WInterface;
-import spinnery.widget.WInterfaceHolder;
 import spinnery.widget.WSlot;
 import spinnery.widget.WWidget;
+import spinnery.widget.api.WCollection;
 
 public class BaseContainerScreen<T extends BaseContainer> extends ContainerScreen<T> {
-	int tooltipX = 0;
-	int tooltipY = 0;
-	WSlot drawSlot;
-
-	WInterfaceHolder clientHolder = new WInterfaceHolder();
+	protected final WInterface clientInterface;
+	protected int tooltipX = 0;
+	protected int tooltipY = 0;
+	protected WSlot drawSlot;
 
 	@Environment(EnvType.CLIENT)
 	public BaseContainerScreen(Text name, T linkedContainer, PlayerEntity player) {
 		super(linkedContainer, player.inventory, name);
-		this.x = Integer.MIN_VALUE;
-		this.y = Integer.MIN_VALUE;
-		this.containerHeight = Integer.MAX_VALUE;
-		this.containerWidth = Integer.MIN_VALUE;
+		clientInterface = new WInterface(linkedContainer);
 	}
 
 	@Override
 	@Environment(EnvType.CLIENT)
 	public void render(int mouseX, int mouseY, float tick) {
-		getHolder().draw();
+		clientInterface.draw();
 
 		drawTooltip();
 
-		if (!playerInventory.getCursorStack().isEmpty()) {
-			RenderSystem.translatef(0, 0, 100);
-			MinecraftClient.getInstance().getItemRenderer().renderGuiItem(playerInventory.getCursorStack(), mouseX - 8, mouseY - 8);
-			MinecraftClient.getInstance().getItemRenderer().renderGuiItemOverlay(MinecraftClient.getInstance().textRenderer, playerInventory.getCursorStack(), mouseX - 8, mouseY - 8);
-		}
+		super.render(mouseX, mouseY, tick);
 	}
 
+	@Override
 	@Environment(EnvType.CLIENT)
-	public WInterfaceHolder getHolder() {
-		return clientHolder;
+	protected void drawMouseoverTooltip(int mouseX, int mouseY) {
+		clientInterface.onDrawMouseoverTooltip(mouseX, mouseY);
+
+		super.drawMouseoverTooltip(mouseX, mouseY);
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -95,10 +85,10 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 
 	@Override
 	@Environment(EnvType.CLIENT)
-	protected void drawMouseoverTooltip(int mouseX, int mouseY) {
-		getHolder().drawMouseoverTooltip(mouseX, mouseY);
+	public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
+		getInterface().onMouseClicked((int) mouseX, (int) mouseY, mouseButton);
 
-		super.drawMouseoverTooltip(mouseX, mouseY);
+		return false;
 	}
 
 	@Override
@@ -106,12 +96,9 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 	protected void drawBackground(float tick, int mouseX, int mouseY) {
 	}
 
-	@Override
 	@Environment(EnvType.CLIENT)
-	public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
-		getHolder().onMouseClicked((int) mouseX, (int) mouseY, mouseButton);
-
-		return false;
+	public WInterface getInterface() {
+		return clientInterface;
 	}
 
 	@Override
@@ -123,7 +110,7 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 	@Override
 	@Environment(EnvType.CLIENT)
 	public boolean mouseDragged(double mouseX, double mouseY, int mouseButton, double deltaX, double deltaY) {
-		getHolder().onMouseDragged((int) mouseX, (int) mouseY, mouseButton, (int) deltaX, (int) deltaY);
+		getInterface().onMouseDragged((int) mouseX, (int) mouseY, mouseButton, (int) deltaX, (int) deltaY);
 
 		return false;
 	}
@@ -131,7 +118,7 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 	@Override
 	@Environment(EnvType.CLIENT)
 	public boolean mouseReleased(double mouseX, double mouseY, int mouseButton) {
-		getHolder().onMouseReleased((int) mouseX, (int) mouseY, mouseButton);
+		getInterface().onMouseReleased((int) mouseX, (int) mouseY, mouseButton);
 
 		return false;
 	}
@@ -139,7 +126,7 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 	@Override
 	@Environment(EnvType.CLIENT)
 	public boolean keyPressed(int character, int keyCode, int keyModifier) {
-		getHolder().keyPressed(character, keyCode, keyModifier);
+		clientInterface.onKeyPressed(character, keyCode, keyModifier);
 
 		if (character == GLFW.GLFW_KEY_ESCAPE) {
 			minecraft.player.closeContainer();
@@ -157,14 +144,14 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 
 	@Override
 	public void tick() {
-		getHolder().tick();
+		getInterface().tick();
 		super.tick();
 	}
 
 	@Override
 	@Environment(EnvType.CLIENT)
 	public boolean mouseScrolled(double mouseX, double mouseY, double deltaY) {
-		getHolder().onMouseScrolled((int) mouseX, (int) mouseY, deltaY);
+		getInterface().onMouseScrolled((int) mouseX, (int) mouseY, deltaY);
 
 		return false;
 	}
@@ -172,7 +159,7 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 	@Override
 	@Environment(EnvType.CLIENT)
 	public boolean keyReleased(int character, int keyCode, int keyModifier) {
-		getHolder().onKeyReleased(character, keyCode, keyModifier);
+		getInterface().onKeyReleased(character, keyCode, keyModifier);
 
 		return false;
 	}
@@ -180,7 +167,7 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 	@Override
 	@Environment(EnvType.CLIENT)
 	public boolean charTyped(char character, int keyCode) {
-		getHolder().onCharTyped(character, keyCode);
+		getInterface().onCharTyped(character, keyCode);
 
 		return super.charTyped(character, keyCode);
 	}
@@ -188,7 +175,7 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 	@Override
 	@Environment(EnvType.CLIENT)
 	public void mouseMoved(double mouseX, double mouseY) {
-		getHolder().mouseMoved((int) mouseX, (int) mouseY);
+		clientInterface.onMouseMoved((int) mouseX, (int) mouseY);
 
 		updateTooltip((int) mouseX, (int) mouseY);
 	}
@@ -196,7 +183,7 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 	@Environment(EnvType.CLIENT)
 	public void updateTooltip(int mouseX, int mouseY) {
 		setDrawSlot(null);
-		for (WWidget widgetA : getHolder().getWidgets()) {
+		for (WWidget widgetA : getInterface().getWidgets()) {
 			if (widgetA.getFocus() && widgetA instanceof WSlot) {
 				setDrawSlot((WSlot) widgetA);
 				setTooltipX(mouseX);
@@ -211,18 +198,5 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 				}
 			}
 		}
-	}
-
-	@Override
-	public void resize(MinecraftClient client, int width, int height) {
-		for (WInterface wInterface : getLinkedContainer().getHolder().getInterfaces()) {
-			wInterface.align();
-			wInterface.onAlign();
-			for (WWidget widgetA : wInterface.getWidgets()) {
-				widgetA.align();
-				widgetA.onAlign();
-			}
-		}
-		super.resize(client, width, height);
 	}
 }

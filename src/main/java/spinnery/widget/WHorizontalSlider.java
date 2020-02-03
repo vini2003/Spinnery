@@ -2,51 +2,65 @@ package spinnery.widget;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import org.apache.commons.lang3.mutable.Mutable;
 import org.lwjgl.glfw.GLFW;
 import spinnery.client.BaseRenderer;
+import spinnery.client.TextRenderer;
+import spinnery.widget.api.WFocusedKeyboardListener;
+import spinnery.widget.api.WFocusedMouseListener;
 
 @Environment(EnvType.CLIENT)
-public class WHorizontalSlider extends WWidget implements WClient, WFocusedMouseListener, WFocusedKeyboardListener {
-	protected int limit = 0;
-	protected float progress = 0;
+@WFocusedKeyboardListener
+@WFocusedMouseListener
+public class WHorizontalSlider extends WWidget {
+	protected Mutable<Number> limit;
+	protected Mutable<Number> progress;
+
 	protected String total = "0";
 	protected int tX;
 
-	public WHorizontalSlider(WPosition position, WSize size, WInterface linkedInterface, int limit) {
-		setInterface(linkedInterface);
-		setPosition(position);
-		setSize(size);
-		setLimit(limit);
+	public WHorizontalSlider limit(Mutable<Number> limit) {
+		this.limit = limit;
+		return this;
+	}
+
+	public WHorizontalSlider progress(Mutable<Number> progress) {
+		this.progress = progress;
+		return this;
+	}
+
+	public WHorizontalSlider build() {
 		updatePosition(getX(), getY());
+		return this;
 	}
 
 	@Override
 	public void onKeyPressed(int keyPressed, int character, int keyModifier) {
 		if (keyPressed == GLFW.GLFW_KEY_KP_SUBTRACT) {
-			setProgress(Math.min(getProgress() + 1, getLimit() - 1));
+			progress.setValue(Math.min(getProgress().getValue().intValue() + 1, getLimit().getValue().intValue() - 1));
 		}
 		if (keyPressed == GLFW.GLFW_KEY_KP_DIVIDE) {
-			setProgress(Math.max(getProgress() - 1, 0));
+			progress.setValue(Math.max(getProgress().getValue().intValue() - 1, 0));
 		}
 		super.onKeyPressed(keyPressed, character, keyModifier);
 	}
 
-	public float getProgress() {
+	public Mutable<Number> getProgress() {
 		return progress;
 	}
 
-	public int getLimit() {
+	public Mutable<Number> getLimit() {
 		return limit;
 	}
 
-	public void setLimit(int limit) {
+	public void setLimit(Mutable<Number> limit) {
 		this.limit = limit;
 	}
 
-	public void setProgress(float progress) {
+	public void setProgress(Mutable<Number> progress) {
 		this.progress = progress;
-		total = Integer.toString(Math.round(getProgress()));
-		tX = getX() + (getWidth() + 7) / 2 - BaseRenderer.getTextRenderer().getStringWidth(Integer.toString((int) getProgress())) / 2;
+		total = Integer.toString(Math.round(getProgress().getValue().floatValue()));
+		tX = getX() + (getWidth() + 7) / 2 - TextRenderer.width(String.valueOf(getProgress().getValue().intValue())) / 2;
 	}
 
 	@Override
@@ -56,7 +70,7 @@ public class WHorizontalSlider extends WWidget implements WClient, WFocusedMouse
 	}
 
 	public void updatePosition(int mouseX, int mouseY) {
-		setProgress(((mouseX - getX()) * ((float) getLimit() / (float) (getWidth()))));
+		progress.setValue((mouseX - getX()) * (getLimit().getValue().floatValue() / (float) (getWidth())));
 	}
 
 	@Override
@@ -71,8 +85,8 @@ public class WHorizontalSlider extends WWidget implements WClient, WFocusedMouse
 			return;
 		}
 
-		int l = getLimit();
-		float p = getProgress();
+		int l = getLimit().getValue().intValue();
+		float p = getProgress().getValue().floatValue();
 
 		int x = getX();
 		int y = getY();
@@ -81,7 +95,8 @@ public class WHorizontalSlider extends WWidget implements WClient, WFocusedMouse
 		int sX = getWidth();
 		int sY = getHeight();
 
-		BaseRenderer.drawText(isLabelShadowed(), total, tX, y + sY + 4, getStyle().asColor("text"));
+		TextRenderer.pass().shadow(isLabelShadowed()).text(total).at(tX, y + sY + 4, z)
+				.color(getStyle().asColor("label.color")).shadowColor(getStyle().asColor("label.shadow_color")).render();
 
 		BaseRenderer.drawRectangle(x, y, z, (sX), 1, getStyle().asColor("top_left.background"));
 		BaseRenderer.drawRectangle(x, y, z, 1, sY, getStyle().asColor("top_left.background"));

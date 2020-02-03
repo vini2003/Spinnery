@@ -2,58 +2,65 @@ package spinnery.widget;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import org.apache.commons.lang3.mutable.Mutable;
 import org.lwjgl.glfw.GLFW;
 import spinnery.client.BaseRenderer;
+import spinnery.client.TextRenderer;
+import spinnery.widget.api.WFocusedKeyboardListener;
+import spinnery.widget.api.WFocusedMouseListener;
 
 @Environment(EnvType.CLIENT)
-public class WVerticalSlider extends WWidget implements WClient, WFocusedMouseListener, WFocusedKeyboardListener {
-	protected int limit = 0;
-	protected float progress = 0;
-	protected String slidTotal = "0";
-	protected int slidStringPosition;
+@WFocusedKeyboardListener
+@WFocusedMouseListener
+public class WVerticalSlider extends WWidget {
+	protected Mutable<Number> limit;
+	protected Mutable<Number> progress;
 
-	public WVerticalSlider(WPosition position, WSize size, WInterface linkedInterface, int limit) {
-		setInterface(linkedInterface);
-		setPosition(position);
-		setSize(size);
-		setLimit(limit);
+	protected String total = "0";
+	protected int tY;
+
+	public WVerticalSlider limit(Mutable<Number> limit) {
+		this.limit = limit;
+		return this;
 	}
 
-	public int getSlidStringPosition() {
-		return slidStringPosition;
+	public WVerticalSlider progress(Mutable<Number> progress) {
+		this.progress = progress;
+		return this;
 	}
 
-	public void setSlidStringPosition(int slidStringPosition) {
-		this.slidStringPosition = slidStringPosition;
+	public WVerticalSlider build() {
+		updatePosition(getX(), getY());
+		return this;
 	}
 
 	@Override
 	public void onKeyPressed(int keyPressed, int character, int keyModifier) {
 		if (keyPressed == GLFW.GLFW_KEY_KP_SUBTRACT) {
-			setProgress(Math.min(getProgress() + 1, getLimit() - 1));
+			progress.setValue(Math.min(getProgress().getValue().intValue() + 1, getLimit().getValue().intValue() - 1));
 		}
 		if (keyPressed == GLFW.GLFW_KEY_KP_DIVIDE) {
-			setProgress(Math.max(getProgress() - 1, 0));
+			progress.setValue(Math.max(getProgress().getValue().intValue() - 1, 0));
 		}
 		super.onKeyPressed(keyPressed, character, keyModifier);
 	}
 
-	public float getProgress() {
+	public Mutable<Number> getProgress() {
 		return progress;
 	}
 
-	public int getLimit() {
+	public Mutable<Number> getLimit() {
 		return limit;
 	}
 
-	public void setLimit(int limit) {
+	public void setLimit(Mutable<Number> limit) {
 		this.limit = limit;
 	}
 
-	public void setProgress(float progress) {
+	public void setProgress(Mutable<Number> progress) {
 		this.progress = progress;
-		setSlidTotal(Integer.toString(Math.round(getProgress())));
-		setSlidStringPosition(getY() + getHeight() / 2 - BaseRenderer.getTextRenderer().getStringWidth(Integer.toString((int) getProgress())) / 2);
+		total = Integer.toString(Math.round(getProgress().getValue().intValue()));
+		tY = (getY() + getHeight() / 2 - TextRenderer.width(String.valueOf(getProgress().getValue().intValue())) / 2);
 	}
 
 	@Override
@@ -63,7 +70,7 @@ public class WVerticalSlider extends WWidget implements WClient, WFocusedMouseLi
 	}
 
 	public void updatePosition(int mouseX, int mouseY) {
-		setProgress((mouseY - getY()) * ((float) getLimit() / (float) (getWidth())));
+		progress.setValue((mouseY - getY()) * (getLimit().getValue().floatValue() / (float) (getWidth())));
 	}
 
 	@Override
@@ -78,8 +85,8 @@ public class WVerticalSlider extends WWidget implements WClient, WFocusedMouseLi
 			return;
 		}
 
-		int l = getLimit();
-		float p = getProgress();
+		int l = getLimit().getValue().intValue();
+		float p = getProgress().getValue().floatValue();
 
 		int x = getX();
 		int y = getY();
@@ -88,7 +95,8 @@ public class WVerticalSlider extends WWidget implements WClient, WFocusedMouseLi
 		int sX = getWidth();
 		int sY = getHeight();
 
-		BaseRenderer.drawText(isLabelShadowed(), getSlidTotal(), x + sX + 4, y + sY / 2, 0xffffff);
+		TextRenderer.pass().shadow(isLabelShadowed()).text(getTotal()).at(x + sX + 4, tY, z)
+				.color(getStyle().asColor("label.color")).shadowColor(getStyle().asColor("label.shadow_color")).render();
 
 		BaseRenderer.drawRectangle(x, y, z, sX, 1, getStyle().asColor("top_left.background"));
 		BaseRenderer.drawRectangle(x, y, z, 1, (sY), getStyle().asColor("top_left.background"));
@@ -102,11 +110,11 @@ public class WVerticalSlider extends WWidget implements WClient, WFocusedMouseLi
 		BaseRenderer.drawBeveledPanel(x - 1, Math.min(y + sY - 7, y + (sY / l) * p), z, sX + 3, 8, getStyle().asColor("top_left.foreground"), getStyle().asColor("foreground"), getStyle().asColor("bottom_right.foreground"));
 	}
 
-	public String getSlidTotal() {
-		return slidTotal;
+	public String getTotal() {
+		return total;
 	}
 
-	public void setSlidTotal(String slidTotal) {
-		this.slidTotal = slidTotal;
+	public void setTotal(String total) {
+		this.total = total;
 	}
 }

@@ -14,6 +14,6 @@ public class Spinnery implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
-		NetworkRegistry.initializeServer();
+		NetworkRegistry.initialize();
 	}
 }

@@ -6,10 +6,11 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import org.lwjgl.glfw.GLFW;
 import spinnery.client.BaseRenderer;
+import spinnery.client.TextRenderer;
 
 @Environment(EnvType.CLIENT)
-public class WDynamicText extends WWidget implements WClient {
-	protected boolean isSelected;
+public class WDynamicText extends WWidget {
+	protected boolean isActive;
 	protected String text = "";
 	protected String visible = "";
 	protected int selLeftPos = 0;
@@ -18,11 +19,10 @@ public class WDynamicText extends WWidget implements WClient {
 	protected int offsetPos = 0;
 	protected int cursorTick = 0;
 	protected boolean isEditable = true;
+	protected int currentLine = 0;
 
-	public WDynamicText(WPosition position, WSize size, WInterface linkedInterface) {
-		setInterface(linkedInterface);
-		setPosition(position);
-		setSize(size);
+	public WDynamicText build() {
+		return this;
 	}
 
 	public String getText() {
@@ -34,13 +34,39 @@ public class WDynamicText extends WWidget implements WClient {
 		updateText();
 	}
 
+	@Override
+	public void onCharTyped(char character) {
+		if (!isActive) {
+			return;
+		}
+
+		if (hasSelection()) {
+			text = "";
+		}
+		text = new StringBuilder(text).insert(cursorPos, character).toString();
+		++cursorPos;
+
+		clearSelection();
+		updateText();
+
+		super.onCharTyped(character);
+	}
+
+	public boolean isEditable() {
+		return isEditable;
+	}
+
+	public void setEditable(boolean editable) {
+		isEditable = editable;
+	}
+
 	void updateText() {
 		visible = "";
 		int sW = 0;
 		for (char c : text.toCharArray()) {
 			visible += c;
 			if (c != '\n') {
-				sW += BaseRenderer.getTextRenderer().getCharWidth(c);
+				sW += TextRenderer.width(c);
 				if (sW > getWidth() - 12) {
 					visible += '\n';
 					sW = 0;
@@ -67,29 +93,6 @@ public class WDynamicText extends WWidget implements WClient {
 		offsetPos = Math.max(offsetA - offsetB, 0);
 	}
 
-	public boolean isEditable() {
-		return isEditable;
-	}
-
-	public void setEditable(boolean editable) {
-		isEditable = editable;
-	}
-
-	@Override
-	public void onCharTyped(char character) {
-		if (!isSelected) {
-			return;
-		}
-
-		text = new StringBuilder(text).insert(cursorPos, character).toString();
-		++cursorPos;
-
-		clearSelection();
-		updateText();
-
-		super.onCharTyped(character);
-	}
-
 	void clearSelection() {
 		selRightPos = -1;
 		selLeftPos = -1;
@@ -97,10 +100,11 @@ public class WDynamicText extends WWidget implements WClient {
 
 	@Override
 	public void onKeyPressed(int keyPressed, int character, int keyModifier) {
-		if (!isSelected) {
+		if (!isActive) {
 			return;
 		}
 
+		cursorTick = 20;
 		if (keyPressed == GLFW.GLFW_KEY_A && Screen.hasControlDown()) { // Ctrl w. A
 			selLeftPos = 0;
 			selRightPos = text.length() - 1;
@@ -126,15 +130,31 @@ public class WDynamicText extends WWidget implements WClient {
 			cursorPos += MinecraftClient.getInstance().keyboard.getClipboard().length();
 			updateText();
 		} else if (keyPressed == GLFW.GLFW_KEY_RIGHT && Screen.hasShiftDown() && cursorPos < text.length()) { // Right w. Shift
-			selLeftPos = selLeftPos == -1 ? cursorPos : selLeftPos;
 			++cursorPos;
-			selRightPos = cursorPos;
+			if (hasSelection()) {
+				if (cursorPos > selRightPos) {
+					selRightPos = cursorPos;
+				} else {
+					selLeftPos = cursorPos;
+				}
+			} else {
+				selLeftPos = selLeftPos == -1 ? cursorPos - 1 : selLeftPos;
+				selRightPos = cursorPos;
+			}
 			updateText();
 
 		} else if (keyPressed == GLFW.GLFW_KEY_LEFT && Screen.hasShiftDown() && cursorPos > 0) { // Left w. Shift
-			selRightPos = selRightPos == -1 ? cursorPos : selRightPos;
 			--cursorPos;
-			selLeftPos = cursorPos;
+			if (hasSelection()) {
+				if (cursorPos >= selLeftPos) {
+					selRightPos = cursorPos;
+				} else {
+					selLeftPos = cursorPos;
+				}
+			} else {
+				selRightPos = selRightPos == -1 ? cursorPos + 1 : selRightPos;
+				selLeftPos = cursorPos;
+			}
 			updateText();
 		} else if (keyPressed == GLFW.GLFW_KEY_RIGHT && cursorPos <= text.length() - 1) { // Right
 			++cursorPos;
@@ -144,27 +164,60 @@ public class WDynamicText extends WWidget implements WClient {
 			--cursorPos;
 			clearSelection();
 			updateText();
-		} else if (keyPressed == GLFW.GLFW_KEY_BACKSPACE && cursorPos > 0 && text.length() > 0) { // Backspace
-			--cursorPos;
+		} else if (keyPressed == GLFW.GLFW_KEY_BACKSPACE && text.length() > 0) { // Backspace
 			if (hasSelection()) {
-				text = text.substring(0, selLeftPos) + text.substring(selRightPos, text.length() - 1);
+				text = text.substring(0, selLeftPos) + text.substring(selRightPos);
 				cursorPos = selLeftPos;
 				clearSelection();
 			} else {
-				text = new StringBuilder(text).deleteCharAt(cursorPos).toString();
+				if (cursorPos > 0) {
+					--cursorPos;
+					text = new StringBuilder(text).deleteCharAt(cursorPos).toString();
+				}
 			}
 			updateText();
-		} else if (keyPressed == GLFW.GLFW_KEY_DELETE && cursorPos < text.length()) { // Delete
+		} else if (keyPressed == GLFW.GLFW_KEY_DELETE && text.length() > 0) { // Delete
 			if (hasSelection()) {
-				text = text.substring(0, selLeftPos) + text.substring(selRightPos, text.length() - 1);
+				text = text.substring(0, selLeftPos) + text.substring(selRightPos);
 				cursorPos = selLeftPos;
 				clearSelection();
 			} else {
-				text = new StringBuilder(text).deleteCharAt(cursorPos).toString();
+				if (cursorPos < text.length())
+					text = new StringBuilder(text).deleteCharAt(cursorPos).toString();
 			}
+			updateText();
+		} else if (keyPressed == GLFW.GLFW_KEY_HOME) {
+			if (Screen.hasShiftDown()) {
+				if (hasSelection()) {
+					if (cursorPos >= selRightPos) {
+						selRightPos = selLeftPos;
+					}
+				} else {
+					selRightPos = cursorPos;
+				}
+				selLeftPos = 0;
+			} else {
+				clearSelection();
+			}
+			cursorPos = 0;
+			updateText();
+		} else if (keyPressed == GLFW.GLFW_KEY_END) {
+			if (Screen.hasShiftDown()) {
+				if (hasSelection()) {
+					if (cursorPos <= selLeftPos) {
+						selLeftPos = selRightPos;
+					}
+				} else {
+					selLeftPos = cursorPos;
+				}
+				selRightPos = text.length();
+			} else {
+				clearSelection();
+			}
+			cursorPos = text.length();
 			updateText();
 		} else if (keyPressed == GLFW.GLFW_KEY_ENTER) {
-			text += '\n';
+			text = new StringBuilder(text).insert(cursorPos, '\n').toString();
 			++cursorPos;
 			updateText();
 		}
@@ -179,7 +232,7 @@ public class WDynamicText extends WWidget implements WClient {
 	@Override
 	public void onMouseClicked(int mouseX, int mouseY, int mouseButton) {
 		if (isEditable) {
-			this.isSelected = updateFocus(mouseX, mouseY);
+			this.isActive = updateFocus(mouseX, mouseY);
 		}
 		super.onMouseClicked(mouseX, mouseY, mouseButton);
 	}
@@ -197,39 +250,62 @@ public class WDynamicText extends WWidget implements WClient {
 		int sX = getWidth();
 		int sY = getHeight();
 
-		int oY = 0;
-
 		BaseRenderer.drawBeveledPanel(x, y, z, sX, sY, getStyle().asColor("top_left"), getStyle().asColor("background"), getStyle().asColor("bottom_right"));
 
-		if (text.isEmpty() && !isSelected) {
-			BaseRenderer.drawText(isLabelShadowed(), getLabel().asFormattedString(), x + 4, y + 4 + oY, getStyle().asColor("label"));
-		} else {
-			int pP = x + 4, pC = offsetPos;
-			if (visible.isEmpty() && cursorTick > 10) {
-				BaseRenderer.drawText(isLabelShadowed(), "|", pP, y + 4 + oY, getStyle().asColor("cursor"));
-			}
-			for (char c : visible.toCharArray()) {
+		if (text.isEmpty() && !isActive) {
+			TextRenderer.pass().shadow(isLabelShadowed())
+					.text(getLabel()).at(x + 4, y + 4, z)
+					.color(getStyle().asColor("label.color")).shadowColor(getStyle().asColor("label.shadow_color")).render();
+		}
+
+		int cH = TextRenderer.height();
+		int oX = 0;
+		int oY = 0;
+		int right = x + sX - 8;
+		int bottom = y + sY - 8;
+		if (!text.isEmpty()) {
+			for (int i = 0; i < text.length(); i++) {
+				char c = text.charAt(i);
+				int cX = x + 4 + oX;
+				int cY = y + 4 + oY;
+				int cW = TextRenderer.width(c);
 				if (c == '\n') {
-					oY += 9;
-					pP = x + 4;
+					if (isSelected(i)) {
+						BaseRenderer.drawRectangle(cX, cY, z, right - cX, cH, getStyle().asColor("highlight"));
+					}
+					oX = 0;
+					oY += cH + 2;
+					if (oY > y + sY - 8) {
+						break;
+					}
 				} else {
-					int cW = (int) BaseRenderer.getTextRenderer().getCharWidth(c);
-					BaseRenderer.drawText(isLabelShadowed(), String.valueOf(c), pP, y + 4 + oY, getStyle().asColor("text"));
-
-					if (pC >= selLeftPos && (pC < selRightPos || pC == text.length() - 1 && pC <= selRightPos) && (selLeftPos - selRightPos != 0)) {
-						BaseRenderer.drawRectangle(pP, y + 4 + oY, 10, cW, 9, getStyle().asColor("highlight"));
+					TextRenderer.pass().text(c).at(cX, cY, z).color(getStyle().asColor("text")).render();
+					if (isSelected(i)) {
+						BaseRenderer.drawRectangle(cX, cY, z, cW, cH, getStyle().asColor("highlight"));
 					}
-
-					pP += cW;
-
-					if ((pC == cursorPos - 1) && isSelected && cursorTick > 10) {
-						BaseRenderer.drawText(isLabelShadowed(), "|", pP, y + 4 + oY, getStyle().asColor("cursor"));
+					if (cX + cW > right) {
+						if (cY + cH + 2 > bottom) {
+							break;
+						}
+						oX = 0;
+						oY += cH + 2;
+					} else {
+						oX += cW;
 					}
-
-					++pC;
+				}
+				if (isActive && cursorPos == i + 1 && cursorTick > 10) {
+					BaseRenderer.drawRectangle(x + 4 + oX, y + 4 + oY, z, 1, cH, getStyle().asColor("cursor"));
 				}
 			}
 		}
+		if (isActive && cursorPos == 0 && cursorTick > 10) {
+			BaseRenderer.drawRectangle(x + 4, y + 4, z, 1, cH, getStyle().asColor("cursor"));
+			currentLine = 0;
+		}
+	}
+
+	protected boolean isSelected(int index) {
+		return selLeftPos <= index && selRightPos > index;
 	}
 
 	@Override

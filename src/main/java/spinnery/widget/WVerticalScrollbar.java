@@ -1,15 +1,20 @@
 package spinnery.widget;
 
 import spinnery.client.BaseRenderer;
+import spinnery.widget.api.WVerticalScrollable;
 
-public class WVerticalScrollbar extends WWidget implements WClient {
+public class WVerticalScrollbar extends WWidget {
     protected WVerticalScrollable parent;
     protected double clickMouseY;
     protected boolean dragging = false;
 
-    public WVerticalScrollbar(WInterface linkedInterface, WVerticalScrollable parent) {
-        setInterface(linkedInterface);
+    public WVerticalScrollbar parent(WVerticalScrollable parent) {
         this.parent = parent;
+        return this;
+    }
+
+    public WVerticalScrollbar build() {
+        return this;
     }
 
     public int getScrollerHeight() {

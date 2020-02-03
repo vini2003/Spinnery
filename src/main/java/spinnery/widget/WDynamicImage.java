@@ -4,18 +4,22 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.util.Identifier;
 import spinnery.client.BaseRenderer;
+import spinnery.widget.api.WFocusedMouseListener;
 
 @Environment(EnvType.CLIENT)
-public class WDynamicImage extends WWidget implements WClient, WFocusedMouseListener {
+@WFocusedMouseListener
+public class WDynamicImage extends WWidget {
 	protected Identifier[] textures;
 
 	protected int currentImage = 0;
 
-	public WDynamicImage(WPosition position, WSize size, WInterface linkedInterface, Identifier... textures) {
-		setInterface(linkedInterface);
-		setPosition(position);
-		setSize(size);
+	public WDynamicImage textures(Identifier... textures) {
 		setTextures(textures);
+		return this;
+	}
+
+	public WDynamicImage build() {
+		return this;
 	}
 
 	public int next() {

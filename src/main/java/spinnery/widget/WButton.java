@@ -3,18 +3,14 @@ package spinnery.widget;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import spinnery.client.BaseRenderer;
-import spinnery.registry.ThemeRegistry;
+import spinnery.client.TextRenderer;
+import spinnery.widget.api.WFocusedMouseListener;
 
 @Environment(EnvType.CLIENT)
-public class WButton extends WWidget implements WClient, WFocusedMouseListener {
+@WFocusedMouseListener
+public class WButton extends WWidget {
 	protected boolean lowered = false;
 	protected int ticks = 0;
-
-	public WButton(WPosition position, WSize size, WInterface linkedInterface) {
-		setInterface(linkedInterface);
-		setPosition(position);
-		setSize(size);
-	}
 
 	@Override
 	public void onMouseClicked(int mouseX, int mouseY, int mouseButton) {
@@ -35,11 +31,10 @@ public class WButton extends WWidget implements WClient, WFocusedMouseListener {
 		}
 
 		if (hasLabel()) {
-			if (BaseRenderer.getTextRenderer().getStringWidth(getLabel().asFormattedString()) > getWidth() - 6) {
-				BaseRenderer.drawText(isLabelShadowed(), getLabel().asFormattedString(), (getX() + getWidth() + 2), (int) (getY() + getHeight() / 2 - 4.5), getStyle().asColor("label"));
-			} else {
-				BaseRenderer.drawText(isLabelShadowed(), getLabel().asFormattedString(), (getX() + 3), (int) (getY() + getHeight() / 2 - 4.5), getStyle().asColor("label"));
-			}
+			int x = (TextRenderer.width(getLabel()) > getWidth() - 6) ? (getX() + getWidth() + 2) : (getX() + 3);
+			TextRenderer.pass().text(getLabel()).at(x, getY() + getHeight() / 2 - 4.5, getZ())
+					.shadow(getStyle().asBoolean("label.shadow")).shadowColor(getStyle().asColor("label.shadow_color"))
+					.color(getStyle().asColor("label.color")).render();
 		}
 	}
 

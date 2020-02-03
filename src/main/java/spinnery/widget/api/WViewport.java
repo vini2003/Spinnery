@@ -1,4 +1,4 @@
-package spinnery.widget;
+package spinnery.widget.api;
 
 public interface WViewport {
     WSize getInnerSize();

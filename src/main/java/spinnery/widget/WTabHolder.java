@@ -5,22 +5,25 @@ import net.fabricmc.api.Environment;
 import net.minecraft.item.Item;
 import net.minecraft.text.Text;
 import spinnery.client.BaseRenderer;
+import spinnery.widget.api.WCollection;
+import spinnery.widget.api.WFocusedMouseListener;
+import spinnery.widget.api.WModifiableCollection;
+import spinnery.widget.api.WPosition;
+import spinnery.widget.api.WSize;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
 @Environment(EnvType.CLIENT)
-public class WTabHolder extends WWidget implements WClient, WCollection, WFocusedMouseListener {
+@WFocusedMouseListener
+public class WTabHolder extends WWidget implements WCollection {
 	List<WTab> tabs = new ArrayList<>();
 
-	public WTabHolder(WPosition position, WSize size, WInterface linkedInterface) {
-		setInterface(linkedInterface);
-		setPosition(position);
-		setSize(size);
+	public WTabHolder build() {
+		return this;
 	}
 
 	public void selectTab(int tabNumber) {
@@ -46,7 +49,7 @@ public class WTabHolder extends WWidget implements WClient, WCollection, WFocuse
 		for (int i = 0; i < tabs.size(); i++) {
 			WTabToggle button = tabs.get(i).getToggle();
 			button.setWidth(tabSize);
-			button.setPosition(WPosition.of(WType.ANCHORED, tabOffset, 0, 0, this));
+			button.setPosition(new WPosition().anchor(this).position(tabOffset, 0, 0));
 			tabOffset += tabSize;
 		}
 		return tab;
@@ -118,7 +121,7 @@ public class WTabHolder extends WWidget implements WClient, WCollection, WFocuse
 
 		BaseRenderer.drawPanel(x, y + 24, z, sX, sY - 24, getStyle().asColor("shadow"), getStyle().asColor("background"), getStyle().asColor("highlight"), getStyle().asColor("outline"));
 
-		for (WWidget widget : getWidgets()) {
+		for (WWidget widget : getAllWidgets()) {
 			if (!(widget instanceof WTabToggle)) {
 				widget.draw();
 			}
@@ -135,7 +138,10 @@ public class WTabHolder extends WWidget implements WClient, WCollection, WFocuse
 			this.symbol = symbol;
 			this.name = name;
 			this.number = number;
-			this.widgets.add(new WTabToggle(WPosition.of(WType.ANCHORED, 0, 0, 0, holder), WSize.of(36, 24), getInterface(), symbol, name));
+			this.widgets.add(getInterface().getFactory().build(WTabToggle.class, new WPosition().anchor(holder).position(0, 0, 0), new WSize().put(36, 24))
+						.symbol(symbol)
+						.name(name)
+						.build());
 			this.widgets.iterator().next().setOnMouseClicked(() -> {
 				if (getToggle().getToggleState()) {
 					selectTab(this.number);

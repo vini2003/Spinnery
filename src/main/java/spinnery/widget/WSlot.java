@@ -14,9 +14,15 @@ import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.Level;
 import spinnery.Spinnery;
 import spinnery.client.BaseRenderer;
+import spinnery.common.BaseContainer;
 import spinnery.registry.NetworkRegistry;
+import spinnery.widget.api.WFocusedMouseListener;
+import spinnery.widget.api.WModifiableCollection;
+import spinnery.widget.api.WPosition;
+import spinnery.widget.api.WSize;
 
-public class WSlot extends WWidget implements WClient, WServer, WFocusedMouseListener {
+@WFocusedMouseListener
+public class WSlot extends WWidget {
 	protected int slotNumber;
 	protected Identifier previewTexture;
 	protected int maximumCount = 0;
@@ -24,74 +30,67 @@ public class WSlot extends WWidget implements WClient, WServer, WFocusedMouseLis
 	protected int inventoryNumber;
 	protected boolean ignoreOnRelease = false;
 
-	@Environment(EnvType.CLIENT)
-	public WSlot(WPosition position, WSize size, WInterface linkedInterface, int slotNumber, int inventoryNumber) {
-		setInterface(linkedInterface);
-		setPosition(position);
-		setSize(size);
-		setSlotNumber(slotNumber);
-		setInventoryNumber(inventoryNumber);
+	public WSlot slot(int slotNumber) {
+		this.slotNumber = slotNumber;
+		return this;
 	}
 
-	public WSlot(WInterface linkedInterface, int slotNumber, int inventoryNumber) {
-		setInterface(linkedInterface);
-		setSlotNumber(slotNumber);
-		setInventoryNumber(inventoryNumber);
+	public WSlot inventory(int inventoryNumber) {
+		this.inventoryNumber = inventoryNumber;
+		return this;
+	}
+
+	public WSlot maximum(int maximumCount) {
+		overrideMaximumCount = true;
+		this.maximumCount = maximumCount;
+		return this;
+	}
+
+	public WSlot preview(Identifier previewTexture) {
+		this.previewTexture = previewTexture;
+		return this;
+	}
+
+	public WSlot build() {
+		return this;
 	}
 
 	@Environment(EnvType.CLIENT)
-	public static void addPlayerInventory(WSize size, WInterface linkedInterface, int inventoryNumber) {
+	public static void addPalyerInventory(WPosition position, WSize size, WModifiableCollection parent) {
 		int temporarySlotNumber = 0;
-		addArray(
-				WPosition.of(WType.ANCHORED, 4, linkedInterface.getHeight() - 82 + size.getY() * 3 + 4, 0, linkedInterface),
-				size,
-				linkedInterface,
-				temporarySlotNumber,
-				inventoryNumber,
-				9,
-				1);
+		addArray(position, size, parent, temporarySlotNumber, BaseContainer.PLAYER_INVENTORY, 9, 1);
 		temporarySlotNumber = 9;
-		addArray(
-				WPosition.of(WType.ANCHORED, 4, linkedInterface.getHeight() - 82, 0, linkedInterface),
-				size,
-				linkedInterface,
-				temporarySlotNumber,
-				inventoryNumber,
-				9,
-				3);
+		addArray(position, size, parent, temporarySlotNumber, BaseContainer.PLAYER_INVENTORY, 9, 3);
 	}
 
 	@Environment(EnvType.CLIENT)
-	public static void addArray(WPosition position, WSize size, WInterface linkedInterface, int slotNumber, int inventoryNumber, int arrayWidth, int arrayHeight) {
+	public static void addArray(WPosition position, WSize size, WModifiableCollection parent, int slotNumber, int inventoryNumber, int arrayWidth, int arrayHeight) {
 		for (int y = 0; y < arrayHeight; ++y) {
 			for (int x = 0; x < arrayWidth; ++x) {
-				WSlot.addSingle(WPosition.of(WType.FREE, position.getX() + (size.getX() * x), position.getY() + (size.getY() * y), position.getZ()), WSize.of(size.getX(), size.getY()), linkedInterface, slotNumber++, inventoryNumber);
+				parent.getFactory().build(WSlot.class, new WPosition().position(position.getX() + (size.getX() * x), position.getY() + (size.getY() * y), position.getZ()), size)
+						.slot(slotNumber)
+						.inventory(inventoryNumber)
+						.build();
 			}
 		}
 	}
 
-	@Environment(EnvType.CLIENT)
-	public static void addSingle(WPosition position, WSize size, WInterface linkedInterface, int slotNumber, int inventoryNumber) {
-		linkedInterface.add(new WSlot(position, size, linkedInterface, slotNumber, inventoryNumber));
-	}
-
-	public static void addPlayerInventory(WInterface linkedInterface, int inventoryNumber) {
+	public static void addHeadlessPlayerInventory(WInterface linkedInterface, int inventoryNumber) {
 		int temporarySlotNumber = 0;
-		addArray(linkedInterface, temporarySlotNumber, inventoryNumber, 9, 1);
+		addHeadlessArray(linkedInterface, temporarySlotNumber, inventoryNumber, 9, 1);
 		temporarySlotNumber = 9;
-		addArray(linkedInterface, temporarySlotNumber, inventoryNumber, 9, 3);
+		addHeadlessArray(linkedInterface, temporarySlotNumber, inventoryNumber, 9, 3);
 	}
 
-	public static void addArray(WInterface linkedInterface, int slotNumber, int inventoryNumber, int arrayWidth, int arrayHeight) {
+	public static void addHeadlessArray(WModifiableCollection parent, int slotNumber, int inventoryNumber, int arrayWidth, int arrayHeight) {
 		for (int y = 0; y < arrayHeight; ++y) {
 			for (int x = 0; x < arrayWidth; ++x) {
-				WSlot.addSingle(linkedInterface, slotNumber++, inventoryNumber);
+				parent.getFactory().build(WSlot.class, null, null)
+						.slot(slotNumber)
+						.inventory(inventoryNumber)
+						.build();
 			}
 		}
-	}
-
-	public static void addSingle(WInterface linkedInterface, int slotNumber, int inventoryNumber) {
-		linkedInterface.add(new WSlot(linkedInterface, slotNumber, inventoryNumber));
 	}
 
 	public int getMaxCount() {

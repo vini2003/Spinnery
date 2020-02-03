@@ -10,9 +10,13 @@ import net.minecraft.resource.ResourceType;
 import org.apache.logging.log4j.Level;
 import spinnery.Spinnery;
 import spinnery.util.ResourceListener;
-import spinnery.widget.WTheme;
+import spinnery.widget.api.WTheme;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Objects;
 

@@ -9,6 +9,11 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.Tickable;
 import spinnery.registry.ThemeRegistry;
 import spinnery.registry.WidgetRegistry;
+import spinnery.widget.api.WPosition;
+import spinnery.widget.api.WPositioned;
+import spinnery.widget.api.WSize;
+import spinnery.widget.api.WStyle;
+import spinnery.widget.api.WStyleProvider;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,12 +21,12 @@ import java.util.Optional;
 
 import static spinnery.registry.ThemeRegistry.DEFAULT_THEME;
 
-public class WWidget implements Tickable, Comparable<WWidget> {
+public class WWidget implements Tickable, Comparable<WWidget>, WPositioned, WStyleProvider {
 	protected WInterface linkedInterface;
 
-	protected WPosition position = WPosition.of(WType.FREE, 0, 0, 0);
+	protected WPosition position = null;
 
-	protected WSize size = WSize.of(0, 0);
+	protected WSize size = null;
 
 	protected boolean isHidden = false;
 	protected boolean hasFocus = false;
@@ -45,14 +50,35 @@ public class WWidget implements Tickable, Comparable<WWidget> {
 
 	protected Text label = new LiteralText("");
 
-	public WWidget() {
+	public WWidget label(Text label) {
+		this.label = label;
+		return this;
 	}
 
-	public WStyle getStyle() {
-		if (styleOverrides == null) {
-			styleOverrides = ThemeRegistry.getStyle(getTheme(), WidgetRegistry.getId(getClass()));
-		}
-		return styleOverrides;
+	public WWidget theme(Identifier theme) {
+		this.theme = theme;
+		return this;
+	}
+
+	public WWidget hidden(boolean isHidden) {
+		this.isHidden = isHidden;
+		return this;
+	}
+
+	public WWidget shadow(boolean isLabelShadowed) {
+		this.isLabelShadowed = isLabelShadowed;
+		return this;
+	}
+
+	@SuppressWarnings("unchecked")
+	public <T extends WWidget> T morph(Class<T> tClass) {
+		return (T) this;
+	}
+
+
+	@Environment(EnvType.CLIENT)
+	public boolean isLabelShadowed() {
+		return getStyle().asBoolean("label.shadow");
 	}
 
 	public <T> void overrideStyle(String property, T value) {
@@ -268,9 +294,12 @@ public class WWidget implements Tickable, Comparable<WWidget> {
 		return !label.asFormattedString().isEmpty();
 	}
 
-	@Environment(EnvType.CLIENT)
-	public boolean isLabelShadowed() {
-		return isLabelShadowed;
+	@Override
+	public WStyle getStyle() {
+		if (styleOverrides == null) {
+			styleOverrides = ThemeRegistry.getStyle(getTheme(), WidgetRegistry.getId(getClass()));
+		}
+		return styleOverrides;
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -427,16 +456,17 @@ public class WWidget implements Tickable, Comparable<WWidget> {
 
 	@Environment(EnvType.CLIENT)
 	public void center() {
-		if (this instanceof WInterface && ((WInterface) this).isClient() || getInterface() != null && getInterface().isClient()) {
+		if (getInterface() != null && getInterface().isClient()) {
 			int x, y;
-			if (position.type == WType.FREE) {
+			if (position.getAnchor() == null) {
 				x = MinecraftClient.getInstance().getWindow().getScaledWidth() / 2 - getWidth() / 2;
 				y = MinecraftClient.getInstance().getWindow().getScaledHeight() / 2 - getHeight() / 2;
 			} else {
-				x = position.anchor.getWidth() / 2 - getWidth() / 2;
-				y = position.anchor.getHeight() / 2 - getHeight() / 2;
+				x = position.getAnchor().getWidth() / 2 - getWidth() / 2;
+				y = position.getAnchor().getHeight() / 2 - getHeight() / 2;
 			}
-			this.position.set(x, y, getZ());
+			position.setX(x);
+			position.setY(y);
 		}
 	}
 
