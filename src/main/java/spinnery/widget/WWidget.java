@@ -415,6 +415,12 @@ public class WWidget implements Tickable, Comparable<WWidget>, WLayoutElement, W
 	}
 
 	@Environment(EnvType.CLIENT)
+	public <T extends WWidget> T setOnCharTyped(WCharTypeListener<T> linkedRunnable) {
+		this.runnableOnCharTyped = linkedRunnable;
+		return (T) this;
+	}
+
+	@Environment(EnvType.CLIENT)
 	public <T extends WWidget> T setOnKeyReleased(WKeyReleaseListener<T> linkedRunnable) {
 		this.runnableOnKeyReleased = linkedRunnable;
 		return (T) this;
@@ -477,6 +483,11 @@ public class WWidget implements Tickable, Comparable<WWidget>, WLayoutElement, W
 	@Environment(EnvType.CLIENT)
 	public <T extends WWidget> WKeyPressListener<T> getOnKeyPressed() {
 		return runnableOnKeyPressed;
+	}
+
+	@Environment(EnvType.CLIENT)
+	public <T extends WWidget> WCharTypeListener<T> getOnCharTyped() {
+		return runnableOnCharTyped;
 	}
 
 	@Environment(EnvType.CLIENT)
