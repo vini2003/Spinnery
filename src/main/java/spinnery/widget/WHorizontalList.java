@@ -22,7 +22,7 @@ public class WHorizontalList extends WWidget implements WModifiableCollection {
 		container.setParent(this);
 	}
 
-	public WHorizontalList scroller(boolean visible) {
+	public WHorizontalList setScroller(boolean visible) {
 		container.setScrollbarVisible(visible);
 		return this;
 	}
@@ -95,12 +95,6 @@ public class WHorizontalList extends WWidget implements WModifiableCollection {
 	@Override
 	public void remove(WWidget... widgetArray) {
 		container.remove(widgetArray);
-	}
-
-	@Override
-	public void setLabel(Text label) {
-		super.setLabel(label);
-		onLayoutChange();
 	}
 
 	@Override

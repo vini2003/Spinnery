@@ -22,7 +22,7 @@ public class WVerticalList extends WWidget implements WModifiableCollection {
 		container.setParent(this);
 	}
 
-	public WVerticalList scroller(boolean visible) {
+	public WVerticalList setScroller(boolean visible) {
 		container.setScrollbarVisible(visible);
 		return this;
 	}
@@ -80,12 +80,6 @@ public class WVerticalList extends WWidget implements WModifiableCollection {
 	public boolean updateFocus(int mouseX, int mouseY) {
 		setFocus(isWithinBounds(mouseX, mouseY) && getWidgets().stream().noneMatch((WWidget::getFocus)));
 		return getFocus();
-	}
-
-	@Override
-	public void setLabel(Text label) {
-		super.setLabel(label);
-		onLayoutChange();
 	}
 
 	@Override

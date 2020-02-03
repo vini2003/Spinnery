@@ -1,7 +1,6 @@
 package spinnery.widget;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.text.Text;
 import org.lwjgl.opengl.GL11;
 import spinnery.widget.api.WCollection;
 import spinnery.widget.api.WModifiableCollection;
@@ -29,6 +28,8 @@ public class WVerticalScrollableContainer extends WWidget implements WModifiable
 
     @Override
     public void onLayoutChange() {
+        scrollToStart();
+        updateHidden();
         updateScrollbar();
     }
 
@@ -120,14 +121,6 @@ public class WVerticalScrollableContainer extends WWidget implements WModifiable
             }
         }
         return widgets;
-    }
-
-    @Override
-    public void setLabel(Text label) {
-        super.setLabel(label);
-        scrollToStart();
-        updateHidden();
-        updateScrollbar();
     }
 
     public boolean hasScrollbar() {

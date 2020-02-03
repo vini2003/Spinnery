@@ -45,11 +45,6 @@ public class WDraggableArea extends WWidget implements WModifiableCollection {
 	}
 
 	@Override
-	public void setLabel(Text label) {
-		super.setLabel(label);
-	}
-
-	@Override
 	public boolean updateFocus(int mouseX, int mouseY) {
 		setFocus(isWithinBounds(mouseX, mouseY) && getWidgets().stream().noneMatch((WWidget::getFocus)));
 		return getFocus();

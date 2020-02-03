@@ -14,21 +14,6 @@ public class WStaticText extends WWidget {
 	protected TextRenderer.Font font = TextRenderer.Font.DEFAULT;
 	protected Integer maxWidth = null;
 
-	public WStaticText font(TextRenderer.Font font) {
-		this.font = font;
-		return this;
-	}
-
-	public WStaticText text(Text text) {
-		this.text = text;
-		return this;
-	}
-
-	public WStaticText text(String text) {
-		this.text = new LiteralText(text);
-		return this;
-	}
-
 	public Integer getMaxWidth() {
 		return maxWidth;
 	}
@@ -41,8 +26,9 @@ public class WStaticText extends WWidget {
 		return font;
 	}
 
-	public void setFont(TextRenderer.Font font) {
+	public WStaticText setFont(TextRenderer.Font font) {
 		this.font = font;
+		return this;
 	}
 
 	@Override
@@ -76,5 +62,9 @@ public class WStaticText extends WWidget {
 
 	public void setText(Text text) {
 		this.text = text;
+	}
+
+	public void setText(String text) {
+		this.text = new LiteralText(text);
 	}
 }

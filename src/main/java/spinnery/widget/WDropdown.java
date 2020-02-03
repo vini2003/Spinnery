@@ -2,7 +2,6 @@ package spinnery.widget;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.text.Text;
 import org.lwjgl.glfw.GLFW;
 import spinnery.client.BaseRenderer;
 import spinnery.client.TextRenderer;
@@ -25,6 +24,7 @@ public class WDropdown extends WWidget implements WModifiableCollection {
 
 	@Override
 	public void onLayoutChange() {
+		updatePositions();
 		updateHidden();
 	}
 
@@ -63,16 +63,8 @@ public class WDropdown extends WWidget implements WModifiableCollection {
 	}
 
 	@Override
-	public void setLabel(Text label) {
-		super.setLabel(label);
-		updatePositions();
-		updateHidden();
-	}
-
-	@Override
 	public void align() {
 		super.align();
-
 		updatePositions();
 	}
 
@@ -108,7 +100,7 @@ public class WDropdown extends WWidget implements WModifiableCollection {
 		return dropdownSize;
 	}
 
-	public WDropdown dropdownSize(WSize dropdownSize) {
+	public WDropdown setDropdownSize(WSize dropdownSize) {
 		this.dropdownSize = dropdownSize;
 		return this;
 	}
