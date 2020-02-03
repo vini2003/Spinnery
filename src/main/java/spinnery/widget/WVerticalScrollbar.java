@@ -16,7 +16,8 @@ public class WVerticalScrollbar extends WWidget {
     public int getScrollerHeight() {
         double outerHeight = getHeight();
         double innerHeight = scrollable.getInnerHeight();
-        return (int) (outerHeight * (outerHeight / Math.max(innerHeight, outerHeight)));
+        int calculated = (int) (outerHeight * (outerHeight / Math.max(innerHeight, outerHeight)));
+        return Math.max(calculated, 4);
     }
 
     public int getScrollerY() {

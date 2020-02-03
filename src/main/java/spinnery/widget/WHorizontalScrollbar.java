@@ -16,7 +16,8 @@ public class WHorizontalScrollbar extends WWidget {
     public int getScrollerWidth() {
         double outerWidth = getWidth();
         double innerWidth = scrollable.getInnerWidth();
-        return (int) (outerWidth * (outerWidth / (Math.max(innerWidth, outerWidth))));
+        int calculated = (int) (outerWidth * (outerWidth / (Math.max(innerWidth, outerWidth))));
+        return Math.max(calculated, 4);
     }
 
     public int getScrollerX() {
