@@ -26,6 +26,10 @@ public class WPosition implements WPositioned {
 		return new WPosition().anchor(anchor).set(x, y, z);
 	}
 
+	public static WPosition of(WPositioned anchor, int x, int y) {
+		return new WPosition().anchor(anchor).set(x, y, 0);
+	}
+
 	public WPosition anchor(WPositioned anchor) {
 		this.anchor = anchor;
 		return this;
