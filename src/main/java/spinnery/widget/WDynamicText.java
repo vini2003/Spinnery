@@ -31,7 +31,7 @@ public class WDynamicText extends WWidget {
 	}
 
 	@Override
-	public void onCharTyped(char character) {
+	public void onCharTyped(char character, int keyCode) {
 		if (!isActive) {
 			return;
 		}
@@ -45,7 +45,7 @@ public class WDynamicText extends WWidget {
 		clearSelection();
 		updateText();
 
-		super.onCharTyped(character);
+		super.onCharTyped(character, keyCode);
 	}
 
 	public boolean isEditable() {

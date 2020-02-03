@@ -81,12 +81,9 @@ public class WDraggableContainer extends WWidget implements WModifiableCollectio
     public void onMouseClicked(int mouseX, int mouseY, int mouseButton) {
         if (mouseButton == 0 && isWithinBounds(mouseX, mouseY)) {
             dragging = true;
+        } else {
+            dragging = false;
         }
-    }
-
-    @Override
-    public void onMouseReleased(double mouseX, double mouseY, int mouseButton) {
-        dragging = false;
     }
 
     @Override

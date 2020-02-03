@@ -96,7 +96,7 @@ public class WDraggableArea extends WWidget implements WModifiableCollection {
 	}
 
 	@Override
-	public void onMouseReleased(double mouseX, double mouseY, int mouseButton) {
+	public void onMouseReleased(int mouseX, int mouseY, int mouseButton) {
 		container.onMouseReleased(mouseX, mouseY, mouseButton);
 	}
 

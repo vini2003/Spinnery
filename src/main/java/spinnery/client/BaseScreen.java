@@ -29,8 +29,8 @@ public class BaseScreen extends Screen {
 	}
 
 	@Override
-	public boolean keyPressed(int character, int keyCode, int keyModifier) {
-		screenInterface.onKeyPressed(character, keyCode, keyModifier);
+	public boolean keyPressed(int keyCode, int character, int keyModifier) {
+		screenInterface.onKeyPressed(keyCode, character, keyModifier);
 
 		if (character == GLFW.GLFW_KEY_ESCAPE) {
 			minecraft.player.closeScreen();

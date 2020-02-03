@@ -107,7 +107,7 @@ public class WTexturedButton extends WWidget {
 	}
 
 	@Override
-	public void onMouseReleased(double mouseX, double mouseY, int mouseButton) {
+	public void onMouseReleased(int mouseX, int mouseY, int mouseButton) {
 		if (isDisabledf) return;
 		super.onMouseReleased(mouseX, mouseY, mouseButton);
 	}

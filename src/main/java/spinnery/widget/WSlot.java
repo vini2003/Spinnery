@@ -89,7 +89,7 @@ public class WSlot extends WWidget {
 
 	@Override
 	@Environment(EnvType.CLIENT)
-	public void onMouseReleased(double mouseX, double mouseY, int mouseButton) {
+	public void onMouseReleased(int mouseX, int mouseY, int mouseButton) {
 		PlayerEntity playerEntity = getInterface().getContainer().getLinkedPlayerInventory().player;
 
 		if (!ignoreOnRelease && mouseButton == 0 && !Screen.hasShiftDown() && !playerEntity.inventory.getCursorStack().isEmpty()) {

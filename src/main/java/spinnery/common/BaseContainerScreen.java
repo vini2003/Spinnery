@@ -125,10 +125,10 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 
 	@Override
 	@Environment(EnvType.CLIENT)
-	public boolean keyPressed(int character, int keyCode, int keyModifier) {
-		clientInterface.onKeyPressed(character, keyCode, keyModifier);
+	public boolean keyPressed(int keyCode, int character, int keyModifier) {
+		clientInterface.onKeyPressed(keyCode, character, keyModifier);
 
-		if (character == GLFW.GLFW_KEY_ESCAPE) {
+		if (keyCode == GLFW.GLFW_KEY_ESCAPE) {
 			minecraft.player.closeContainer();
 			return true;
 		} else {

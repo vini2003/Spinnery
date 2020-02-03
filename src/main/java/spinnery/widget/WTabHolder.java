@@ -140,7 +140,7 @@ public class WTabHolder extends WWidget implements WCollection {
 			tabToggle.setParent(holder);
 			tabToggle.setInterface(holder.getInterface());
 			this.widgets.add(tabToggle);
-			this.widgets.iterator().next().setOnMouseClicked(() -> {
+			this.widgets.iterator().next().setOnMouseClicked((widget, mouseX, mouseY, mouseButton) -> {
 				if (getToggle().getToggleState()) {
 					selectTab(this.number);
 				}

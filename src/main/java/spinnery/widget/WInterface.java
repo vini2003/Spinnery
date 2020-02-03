@@ -148,11 +148,11 @@ public class WInterface implements WModifiableCollection, WLayoutElement, WThema
 		}
 	}
 
-	public void onKeyReleased(int character, int keyCode, int keyModifier) {
+	public void onKeyReleased(int keyCode, int character, int keyModifier) {
 		for (WWidget widget : getAllWidgets()) {
 			if (widget.getClass().isAnnotationPresent(WFocusedKeyboardListener.class) && !widget.getFocus())
 				continue;
-			widget.onKeyReleased(keyCode);
+			widget.onKeyReleased(keyCode, character, keyModifier);
 			if (widget instanceof WNetworked) {
 				ClientSidePacketRegistry.INSTANCE.sendToServer(NetworkRegistry.SYNCED_WIDGET_PACKET,
 						NetworkRegistry.createKeyReleasePacket(((WNetworked) widget), character, keyCode, keyModifier));
@@ -160,11 +160,11 @@ public class WInterface implements WModifiableCollection, WLayoutElement, WThema
 		}
 	}
 
-	public void onKeyPressed(int character, int keyCode, int keyModifier) {
+	public void onKeyPressed(int keyCode, int character, int keyModifier) {
 		for (WWidget widget : getAllWidgets()) {
 			if (widget.getClass().isAnnotationPresent(WFocusedKeyboardListener.class) && !widget.getFocus())
 				continue;
-			widget.onKeyPressed(character, keyCode, keyModifier);
+			widget.onKeyPressed(keyCode, character, keyModifier);
 			if (widget instanceof WNetworked) {
 				ClientSidePacketRegistry.INSTANCE.sendToServer(NetworkRegistry.SYNCED_WIDGET_PACKET,
 						NetworkRegistry.createKeyPressPacket(((WNetworked) widget), character, keyCode, keyModifier));
@@ -176,7 +176,7 @@ public class WInterface implements WModifiableCollection, WLayoutElement, WThema
 		for (WWidget widget : getAllWidgets()) {
 			if (widget.getClass().isAnnotationPresent(WFocusedKeyboardListener.class) && !widget.getFocus())
 				continue;
-			widget.onCharTyped(character);
+			widget.onCharTyped(character, keyCode);
 			if (widget instanceof WNetworked) {
 				ClientSidePacketRegistry.INSTANCE.sendToServer(NetworkRegistry.SYNCED_WIDGET_PACKET,
 						NetworkRegistry.createCharTypePacket(((WNetworked) widget), character, keyCode));
@@ -186,7 +186,7 @@ public class WInterface implements WModifiableCollection, WLayoutElement, WThema
 
 	public void onDrawMouseoverTooltip(int mouseX, int mouseY) {
 		for (WWidget widget : getAllWidgets()) {
-			widget.onDrawTooltip();
+			widget.onDrawTooltip(mouseX, mouseY);
 		}
 	}
 

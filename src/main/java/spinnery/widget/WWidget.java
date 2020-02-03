@@ -9,10 +9,11 @@ import net.minecraft.util.Tickable;
 import spinnery.registry.ThemeRegistry;
 import spinnery.registry.WidgetRegistry;
 import spinnery.widget.api.*;
+import spinnery.widget.api.listener.*;
 
 import static spinnery.registry.ThemeRegistry.DEFAULT_THEME;
 
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked", "rawtypes"})
 public class WWidget implements Tickable, Comparable<WWidget>, WLayoutElement, WThemable, WStyleProvider {
 	protected WInterface linkedInterface;
 	protected WLayoutElement parent;
@@ -24,18 +25,18 @@ public class WWidget implements Tickable, Comparable<WWidget>, WLayoutElement, W
 	protected boolean isHidden = false;
 	protected boolean hasFocus = false;
 
-	protected Runnable runnableOnCharTyped;
-	protected Runnable runnableOnMouseClicked;
-	protected Runnable runnableOnKeyPressed;
-	protected Runnable runnableOnKeyReleased;
-	protected Runnable runnableOnFocusGained;
-	protected Runnable runnableOnFocusReleased;
-	protected Runnable runnableOnDrawTooltip;
-	protected Runnable runnableOnMouseReleased;
-	protected Runnable runnableOnMouseMoved;
-	protected Runnable runnableOnMouseDragged;
-	protected Runnable runnableOnMouseScrolled;
-	protected Runnable runnableOnAlign;
+	protected WCharTypeListener runnableOnCharTyped;
+	protected WMouseClickListener runnableOnMouseClicked;
+	protected WKeyPressListener runnableOnKeyPressed;
+	protected WKeyReleaseListener runnableOnKeyReleased;
+	protected WFocusGainListener runnableOnFocusGained;
+	protected WFocusLossListener runnableOnFocusReleased;
+	protected WTooltipDrawListener runnableOnDrawTooltip;
+	protected WMouseReleaseListener runnableOnMouseReleased;
+	protected WMouseMoveListener runnableOnMouseMoved;
+	protected WMouseDragListener runnableOnMouseDragged;
+	protected WMouseScrollListener runnableOnMouseScrolled;
+	protected WAlignListener runnableOnAlign;
 
 	protected Identifier theme;
 	protected WStyle styleOverrides;
@@ -123,6 +124,22 @@ public class WWidget implements Tickable, Comparable<WWidget>, WLayoutElement, W
 	public void center() {
 		setPosition(WPosition.of(getParent(),
 				getParent().getWidth() / 2 - getWidth() / 2,
+				getParent().getHeight() / 2 - getHeight() / 2,
+				getPosition().getOffsetZ()));
+	}
+
+	@Environment(EnvType.CLIENT)
+	public void centerX() {
+		setPosition(WPosition.of(getParent(),
+				getParent().getWidth() / 2 - getWidth() / 2,
+				getPosition().getOffsetY(),
+				getPosition().getOffsetZ()));
+	}
+
+	@Environment(EnvType.CLIENT)
+	public void centerY() {
+		setPosition(WPosition.of(getParent(),
+				getPosition().getOffsetX(),
 				getParent().getHeight() / 2 - getHeight() / 2,
 				getPosition().getOffsetZ()));
 	}
@@ -289,84 +306,84 @@ public class WWidget implements Tickable, Comparable<WWidget>, WLayoutElement, W
 	@Environment(EnvType.CLIENT)
 	public void onKeyPressed(int keyPressed, int character, int keyModifier) {
 		if (runnableOnKeyPressed != null) {
-			runnableOnKeyPressed.run();
+			runnableOnKeyPressed.event(this, keyPressed, character, keyModifier);
 		}
 	}
 
 	@Environment(EnvType.CLIENT)
-	public void onKeyReleased(int keyReleased) {
+	public void onKeyReleased(int keyReleased, int character, int keyModifier) {
 		if (runnableOnKeyReleased != null) {
-			runnableOnKeyReleased.run();
+			runnableOnKeyReleased.event(this, keyReleased, character, keyModifier);
 		}
 	}
 
 	@Environment(EnvType.CLIENT)
-	public void onCharTyped(char character) {
+	public void onCharTyped(char character, int keyCode) {
 		if (runnableOnCharTyped != null) {
-			runnableOnCharTyped.run();
+			runnableOnCharTyped.event(this, character, keyCode);
 		}
 	}
 
 	@Environment(EnvType.CLIENT)
 	public void onFocusGained() {
 		if (runnableOnFocusGained != null) {
-			runnableOnFocusGained.run();
+			runnableOnFocusGained.event(this);
 		}
 	}
 
 	@Environment(EnvType.CLIENT)
 	public void onFocusReleased() {
 		if (runnableOnFocusReleased != null) {
-			runnableOnFocusReleased.run();
+			runnableOnFocusReleased.event(this);
 		}
 	}
 
 	@Environment(EnvType.CLIENT)
-	public void onMouseReleased(double mouseX, double mouseY, int mouseButton) {
+	public void onMouseReleased(int mouseX, int mouseY, int mouseButton) {
 		if (runnableOnMouseReleased != null) {
-			runnableOnMouseReleased.run();
+			runnableOnMouseReleased.event(this, mouseX, mouseY, mouseButton);
 		}
 	}
 
 	@Environment(EnvType.CLIENT)
 	public void onMouseClicked(int mouseX, int mouseY, int mouseButton) {
 		if (runnableOnMouseClicked != null) {
-			runnableOnMouseClicked.run();
+			runnableOnMouseClicked.event(this, mouseX, mouseY, mouseButton);
 		}
 	}
 
 	@Environment(EnvType.CLIENT)
 	public void onMouseDragged(int mouseX, int mouseY, int mouseButton, double deltaX, double deltaY) {
 		if (runnableOnMouseDragged != null) {
-			runnableOnMouseDragged.run();
+			runnableOnMouseDragged.event(this, mouseX, mouseY, mouseButton, deltaX, deltaY);
 		}
 	}
 
 	@Environment(EnvType.CLIENT)
-	public void onMouseMoved(double mouseX, double mouseY) {
+	public void onMouseMoved(int mouseX, int mouseY) {
 		if (runnableOnMouseMoved != null) {
-			runnableOnMouseMoved.run();
+			runnableOnMouseMoved.event(this, mouseX, mouseY);
 		}
 	}
 
 	@Environment(EnvType.CLIENT)
 	public void onMouseScrolled(int mouseX, int mouseY, double deltaY) {
 		if (runnableOnMouseScrolled != null) {
-			runnableOnMouseScrolled.run();
+			runnableOnMouseScrolled.event(this, mouseX, mouseY, deltaY);
 		}
 	}
 
 	@Environment(EnvType.CLIENT)
-	public void onDrawTooltip() {
+	public void onDrawTooltip(int mouseX, int mouseY) {
 		if (runnableOnDrawTooltip != null) {
-			runnableOnDrawTooltip.run();
+			runnableOnDrawTooltip.event(this, mouseX, mouseY);
 		}
 	}
 
 	@Environment(EnvType.CLIENT)
 	public void onAlign() {
 		if (runnableOnAlign != null) {
-			runnableOnAlign.run();
+			runnableOnAlign.event(this);
 		}
 		onLayoutChange();
 	}
@@ -374,125 +391,125 @@ public class WWidget implements Tickable, Comparable<WWidget>, WLayoutElement, W
 	// Event runner setters
 
 	@Environment(EnvType.CLIENT)
-	public <T extends WWidget> T setOnFocusGained(Runnable linkedRunnableOnFocusGained) {
-		this.runnableOnFocusGained = linkedRunnableOnFocusGained;
+	public <T extends WWidget> T setOnFocusGained(WFocusGainListener<T> linkedRunnable) {
+		this.runnableOnFocusGained = linkedRunnable;
 		return (T) this;
 	}
 
 	@Environment(EnvType.CLIENT)
-	public <T extends WWidget> T setOnFocusReleased(Runnable linkedRunnableOnFocusReleased) {
-		this.runnableOnFocusReleased = linkedRunnableOnFocusReleased;
+	public <T extends WWidget> T setOnFocusReleased(WFocusLossListener<T> linkedRunnable) {
+		this.runnableOnFocusReleased = linkedRunnable;
 		return (T) this;
 	}
 
 	@Environment(EnvType.CLIENT)
-	public <T extends WWidget> T setOnKeyPressed(Runnable linkedRunnableOnKeyPressed) {
-		this.runnableOnKeyPressed = linkedRunnableOnKeyPressed;
+	public <T extends WWidget> T setOnKeyPressed(WKeyPressListener<T> linkedRunnable) {
+		this.runnableOnKeyPressed = linkedRunnable;
 		return (T) this;
 	}
 
 	@Environment(EnvType.CLIENT)
-	public <T extends WWidget> T setOnKeyReleased(Runnable linkedRunnableOnKeyReleased) {
-		this.runnableOnKeyReleased = linkedRunnableOnKeyReleased;
+	public <T extends WWidget> T setOnKeyReleased(WKeyReleaseListener<T> linkedRunnable) {
+		this.runnableOnKeyReleased = linkedRunnable;
 		return (T) this;
 	}
 
 	@Environment(EnvType.CLIENT)
-	public <T extends WWidget> T setOnMouseClicked(Runnable linkedRunnable) {
+	public <T extends WWidget> T setOnMouseClicked(WMouseClickListener<T> linkedRunnable) {
 		this.runnableOnMouseClicked = linkedRunnable;
 		return (T) this;
 	}
 
 	@Environment(EnvType.CLIENT)
-	public <T extends WWidget> T setOnMouseDragged(Runnable linkedRunnable) {
+	public <T extends WWidget> T setOnMouseDragged(WMouseDragListener<T> linkedRunnable) {
 		this.runnableOnMouseDragged = linkedRunnable;
 		return (T) this;
 	}
 
 	@Environment(EnvType.CLIENT)
-	public <T extends WWidget> T setOnMouseMoved(Runnable linkedRunnable) {
+	public <T extends WWidget> T setOnMouseMoved(WMouseMoveListener<T> linkedRunnable) {
 		this.runnableOnMouseMoved = linkedRunnable;
 		return (T) this;
 	}
 
 	@Environment(EnvType.CLIENT)
-	public <T extends WWidget> T setOnMouseScrolled(Runnable linkedRunnable) {
+	public <T extends WWidget> T setOnMouseScrolled(WMouseScrollListener<T> linkedRunnable) {
 		this.runnableOnMouseScrolled = linkedRunnable;
 		return (T) this;
 	}
 
 	@Environment(EnvType.CLIENT)
-	public <T extends WWidget> T setOnMouseReleased(Runnable linkedRunnable) {
+	public <T extends WWidget> T setOnMouseReleased(WMouseReleaseListener<T> linkedRunnable) {
 		this.runnableOnMouseReleased = linkedRunnable;
 		return (T) this;
 	}
 
 	@Environment(EnvType.CLIENT)
-	public <T extends WWidget> T setOnDrawTooltip(Runnable linkedRunnableOnDrawTooltip) {
-		this.runnableOnDrawTooltip = linkedRunnableOnDrawTooltip;
+	public <T extends WWidget> T setOnDrawTooltip(WTooltipDrawListener<T> linkedRunnable) {
+		this.runnableOnDrawTooltip = linkedRunnable;
 		return (T) this;
 	}
 
 	@Environment(EnvType.CLIENT)
-	public <T extends WWidget> T setOnAlign(Runnable linkedRunnableOnAlign) {
-		this.runnableOnAlign = linkedRunnableOnAlign;
+	public <T extends WWidget> T setOnAlign(WAlignListener<T> linkedRunnable) {
+		this.runnableOnAlign = linkedRunnable;
 		return (T) this;
 	}
 
 	// Event runner getters
 
 	@Environment(EnvType.CLIENT)
-	public Runnable getOnFocusGained() {
+	public <T extends WWidget> WFocusGainListener<T> getOnFocusGained() {
 		return runnableOnFocusGained;
 	}
 
 	@Environment(EnvType.CLIENT)
-	public Runnable getOnFocusReleased() {
+	public <T extends WWidget> WFocusLossListener<T> getOnFocusReleased() {
 		return runnableOnFocusReleased;
 	}
 
 	@Environment(EnvType.CLIENT)
-	public Runnable getOnKeyPressed() {
+	public <T extends WWidget> WKeyPressListener<T> getOnKeyPressed() {
 		return runnableOnKeyPressed;
 	}
 
 	@Environment(EnvType.CLIENT)
-	public Runnable getOnKeyReleased() {
+	public <T extends WWidget> WKeyReleaseListener<T> getOnKeyReleased() {
 		return runnableOnKeyReleased;
 	}
 
 	@Environment(EnvType.CLIENT)
-	public Runnable getOnMouseClicked() {
+	public <T extends WWidget> WMouseClickListener<T> getOnMouseClicked() {
 		return runnableOnMouseClicked;
 	}
 
 	@Environment(EnvType.CLIENT)
-	public Runnable getOnMouseDragged() {
+	public <T extends WWidget> WMouseDragListener<T> getOnMouseDragged() {
 		return runnableOnMouseDragged;
 	}
 
 	@Environment(EnvType.CLIENT)
-	public Runnable getOnMouseMoved() {
+	public <T extends WWidget> WMouseMoveListener<T> getOnMouseMoved() {
 		return runnableOnMouseMoved;
 	}
 
 	@Environment(EnvType.CLIENT)
-	public Runnable getOnMouseScrolled() {
+	public <T extends WWidget> WMouseScrollListener<T> getOnMouseScrolled() {
 		return runnableOnMouseScrolled;
 	}
 
 	@Environment(EnvType.CLIENT)
-	public Runnable getOnMouseReleased() {
+	public <T extends WWidget> WMouseReleaseListener<T> getOnMouseReleased() {
 		return runnableOnMouseReleased;
 	}
 
 	@Environment(EnvType.CLIENT)
-	public Runnable getOnDrawTooltip() {
+	public <T extends WWidget> WTooltipDrawListener<T> getOnDrawTooltip() {
 		return runnableOnDrawTooltip;
 	}
 
 	@Environment(EnvType.CLIENT)
-	public Runnable getOnAlign() {
+	public <T extends WWidget> WAlignListener<T> getOnAlign() {
 		return runnableOnAlign;
 	}
 
