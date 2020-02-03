@@ -17,6 +17,11 @@ public class WSize implements WSized {
 		return new WSize(widget.getWidth(), widget.getHeight());
 	}
 
+	public WSize add(int width, int height) {
+		WSize newSize = WSize.of(this);
+		return newSize.setWidth(newSize.getWidth() + width).setHeight(newSize.getHeight() + height);
+	}
+
 	public int getWidth() {
 		return width;
 	}

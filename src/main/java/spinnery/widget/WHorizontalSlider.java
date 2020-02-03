@@ -2,74 +2,55 @@ package spinnery.widget;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import org.apache.commons.lang3.mutable.Mutable;
-import org.apache.commons.lang3.mutable.MutableInt;
-import org.lwjgl.glfw.GLFW;
 import spinnery.client.BaseRenderer;
 import spinnery.client.TextRenderer;
 import spinnery.widget.api.WFocusedKeyboardListener;
 import spinnery.widget.api.WFocusedMouseListener;
+import spinnery.widget.api.WPosition;
+import spinnery.widget.api.WSize;
 
 @Environment(EnvType.CLIENT)
 @WFocusedKeyboardListener
 @WFocusedMouseListener
-public class WHorizontalSlider extends WWidget {
-	protected Mutable<Number> limit = new MutableInt(0);
-	protected Mutable<Number> progress = new MutableInt(0);
-
+public class WHorizontalSlider extends WAbstractSlider {
 	protected String total = "0";
 	protected int tX;
 
 	@Override
 	public void onLayoutChange() {
-		tX = getX() + (getWidth() + 7) / 2 - TextRenderer.width(String.valueOf(getProgress().getValue().intValue())) / 2;
+		tX = getX() + (getWidth() + 7) / 2 - TextRenderer.width(String.valueOf(progress)) / 2;
 	}
 
-	public WHorizontalSlider setLimit(float limit) {
-		this.limit.setValue(limit);
-		return this;
+	@Override
+	protected void updatePosition(int mouseX, int mouseY) {
+		double innerWidth = getInnerSize().getWidth();
+		double percentComplete = Math.max(0, (mouseX - getInnerAnchor().getX()) / innerWidth);
+		setProgress(min + percentComplete * (max - min));
 	}
 
-	public WHorizontalSlider setProgress(float progress) {
-		this.progress.setValue(progress);
-		total = Integer.toString(Math.round(getProgress().getValue().floatValue()));
+	@SuppressWarnings("unchecked")
+	@Override
+	public WHorizontalSlider setProgress(double progress) {
+		super.setProgress(progress);
+		super.setProgress(progress);
+		total = String.valueOf(this.progress);
 		onLayoutChange();
 		return this;
 	}
 
 	@Override
-	public void onKeyPressed(int keyPressed, int character, int keyModifier) {
-		if (keyPressed == GLFW.GLFW_KEY_KP_SUBTRACT) {
-			progress.setValue(Math.min(getProgress().getValue().intValue() + 1, getLimit().getValue().intValue() - 1));
-		}
-		if (keyPressed == GLFW.GLFW_KEY_KP_DIVIDE) {
-			progress.setValue(Math.max(getProgress().getValue().intValue() - 1, 0));
-		}
-		super.onKeyPressed(keyPressed, character, keyModifier);
-	}
-
-	public Mutable<Number> getProgress() {
-		return progress;
-	}
-
-	public Mutable<Number> getLimit() {
-		return limit;
+	public WPosition getInnerAnchor() {
+		return getPosition().add(1, 1, 0);
 	}
 
 	@Override
-	public void onMouseClicked(int mouseX, int mouseY, int mouseButton) {
-		updatePosition(mouseX, mouseY);
-		super.onMouseClicked(mouseX, mouseY, mouseButton);
-	}
-
-	public void updatePosition(int mouseX, int mouseY) {
-		setProgress((mouseX - getX()) * (getLimit().getValue().floatValue() / (float) (getWidth())));
+	public WSize getInnerSize() {
+		return getSize().add(-2, -2);
 	}
 
 	@Override
-	public void onMouseDragged(int mouseX, int mouseY, int mouseButton, double deltaX, double deltaY) {
-		updatePosition(mouseX, mouseY);
-		super.onMouseDragged(mouseX, mouseY, mouseButton, deltaX, deltaY);
+	public WSize getKnobSize() {
+		return WSize.of(6, getHeight() + 3);
 	}
 
 	@Override
@@ -77,9 +58,6 @@ public class WHorizontalSlider extends WWidget {
 		if (isHidden()) {
 			return;
 		}
-
-		int l = getLimit().getValue().intValue();
-		float p = getProgress().getValue().floatValue();
 
 		int x = getX();
 		int y = getY();
@@ -97,9 +75,26 @@ public class WHorizontalSlider extends WWidget {
 		BaseRenderer.drawRectangle(x, y + sY, z, (sX), 1, getStyle().asColor("bottom_right.background"));
 		BaseRenderer.drawRectangle(x + (sX), y, z, 1, sY + 1, getStyle().asColor("bottom_right.background"));
 
-		BaseRenderer.drawRectangle(x + 1, y + 1, z, ((sX) / l) * p - 1, sY - 1, getStyle().asColor("background.on"));
-		BaseRenderer.drawRectangle(x + ((sX) / l) * p, y + 1, z, (sX) - ((sX) / l) * p, sY - 1, getStyle().asColor("background.off"));
+		WPosition innerAnchor = getInnerAnchor();
+		WSize innerSize = getInnerSize();
+		int innerX = innerAnchor.getX();
+		int innerY = innerAnchor.getY();
+		int innerWidth = innerSize.getWidth();
+		int innerHeight = innerSize.getHeight();
+		double percentComplete = getPercentComplete();
+		double percentLeft = 1 - percentComplete;
+		BaseRenderer.drawRectangle(innerX, innerY, z, innerWidth * percentComplete, innerHeight,
+				getStyle().asColor("background.on"));
+		BaseRenderer.drawRectangle(innerX + innerWidth * percentComplete, innerY, z, innerWidth * percentLeft, innerHeight,
+				getStyle().asColor("background.off"));
 
-		BaseRenderer.drawBeveledPanel(Math.min(x + sX - 7, x + (sX / l) * p), y - 1, z, 8, sY + 3, getStyle().asColor("top_left.foreground"), getStyle().asColor("foreground"), getStyle().asColor("bottom_right.foreground"));
+		WSize knobSize = getKnobSize();
+		int knobWidth = knobSize.getWidth();
+		int knobHeight = knobSize.getHeight();
+		int knobX = (int) (x + (innerWidth - (double) knobWidth / 2) * percentComplete);
+		int clampedX = (int) Math.min(x + innerWidth - (double) knobWidth / 2, Math.max(x, knobX));
+		BaseRenderer.drawBeveledPanel(clampedX, y - 1, z, knobWidth, knobHeight,
+				getStyle().asColor("top_left.foreground"), getStyle().asColor("foreground"),
+				getStyle().asColor("bottom_right.foreground"));
 	}
 }
