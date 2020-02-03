@@ -197,7 +197,7 @@ public class WWidget implements Tickable, Comparable<WWidget>, WLayoutElement, W
 	}
 
 	@Environment(EnvType.CLIENT)
-	public <T, W extends WWidget> W overrideStyle(String property, T value) {
+	public <W extends WWidget> W overrideStyle(String property, Object value) {
 		getStyle().override(property, value);
 		return (W) this;
 	}
