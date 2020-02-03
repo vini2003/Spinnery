@@ -22,6 +22,11 @@ public class WHorizontalList extends WWidget implements WModifiableCollection {
 		container.setParent(this);
 	}
 
+	public WHorizontalList scroller(boolean visible) {
+		container.setScrollbarVisible(visible);
+		return this;
+	}
+
 	@Override
 	public void onLayoutChange() {
 		if (hasLabel()) {
@@ -53,10 +58,6 @@ public class WHorizontalList extends WWidget implements WModifiableCollection {
 
 	public boolean hasScrollbar() {
 		return container.hasScrollbar();
-	}
-
-	public void setScroller(boolean visible) {
-		container.setScrollbarVisible(visible);
 	}
 
 	@Override

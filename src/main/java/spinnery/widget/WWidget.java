@@ -54,6 +54,11 @@ public class WWidget implements Tickable, Comparable<WWidget>, WLayoutElement, W
 		return (T) this;
 	}
 
+	public <T extends WWidget> T label(String text) {
+		this.label = new LiteralText(text);
+		return (T) this;
+	}
+
 	public <T extends WWidget> T theme(Identifier theme) {
 		this.theme = theme;
 		return (T) this;
@@ -64,7 +69,7 @@ public class WWidget implements Tickable, Comparable<WWidget>, WLayoutElement, W
 		return (T) this;
 	}
 
-	public <T extends WWidget> T shadow(boolean isLabelShadowed) {
+	public <T extends WWidget> T labelShadow(boolean isLabelShadowed) {
 		this.isLabelShadowed = isLabelShadowed;
 		return (T) this;
 	}
@@ -75,8 +80,9 @@ public class WWidget implements Tickable, Comparable<WWidget>, WLayoutElement, W
 		return getStyle().asBoolean("label.shadow");
 	}
 
-	public <T> void overrideStyle(String property, T value) {
+	public <T, W extends WWidget> W overrideStyle(String property, T value) {
 		getStyle().override(property, value);
+		return (W) this;
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -99,8 +105,9 @@ public class WWidget implements Tickable, Comparable<WWidget>, WLayoutElement, W
 	}
 
 	@Environment(EnvType.CLIENT)
-	public void setOnKeyPressed(Runnable linkedRunnableOnKeyPressed) {
+	public <T extends WWidget> T setOnKeyPressed(Runnable linkedRunnableOnKeyPressed) {
 		this.runnableOnKeyPressed = linkedRunnableOnKeyPressed;
+		return (T) this;
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -130,8 +137,9 @@ public class WWidget implements Tickable, Comparable<WWidget>, WLayoutElement, W
 	}
 
 	@Environment(EnvType.CLIENT)
-	public void setOnKeyReleased(Runnable linkedRunnableOnKeyReleased) {
+	public <T extends WWidget> T setOnKeyReleased(Runnable linkedRunnableOnKeyReleased) {
 		this.runnableOnKeyReleased = linkedRunnableOnKeyReleased;
+		return (T) this;
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -140,8 +148,9 @@ public class WWidget implements Tickable, Comparable<WWidget>, WLayoutElement, W
 	}
 
 	@Environment(EnvType.CLIENT)
-	public void setOnFocusGained(Runnable linkedRunnableOnFocusGained) {
+	public <T extends WWidget> T setOnFocusGained(Runnable linkedRunnableOnFocusGained) {
 		this.runnableOnFocusGained = linkedRunnableOnFocusGained;
+		return (T) this;
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -150,8 +159,9 @@ public class WWidget implements Tickable, Comparable<WWidget>, WLayoutElement, W
 	}
 
 	@Environment(EnvType.CLIENT)
-	public void setOnFocusReleased(Runnable linkedRunnableOnFocusReleased) {
+	public <T extends WWidget> T setOnFocusReleased(Runnable linkedRunnableOnFocusReleased) {
 		this.runnableOnFocusReleased = linkedRunnableOnFocusReleased;
+		return (T) this;
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -167,8 +177,9 @@ public class WWidget implements Tickable, Comparable<WWidget>, WLayoutElement, W
 	}
 
 	@Environment(EnvType.CLIENT)
-	public void setOnMouseReleased(Runnable linkedRunnable) {
+	public <T extends WWidget> T setOnMouseReleased(Runnable linkedRunnable) {
 		this.runnableOnMouseReleased = linkedRunnable;
+		return (T) this;
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -184,8 +195,9 @@ public class WWidget implements Tickable, Comparable<WWidget>, WLayoutElement, W
 	}
 
 	@Environment(EnvType.CLIENT)
-	public void setOnMouseClicked(Runnable linkedRunnable) {
+	public <T extends WWidget> T setOnMouseClicked(Runnable linkedRunnable) {
 		this.runnableOnMouseClicked = linkedRunnable;
+		return (T) this;
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -201,8 +213,9 @@ public class WWidget implements Tickable, Comparable<WWidget>, WLayoutElement, W
 	}
 
 	@Environment(EnvType.CLIENT)
-	public void setOnMouseDragged(Runnable linkedRunnable) {
+	public <T extends WWidget> T setOnMouseDragged(Runnable linkedRunnable) {
 		this.runnableOnMouseDragged = linkedRunnable;
+		return (T) this;
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -218,8 +231,9 @@ public class WWidget implements Tickable, Comparable<WWidget>, WLayoutElement, W
 	}
 
 	@Environment(EnvType.CLIENT)
-	public void setOnMouseMoved(Runnable linkedRunnable) {
+	public <T extends WWidget> T setOnMouseMoved(Runnable linkedRunnable) {
 		this.runnableOnMouseMoved = linkedRunnable;
+		return (T) this;
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -235,8 +249,9 @@ public class WWidget implements Tickable, Comparable<WWidget>, WLayoutElement, W
 	}
 
 	@Environment(EnvType.CLIENT)
-	public void setOnMouseScrolled(Runnable linkedRunnable) {
+	public <T extends WWidget> T setOnMouseScrolled(Runnable linkedRunnable) {
 		this.runnableOnMouseScrolled = linkedRunnable;
+		return (T) this;
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -252,8 +267,9 @@ public class WWidget implements Tickable, Comparable<WWidget>, WLayoutElement, W
 	}
 
 	@Environment(EnvType.CLIENT)
-	public void setOnDrawTooltip(Runnable linkedRunnableOnDrawTooltip) {
+	public <T extends WWidget> T setOnDrawTooltip(Runnable linkedRunnableOnDrawTooltip) {
 		this.runnableOnDrawTooltip = linkedRunnableOnDrawTooltip;
+		return (T) this;
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -270,8 +286,9 @@ public class WWidget implements Tickable, Comparable<WWidget>, WLayoutElement, W
 	}
 
 	@Environment(EnvType.CLIENT)
-	public void setOnAlign(Runnable linkedRunnableOnAlign) {
+	public <T extends WWidget> T setOnAlign(Runnable linkedRunnableOnAlign) {
 		this.runnableOnAlign = linkedRunnableOnAlign;
+		return (T) this;
 	}
 
 	@Environment(EnvType.CLIENT)

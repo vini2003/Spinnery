@@ -24,6 +24,11 @@ public class WStaticText extends WWidget {
 		return this;
 	}
 
+	public WStaticText text(String text) {
+		this.text = new LiteralText(text);
+		return this;
+	}
+
 	public Integer getMaxWidth() {
 		return maxWidth;
 	}
