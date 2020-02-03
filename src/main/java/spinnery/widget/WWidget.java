@@ -214,8 +214,14 @@ public class WWidget implements Tickable, Comparable<WWidget>, WLayoutElement, W
 	}
 
 	@Environment(EnvType.CLIENT)
-	public void setTheme(Identifier theme) {
+	public <T extends WWidget> T setTheme(Identifier theme) {
 		this.theme = theme;
+		return (T) this;
+	}
+
+	@Environment(EnvType.CLIENT)
+	public <T extends WWidget> T setTheme(String theme) {
+		return setTheme(new Identifier(theme));
 	}
 
 	// WLayoutElement

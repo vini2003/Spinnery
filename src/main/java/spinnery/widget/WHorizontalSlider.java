@@ -25,13 +25,15 @@ public class WHorizontalSlider extends WWidget {
 		tX = getX() + (getWidth() + 7) / 2 - TextRenderer.width(String.valueOf(getProgress().getValue().intValue())) / 2;
 	}
 
-	public WHorizontalSlider limit(float limit) {
+	public WHorizontalSlider setLimit(float limit) {
 		this.limit.setValue(limit);
 		return this;
 	}
 
-	public WHorizontalSlider progress(float progress) {
+	public WHorizontalSlider setProgress(float progress) {
 		this.progress.setValue(progress);
+		total = Integer.toString(Math.round(getProgress().getValue().floatValue()));
+		onLayoutChange();
 		return this;
 	}
 
@@ -52,16 +54,6 @@ public class WHorizontalSlider extends WWidget {
 
 	public Mutable<Number> getLimit() {
 		return limit;
-	}
-
-	public void setLimit(float value) {
-		this.limit.setValue(value);
-	}
-
-	public void setProgress(float value) {
-		this.progress.setValue(value);
-		total = Integer.toString(Math.round(getProgress().getValue().floatValue()));
-		onLayoutChange();
 	}
 
 	@Override

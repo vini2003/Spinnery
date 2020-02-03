@@ -3,6 +3,7 @@ package spinnery.widget;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.item.Item;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import spinnery.client.BaseRenderer;
 import spinnery.widget.api.WCollection;
@@ -49,6 +50,10 @@ public class WTabHolder extends WWidget implements WCollection {
 			tabOffset += tabSize;
 		}
 		return tab;
+	}
+
+	public WTab addTab(Item symbol, String name) {
+		return addTab(symbol, new LiteralText(name));
 	}
 
 	public WTab removeTab(int tabNumber) {
