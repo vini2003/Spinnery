@@ -2,7 +2,6 @@ package spinnery.widget;
 
 import net.minecraft.client.MinecraftClient;
 import org.lwjgl.opengl.GL11;
-import spinnery.widget.api.WCollection;
 import spinnery.widget.api.WModifiableCollection;
 import spinnery.widget.api.WPosition;
 import spinnery.widget.api.WSize;
@@ -107,18 +106,6 @@ public class WVerticalScrollableContainer extends WWidget implements WModifiable
         Set<WWidget> widgets = new LinkedHashSet<>();
         for (List<WWidget> widgetA : getListWidgets()) {
             widgets.addAll(widgetA);
-        }
-        return widgets;
-    }
-
-    @Override
-    public Set<WWidget> getAllWidgets() {
-        Set<WWidget> widgets = new LinkedHashSet<>();
-        for (List<WWidget> widgetA : getListWidgets()) {
-            widgets.addAll(widgetA);
-            if (widgetA instanceof WCollection) {
-                widgets.addAll(((WCollection) widgetA).getAllWidgets());
-            }
         }
         return widgets;
     }
