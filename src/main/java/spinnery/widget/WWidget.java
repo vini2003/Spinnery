@@ -14,7 +14,7 @@ import spinnery.widget.api.listener.*;
 import static spinnery.registry.ThemeRegistry.DEFAULT_THEME;
 
 @SuppressWarnings({"unchecked", "rawtypes"})
-public class WWidget implements Tickable, Comparable<WWidget>, WLayoutElement, WThemable, WStyleProvider {
+public abstract class WWidget implements Tickable, Comparable<WWidget>, WLayoutElement, WThemable, WStyleProvider {
 	protected WInterface linkedInterface;
 	protected WLayoutElement parent;
 

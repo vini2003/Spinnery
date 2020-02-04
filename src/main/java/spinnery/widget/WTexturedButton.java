@@ -15,46 +15,15 @@ public class WTexturedButton extends WWidget {
 	protected Identifier active;
 	protected Identifier disabled;
 
-	protected boolean isDisabledf = false;
-
-	public WTexturedButton inactive(Identifier inactive) {
-		this.inactive = inactive;
-		return this;
-	}
-
-	public WTexturedButton active(Identifier active) {
-		this.active = active;
-		return this;
-	}
-
-	public WTexturedButton disabled(Identifier disabled) {
-		this.disabled = disabled;
-		return this;
-	}
-
-	public WTexturedButton(WPosition position, WSize size, WInterface linkedInterface, Identifier texture, Identifier textureActive, Identifier textureDisabled) {
-		this(position, size, linkedInterface);
-		setInactive(texture);
-		setActive(textureActive);
-		setDisabled(textureDisabled);
-	}
-
-	protected WTexturedButton(WPosition position, WSize size, WInterface linkedInterface) {
-		setPosition(position);
-		setSize(size);
-		setInterface(linkedInterface);
-	}
-
-	public WTexturedButton(WPosition position, WSize size, WInterface linkedInterface, Identifier texture, Identifier textureActive) {
-		this(position, size, linkedInterface, texture, textureActive, null);
-	}
+	protected boolean isDisabled = false;
 
 	public Identifier getInactive() {
 		return inactive;
 	}
 
-	public void setInactive(Identifier inactive) {
+	public <W extends WTexturedButton> W setInactive(Identifier inactive) {
 		this.inactive = inactive;
+		return (W) this;
 	}
 
 	@Override
@@ -63,7 +32,7 @@ public class WTexturedButton extends WWidget {
 	}
 
 	protected Identifier getDrawTexture() {
-		if (isDisabledf() && getDisabled() != null) {
+		if (isDisabled() && getDisabled() != null) {
 			return disabled;
 		}
 		if (isActive() && getActive() != null) {
@@ -72,16 +41,17 @@ public class WTexturedButton extends WWidget {
 		return inactive;
 	}
 
-	public boolean isDisabledf() {
-		return isDisabledf;
+	public boolean isDisabled() {
+		return isDisabled;
 	}
 
 	public Identifier getDisabled() {
 		return disabled;
 	}
 
-	public void setDisabled(Identifier disabled) {
+	public <W extends WTexturedButton> W setDisabled(Identifier disabled) {
 		this.disabled = disabled;
+		return (W) this;
 	}
 
 	public boolean isActive() {
@@ -92,23 +62,25 @@ public class WTexturedButton extends WWidget {
 		return active;
 	}
 
-	public void setActive(Identifier active) {
+	public <W extends WTexturedButton> W setActive(Identifier active) {
 		this.active = active;
+		return (W) this;
 	}
 
-	public void setDisabledf(boolean disabledf) {
-		this.isDisabledf = disabledf;
+	public <W extends WTexturedButton> W setDisabled(boolean disabled) {
+		this.isDisabled = disabled;
+		return (W) this;
 	}
 
 	@Override
 	public void onMouseClicked(int mouseX, int mouseY, int mouseButton) {
-		if (isDisabledf) return;
+		if (isDisabled) return;
 		super.onMouseClicked(mouseX, mouseY, mouseButton);
 	}
 
 	@Override
 	public void onMouseReleased(int mouseX, int mouseY, int mouseButton) {
-		if (isDisabledf) return;
+		if (isDisabled) return;
 		super.onMouseReleased(mouseX, mouseY, mouseButton);
 	}
 }

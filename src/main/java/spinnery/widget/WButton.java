@@ -8,16 +8,7 @@ import spinnery.widget.api.WFocusedMouseListener;
 
 @Environment(EnvType.CLIENT)
 @WFocusedMouseListener
-public class WButton extends WWidget {
-	protected boolean lowered = false;
-	protected int ticks = 0;
-
-	@Override
-	public void onMouseClicked(int mouseX, int mouseY, int mouseButton) {
-		setLowered(true);
-		super.onMouseClicked(mouseX, mouseY, mouseButton);
-	}
-
+public class WButton extends WAbstractButton {
 	@Override
 	public void draw() {
 		if (isHidden()) {
@@ -36,23 +27,5 @@ public class WButton extends WWidget {
 					.shadow(getStyle().asBoolean("label.shadow")).shadowColor(getStyle().asColor("label.shadow_color"))
 					.color(getStyle().asColor("label.color")).render();
 		}
-	}
-
-	@Override
-	public void tick() {
-		if (isLowered() && ticks == 0) {
-			setLowered(false);
-		} else if (isLowered() && ticks > 0) {
-			--ticks;
-		}
-	}
-
-	public boolean isLowered() {
-		return lowered;
-	}
-
-	public void setLowered(boolean toggleState) {
-		this.lowered = toggleState;
-		this.ticks = toggleState ? 2 : 0;
 	}
 }

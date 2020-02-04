@@ -32,7 +32,6 @@ public class WHorizontalSlider extends WAbstractSlider {
 	@Override
 	public WHorizontalSlider setProgress(double progress) {
 		super.setProgress(progress);
-		super.setProgress(progress);
 		total = String.valueOf(this.progress);
 		onLayoutChange();
 		return this;

@@ -3,7 +3,9 @@ package spinnery.registry;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import net.minecraft.util.Identifier;
-import spinnery.widget.WBar;
+import spinnery.widget.WHorizontalBar;
+import spinnery.widget.WTexturedButton;
+import spinnery.widget.WVerticalBar;
 import spinnery.widget.WButton;
 import spinnery.widget.WDraggableArea;
 import spinnery.widget.WDropdown;
@@ -64,9 +66,11 @@ public class WidgetRegistry {
 		register(new Identifier("spinnery", "toggle"), WToggle.class);
 		register(new Identifier("spinnery", "tooltip"), WTooltip.class);
 		register(new Identifier("spinnery", "vertical_slider"), WVerticalSlider.class);
-		register(new Identifier("spinnery", "bar"), WBar.class);
+		register(new Identifier("spinnery", "vertical_bar"), WVerticalBar.class);
+		register(new Identifier("spinnery", "horizontal_bar"), WHorizontalBar.class);
 		register(new Identifier("spinnery", "vertical_scrollbar"), WVerticalScrollbar.class);
 		register(new Identifier("spinnery", "horizontal_scrollbar"), WHorizontalScrollbar.class);
+		register(new Identifier("spinnery", "textured_button"), WTexturedButton.class);
 	}
 
 	public static void register(Identifier id, Class<? extends WWidget> wClass) {
