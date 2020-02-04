@@ -6,7 +6,9 @@ import io.github.cottonmc.jankson.JanksonFactory;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.ResourceType;
+import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.Level;
 import spinnery.Spinnery;
 import spinnery.util.ResourceListener;
@@ -18,7 +20,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Objects;
+import java.util.Set;
 
 @Environment(EnvType.CLIENT)
 public class ResourceRegistry {
@@ -44,30 +48,16 @@ public class ResourceRegistry {
 		}
 	}
 
-	public static void loadCustom() {
-		File file = new File("./resources/spinnery/themes");
+	public static void load(ResourceManager resourceManager) {
+		Collection<Identifier> themeFiles = resourceManager.findResources("spinnery",
+				(string) -> string.endsWith(".theme.json5"));
 
-		try {
-			if (!file.exists()) {
-				if (!file.mkdirs() || !file.createNewFile()) {
-					throw new IOException("Could not create file(s): ./resources/spinnery/themes");
-				}
-			}
-
+		for (Identifier id : themeFiles) {
 			try {
-				Arrays.asList(Objects.requireNonNull(new File("./resources/spinnery/themes").listFiles())).forEach((themeFile) -> {
-					try {
-						if (themeFile.getName().endsWith(".theme.json5")) register(new FileInputStream(themeFile));
-					} catch (FileNotFoundException impossibleException) {
-						impossibleException.printStackTrace();
-					}
-
-				});
-			} catch (NullPointerException exception) {
-				Spinnery.LOGGER.log(Level.INFO, "[Spinnery] No custom themes found.");
+				register(resourceManager.getResource(id).getInputStream());
+			} catch (IOException e) {
+				Spinnery.LOGGER.warn("[Spinnery] Failed to load theme {}.", id);
 			}
-		} catch (IOException exception) {
-			Spinnery.LOGGER.log(Level.INFO, "[Spinnery] No custom themes found.");
 		}
 	}
 }
