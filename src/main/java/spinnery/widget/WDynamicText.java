@@ -7,8 +7,10 @@ import net.minecraft.client.gui.screen.Screen;
 import org.lwjgl.glfw.GLFW;
 import spinnery.client.BaseRenderer;
 import spinnery.client.TextRenderer;
+import spinnery.widget.api.WFocusedKeyboardListener;
 
 @Environment(EnvType.CLIENT)
+@WFocusedKeyboardListener
 public class WDynamicText extends WAbstractWidget {
 	protected boolean isActive;
 	protected String text = "";
@@ -314,5 +316,10 @@ public class WDynamicText extends WAbstractWidget {
 			cursorTick = 20;
 		}
 		super.tick();
+	}
+
+	@Override
+	public boolean getFocus() {
+		return super.getFocus() || isActive;
 	}
 }

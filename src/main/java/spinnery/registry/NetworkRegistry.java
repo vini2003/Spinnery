@@ -62,7 +62,7 @@ public class NetworkRegistry {
 		payload.putDouble("mouseX", mouseX);
 		payload.putDouble("mouseY", mouseY);
 		payload.putInt("button", button);
-		widget.appendPayload(WNetworked.Event.MOUSE_CLICK, payload);
+		widget.appendPayload(WNetworked.Event.MOUSE_RELEASE, payload);
 		buffer.writeCompoundTag(payload);
 		return buffer;
 	}
@@ -78,7 +78,7 @@ public class NetworkRegistry {
 		payload.putInt("button", button);
 		payload.putDouble("deltaX", deltaX);
 		payload.putDouble("deltaY", deltaY);
-		widget.appendPayload(WNetworked.Event.MOUSE_CLICK, payload);
+		widget.appendPayload(WNetworked.Event.MOUSE_DRAG, payload);
 		buffer.writeCompoundTag(payload);
 		return buffer;
 	}
@@ -91,7 +91,7 @@ public class NetworkRegistry {
 		payload.putDouble("mouseX", mouseX);
 		payload.putDouble("mouseY", mouseY);
 		payload.putDouble("deltaY", deltaY);
-		widget.appendPayload(WNetworked.Event.MOUSE_CLICK, payload);
+		widget.appendPayload(WNetworked.Event.MOUSE_SCROLL, payload);
 		buffer.writeCompoundTag(payload);
 		return buffer;
 	}
@@ -102,7 +102,7 @@ public class NetworkRegistry {
 		buffer.writeEnumConstant(WNetworked.Event.FOCUS);
 		CompoundTag payload = new CompoundTag();
 		payload.putBoolean("focused", focused);
-		widget.appendPayload(WNetworked.Event.MOUSE_CLICK, payload);
+		widget.appendPayload(WNetworked.Event.FOCUS, payload);
 		buffer.writeCompoundTag(payload);
 		return buffer;
 	}
@@ -115,7 +115,7 @@ public class NetworkRegistry {
 		payload.putInt("character", character);
 		payload.putInt("keyCode", keyCode);
 		payload.putInt("keyModifier", keyModifier);
-		widget.appendPayload(WNetworked.Event.MOUSE_CLICK, payload);
+		widget.appendPayload(WNetworked.Event.KEY_PRESS, payload);
 		buffer.writeCompoundTag(payload);
 		return buffer;
 	}
@@ -128,7 +128,7 @@ public class NetworkRegistry {
 		payload.putInt("character", character);
 		payload.putInt("keyCode", keyCode);
 		payload.putInt("keyModifier", keyModifier);
-		widget.appendPayload(WNetworked.Event.MOUSE_CLICK, payload);
+		widget.appendPayload(WNetworked.Event.KEY_RELEASE, payload);
 		buffer.writeCompoundTag(payload);
 		return buffer;
 	}
@@ -140,7 +140,7 @@ public class NetworkRegistry {
 		CompoundTag payload = new CompoundTag();
 		payload.putString("character", String.valueOf(character));
 		payload.putInt("keyCode", keyCode);
-		widget.appendPayload(WNetworked.Event.MOUSE_CLICK, payload);
+		widget.appendPayload(WNetworked.Event.CHAR_TYPE, payload);
 		buffer.writeCompoundTag(payload);
 		return buffer;
 	}
