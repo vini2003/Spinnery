@@ -192,7 +192,16 @@ public abstract class WAbstractWidget implements Tickable, Comparable<WAbstractW
 	@Environment(EnvType.CLIENT)
 	public WStyle getStyle() {
 		if (styleOverrides == null) {
-			styleOverrides = ThemeRegistry.getStyle(getTheme(), WidgetRegistry.getId(getClass()));
+			Identifier widgetId = WidgetRegistry.getId(getClass());
+			if (widgetId == null) {
+				Class superClass = getClass().getSuperclass();
+				while (superClass != Object.class) {
+					widgetId = WidgetRegistry.getId(superClass);
+					if (widgetId != null) break;
+					superClass = superClass.getSuperclass();
+				}
+			}
+			styleOverrides = ThemeRegistry.getStyle(getTheme(), widgetId);
 		}
 		return styleOverrides;
 	}
