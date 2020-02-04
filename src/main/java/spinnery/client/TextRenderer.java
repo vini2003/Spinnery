@@ -66,6 +66,7 @@ public class TextRenderer {
 		private int z;
 		private int color = 0xffffffff;
 		private int shadowColor = 0xff3e3e3e;
+		private double scale = 1.0;
 		private boolean shadow;
 		private Integer maxWidth;
 		private Font font = Font.DEFAULT;
@@ -94,6 +95,15 @@ public class TextRenderer {
 			this.y = y.intValue();
 			this.z = z.intValue();
 			return this;
+		}
+
+		public RenderPass scale(double scale) {
+			this.scale = scale;
+			return this;
+		}
+
+		public RenderPass size(int size) {
+			return scale(size / 9D);
 		}
 
 		public RenderPass color(WColor color) {
@@ -130,7 +140,10 @@ public class TextRenderer {
 		}
 
 		public void render() {
-			RenderSystem.translatef(0.0f, 0.0f, (float) z);
+			float oX = x * (1f - (float) scale);
+			float oY = y * (1f - (float) scale);
+			RenderSystem.translatef(oX, oY, z);
+			RenderSystem.scaled(scale, scale, 1);
 			if (maxWidth != null) {
 				if (shadow)
 					getTextRenderer(font).drawTrimmed(text, x + 1, y + 1, maxWidth, shadowColor);
@@ -139,7 +152,8 @@ public class TextRenderer {
 				if (shadow) getTextRenderer(font).draw(text, x + 1, y + 1, shadowColor);
 				getTextRenderer(font).draw(text, x, y, color);
 			}
-			RenderSystem.translatef(0.0f, 0.0f, (float) -z);
+			RenderSystem.scaled(1 / scale, 1 / scale, 1);
+			RenderSystem.translatef(-oX, -oY, -z);
 		}
 	}
 }

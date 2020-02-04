@@ -11,6 +11,7 @@ import spinnery.widget.api.WFocusedMouseListener;
 @WFocusedMouseListener
 public class WStaticText extends WAbstractWidget {
 	protected Text text = new LiteralText("");
+	protected double scale = 1.0;
 	protected TextRenderer.Font font = TextRenderer.Font.DEFAULT;
 	protected Integer maxWidth = null;
 
@@ -30,6 +31,15 @@ public class WStaticText extends WAbstractWidget {
 	public <W extends WStaticText> W setFont(TextRenderer.Font font) {
 		this.font = font;
 		return (W) this;
+	}
+
+	public double getScale() {
+		return scale;
+	}
+
+	public WStaticText setScale(double scale) {
+		this.scale = scale;
+		return this;
 	}
 
 	@Override
@@ -52,7 +62,7 @@ public class WStaticText extends WAbstractWidget {
 		int y = getY();
 		int z = getZ();
 
-		TextRenderer.pass().shadow(isLabelShadowed()).text(getText()).font(font).at(x, y, z).maxWidth(maxWidth)
+		TextRenderer.pass().text(getText()).font(font).at(x, y, z).scale(scale).maxWidth(maxWidth)
 				.shadow(getStyle().asBoolean("shadow")).shadowColor(getStyle().asColor("shadowColor"))
 				.color(getStyle().asColor("text")).render();
 	}

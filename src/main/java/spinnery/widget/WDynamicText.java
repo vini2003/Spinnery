@@ -19,6 +19,7 @@ public class WDynamicText extends WAbstractWidget {
 	protected int selRightPos = 0;
 	protected int cursorPos;
 	protected int offsetPos = 0;
+	protected double scale = 1.0;
 	protected int cursorTick = 0;
 	protected boolean isEditable = true;
 	protected int currentLine = 0;
@@ -31,6 +32,15 @@ public class WDynamicText extends WAbstractWidget {
 		this.text = text;
 		updateText();
 		return (W) this;
+	}
+
+	public double getScale() {
+		return scale;
+	}
+
+	public WDynamicText setScale(double scale) {
+		this.scale = scale;
+		return this;
 	}
 
 	@Override
@@ -232,7 +242,7 @@ public class WDynamicText extends WAbstractWidget {
 	@Override
 	public void onMouseClicked(int mouseX, int mouseY, int mouseButton) {
 		if (isEditable) {
-			this.isActive = updateFocus(mouseX, mouseY);
+			this.isActive = isWithinBounds(mouseX, mouseY);
 		}
 		super.onMouseClicked(mouseX, mouseY, mouseButton);
 	}
@@ -253,12 +263,12 @@ public class WDynamicText extends WAbstractWidget {
 		BaseRenderer.drawBeveledPanel(x, y, z, sX, sY, getStyle().asColor("top_left"), getStyle().asColor("background"), getStyle().asColor("bottom_right"));
 
 		if (text.isEmpty() && !isActive) {
-			TextRenderer.pass().shadow(isLabelShadowed())
-					.text(getLabel()).at(x + 4, y + 4, z)
+			TextRenderer.pass().shadow(isLabelShadowed()).text(getLabel())
+					.at(x + 4, y + 4, z).scale(scale)
 					.color(getStyle().asColor("label.color")).shadowColor(getStyle().asColor("label.shadow_color")).render();
 		}
 
-		int cH = TextRenderer.height();
+		int cH = (int) Math.round(TextRenderer.height() * scale);
 		int oX = 0;
 		int oY = 0;
 		int right = x + sX - 8;
@@ -268,7 +278,7 @@ public class WDynamicText extends WAbstractWidget {
 				char c = text.charAt(i);
 				int cX = x + 4 + oX;
 				int cY = y + 4 + oY;
-				int cW = TextRenderer.width(c);
+				int cW = (int) Math.round(TextRenderer.width(c) * scale);
 				if (c == '\n') {
 					if (isSelected(i)) {
 						BaseRenderer.drawRectangle(cX, cY, z, right - cX, cH, getStyle().asColor("highlight"));
@@ -279,7 +289,7 @@ public class WDynamicText extends WAbstractWidget {
 						break;
 					}
 				} else {
-					TextRenderer.pass().text(c).at(cX, cY, z).color(getStyle().asColor("text")).render();
+					TextRenderer.pass().text(c).at(cX, cY, z).scale(scale).color(getStyle().asColor("text")).render();
 					if (isSelected(i)) {
 						BaseRenderer.drawRectangle(cX, cY, z, cW, cH, getStyle().asColor("highlight"));
 					}
