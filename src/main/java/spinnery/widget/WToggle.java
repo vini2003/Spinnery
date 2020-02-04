@@ -8,15 +8,7 @@ import spinnery.widget.api.WFocusedMouseListener;
 
 @Environment(EnvType.CLIENT)
 @WFocusedMouseListener
-public class WToggle extends WWidget {
-	protected boolean toggleState = false;
-
-	@Override
-	public void onMouseClicked(int mouseX, int mouseY, int mouseButton) {
-		setToggleState(!getToggleState());
-		super.onMouseClicked(mouseX, mouseY, mouseButton);
-	}
-
+public class WToggle extends WAbstractToggle {
 	@Override
 	public void draw() {
 		if (isHidden()) {
@@ -49,13 +41,5 @@ public class WToggle extends WWidget {
 					.text(getLabel()).at(x + sX + 2, y + sY / 2 - 4.5, z)
 					.color(getStyle().asColor("label.color")).shadowColor(getStyle().asColor("label.shadow_color")).render();
 		}
-	}
-
-	public boolean getToggleState() {
-		return toggleState;
-	}
-
-	public void setToggleState(boolean toggleState) {
-		this.toggleState = toggleState;
 	}
 }

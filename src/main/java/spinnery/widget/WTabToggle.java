@@ -12,27 +12,8 @@ import spinnery.widget.api.WFocusedMouseListener;
 
 @Environment(EnvType.CLIENT)
 @WFocusedMouseListener
-public class WTabToggle extends WToggle {
+public class WTabToggle extends WAbstractToggle {
 	Item symbol;
-	Text name;
-
-	public WTabToggle symbol(Item symbol) {
-		this.symbol = symbol;
-		return this;
-	}
-
-	public WTabToggle name(Text name) {
-		this.name = name;
-		return this;
-	}
-
-	public Text getName() {
-		return name;
-	}
-
-	public void setName(Text name) {
-		this.name = name;
-	}
 
 	@Override
 	public void onMouseClicked(int mouseX, int mouseY, int mouseButton) {
@@ -63,7 +44,7 @@ public class WTabToggle extends WToggle {
 		RenderSystem.enableLighting();
 		BaseRenderer.getItemRenderer().renderGuiItemIcon(new ItemStack(getSymbol(), 1), x + 4, y + 4);
 		RenderSystem.disableLighting();
-		TextRenderer.pass().shadow(isLabelShadowed()).text(name).at(x + 24, y + sY / 2 - 4.5, z)
+		TextRenderer.pass().shadow(isLabelShadowed()).text(getLabel()).at(x + 24, y + sY / 2 - 4.5, z)
 				.color(getStyle().asColor("label.color")).shadowColor(getStyle().asColor("label.shadow_color")).render();
 	}
 
