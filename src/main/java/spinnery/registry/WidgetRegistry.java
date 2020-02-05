@@ -3,29 +3,7 @@ package spinnery.registry;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import net.minecraft.util.Identifier;
-import spinnery.widget.WAbstractWidget;
-import spinnery.widget.WHorizontalBar;
-import spinnery.widget.WTexturedButton;
-import spinnery.widget.WVerticalBar;
-import spinnery.widget.WButton;
-import spinnery.widget.WDraggableArea;
-import spinnery.widget.WDropdown;
-import spinnery.widget.WDynamicImage;
-import spinnery.widget.WDynamicText;
-import spinnery.widget.WHorizontalList;
-import spinnery.widget.WHorizontalScrollbar;
-import spinnery.widget.WHorizontalSlider;
-import spinnery.widget.WPanel;
-import spinnery.widget.WSlot;
-import spinnery.widget.WStaticImage;
-import spinnery.widget.WStaticText;
-import spinnery.widget.WTabHolder;
-import spinnery.widget.WTabToggle;
-import spinnery.widget.WToggle;
-import spinnery.widget.WTooltip;
-import spinnery.widget.WVerticalList;
-import spinnery.widget.WVerticalScrollbar;
-import spinnery.widget.WVerticalSlider;
+import spinnery.widget.*;
 
 public class WidgetRegistry {
 	private static BiMap<Identifier, Class<? extends WAbstractWidget>> widgetMap = HashBiMap.create();
@@ -71,6 +49,7 @@ public class WidgetRegistry {
 		register(new Identifier("spinnery", "vertical_scrollbar"), WVerticalScrollbar.class);
 		register(new Identifier("spinnery", "horizontal_scrollbar"), WHorizontalScrollbar.class);
 		register(new Identifier("spinnery", "textured_button"), WTexturedButton.class);
+		register(new Identifier("spinnery", "text_area"), WTextArea.class);
 	}
 
 	public static void register(Identifier id, Class<? extends WAbstractWidget> wClass) {

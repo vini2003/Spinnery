@@ -204,6 +204,19 @@
         bottom_right: "$bevel_light",
         background: "$bg_interactable",
       }
+    },
+    "spinnery:text_area": {
+      top_left: "$bevel_light",
+      bottom_right: "$bevel_dark",
+      background: 0xff000000,
+      text: {
+        color: 0xffffffff,
+        shadow: false,
+        shadow_color: 0x00000000
+      },
+      highlight: 0xb30400ff,
+      cursor: 0xffffffff,
+      label: 0xff808080
     }
   }
 }
