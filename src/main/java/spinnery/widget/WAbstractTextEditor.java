@@ -288,6 +288,11 @@ public abstract class WAbstractTextEditor extends WWidget {
     @Override
     public void onCharTyped(char character, int keyCode) {
         if (active) {
+            if (hasSelection()) {
+                cursor.assign(selection.getLeft());
+                deleteText(selection.getLeft(), selection.getRight());
+                clearSelection();
+            }
             insertText(String.valueOf(character));
             int prevY = cursor.y;
             cursor.right();
