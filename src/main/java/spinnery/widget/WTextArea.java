@@ -2,6 +2,7 @@ package spinnery.widget;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import org.lwjgl.glfw.GLFW;
 import spinnery.client.BaseRenderer;
 import spinnery.client.TextRenderer;
 import spinnery.widget.api.WFocusedKeyboardListener;
@@ -88,6 +89,32 @@ public class WTextArea extends WAbstractTextEditor {
             super.setText(text);
         }
         return this;
+    }
+
+    @Override
+    protected void processKeyActions(int keyPressed, int character, int keyModifier) {
+        if (keyPressed == GLFW.GLFW_KEY_BACKSPACE && !hasSelection()) {
+            int lineLength = getLineLength(cursor.y);
+            String deleted = deleteText(cursor.copy().left(), cursor);
+            if (deleted.equals("")) {
+                cursor.left();
+                deleteText(cursor.copy().left(), cursor);
+            }
+            if (deleted.equals("\n")) {
+                for (int i = 0; i < lineLength; i++) {
+                    cursor.left();
+                }
+            }
+            cursor.left();
+            return;
+        } else if (keyPressed == GLFW.GLFW_KEY_DELETE && !hasSelection()) {
+            String deleted = deleteText(cursor, cursor.copy().right());
+            if (deleted.equals("")) {
+                deleteText(cursor, cursor.copy().right().right());
+            }
+            return;
+        }
+        super.processKeyActions(keyPressed, character, keyModifier);
     }
 
     @Override
