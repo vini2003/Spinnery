@@ -10,6 +10,18 @@ import spinnery.widget.api.WSize;
 @Environment(EnvType.CLIENT)
 @WFocusedKeyboardListener
 public class WTextField extends WAbstractTextEditor {
+    protected Integer fixedLength;
+
+    public Integer getFixedLength() {
+        return fixedLength;
+    }
+
+    @SuppressWarnings("unchecked")
+    public <W extends WTextField> W setFixedLength(Integer fixedLength) {
+        this.fixedLength = fixedLength;
+        return (W) this;
+    }
+
     @Override
     public WPosition getInnerAnchor() {
         return WPosition.of(this).add(4, 4, 0);
@@ -23,7 +35,11 @@ public class WTextField extends WAbstractTextEditor {
     @SuppressWarnings("unchecked")
     @Override
     public <W extends WAbstractTextEditor> W setText(String text) {
-        return (W) super.setText(text.replaceAll("\n", ""));
+        String finalText = text.replaceAll("\n", "");
+        if (fixedLength != null && fixedLength >= 0 && fixedLength < finalText.length()) {
+            finalText = finalText.substring(0, fixedLength);
+        }
+        return (W) super.setText(finalText);
     }
 
     @Override
