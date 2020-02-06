@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Environment(EnvType.CLIENT)
-public abstract class WAbstractTextEditor extends WWidget {
+public abstract class WAbstractTextEditor extends WAbstractWidget {
     protected String text = "";
     protected final List<String> lines = new ArrayList<>();
     protected double scale = 1.0;

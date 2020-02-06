@@ -18,9 +18,10 @@ public class WTextArea extends WAbstractTextEditor {
     protected final List<Boolean> newLine = new ArrayList<>();
     protected boolean lineWrap;
 
-    public WTextArea setLineWrap(boolean lineWrap) {
+    @SuppressWarnings("unchecked")
+    public <W extends WTextArea> W setLineWrap(boolean lineWrap) {
         this.lineWrap = lineWrap;
-        return this;
+        return (W) this;
     }
 
     public boolean getLineWrap() {

@@ -64,6 +64,10 @@ public class WInterface implements WModifiableCollection, WLayoutElement, WThema
 		return (W) this;
 	}
 
+	public <W extends WInterface> W setTheme(String theme) {
+		return setTheme(new Identifier(theme));
+	}
+
 	public boolean isServer() {
 		return !isClientside;
 	}

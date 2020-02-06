@@ -22,8 +22,8 @@ public class WTextField extends WAbstractTextEditor {
 
     @SuppressWarnings("unchecked")
     @Override
-    public WTextField setText(String text) {
-        return super.setText(text.replaceAll("\n", ""));
+    public <W extends WAbstractTextEditor> W setText(String text) {
+        return (W) super.setText(text.replaceAll("\n", ""));
     }
 
     @Override
