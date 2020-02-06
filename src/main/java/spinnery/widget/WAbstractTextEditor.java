@@ -151,7 +151,7 @@ public abstract class WAbstractTextEditor extends WWidget {
     }
 
     protected int getVisibleLines() {
-        return getInnerSize().getHeight() / getTextHeight();
+        return Math.max(1, getInnerSize().getHeight() / getTextHeight());
     }
 
     protected boolean isLineVisible(int line) {
@@ -639,6 +639,7 @@ public abstract class WAbstractTextEditor extends WWidget {
 
     @Override
     public void onKeyPressed(int keyPressed, int character, int keyModifier) {
+        if (!active) return;
         processKeyActions(keyPressed, character, keyModifier);
         if (selection.getLeft().equals(selection.getRight())) {
             clearSelection();
@@ -671,9 +672,11 @@ public abstract class WAbstractTextEditor extends WWidget {
         int offsetCursorStartY = cursorY + yRenderOffset;
         int offsetCursorEndY = cursorY + yRenderOffset + cH;
         if (offsetCursorX > innerX + innerWidth) {
-            xOffset -= (offsetCursorX - (innerX + innerWidth)) * 2;
+            xOffset -= (offsetCursorX - (innerX + innerWidth)) + 2;
         } else if (offsetCursorX < innerX) {
-            xOffset = Math.min(0, xOffset + innerWidth);
+            int compensateOffset = xOffset + (innerX - offsetCursorX);
+            int widthOffset = xOffset + innerWidth;
+            xOffset = Math.min(0, Math.max(widthOffset, compensateOffset));
         }
         if (offsetCursorEndY > innerY + innerHeight) {
             yOffset -= offsetCursorEndY - (innerY + innerHeight);
