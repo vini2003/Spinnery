@@ -1,6 +1,6 @@
 package spinnery.widget;
 
-public abstract class WAbstractButton extends WWidget {
+public abstract class WAbstractButton extends WAbstractWidget {
 	protected boolean lowered = false;
 	protected int ticks = 0;
 	protected int delayTicks = 0;

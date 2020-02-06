@@ -20,12 +20,12 @@ import java.util.Set;
 
 @Environment(EnvType.CLIENT)
 @WFocusedMouseListener
-public class WTabHolder extends WWidget implements WCollection {
+public class WTabHolder extends WAbstractWidget implements WCollection {
 	List<WTab> tabs = new ArrayList<>();
 
 	public void selectTab(int tabNumber) {
 		for (int i = 0; i < tabs.size(); i++) {
-			for (WWidget widget : tabs.get(i).getWidgets()) {
+			for (WAbstractWidget widget : tabs.get(i).getWidgets()) {
 				if (widget != tabs.get(i).getToggle()) {
 					widget.setHidden(i + 1 != tabNumber);
 				} else {
@@ -64,14 +64,14 @@ public class WTabHolder extends WWidget implements WCollection {
 	public void align() {
 		super.align();
 
-		for (WWidget widget : getWidgets()) {
+		for (WAbstractWidget widget : getWidgets()) {
 			widget.align();
 		}
 	}
 
 	@Override
-	public Set<WWidget> getWidgets() {
-		Set<WWidget> widgets = new LinkedHashSet<>();
+	public Set<WAbstractWidget> getWidgets() {
+		Set<WAbstractWidget> widgets = new LinkedHashSet<>();
 		for (WTab tab : tabs) {
 			widgets.addAll(tab.getWidgets());
 		}
@@ -79,8 +79,8 @@ public class WTabHolder extends WWidget implements WCollection {
 	}
 
 	@Override
-	public Set<WWidget> getAllWidgets() {
-		Set<WWidget> widgets = new LinkedHashSet<>();
+	public Set<WAbstractWidget> getAllWidgets() {
+		Set<WAbstractWidget> widgets = new LinkedHashSet<>();
 		for (WTab tab : tabs) {
 			widgets.addAll(tab.getAllWidgets());
 		}
@@ -88,7 +88,7 @@ public class WTabHolder extends WWidget implements WCollection {
 	}
 
 	@Override
-	public boolean contains(WWidget... widgets) {
+	public boolean contains(WAbstractWidget... widgets) {
 		return getAllWidgets().containsAll(Arrays.asList(widgets));
 	}
 
@@ -97,7 +97,7 @@ public class WTabHolder extends WWidget implements WCollection {
 		super.center();
 
 		for (WTab tab : tabs) {
-			for (WWidget widget : tab.getWidgets()) {
+			for (WAbstractWidget widget : tab.getWidgets()) {
 				widget.align();
 			}
 		}
@@ -122,7 +122,7 @@ public class WTabHolder extends WWidget implements WCollection {
 
 		BaseRenderer.drawPanel(x, y + 24, z, sX, sY - 24, getStyle().asColor("shadow"), getStyle().asColor("background"), getStyle().asColor("highlight"), getStyle().asColor("outline"));
 
-		for (WWidget widget : getAllWidgets()) {
+		for (WAbstractWidget widget : getAllWidgets()) {
 			if (!(widget instanceof WTabToggle)) {
 				widget.draw();
 			}
@@ -133,15 +133,15 @@ public class WTabHolder extends WWidget implements WCollection {
 		Item symbol;
 		Text name;
 		int number;
-		Set<WWidget> widgets = new LinkedHashSet<>();
+		Set<WAbstractWidget> widgets = new LinkedHashSet<>();
 
 		public WTab(WTabHolder holder, Item symbol, Text name, int number) {
 			this.symbol = symbol;
 			this.name = name;
 			this.number = number;
 			WTabToggle tabToggle = createChild(WTabToggle.class, WPosition.of(holder, 0, 0, 0), WSize.of(36, 24))
-					.symbol(symbol)
-					.name(name);
+					.setSymbol(symbol)
+					.setLabel(name);
 			tabToggle.setParent(holder);
 			tabToggle.setInterface(holder.getInterface());
 			this.widgets.add(tabToggle);
@@ -152,7 +152,7 @@ public class WTabHolder extends WWidget implements WCollection {
 			});
 		}
 
-		public Set<WWidget> getWidgets() {
+		public Set<WAbstractWidget> getWidgets() {
 			return widgets;
 		}
 
@@ -161,9 +161,9 @@ public class WTabHolder extends WWidget implements WCollection {
 		}
 
 		@Override
-		public void add(WWidget... widgets) {
+		public void add(WAbstractWidget... widgets) {
 			this.widgets.addAll(Arrays.asList(widgets));
-			for (WWidget widget : getWidgets()) {
+			for (WAbstractWidget widget : getWidgets()) {
 				if (!(widget instanceof WTabToggle)) {
 					widget.setHidden(true);
 				}
@@ -171,12 +171,12 @@ public class WTabHolder extends WWidget implements WCollection {
 		}
 
 		@Override
-		public void remove(WWidget... widgets) {
+		public void remove(WAbstractWidget... widgets) {
 			this.widgets.removeAll(Arrays.asList(widgets));
 		}
 
 		@Override
-		public boolean contains(WWidget... widgets) {
+		public boolean contains(WAbstractWidget... widgets) {
 			return this.widgets.containsAll(Arrays.asList(widgets));
 		}
 	}

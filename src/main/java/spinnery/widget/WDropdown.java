@@ -17,8 +17,8 @@ import java.util.Set;
 
 @Environment(EnvType.CLIENT)
 @WFocusedMouseListener
-public class WDropdown extends WWidget implements WModifiableCollection {
-	public List<List<WWidget>> dropdownWidgets = new ArrayList<>();
+public class WDropdown extends WAbstractWidget implements WModifiableCollection {
+	public List<List<WAbstractWidget>> dropdownWidgets = new ArrayList<>();
 	protected boolean state = false;
 	protected WSize dropdownSize;
 
@@ -29,27 +29,29 @@ public class WDropdown extends WWidget implements WModifiableCollection {
 	}
 
 	public void updateHidden() {
-		for (List<WWidget> widgetB : getDropdownWidgets()) {
-			for (WWidget widgetC : widgetB) {
+		for (List<WAbstractWidget> widgetB : getDropdownWidgets()) {
+			for (WAbstractWidget widgetC : widgetB) {
 				widgetC.setHidden(!getState());
 			}
 		}
 	}
 
-	public List<List<WWidget>> getDropdownWidgets() {
+	public List<List<WAbstractWidget>> getDropdownWidgets() {
 		return dropdownWidgets;
 	}
 
-	public void setDropdownWidgets(List<List<WWidget>> dropdownWidgets) {
+	public <W extends WDropdown> W setDropdownWidgets(List<List<WAbstractWidget>> dropdownWidgets) {
 		this.dropdownWidgets = dropdownWidgets;
+		return (W) this;
 	}
 
 	public boolean getState() {
 		return state;
 	}
 
-	public void setState(boolean state) {
+	public <W extends WDropdown> W setState(boolean state) {
 		this.state = state;
+		return (W) this;
 	}
 
 	@Override
@@ -72,15 +74,15 @@ public class WDropdown extends WWidget implements WModifiableCollection {
 	public boolean updateFocus(int mouseX, int mouseY) {
 		super.updateFocus(mouseX, mouseY);
 
-		setFocus(isWithinBounds(mouseX, mouseY) && getAllWidgets().stream().noneMatch((WWidget::getFocus)));
+		setFocus(isWithinBounds(mouseX, mouseY) && getAllWidgets().stream().noneMatch((WAbstractWidget::getFocus)));
 
 		return getFocus();
 	}
 
 	@Override
-	public Set<WWidget> getWidgets() {
-		Set<WWidget> widgets = new LinkedHashSet<>();
-		for (List<WWidget> widgetA : getDropdownWidgets()) {
+	public Set<WAbstractWidget> getWidgets() {
+		Set<WAbstractWidget> widgets = new LinkedHashSet<>();
+		for (List<WAbstractWidget> widgetA : getDropdownWidgets()) {
 			widgets.addAll(widgetA);
 		}
 		return widgets;
@@ -100,9 +102,9 @@ public class WDropdown extends WWidget implements WModifiableCollection {
 		return dropdownSize;
 	}
 
-	public WDropdown setDropdownSize(WSize dropdownSize) {
+	public <W extends WDropdown> W setDropdownSize(WSize dropdownSize) {
 		this.dropdownSize = dropdownSize;
-		return this;
+		return (W) this;
 	}
 
 	@Override
@@ -118,7 +120,7 @@ public class WDropdown extends WWidget implements WModifiableCollection {
 		int offsetX = newX - oldX;
 		int offsetY = newY - oldY;
 
-		for (WWidget widget : getWidgets()) {
+		for (WAbstractWidget widget : getWidgets()) {
 			widget.setX(widget.getX() + offsetX);
 			widget.setY(widget.getY() + offsetY);
 		}
@@ -151,7 +153,7 @@ public class WDropdown extends WWidget implements WModifiableCollection {
 		}
 
 		if (getState()) {
-			for (WWidget widgetC : getAllWidgets()) {
+			for (WAbstractWidget widgetC : getAllWidgets()) {
 				widgetC.draw();
 			}
 		}
@@ -160,9 +162,9 @@ public class WDropdown extends WWidget implements WModifiableCollection {
 	public void updatePositions() {
 		int y = getY() + (hasLabel() ? 20 : 8);
 
-		for (List<WWidget> widgetA : getDropdownWidgets()) {
+		for (List<WAbstractWidget> widgetA : getDropdownWidgets()) {
 			int x = getX() + 4;
-			for (WWidget widgetB : widgetA) {
+			for (WAbstractWidget widgetB : widgetA) {
 				widgetB.setX(x);
 				widgetB.setY(y);
 				x += widgetB.getWidth() + 2;
@@ -172,21 +174,21 @@ public class WDropdown extends WWidget implements WModifiableCollection {
 	}
 
 	@Override
-	public void add(WWidget... widgetArray) {
+	public void add(WAbstractWidget... widgetArray) {
 		getDropdownWidgets().add(Arrays.asList(widgetArray));
 		updatePositions();
 		updateHidden();
 	}
 
 	@Override
-	public void remove(WWidget... widgetArray) {
+	public void remove(WAbstractWidget... widgetArray) {
 		getDropdownWidgets().remove(Arrays.asList(widgetArray));
 		updatePositions();
 		updateHidden();
 	}
 
 	@Override
-	public boolean contains(WWidget... widgetArray) {
+	public boolean contains(WAbstractWidget... widgetArray) {
 		return getDropdownWidgets().containsAll(Arrays.asList(widgetArray));
 	}
 }

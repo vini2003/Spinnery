@@ -52,7 +52,8 @@ public class WTabToggle extends WAbstractToggle {
 		return symbol;
 	}
 
-	public void setSymbol(Item symbol) {
+	public <W extends WTabToggle> W setSymbol(Item symbol) {
 		this.symbol = symbol;
+		return (W) this;
 	}
 }

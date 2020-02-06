@@ -2,7 +2,6 @@ package spinnery.widget;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.text.Text;
 import spinnery.client.BaseRenderer;
 import spinnery.client.TextRenderer;
 import spinnery.widget.api.WModifiableCollection;
@@ -12,7 +11,7 @@ import spinnery.widget.api.WSize;
 import java.util.Set;
 
 @Environment(EnvType.CLIENT)
-public class WVerticalList extends WWidget implements WModifiableCollection {
+public class WVerticalList extends WAbstractWidget implements WModifiableCollection {
 	public static final int LABEL_HEIGHT = 16; // add to theme config? yes
 
 	protected WVerticalScrollableContainer container;
@@ -22,9 +21,9 @@ public class WVerticalList extends WWidget implements WModifiableCollection {
 		container.setParent(this);
 	}
 
-	public WVerticalList setScroller(boolean visible) {
+	public <W extends WVerticalList> W setScroller(boolean visible) {
 		container.setScrollbarVisible(visible);
-		return this;
+		return (W) this;
 	}
 
 	@Override
@@ -42,12 +41,12 @@ public class WVerticalList extends WWidget implements WModifiableCollection {
 	}
 
 	@Override
-	public Set<WWidget> getWidgets() {
+	public Set<WAbstractWidget> getWidgets() {
 		return container.getWidgets();
 	}
 
 	@Override
-	public Set<WWidget> getAllWidgets() {
+	public Set<WAbstractWidget> getAllWidgets() {
 		return container.getAllWidgets();
 	}
 
@@ -78,22 +77,22 @@ public class WVerticalList extends WWidget implements WModifiableCollection {
 
 	@Override
 	public boolean updateFocus(int mouseX, int mouseY) {
-		setFocus(isWithinBounds(mouseX, mouseY) && getWidgets().stream().noneMatch((WWidget::getFocus)));
+		setFocus(isWithinBounds(mouseX, mouseY) && getWidgets().stream().noneMatch((WAbstractWidget::getFocus)));
 		return getFocus();
 	}
 
 	@Override
-	public void add(WWidget... widgetArray) {
+	public void add(WAbstractWidget... widgetArray) {
 		container.add(widgetArray);
 	}
 
 	@Override
-	public void remove(WWidget... widgetArray) {
+	public void remove(WAbstractWidget... widgetArray) {
 		container.remove(widgetArray);
 	}
 
 	@Override
-	public boolean contains(WWidget... widgetArray) {
+	public boolean contains(WAbstractWidget... widgetArray) {
 		return container.contains(widgetArray);
 	}
 

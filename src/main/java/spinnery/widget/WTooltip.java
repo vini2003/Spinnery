@@ -8,8 +8,8 @@ import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-public class WTooltip extends WWidget implements WModifiableCollection {
-    private Set<WWidget> widgets = new LinkedHashSet<>();
+public class WTooltip extends WAbstractWidget implements WModifiableCollection {
+    private Set<WAbstractWidget> widgets = new LinkedHashSet<>();
 
     @Override
     public void draw() {
@@ -40,28 +40,28 @@ public class WTooltip extends WWidget implements WModifiableCollection {
         BaseRenderer.drawGradient(x - 3, y - 3, x + width + 3, y - 3 + 1, z, colorStart, colorStart); // top outline
         BaseRenderer.drawGradient(x - 3, y + height + 2, x + width + 3, y + height + 3, z, colorEnd, colorEnd); // bottom outline
 
-        for (WWidget widget : widgets) {
+        for (WAbstractWidget widget : widgets) {
             widget.draw();
         }
     }
 
     @Override
-    public void add(WWidget... widgets) {
+    public void add(WAbstractWidget... widgets) {
         this.widgets.addAll(Arrays.asList(widgets));
     }
 
     @Override
-    public void remove(WWidget... widgets) {
+    public void remove(WAbstractWidget... widgets) {
         this.widgets.removeAll(Arrays.asList(widgets));
     }
 
     @Override
-    public boolean contains(WWidget... widgets) {
+    public boolean contains(WAbstractWidget... widgets) {
         return this.widgets.containsAll(Arrays.asList(widgets));
     }
 
     @Override
-    public Set<WWidget> getWidgets() {
+    public Set<WAbstractWidget> getWidgets() {
         return widgets;
     }
 }

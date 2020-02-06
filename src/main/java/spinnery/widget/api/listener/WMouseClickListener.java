@@ -1,7 +1,7 @@
 package spinnery.widget.api.listener;
 
-import spinnery.widget.WWidget;
+import spinnery.widget.WAbstractWidget;
 
-public interface WMouseClickListener<W extends WWidget> {
+public interface WMouseClickListener<W extends WAbstractWidget> {
     void event(W widget, int mouseX, int mouseY, int mouseButton);
 }

@@ -3,6 +3,7 @@ package spinnery.registry;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import net.minecraft.util.Identifier;
+import spinnery.widget.WAbstractWidget;
 import spinnery.widget.WHorizontalBar;
 import spinnery.widget.WTexturedButton;
 import spinnery.widget.WVerticalBar;
@@ -25,13 +26,12 @@ import spinnery.widget.WTooltip;
 import spinnery.widget.WVerticalList;
 import spinnery.widget.WVerticalScrollbar;
 import spinnery.widget.WVerticalSlider;
-import spinnery.widget.WWidget;
 
 public class WidgetRegistry {
-	private static BiMap<Identifier, Class<? extends WWidget>> widgetMap = HashBiMap.create();
+	private static BiMap<Identifier, Class<? extends WAbstractWidget>> widgetMap = HashBiMap.create();
 
-	public static Class<? extends WWidget> get(String className) {
-		for (Class<? extends WWidget> widgetClass : widgetMap.values()) {
+	public static Class<? extends WAbstractWidget> get(String className) {
+		for (Class<? extends WAbstractWidget> widgetClass : widgetMap.values()) {
 			if (widgetClass.getName().equals(className)) {
 				return widgetClass;
 			}
@@ -39,16 +39,16 @@ public class WidgetRegistry {
 		return null;
 	}
 
-	public static Class<? extends WWidget> get(Identifier id) {
+	public static Class<? extends WAbstractWidget> get(Identifier id) {
 		return widgetMap.get(id);
 	}
 
-	public static Identifier getId(Class<? extends WWidget> wClass) {
+	public static Identifier getId(Class<? extends WAbstractWidget> wClass) {
 		return widgetMap.inverse().get(wClass);
 	}
 
 	public static void initialize() {
-		register(new Identifier("spinnery", "widget"), WWidget.class);
+		register(new Identifier("spinnery", "widget"), WAbstractWidget.class);
 		register(new Identifier("spinnery", "button"), WButton.class);
 		register(new Identifier("spinnery", "draggable_area"), WDraggableArea.class);
 		register(new Identifier("spinnery", "dropdown"), WDropdown.class);
@@ -73,7 +73,7 @@ public class WidgetRegistry {
 		register(new Identifier("spinnery", "textured_button"), WTexturedButton.class);
 	}
 
-	public static void register(Identifier id, Class<? extends WWidget> wClass) {
+	public static void register(Identifier id, Class<? extends WAbstractWidget> wClass) {
 		widgetMap.put(id, wClass);
 	}
 }

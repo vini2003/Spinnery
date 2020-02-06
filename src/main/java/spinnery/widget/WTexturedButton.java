@@ -5,12 +5,10 @@ import net.fabricmc.api.Environment;
 import net.minecraft.util.Identifier;
 import spinnery.client.BaseRenderer;
 import spinnery.widget.api.WFocusedMouseListener;
-import spinnery.widget.api.WPosition;
-import spinnery.widget.api.WSize;
 
 @Environment(EnvType.CLIENT)
 @WFocusedMouseListener
-public class WTexturedButton extends WWidget {
+public class WTexturedButton extends WAbstractWidget {
 	protected Identifier inactive;
 	protected Identifier active;
 	protected Identifier disabled;

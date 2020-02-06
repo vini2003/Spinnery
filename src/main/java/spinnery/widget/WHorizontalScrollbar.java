@@ -3,7 +3,7 @@ package spinnery.widget;
 import spinnery.client.BaseRenderer;
 import spinnery.widget.api.WHorizontalScrollable;
 
-public class WHorizontalScrollbar extends WWidget {
+public class WHorizontalScrollbar extends WAbstractWidget {
     protected WHorizontalScrollable scrollable;
     protected double clickMouseX;
     protected boolean dragging = false;

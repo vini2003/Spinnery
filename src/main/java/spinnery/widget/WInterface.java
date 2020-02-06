@@ -20,13 +20,14 @@ import java.util.Set;
 
 public class WInterface implements WModifiableCollection, WLayoutElement, WThemable {
 	protected BaseContainer linkedContainer;
-	protected Set<WWidget> heldWidgets = new LinkedHashSet<>();
-	protected Map<Object, WWidget> cachedWidgets = new HashMap<>();
+	protected Set<WAbstractWidget> heldWidgets = new LinkedHashSet<>();
+	protected Map<Object, WAbstractWidget> cachedWidgets = new HashMap<>();
 	protected boolean isClientside;
 	protected Identifier theme;
 
-	public void setClientside(Boolean clientside) {
+	public <W extends WInterface> W setClientside(Boolean clientside) {
 		isClientside = clientside;
+		return (W) this;
 	}
 
 	public WInterface() {
@@ -48,8 +49,9 @@ public class WInterface implements WModifiableCollection, WLayoutElement, WThema
 		return linkedContainer;
 	}
 
-	public void setContainer(BaseContainer linkedContainer) {
+	public <W extends WInterface> W setContainer(BaseContainer linkedContainer) {
 		this.linkedContainer = linkedContainer;
+		return (W) this;
 	}
 
 	@Override
@@ -57,14 +59,9 @@ public class WInterface implements WModifiableCollection, WLayoutElement, WThema
 		return theme;
 	}
 
-	public WInterface setTheme(Identifier theme) {
+	public <W extends WInterface> W setTheme(Identifier theme) {
 		this.theme = theme;
-		return this;
-	}
-
-	public WInterface setTheme(String theme) {
-		this.theme = new Identifier(theme);
-		return this;
+		return (W) this;
 	}
 
 	public boolean isServer() {
@@ -72,27 +69,27 @@ public class WInterface implements WModifiableCollection, WLayoutElement, WThema
 	}
 
 	@Override
-	public Set<WWidget> getWidgets() {
+	public Set<WAbstractWidget> getWidgets() {
 		return heldWidgets;
 	}
 
 	@Override
-	public void add(WWidget... widgets) {
+	public void add(WAbstractWidget... widgets) {
 		heldWidgets.addAll(Arrays.asList(widgets));
 	}
 
 	@Override
-	public void remove(WWidget... widgets) {
+	public void remove(WAbstractWidget... widgets) {
 		heldWidgets.removeAll(Arrays.asList(widgets));
 	}
 
 	@Override
-	public boolean contains(WWidget... widgets) {
+	public boolean contains(WAbstractWidget... widgets) {
 		return heldWidgets.containsAll(Arrays.asList(widgets));
 	}
 
 	public void onMouseClicked(int mouseX, int mouseY, int mouseButton) {
-		for (WWidget widget : getAllWidgets()) {
+		for (WAbstractWidget widget : getAllWidgets()) {
 			if (widget.getClass().isAnnotationPresent(WFocusedMouseListener.class) && !widget.getFocus())
 				continue;
 			widget.onMouseClicked(mouseX, mouseY, mouseButton);
@@ -104,7 +101,7 @@ public class WInterface implements WModifiableCollection, WLayoutElement, WThema
 	}
 
 	public boolean onMouseReleased(int mouseX, int mouseY, int mouseButton) {
-		for (WWidget widget : getAllWidgets()) {
+		for (WAbstractWidget widget : getAllWidgets()) {
 			if (widget.getClass().isAnnotationPresent(WFocusedMouseListener.class) && !widget.getFocus())
 				continue;
 			widget.onMouseReleased(mouseX, mouseY, mouseButton);
@@ -117,7 +114,7 @@ public class WInterface implements WModifiableCollection, WLayoutElement, WThema
 	}
 
 	public boolean onMouseDragged(int mouseX, int mouseY, int mouseButton, int deltaX, int deltaY) {
-		for (WWidget widget : getAllWidgets()) {
+		for (WAbstractWidget widget : getAllWidgets()) {
 			if (widget.getClass().isAnnotationPresent(WFocusedMouseListener.class) && !widget.getFocus())
 				continue;
 			widget.onMouseDragged(mouseX, mouseY, mouseButton, deltaX, deltaY);
@@ -130,7 +127,7 @@ public class WInterface implements WModifiableCollection, WLayoutElement, WThema
 	}
 
 	public void onMouseScrolled(int mouseX, int mouseY, double deltaY) {
-		for (WWidget widget : getAllWidgets()) {
+		for (WAbstractWidget widget : getAllWidgets()) {
 			if (widget.getClass().isAnnotationPresent(WFocusedMouseListener.class) && !widget.getFocus())
 				continue;
 			widget.onMouseScrolled(mouseX, mouseY, deltaY);
@@ -142,7 +139,7 @@ public class WInterface implements WModifiableCollection, WLayoutElement, WThema
 	}
 
 	public void onMouseMoved(int mouseX, int mouseY) {
-		for (WWidget widget : getAllWidgets()) {
+		for (WAbstractWidget widget : getAllWidgets()) {
 			widget.updateFocus(mouseX, mouseY);
 			if (widget.getClass().isAnnotationPresent(WFocusedMouseListener.class) && !widget.getFocus())
 				continue;
@@ -155,7 +152,7 @@ public class WInterface implements WModifiableCollection, WLayoutElement, WThema
 	}
 
 	public void onKeyReleased(int keyCode, int character, int keyModifier) {
-		for (WWidget widget : getAllWidgets()) {
+		for (WAbstractWidget widget : getAllWidgets()) {
 			if (widget.getClass().isAnnotationPresent(WFocusedKeyboardListener.class) && !widget.getFocus())
 				continue;
 			widget.onKeyReleased(keyCode, character, keyModifier);
@@ -167,7 +164,7 @@ public class WInterface implements WModifiableCollection, WLayoutElement, WThema
 	}
 
 	public void onKeyPressed(int keyCode, int character, int keyModifier) {
-		for (WWidget widget : getAllWidgets()) {
+		for (WAbstractWidget widget : getAllWidgets()) {
 			if (widget.getClass().isAnnotationPresent(WFocusedKeyboardListener.class) && !widget.getFocus())
 				continue;
 			widget.onKeyPressed(keyCode, character, keyModifier);
@@ -179,7 +176,7 @@ public class WInterface implements WModifiableCollection, WLayoutElement, WThema
 	}
 
 	public void onCharTyped(char character, int keyCode) {
-		for (WWidget widget : getAllWidgets()) {
+		for (WAbstractWidget widget : getAllWidgets()) {
 			if (widget.getClass().isAnnotationPresent(WFocusedKeyboardListener.class) && !widget.getFocus())
 				continue;
 			widget.onCharTyped(character, keyCode);
@@ -191,30 +188,30 @@ public class WInterface implements WModifiableCollection, WLayoutElement, WThema
 	}
 
 	public void onDrawMouseoverTooltip(int mouseX, int mouseY) {
-		for (WWidget widget : getAllWidgets()) {
+		for (WAbstractWidget widget : getAllWidgets()) {
 			widget.onDrawTooltip(mouseX, mouseY);
 		}
 	}
 
 	public void onAlign() {
-		for (WWidget widget : getAllWidgets()) {
+		for (WAbstractWidget widget : getAllWidgets()) {
 			widget.align();
 			widget.onAlign();
 		}
 	}
 
 	public void tick() {
-		for (WWidget widget : getAllWidgets()) {
+		for (WAbstractWidget widget : getAllWidgets()) {
 			widget.tick();
 		}
 	}
 
 	@Override
 	public void draw() {
-		List<WWidget> widgets = new ArrayList<>(getWidgets());
+		List<WAbstractWidget> widgets = new ArrayList<>(getWidgets());
 		Collections.sort(widgets);
 
-		for (WWidget widget : widgets) {
+		for (WAbstractWidget widget : widgets) {
 			widget.draw();
 		}
 	}

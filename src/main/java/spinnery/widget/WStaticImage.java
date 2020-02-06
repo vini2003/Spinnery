@@ -8,7 +8,7 @@ import spinnery.widget.api.WFocusedMouseListener;
 
 @Environment(EnvType.CLIENT)
 @WFocusedMouseListener
-public class WStaticImage extends WWidget {
+public class WStaticImage extends WAbstractWidget {
 	protected Identifier texture;
 
 	public WStaticImage texture(Identifier texture) {
@@ -36,7 +36,8 @@ public class WStaticImage extends WWidget {
 		return texture;
 	}
 
-	public void setTexture(Identifier texture) {
+	public <W extends WStaticImage> W setTexture(Identifier texture) {
 		this.texture = texture;
+		return (W) this;
 	}
 }

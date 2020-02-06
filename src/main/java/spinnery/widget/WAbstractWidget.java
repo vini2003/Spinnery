@@ -14,7 +14,7 @@ import spinnery.widget.api.listener.*;
 import static spinnery.registry.ThemeRegistry.DEFAULT_THEME;
 
 @SuppressWarnings({"unchecked", "rawtypes"})
-public abstract class WWidget implements Tickable, Comparable<WWidget>, WLayoutElement, WThemable, WStyleProvider {
+public abstract class WAbstractWidget implements Tickable, Comparable<WAbstractWidget>, WLayoutElement, WThemable, WStyleProvider {
 	protected WInterface linkedInterface;
 	protected WLayoutElement parent;
 
@@ -41,13 +41,14 @@ public abstract class WWidget implements Tickable, Comparable<WWidget>, WLayoutE
 	protected Identifier theme;
 	protected WStyle styleOverrides;
 
-	public WWidget() {
+	public WAbstractWidget() {
 	}
 
 	////// SHARED //////
 
-	public void setInterface(WInterface linkedInterface) {
+	public <W extends WAbstractWidget> W setInterface(WInterface linkedInterface) {
 		this.linkedInterface = linkedInterface;
+		return (W) this;
 	}
 
 	public WInterface getInterface() {
@@ -63,29 +64,29 @@ public abstract class WWidget implements Tickable, Comparable<WWidget>, WLayoutE
 	// Common functionality
 
 	@Environment(EnvType.CLIENT)
-	public <T extends WWidget> T setLabel(Text label) {
+	public <W extends WAbstractWidget> W setLabel(Text label) {
 		this.label = label;
 		onLayoutChange();
-		return (T) this;
+		return (W) this;
 	}
 
 	@Environment(EnvType.CLIENT)
-	public <T extends WWidget> T setLabel(String label) {
+	public <W extends WAbstractWidget> W setLabel(String label) {
 		this.label = new LiteralText(label);
 		onLayoutChange();
-		return (T) this;
+		return (W) this;
 	}
 
 	@Environment(EnvType.CLIENT)
-	public <T extends WWidget> T setHidden(boolean isHidden) {
+	public <W extends WAbstractWidget> W setHidden(boolean isHidden) {
 		this.isHidden = isHidden;
-		return (T) this;
+		return (W) this;
 	}
 
 	@Environment(EnvType.CLIENT)
-	public <T extends WWidget> T setParent(WLayoutElement parent) {
+	public <W extends WAbstractWidget> W setParent(WLayoutElement parent) {
 		this.parent = parent;
-		return (T) this;
+		return (W) this;
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -197,7 +198,7 @@ public abstract class WWidget implements Tickable, Comparable<WWidget>, WLayoutE
 	}
 
 	@Environment(EnvType.CLIENT)
-	public <W extends WWidget> W overrideStyle(String property, Object value) {
+	public <W extends WAbstractWidget> W overrideStyle(String property, Object value) {
 		getStyle().override(property, value);
 		return (W) this;
 	}
@@ -214,13 +215,13 @@ public abstract class WWidget implements Tickable, Comparable<WWidget>, WLayoutE
 	}
 
 	@Environment(EnvType.CLIENT)
-	public <T extends WWidget> T setTheme(Identifier theme) {
+	public <W extends WAbstractWidget> W setTheme(Identifier theme) {
 		this.theme = theme;
-		return (T) this;
+		return (W) this;
 	}
 
 	@Environment(EnvType.CLIENT)
-	public <T extends WWidget> T setTheme(String theme) {
+	public <W extends WAbstractWidget> W setTheme(String theme) {
 		return setTheme(new Identifier(theme));
 	}
 
@@ -254,26 +255,26 @@ public abstract class WWidget implements Tickable, Comparable<WWidget>, WLayoutE
 	}
 
 	@Environment(EnvType.CLIENT)
-	public <T extends WWidget> T setPosition(WPosition position) {
+	public <W extends WAbstractWidget> W setPosition(WPosition position) {
 		this.position = position;
 		onLayoutChange();
-		return (T) this;
+		return (W) this;
 	}
 
 	@Environment(EnvType.CLIENT)
-	public <T extends WWidget> T setX(int x) {
+	public <W extends WAbstractWidget> W setX(int x) {
 		return setPosition(WPosition.of(position).setX(x));
 	}
 
 	@Environment(EnvType.CLIENT)
-	public <T extends WWidget> T setY(int y) {
+	public <W extends WAbstractWidget> W setY(int y) {
 		return setPosition(WPosition.of(position).setY(y));
 	}
 
 	@Environment(EnvType.CLIENT)
-	public <T extends WWidget> T setZ(int z) {
+	public <W extends WAbstractWidget> W setZ(int z) {
 		setPosition(WPosition.of(position).setZ(z));
-		return (T) this;
+		return (W) this;
 	}
 
 	// WSized
@@ -294,19 +295,19 @@ public abstract class WWidget implements Tickable, Comparable<WWidget>, WLayoutE
 	}
 
 	@Environment(EnvType.CLIENT)
-	public <T extends WWidget> T setSize(WSize size) {
+	public <W extends WAbstractWidget> W setSize(WSize size) {
 		this.size = size;
 		onLayoutChange();
-		return (T) this;
+		return (W) this;
 	}
 
 	@Environment(EnvType.CLIENT)
-	public <T extends WWidget> T setWidth(int width) {
+	public <W extends WAbstractWidget> W setWidth(int width) {
 		return setSize(WSize.of(size).setWidth(width));
 	}
 
 	@Environment(EnvType.CLIENT)
-	public <T extends WWidget> T setHeight(int height) {
+	public <W extends WAbstractWidget> W setHeight(int height) {
 		return setSize(WSize.of(size).setHeight(height));
 	}
 
@@ -400,143 +401,143 @@ public abstract class WWidget implements Tickable, Comparable<WWidget>, WLayoutE
 	// Event runner setters
 
 	@Environment(EnvType.CLIENT)
-	public <T extends WWidget> T setOnFocusGained(WFocusGainListener<T> linkedRunnable) {
+	public <W extends WAbstractWidget> W setOnFocusGained(WFocusGainListener<W> linkedRunnable) {
 		this.runnableOnFocusGained = linkedRunnable;
-		return (T) this;
+		return (W) this;
 	}
 
 	@Environment(EnvType.CLIENT)
-	public <T extends WWidget> T setOnFocusReleased(WFocusLossListener<T> linkedRunnable) {
+	public <W extends WAbstractWidget> W setOnFocusReleased(WFocusLossListener<W> linkedRunnable) {
 		this.runnableOnFocusReleased = linkedRunnable;
-		return (T) this;
+		return (W) this;
 	}
 
 	@Environment(EnvType.CLIENT)
-	public <T extends WWidget> T setOnKeyPressed(WKeyPressListener<T> linkedRunnable) {
+	public <W extends WAbstractWidget> W setOnKeyPressed(WKeyPressListener<W> linkedRunnable) {
 		this.runnableOnKeyPressed = linkedRunnable;
-		return (T) this;
+		return (W) this;
 	}
 
 	@Environment(EnvType.CLIENT)
-	public <T extends WWidget> T setOnCharTyped(WCharTypeListener<T> linkedRunnable) {
+	public <W extends WAbstractWidget> W setOnCharTyped(WCharTypeListener<W> linkedRunnable) {
 		this.runnableOnCharTyped = linkedRunnable;
-		return (T) this;
+		return (W) this;
 	}
 
 	@Environment(EnvType.CLIENT)
-	public <T extends WWidget> T setOnKeyReleased(WKeyReleaseListener<T> linkedRunnable) {
+	public <W extends WAbstractWidget> W setOnKeyReleased(WKeyReleaseListener<W> linkedRunnable) {
 		this.runnableOnKeyReleased = linkedRunnable;
-		return (T) this;
+		return (W) this;
 	}
 
 	@Environment(EnvType.CLIENT)
-	public <T extends WWidget> T setOnMouseClicked(WMouseClickListener<T> linkedRunnable) {
+	public <W extends WAbstractWidget> W setOnMouseClicked(WMouseClickListener<W>linkedRunnable) {
 		this.runnableOnMouseClicked = linkedRunnable;
-		return (T) this;
+		return (W) this;
 	}
 
 	@Environment(EnvType.CLIENT)
-	public <T extends WWidget> T setOnMouseDragged(WMouseDragListener<T> linkedRunnable) {
+	public <W extends WAbstractWidget> W setOnMouseDragged(WMouseDragListener<W> linkedRunnable) {
 		this.runnableOnMouseDragged = linkedRunnable;
-		return (T) this;
+		return (W) this;
 	}
 
 	@Environment(EnvType.CLIENT)
-	public <T extends WWidget> T setOnMouseMoved(WMouseMoveListener<T> linkedRunnable) {
+	public <W extends WAbstractWidget> W setOnMouseMoved(WMouseMoveListener<W> linkedRunnable) {
 		this.runnableOnMouseMoved = linkedRunnable;
-		return (T) this;
+		return (W) this;
 	}
 
 	@Environment(EnvType.CLIENT)
-	public <T extends WWidget> T setOnMouseScrolled(WMouseScrollListener<T> linkedRunnable) {
+	public <W extends WAbstractWidget> W setOnMouseScrolled(WMouseScrollListener<W> linkedRunnable) {
 		this.runnableOnMouseScrolled = linkedRunnable;
-		return (T) this;
+		return (W) this;
 	}
 
 	@Environment(EnvType.CLIENT)
-	public <T extends WWidget> T setOnMouseReleased(WMouseReleaseListener<T> linkedRunnable) {
+	public <W extends WAbstractWidget> W setOnMouseReleased(WMouseReleaseListener<W> linkedRunnable) {
 		this.runnableOnMouseReleased = linkedRunnable;
-		return (T) this;
+		return (W) this;
 	}
 
 	@Environment(EnvType.CLIENT)
-	public <T extends WWidget> T setOnDrawTooltip(WTooltipDrawListener<T> linkedRunnable) {
+	public <W extends WAbstractWidget> W setOnDrawTooltip(WTooltipDrawListener<W> linkedRunnable) {
 		this.runnableOnDrawTooltip = linkedRunnable;
-		return (T) this;
+		return (W) this;
 	}
 
 	@Environment(EnvType.CLIENT)
-	public <T extends WWidget> T setOnAlign(WAlignListener<T> linkedRunnable) {
+	public <W extends WAbstractWidget> W setOnAlign(WAlignListener<W> linkedRunnable) {
 		this.runnableOnAlign = linkedRunnable;
-		return (T) this;
+		return (W) this;
 	}
 
 	// Event runner getters
 
 	@Environment(EnvType.CLIENT)
-	public <T extends WWidget> WFocusGainListener<T> getOnFocusGained() {
+	public <W extends WAbstractWidget> WFocusGainListener<W> getOnFocusGained() {
 		return runnableOnFocusGained;
 	}
 
 	@Environment(EnvType.CLIENT)
-	public <T extends WWidget> WFocusLossListener<T> getOnFocusReleased() {
+	public <W extends WAbstractWidget> WFocusLossListener<W> getOnFocusReleased() {
 		return runnableOnFocusReleased;
 	}
 
 	@Environment(EnvType.CLIENT)
-	public <T extends WWidget> WKeyPressListener<T> getOnKeyPressed() {
+	public <W extends WAbstractWidget> WKeyPressListener<W> getOnKeyPressed() {
 		return runnableOnKeyPressed;
 	}
 
 	@Environment(EnvType.CLIENT)
-	public <T extends WWidget> WCharTypeListener<T> getOnCharTyped() {
+	public <W extends WAbstractWidget> WCharTypeListener<W> getOnCharTyped() {
 		return runnableOnCharTyped;
 	}
 
 	@Environment(EnvType.CLIENT)
-	public <T extends WWidget> WKeyReleaseListener<T> getOnKeyReleased() {
+	public <W extends WAbstractWidget> WKeyReleaseListener<W> getOnKeyReleased() {
 		return runnableOnKeyReleased;
 	}
 
 	@Environment(EnvType.CLIENT)
-	public <T extends WWidget> WMouseClickListener<T> getOnMouseClicked() {
+	public <W extends WAbstractWidget> WMouseClickListener<W>getOnMouseClicked() {
 		return runnableOnMouseClicked;
 	}
 
 	@Environment(EnvType.CLIENT)
-	public <T extends WWidget> WMouseDragListener<T> getOnMouseDragged() {
+	public <W extends WAbstractWidget> WMouseDragListener<W> getOnMouseDragged() {
 		return runnableOnMouseDragged;
 	}
 
 	@Environment(EnvType.CLIENT)
-	public <T extends WWidget> WMouseMoveListener<T> getOnMouseMoved() {
+	public <W extends WAbstractWidget> WMouseMoveListener<W> getOnMouseMoved() {
 		return runnableOnMouseMoved;
 	}
 
 	@Environment(EnvType.CLIENT)
-	public <T extends WWidget> WMouseScrollListener<T> getOnMouseScrolled() {
+	public <W extends WAbstractWidget> WMouseScrollListener<W> getOnMouseScrolled() {
 		return runnableOnMouseScrolled;
 	}
 
 	@Environment(EnvType.CLIENT)
-	public <T extends WWidget> WMouseReleaseListener<T> getOnMouseReleased() {
+	public <W extends WAbstractWidget> WMouseReleaseListener<W> getOnMouseReleased() {
 		return runnableOnMouseReleased;
 	}
 
 	@Environment(EnvType.CLIENT)
-	public <T extends WWidget> WTooltipDrawListener<T> getOnDrawTooltip() {
+	public <W extends WAbstractWidget> WTooltipDrawListener<W> getOnDrawTooltip() {
 		return runnableOnDrawTooltip;
 	}
 
 	@Environment(EnvType.CLIENT)
-	public <T extends WWidget> WAlignListener<T> getOnAlign() {
+	public <W extends WAbstractWidget> WAlignListener<W> getOnAlign() {
 		return runnableOnAlign;
 	}
 
 	// Comparable
 
 	@Override
-	public int compareTo(WWidget o) {
+	public int compareTo(WAbstractWidget o) {
 		return Integer.compare(o.getZ(), getZ());
 	}
 }

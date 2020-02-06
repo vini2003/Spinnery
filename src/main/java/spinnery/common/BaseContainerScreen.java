@@ -8,7 +8,7 @@ import net.minecraft.text.Text;
 import org.lwjgl.glfw.GLFW;
 import spinnery.widget.WInterface;
 import spinnery.widget.WSlot;
-import spinnery.widget.WWidget;
+import spinnery.widget.WAbstractWidget;
 import spinnery.widget.api.WCollection;
 
 public class BaseContainerScreen<T extends BaseContainer> extends ContainerScreen<T> {
@@ -64,8 +64,9 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 	}
 
 	@Environment(EnvType.CLIENT)
-	public void setTooltipX(int tooltipX) {
+	public <S extends BaseContainerScreen> S setTooltipX(int tooltipX) {
 		this.tooltipX = tooltipX;
+		return (S) this;
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -74,13 +75,15 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 	}
 
 	@Environment(EnvType.CLIENT)
-	public void setTooltipY(int tooltipY) {
+	public <S extends BaseContainerScreen> S setTooltipY(int tooltipY) {
 		this.tooltipY = tooltipY;
+		return (S) this;
 	}
 
 	@Environment(EnvType.CLIENT)
-	public void setDrawSlot(WSlot drawSlot) {
+	public <S extends BaseContainerScreen> S setDrawSlot(WSlot drawSlot) {
 		this.drawSlot = drawSlot;
+		return (S) this;
 	}
 
 	@Override
@@ -183,13 +186,13 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 	@Environment(EnvType.CLIENT)
 	public void updateTooltip(int mouseX, int mouseY) {
 		setDrawSlot(null);
-		for (WWidget widgetA : getInterface().getWidgets()) {
+		for (WAbstractWidget widgetA : getInterface().getWidgets()) {
 			if (widgetA.getFocus() && widgetA instanceof WSlot) {
 				setDrawSlot((WSlot) widgetA);
 				setTooltipX(mouseX);
 				setTooltipY(mouseY);
 			} else if (widgetA instanceof WCollection) {
-				for (WWidget widgetB : ((WCollection) widgetA).getWidgets()) {
+				for (WAbstractWidget widgetB : ((WCollection) widgetA).getWidgets()) {
 					if (widgetB.updateFocus(mouseX, mouseY) && widgetB instanceof WSlot) {
 						setDrawSlot((WSlot) widgetB);
 						setTooltipX(mouseX);

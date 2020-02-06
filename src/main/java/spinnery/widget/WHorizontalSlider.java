@@ -30,11 +30,11 @@ public class WHorizontalSlider extends WAbstractSlider {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public WHorizontalSlider setProgress(double progress) {
+	public <W extends WAbstractSlider> W setProgress(double progress) {
 		super.setProgress(progress);
 		total = String.valueOf(this.progress);
 		onLayoutChange();
-		return this;
+		return (W) this;
 	}
 
 	@Override

@@ -15,9 +15,9 @@ import net.minecraft.world.World;
 import spinnery.Spinnery;
 import spinnery.registry.NetworkRegistry;
 import spinnery.util.StackUtilities;
+import spinnery.widget.WAbstractWidget;
 import spinnery.widget.WInterface;
 import spinnery.widget.WSlot;
-import spinnery.widget.WWidget;
 import spinnery.widget.api.WNetworked;
 
 import java.util.HashMap;
@@ -45,8 +45,8 @@ public class BaseContainer extends Container implements Tickable {
 	}
 
 	public void onInterfaceEvent(int widgetSyncId, WNetworked.Event event, CompoundTag payload) {
-		Set<WWidget> checkWidgets = serverInterface.getAllWidgets();
-		for (WWidget widget : checkWidgets) {
+		Set<WAbstractWidget> checkWidgets = serverInterface.getAllWidgets();
+		for (WAbstractWidget widget : checkWidgets) {
 			if (!(widget instanceof WNetworked)) continue;
 			if (((WNetworked) widget).getSyncId() == widgetSyncId) {
 				((WNetworked) widget).onInterfaceEvent(event, payload);
@@ -58,7 +58,7 @@ public class BaseContainer extends Container implements Tickable {
 	public void onSlotClicked(int slotNumber, int inventoryNumber, int button, SlotActionType action, PlayerEntity player) {
 		WSlot slotA = null;
 
-		for (WWidget widget : serverInterface.getAllWidgets()) {
+		for (WAbstractWidget widget : serverInterface.getAllWidgets()) {
 			if (widget instanceof WSlot && ((WSlot) widget).getSlotNumber() == slotNumber && ((WSlot) widget).getInventoryNumber() == inventoryNumber) {
 				slotA = (WSlot) widget;
 			}
@@ -142,7 +142,7 @@ public class BaseContainer extends Container implements Tickable {
 				break;
 			}
 			case QUICK_MOVE: {
-				for (WWidget widget : serverInterface.getAllWidgets()) {
+				for (WAbstractWidget widget : serverInterface.getAllWidgets()) {
 					if (widget instanceof WSlot && ((WSlot) widget).getLinkedInventory() != slotA.getLinkedInventory()) {
 						WSlot slotB = ((WSlot) widget);
 						ItemStack stackC = slotB.getStack();
@@ -179,8 +179,9 @@ public class BaseContainer extends Container implements Tickable {
 		return linkedWorld;
 	}
 
-	public void setLinkedWorld(World linkedWorld) {
+	public <C extends BaseContainer> C setLinkedWorld(World linkedWorld) {
 		this.linkedWorld = linkedWorld;
+		return (C) this;
 	}
 
 	public PlayerInventory getLinkedPlayerInventory() {
@@ -195,7 +196,7 @@ public class BaseContainer extends Container implements Tickable {
 
 	@Override
 	public void onContentChanged(Inventory inventory) {
-		for (WWidget widget : serverInterface.getAllWidgets()) {
+		for (WAbstractWidget widget : serverInterface.getAllWidgets()) {
 			if (widget instanceof WSlot) {
 				WSlot slotA = ((WSlot) widget);
 
@@ -221,15 +222,6 @@ public class BaseContainer extends Container implements Tickable {
 
 					cachedInventories.get(slotA.getInventoryNumber()).put(slotA.getSlotNumber(), slotA.getStack());
 				}
-			}
-		}
-	}
-
-	@Override
-	public void setStackInSlot(int slot, ItemStack stack) {
-		for (WWidget widget : serverInterface.getAllWidgets()) {
-			if (widget instanceof WSlot && ((WSlot) widget).getSlotNumber() == slot && ((WSlot) widget).getInventoryNumber() == PLAYER_INVENTORY) {
-				((WSlot) widget).setStack(stack);
 			}
 		}
 	}

@@ -14,9 +14,9 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Environment(EnvType.CLIENT)
-public class WDraggableContainer extends WWidget implements WModifiableCollection,
+public class WDraggableContainer extends WAbstractWidget implements WModifiableCollection,
         WVerticalScrollable, WHorizontalScrollable {
-    private Set<WWidget> widgets = new LinkedHashSet<>();
+    private Set<WAbstractWidget> widgets = new LinkedHashSet<>();
 
     protected boolean dragging = false;
     protected float scrollKineticDeltaX = 0;
@@ -48,7 +48,7 @@ public class WDraggableContainer extends WWidget implements WModifiableCollectio
     public int getStartOffsetX() {
         int leftX = getStartAnchorX();
         int leftmostX = leftX;
-        for (WWidget widget : getWidgets()) {
+        for (WAbstractWidget widget : getWidgets()) {
             if (widget.getX() < leftmostX) {
                 leftmostX = widget.getX();
             }
@@ -60,7 +60,7 @@ public class WDraggableContainer extends WWidget implements WModifiableCollectio
     public int getStartOffsetY() {
         int topY = getStartAnchorY();
         int topmostY = topY;
-        for (WWidget widget : getWidgets()) {
+        for (WAbstractWidget widget : getWidgets()) {
             if (widget.getY() < topmostY) {
                 topmostY = widget.getY();
             }
@@ -70,7 +70,7 @@ public class WDraggableContainer extends WWidget implements WModifiableCollectio
 
     @Override
     public void scroll(double deltaX, double deltaY) {
-        for (WWidget widget : getWidgets()) {
+        for (WAbstractWidget widget : getWidgets()) {
             widget.setX(widget.getX() + (int) deltaX);
             widget.setY(widget.getY() + (int) deltaY);
         }
@@ -109,7 +109,7 @@ public class WDraggableContainer extends WWidget implements WModifiableCollectio
         int rightmostX = leftmostX;
         int topmostY = getStartAnchorY();
         int bottommostY = topmostY;
-        for (WWidget widget : getWidgets()) {
+        for (WAbstractWidget widget : getWidgets()) {
             if (widget.getX() < leftmostX) {
                 leftmostX = widget.getX();
             }
@@ -146,14 +146,14 @@ public class WDraggableContainer extends WWidget implements WModifiableCollectio
         int offsetX = newX - oldX;
         int offsetY = newY - oldY;
 
-        for (WWidget widget : getWidgets()) {
+        for (WAbstractWidget widget : getWidgets()) {
             widget.setX(widget.getX() + offsetX);
             widget.setY(widget.getY() + offsetY);
         }
     }
 
     public void updateHidden() {
-        for (WWidget w : getWidgets()) {
+        for (WAbstractWidget w : getWidgets()) {
             boolean hidden = (w.getX() + w.getWidth() < getX())
                     || (w.getX() > getX() + getWidth())
                     || (w.getY() + w.getHeight() < getY())
@@ -177,7 +177,7 @@ public class WDraggableContainer extends WWidget implements WModifiableCollectio
         GL11.glEnable(GL11.GL_SCISSOR_TEST);
         GL11.glScissor((int) (x * scale), (int) (rawHeight - (y * scale + sY * scale)), (int) (sX * scale), (int) (sY * scale));
 
-        for (WWidget w : getWidgets()) {
+        for (WAbstractWidget w : getWidgets()) {
             w.draw();
         }
 
@@ -187,22 +187,22 @@ public class WDraggableContainer extends WWidget implements WModifiableCollectio
     // Collection
 
     @Override
-    public void add(WWidget... widgets) {
+    public void add(WAbstractWidget... widgets) {
         this.widgets.addAll(Arrays.asList(widgets));
     }
 
     @Override
-    public void remove(WWidget... widgets) {
+    public void remove(WAbstractWidget... widgets) {
         this.widgets.removeAll(Arrays.asList(widgets));
     }
 
     @Override
-    public boolean contains(WWidget... widgets) {
+    public boolean contains(WAbstractWidget... widgets) {
         return this.widgets.containsAll(Arrays.asList(widgets));
     }
 
     @Override
-    public Set<WWidget> getWidgets() {
+    public Set<WAbstractWidget> getWidgets() {
         return widgets;
     }
 

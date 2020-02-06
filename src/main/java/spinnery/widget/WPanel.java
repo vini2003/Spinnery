@@ -13,8 +13,8 @@ import java.util.Set;
 
 @Environment(EnvType.CLIENT)
 @WFocusedMouseListener
-public class WPanel extends WWidget implements WModifiableCollection {
-	protected Set<WWidget> heldWidgets = new LinkedHashSet<>();
+public class WPanel extends WAbstractWidget implements WModifiableCollection {
+	protected Set<WAbstractWidget> heldWidgets = new LinkedHashSet<>();
 
 	@Override
 	public void draw() {
@@ -35,28 +35,28 @@ public class WPanel extends WWidget implements WModifiableCollection {
 			BaseRenderer.drawRectangle(x + 1, y + 17, z, sX - 2, 0.75, getStyle().asColor("shadow"));
 		}
 
-		for (WWidget widget : getWidgets()) {
+		for (WAbstractWidget widget : getWidgets()) {
 			widget.draw();
 		}
 	}
 
 	@Override
-	public Set<WWidget> getWidgets() {
+	public Set<WAbstractWidget> getWidgets() {
 		return heldWidgets;
 	}
 
 	@Override
-	public boolean contains(WWidget... widgets) {
+	public boolean contains(WAbstractWidget... widgets) {
 		return heldWidgets.containsAll(Arrays.asList(widgets));
 	}
 
 	@Override
-	public void add(WWidget... widgets) {
+	public void add(WAbstractWidget... widgets) {
 		heldWidgets.addAll(Arrays.asList(widgets));
 	}
 
 	@Override
-	public void remove(WWidget... widgets) {
+	public void remove(WAbstractWidget... widgets) {
 		heldWidgets.removeAll(Arrays.asList(widgets));
 	}
 }

@@ -15,7 +15,7 @@ import spinnery.Spinnery;
 import spinnery.common.BaseContainer;
 import spinnery.util.StackUtilities;
 import spinnery.widget.WSlot;
-import spinnery.widget.WWidget;
+import spinnery.widget.WAbstractWidget;
 import spinnery.widget.api.WNetworked;
 
 public class NetworkRegistry {
@@ -195,7 +195,7 @@ public class NetworkRegistry {
 
 							container.getInventory(inventoryNumber).setInvStack(slotNumber, stack);
 
-							for (WWidget widget : container.getInterface().getAllWidgets()) {
+							for (WAbstractWidget widget : container.getInterface().getAllWidgets()) {
 								if (widget instanceof WSlot && ((WSlot) widget).getInventoryNumber() == inventoryNumber && ((WSlot) widget).getSlotNumber() == slotNumber) {
 									((WSlot) widget).setStack(container.getInventory(inventoryNumber).getInvStack(slotNumber));
 								}

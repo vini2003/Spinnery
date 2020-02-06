@@ -20,8 +20,9 @@ public class BaseScreen extends Screen {
 		getScreenInterface().draw();
 	}
 
-	public void setIsPauseScreen(boolean isPauseScreen) {
+	public <S extends BaseScreen> S setIsPauseScreen(boolean isPauseScreen) {
 		this.isPauseScreen = isPauseScreen;
+		return (S) this;
 	}
 
 	public WInterface getScreenInterface() {

@@ -3,7 +3,7 @@ package spinnery.widget;
 import net.minecraft.util.Identifier;
 import org.apache.commons.lang3.mutable.Mutable;
 
-public abstract class WAbstractBar extends WWidget {
+public abstract class WAbstractBar extends WAbstractWidget {
 	protected Mutable<Number> limit;
 	protected Mutable<Number> progress;
 

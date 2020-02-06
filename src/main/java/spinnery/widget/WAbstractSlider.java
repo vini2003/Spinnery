@@ -10,7 +10,7 @@ import java.util.function.Consumer;
 
 @Environment(EnvType.CLIENT)
 @SuppressWarnings("unchecked")
-public abstract class WAbstractSlider extends WWidget {
+public abstract class WAbstractSlider extends WAbstractWidget {
     protected double min = 0;
     protected double max = 0;
     protected double progress = 0;

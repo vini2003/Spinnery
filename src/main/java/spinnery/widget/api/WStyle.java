@@ -6,7 +6,7 @@ import io.github.cottonmc.jankson.JanksonOps;
 import net.minecraft.util.Identifier;
 import spinnery.Spinnery;
 import spinnery.util.MutablePair;
-import spinnery.widget.WWidget;
+import spinnery.widget.WAbstractWidget;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -114,7 +114,7 @@ public class WStyle {
 		return new WPosition().set(array.getInt(0, 0), array.getInt(1, 0), array.getInt(2, 0));
 	}
 
-	public WPosition asAnchoredPosition(String property, WWidget anchor) {
+	public WPosition asAnchoredPosition(String property, WAbstractWidget anchor) {
 		JsonElement el = getElement(property);
 		if (!(el instanceof JsonArray)) return new WPosition().anchor(anchor).set(0, 0, 0);
 		JsonArray array = (JsonArray) el;

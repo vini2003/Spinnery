@@ -12,14 +12,14 @@ public class WWidgetFactory {
         this.parent = parent;
     }
 
-    public <T extends WWidget> T build(Class<T> tClass, WPosition position, WSize size) {
+    public <W extends WAbstractWidget> W build(Class<W> tClass, WPosition position, WSize size) {
         try {
-            T widget = tClass.newInstance();
+            W widget = tClass.newInstance();
 
             if (position != null) widget.setPosition(position);
             if (size != null) widget.setSize(size);
-            if (parent instanceof WWidget) {
-                widget.setInterface(((WWidget) parent).getInterface());
+            if (parent instanceof WAbstractWidget) {
+                widget.setInterface(((WAbstractWidget) parent).getInterface());
             } else if (parent instanceof WInterface) {
                 widget.setInterface((WInterface) parent);
             }

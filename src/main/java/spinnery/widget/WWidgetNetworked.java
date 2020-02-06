@@ -5,7 +5,7 @@ import spinnery.widget.api.WNetworked;
 
 import java.util.function.BiConsumer;
 
-public class WWidgetNetworked extends WWidget implements WNetworked {
+public class WWidgetNetworked extends WAbstractWidget implements WNetworked {
 	protected BiConsumer<Event, CompoundTag> consumerOnInterfaceEvent;
 	protected final int syncId;
 
@@ -29,7 +29,8 @@ public class WWidgetNetworked extends WWidget implements WNetworked {
         return consumerOnInterfaceEvent;
     }
 
-    public void setOnInterfaceEvent(BiConsumer<Event, CompoundTag> consumerOnInterfaceEvent) {
-        this.consumerOnInterfaceEvent = consumerOnInterfaceEvent;
+    public <W extends WWidgetNetworked> W setOnInterfaceEvent(BiConsumer<Event, CompoundTag> consumerOnInterfaceEvent) {
+		this.consumerOnInterfaceEvent = consumerOnInterfaceEvent;
+		return (W) this;
     }
 }

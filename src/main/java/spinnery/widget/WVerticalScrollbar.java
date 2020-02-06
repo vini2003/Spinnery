@@ -3,7 +3,7 @@ package spinnery.widget;
 import spinnery.client.BaseRenderer;
 import spinnery.widget.api.WVerticalScrollable;
 
-public class WVerticalScrollbar extends WWidget {
+public class WVerticalScrollbar extends WAbstractWidget {
     protected WVerticalScrollable scrollable;
     protected double clickMouseY;
     protected boolean dragging = false;
@@ -78,7 +78,8 @@ public class WVerticalScrollbar extends WWidget {
         return scrollable;
     }
 
-    public void setScrollableParent(WVerticalScrollable parent) {
+    public <W extends WVerticalScrollbar> W setScrollableParent(WVerticalScrollable parent) {
         this.scrollable = parent;
+        return (W) this;
     }
 }

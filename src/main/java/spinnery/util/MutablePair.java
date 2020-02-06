@@ -15,15 +15,17 @@ public class MutablePair<L, R> {
 		return first;
 	}
 
-	public void setFirst(L first) {
+	public MutablePair setFirst(L first) {
 		this.first = first;
+		return this;
 	}
 
 	public R getSecond() {
 		return second;
 	}
 
-	public void setSecond(R second) {
+	public MutablePair setSecond(R second) {
 		this.second = second;
+		return this;
 	}
 }

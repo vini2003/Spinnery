@@ -9,7 +9,7 @@ import spinnery.client.BaseRenderer;
 import spinnery.client.TextRenderer;
 
 @Environment(EnvType.CLIENT)
-public class WDynamicText extends WWidget {
+public class WDynamicText extends WAbstractWidget {
 	protected boolean isActive;
 	protected String text = "";
 	protected String visible = "";
@@ -25,9 +25,10 @@ public class WDynamicText extends WWidget {
 		return text;
 	}
 
-	public void setText(String text) {
+	public <W extends WDynamicText> W setText(String text) {
 		this.text = text;
 		updateText();
+		return (W) this;
 	}
 
 	@Override
@@ -52,8 +53,9 @@ public class WDynamicText extends WWidget {
 		return isEditable;
 	}
 
-	public void setEditable(boolean editable) {
+	public <W extends WDynamicText> W setEditable(boolean editable) {
 		isEditable = editable;
+		return (W) this;
 	}
 
 	void updateText() {

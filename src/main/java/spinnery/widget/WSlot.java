@@ -22,7 +22,7 @@ import spinnery.widget.api.WPosition;
 import spinnery.widget.api.WSize;
 
 @WFocusedMouseListener
-public class WSlot extends WWidget {
+public class WSlot extends WAbstractWidget {
 	protected int slotNumber;
 	protected Identifier previewTexture;
 	protected int maximumCount = 0;
@@ -190,8 +190,9 @@ public class WSlot extends WWidget {
 	}
 
 	@Environment(EnvType.CLIENT)
-	public void setPreviewTexture(Identifier previewTexture) {
+	public <W extends WSlot> W setPreviewTexture(Identifier previewTexture) {
 		this.previewTexture = previewTexture;
+		return (W) this;
 	}
 
 	public ItemStack getStack() {
@@ -214,7 +215,7 @@ public class WSlot extends WWidget {
 		return getInterface().getContainer().getInventories().get(inventoryNumber);
 	}
 
-	public void setStack(ItemStack stack) {
+	public <W extends WSlot> W setStack(ItemStack stack) {
 		try {
 			getLinkedInventory().setInvStack(slotNumber, stack);
 			if (!isOverrideMaximumCount()) {
@@ -223,18 +224,21 @@ public class WSlot extends WWidget {
 		} catch (ArrayIndexOutOfBoundsException exception) {
 			Spinnery.LOGGER.log(Level.ERROR, "Cannot access slot " + getSlotNumber() + ", as it does exist in the inventory!");
 		}
+		return (W) this;
 	}
 
 	public boolean isOverrideMaximumCount() {
 		return overrideMaximumCount;
 	}
 
-	public void setMaximumCount(int maximumCount) {
+	public <W extends WSlot> W setMaximumCount(int maximumCount) {
 		this.maximumCount = maximumCount;
+		return (W) this;
 	}
 
-	public void setOverrideMaximumCount(boolean overrideMaximumCount) {
+	public <W extends WSlot> W setOverrideMaximumCount(boolean overrideMaximumCount) {
 		this.overrideMaximumCount = overrideMaximumCount;
+		return (W) this;
 	}
 
 	public int getSlotNumber() {
@@ -245,11 +249,13 @@ public class WSlot extends WWidget {
 		return inventoryNumber;
 	}
 
-	public void setInventoryNumber(int inventoryNumber) {
+	public <W extends WSlot> W setInventoryNumber(int inventoryNumber) {
 		this.inventoryNumber = inventoryNumber;
+		return (W) this;
 	}
 
-	public void setSlotNumber(int slotNumber) {
+	public <W extends WSlot> W setSlotNumber(int slotNumber) {
 		this.slotNumber = slotNumber;
+		return (W) this;
 	}
 }

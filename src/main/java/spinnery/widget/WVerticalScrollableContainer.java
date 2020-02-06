@@ -13,8 +13,8 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-public class WVerticalScrollableContainer extends WWidget implements WModifiableCollection, WVerticalScrollable {
-    public List<List<WWidget>> listWidgets = new ArrayList<>();
+public class WVerticalScrollableContainer extends WAbstractWidget implements WModifiableCollection, WVerticalScrollable {
+    public List<List<WAbstractWidget>> listWidgets = new ArrayList<>();
 
     protected WVerticalScrollbar scrollbar;
 
@@ -89,7 +89,7 @@ public class WVerticalScrollableContainer extends WWidget implements WModifiable
         } else if (deltaY < 0 && hitBottom) {
             scrollToEnd();
         } else {
-            for (WWidget widget : getWidgets()) {
+            for (WAbstractWidget widget : getWidgets()) {
                 widget.setY(widget.getY() + (int) deltaY);
             }
         }
@@ -97,14 +97,14 @@ public class WVerticalScrollableContainer extends WWidget implements WModifiable
         updateHidden();
     }
 
-    public List<List<WWidget>> getListWidgets() {
+    public List<List<WAbstractWidget>> getListWidgets() {
         return listWidgets;
     }
 
     @Override
-    public Set<WWidget> getWidgets() {
-        Set<WWidget> widgets = new LinkedHashSet<>();
-        for (List<WWidget> widgetA : getListWidgets()) {
+    public Set<WAbstractWidget> getWidgets() {
+        Set<WAbstractWidget> widgets = new LinkedHashSet<>();
+        for (List<WAbstractWidget> widgetA : getListWidgets()) {
             widgets.addAll(widgetA);
         }
         return widgets;
@@ -114,8 +114,9 @@ public class WVerticalScrollableContainer extends WWidget implements WModifiable
         return !scrollbar.isHidden();
     }
 
-    public void setScrollbarVisible(boolean visible) {
+    public <W extends WVerticalScrollableContainer> W setScrollbarVisible(boolean visible) {
         scrollbar.setHidden(!visible);
+        return (W) this;
     }
 
     @Override
@@ -136,11 +137,11 @@ public class WVerticalScrollableContainer extends WWidget implements WModifiable
 
     @Override
     public WSize getInnerSize() {
-        List<List<WWidget>> widgetLists = getListWidgets();
+        List<List<WAbstractWidget>> widgetLists = getListWidgets();
 
         // Topmost widget (lower Y)
         int topmostY = getStartAnchorY();
-        for (WWidget widget : widgetLists.get(0)) {
+        for (WAbstractWidget widget : widgetLists.get(0)) {
             if (widget.getY() < topmostY) {
                 topmostY = widget.getY();
             }
@@ -148,7 +149,7 @@ public class WVerticalScrollableContainer extends WWidget implements WModifiable
 
         // Bottommost widget (higher Y)
         int bottommostY = topmostY;
-        for (WWidget widget : widgetLists.get(widgetLists.size() - 1)) {
+        for (WAbstractWidget widget : widgetLists.get(widgetLists.size() - 1)) {
             if (widget.getY() + widget.getHeight() > bottommostY) {
                 bottommostY = widget.getY() + widget.getHeight();
             }
@@ -161,7 +162,7 @@ public class WVerticalScrollableContainer extends WWidget implements WModifiable
     public int getStartOffsetY() {
         int topY = getStartAnchorY();
         int topmostY = topY;
-        for (WWidget widget : getListWidgets().get(0)) {
+        for (WAbstractWidget widget : getListWidgets().get(0)) {
             if (widget.getY() < topmostY) {
                 topmostY = widget.getY();
             }
@@ -177,7 +178,7 @@ public class WVerticalScrollableContainer extends WWidget implements WModifiable
 
     @Override
     public boolean updateFocus(int mouseX, int mouseY) {
-        setFocus(isWithinBounds(mouseX, mouseY) && getWidgets().stream().noneMatch((WWidget::getFocus)));
+        setFocus(isWithinBounds(mouseX, mouseY) && getWidgets().stream().noneMatch((WAbstractWidget::getFocus)));
         return getFocus();
     }
 
@@ -194,7 +195,7 @@ public class WVerticalScrollableContainer extends WWidget implements WModifiable
         int offsetX = newX - oldX;
         int offsetY = newY - oldY;
 
-        for (WWidget widget : getWidgets()) {
+        for (WAbstractWidget widget : getWidgets()) {
             widget.setX(widget.getX() + offsetX);
             widget.setY(widget.getY() + offsetY);
         }
@@ -219,8 +220,8 @@ public class WVerticalScrollableContainer extends WWidget implements WModifiable
 
         GL11.glScissor((int) (x * scale), (int) (rawHeight - (y * scale + sY * scale)), (int) (sX * scale), (int) (sY * scale));
 
-        for (List<WWidget> widgetB : getListWidgets()) {
-            for (WWidget widgetC : widgetB) {
+        for (List<WAbstractWidget> widgetB : getListWidgets()) {
+            for (WAbstractWidget widgetC : widgetB) {
                 widgetC.draw();
             }
         }
@@ -233,9 +234,9 @@ public class WVerticalScrollableContainer extends WWidget implements WModifiable
     public void scrollToStart() {
         int y = getStartAnchorY();
 
-        for (List<WWidget> widgetA : getListWidgets()) {
+        for (List<WAbstractWidget> widgetA : getListWidgets()) {
             int x = getX();
-            for (WWidget widgetB : widgetA) {
+            for (WAbstractWidget widgetB : widgetA) {
                 widgetB.setX(x);
                 widgetB.setY(y);
                 x += widgetB.getWidth() + 2;
@@ -247,9 +248,9 @@ public class WVerticalScrollableContainer extends WWidget implements WModifiable
     public void scrollToEnd() {
         int y = getEndAnchorY();
 
-        for (List<WWidget> widgetA : getListWidgets()) {
+        for (List<WAbstractWidget> widgetA : getListWidgets()) {
             int x = getX();
-            for (WWidget widgetB : widgetA) {
+            for (WAbstractWidget widgetB : widgetA) {
                 widgetB.setX(x);
                 widgetB.setY(y);
                 x += widgetB.getWidth() + 2;
@@ -259,8 +260,8 @@ public class WVerticalScrollableContainer extends WWidget implements WModifiable
     }
 
     public void updateHidden() {
-        for (List<WWidget> widgetList : getListWidgets()) {
-            for (WWidget w : widgetList) {
+        for (List<WAbstractWidget> widgetList : getListWidgets()) {
+            for (WAbstractWidget w : widgetList) {
                 boolean startContained = isWithinBounds(w.getX(), w.getY(), 1)
                         || isWithinBounds(w.getX() + w.getWidth(), w.getY() + w.getHeight(), 1);
                 w.setHidden(!startContained);
@@ -269,22 +270,22 @@ public class WVerticalScrollableContainer extends WWidget implements WModifiable
     }
 
     @Override
-    public void add(WWidget... widgetArray) {
+    public void add(WAbstractWidget... widgetArray) {
         getListWidgets().add(Arrays.asList(widgetArray));
         scrollToStart();
         updateHidden();
     }
 
     @Override
-    public void remove(WWidget... widgetArray) {
+    public void remove(WAbstractWidget... widgetArray) {
         getListWidgets().remove(Arrays.asList(widgetArray));
         scrollToStart();
         updateHidden();
     }
 
     @Override
-    public boolean contains(WWidget... widgetArray) {
-        for (List<WWidget> widgetList : getListWidgets()) {
+    public boolean contains(WAbstractWidget... widgetArray) {
+        for (List<WAbstractWidget> widgetList : getListWidgets()) {
             if (widgetList.containsAll(Arrays.asList(widgetArray))) {
                 return true;
             }

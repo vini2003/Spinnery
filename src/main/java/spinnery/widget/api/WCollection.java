@@ -1,16 +1,16 @@
 package spinnery.widget.api;
 
-import spinnery.widget.WWidget;
+import spinnery.widget.WAbstractWidget;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 public interface WCollection {
-	Set<WWidget> getWidgets();
+	Set<WAbstractWidget> getWidgets();
 
-	default Set<WWidget> getAllWidgets() {
-		Set<WWidget> allWidgets = new LinkedHashSet<>(getWidgets());
-		for (WWidget widget : getWidgets()) {
+	default Set<WAbstractWidget> getAllWidgets() {
+		Set<WAbstractWidget> allWidgets = new LinkedHashSet<>(getWidgets());
+		for (WAbstractWidget widget : getWidgets()) {
 			if (widget instanceof WCollection) {
 				allWidgets.addAll(((WCollection) widget).getAllWidgets());
 			}
@@ -18,5 +18,5 @@ public interface WCollection {
 		return allWidgets;
 	}
 
-	boolean contains(WWidget... widgets);
+	boolean contains(WAbstractWidget... widgets);
 }

@@ -1,6 +1,6 @@
 package spinnery.widget;
 
-public abstract class WAbstractToggle extends WWidget {
+public abstract class WAbstractToggle extends WAbstractWidget {
 	protected boolean toggleState = false;
 
 	@Override

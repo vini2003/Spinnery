@@ -9,7 +9,7 @@ import spinnery.widget.api.WFocusedMouseListener;
 
 @Environment(EnvType.CLIENT)
 @WFocusedMouseListener
-public class WStaticText extends WWidget {
+public class WStaticText extends WAbstractWidget {
 	protected Text text = new LiteralText("");
 	protected TextRenderer.Font font = TextRenderer.Font.DEFAULT;
 	protected Integer maxWidth = null;
@@ -18,17 +18,18 @@ public class WStaticText extends WWidget {
 		return maxWidth;
 	}
 
-	public void setMaxWidth(Integer maxWidth) {
+	public <W extends WStaticText> W setMaxWidth(Integer maxWidth) {
 		this.maxWidth = maxWidth;
+		return (W) this;
 	}
 
 	public TextRenderer.Font getFont() {
 		return font;
 	}
 
-	public WStaticText setFont(TextRenderer.Font font) {
+	public <W extends WStaticText> W setFont(TextRenderer.Font font) {
 		this.font = font;
-		return this;
+		return (W) this;
 	}
 
 	@Override
@@ -60,11 +61,13 @@ public class WStaticText extends WWidget {
 		return text;
 	}
 
-	public void setText(Text text) {
+	public <W extends WStaticText> W setText(Text text) {
 		this.text = text;
+		return (W) this;
 	}
 
-	public void setText(String text) {
+	public <W extends WStaticText> W setText(String text) {
 		this.text = new LiteralText(text);
+		return (W) this;
 	}
 }
