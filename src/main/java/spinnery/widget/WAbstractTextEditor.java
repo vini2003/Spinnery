@@ -261,11 +261,13 @@ public abstract class WAbstractTextEditor extends WWidget {
         setText(text.substring(0, cursorIndex) + insert + text.substring(cursorIndex));
     }
 
-    protected void deleteText(Cursor start, Cursor end) {
+    protected String deleteText(Cursor start, Cursor end) {
         int startIndex = getStringIndex(start);
         int endIndex = getStringIndex(end);
-        if (endIndex == 0 || startIndex > text.length() || endIndex > text.length()) return;
+        if (endIndex == 0 || startIndex > text.length() || endIndex > text.length()) return "";
+        String deleted = text.substring(startIndex, endIndex);
         setText(text.substring(0, startIndex) + text.substring(endIndex));
+        return deleted;
     }
 
     public boolean isEmpty() {
@@ -433,7 +435,13 @@ public abstract class WAbstractTextEditor extends WWidget {
                     deleteText(selection.getLeft(), selection.getRight());
                     clearSelection();
                 } else {
-                    deleteText(cursor.copy().left(), cursor);
+                    int lineLength = getLineLength(cursor.y);
+                    String deleted = deleteText(cursor.copy().left(), cursor);
+                    if (deleted.equals("\n")) {
+                        for (int i = 0; i < lineLength; i++) {
+                            cursor.left();
+                        }
+                    }
                     cursor.left();
                 }
                 onCursorMove();
