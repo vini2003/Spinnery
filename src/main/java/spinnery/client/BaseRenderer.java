@@ -84,10 +84,10 @@ public class BaseRenderer {
 
 	public static void drawBeveledPanel(double x, double y, double z, double sX, double sY, WColor topleft, WColor panel, WColor bottomright) {
 		drawRectangle(x, y, z, sX, sY, panel);
-		drawRectangle(x, y, z, sX - 1, 1, topleft);
-		drawRectangle(x, y + 1, z, 1, sY - 2, topleft);
+		drawRectangle(x, y, z, sX, 1, topleft);
+		drawRectangle(x, y + 1, z, 1, sY - 1, topleft);
 		drawRectangle(x + sX - 1, y + 1, z, 1, sY - 1, bottomright);
-		drawRectangle(x + 1, y + sY - 1, z, sX - 1, 1, bottomright);
+		drawRectangle(x, y + sY - 1, z, sX - 1, 1, bottomright);
 	}
 
 	public static void drawImage(double x, double y, double z, double sX, double sY, Identifier texture) {

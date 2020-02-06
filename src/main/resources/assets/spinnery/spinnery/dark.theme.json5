@@ -206,8 +206,8 @@
       }
     },
     "spinnery:text_area": {
-      top_left: "$bevel_light",
-      bottom_right: "$bevel_dark",
+      top_left: "$bevel_dark",
+      bottom_right: "$bevel_light",
       background: 0xff000000,
       text: {
         color: 0xffffffff,
@@ -219,8 +219,8 @@
       label: 0xff808080
     },
     "spinnery:text_field": {
-      top_left: "$bevel_light",
-      bottom_right: "$bevel_dark",
+      top_left: "$bevel_dark",
+      bottom_right: "$bevel_light",
       background: 0xff000000,
       text: {
         color: 0xffffffff,
