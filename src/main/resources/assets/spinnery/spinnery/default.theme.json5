@@ -3,15 +3,29 @@
     bevel_dark: 0xff373737,
     bevel_light: 0xffffffff,
     bg_panel: 0xffc6c6c6,
-    bg_interactable: 0xff8b8b8b
+    bg_interactable: 0xff8b8b8b,
+    text_shadow: 0xff3e3e3e
   },
   prototypes: {
+    label: {
+      label: {
+        color: 0xffffffff,
+        shadow: true,
+        shadow_color: "$text_shadow"
+      }
+    },
+    panel_label: {
+      label: {
+        color: 0xff3f3f3f,
+        shadow: false,
+        shadow_color: "$text_shadow"
+      }
+    },
     panel: {
       shadow: 0xff555555,
       background: "$bg_panel",
       highlight: 0xffffffff,
-      outline: 0xff000000,
-      label: 0xffffffff
+      outline: 0xff000000
     },
     slider: {
       top_left: {
@@ -27,7 +41,7 @@
         off: "$bg_interactable"
       },
       foreground: 0xff6b6b6b,
-      text: 0xffffffff
+      padding: [1, 1]
     },
     text_editor: {
       top_left: "$bevel_dark",
@@ -47,24 +61,37 @@
   theme: {
     "spinnery:panel": {
       $extend: [
-        "$panel"
+        "$panel",
+        "$panel_label"
       ]
     },
     "spinnery:vertical_list": {
-      $extend: ["$panel"]
+      $extend: [
+        "$panel",
+        "$panel_label"
+      ]
     },
     "spinnery:horizontal_list": {
-      $extend: ["$panel"]
+      $extend: [
+        "$panel",
+        "$panel_label"
+      ]
     },
     "spinnery:draggable_area": {
-      $extend: ["$panel"],
+      $extend: [
+        "$panel",
+        "$panel_label"
+      ],
       area: {
         start: 0xff141414,
         end: 0xff202020
       },
     },
     "spinnery:dropdown": {
-      $extend: ["$panel"]
+      $extend: [
+        "$panel",
+        "$panel_label"
+      ]
     },
     "spinnery:static_image": {
     },
@@ -72,18 +99,31 @@
     },
     "spinnery:static_text": {
       text: 0xffffffff,
-      shadow: 0xff3e3e3e
+      shadow: true,
+      shadow_color: "$text_shadow"
     },
     "spinnery:vertical_slider": {
-      $extend: ["$slider"]
+      $extend: [
+        "$slider",
+        "$label"
+      ]
     },
     "spinnery:horizontal_slider": {
-      $extend: ["$slider"]
+      $extend: [
+        "$slider",
+        "$label"
+      ]
     },
     "spinnery:toggle": {
-      $extend: ["$slider"]
+      $extend: [
+        "$slider",
+        "$label"
+      ]
     },
     "spinnery:button": {
+      $extend: [
+        "$label"
+      ],
       top_left: {
         on: "$bevel_dark",
         off: "$bevel_light"
@@ -95,8 +135,7 @@
       background: {
         on: "$bevel_dark",
         off: "$bg_interactable"
-      },
-      label: 0xffffffff
+      }
     },
     "spinnery:slot": {
       top_left: "$bevel_dark",
@@ -107,9 +146,15 @@
       }
     },
     "spinnery:tab_holder": {
-      $extend: ["$panel"]
+      $extend: [
+        "$panel",
+        "$panel_label"
+      ]
     },
     "spinnery:tab_toggle": {
+      $extend: [
+        "$panel_label"
+      ],
       shadow: {
         on: 0xff545454,
         off: 0xff555555,
@@ -125,8 +170,7 @@
       outline: {
         on: 0xff000000,
         off: 0xff000000,
-      },
-      label: 0xffffffff
+      }
     },
     "spinnery:tooltip": {
       background: {

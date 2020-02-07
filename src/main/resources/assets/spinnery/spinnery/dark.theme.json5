@@ -127,15 +127,15 @@
 			},
 			background: {
 				on: "$bevel_dark",
-			off: "$bg_interactable"
+				off: "$bg_interactable"
 			}
 		},
 		"spinnery:slot": {
 			top_left: "$bevel_dark",
 			bottom_right: "$bevel_light",
 			background: {
-			focused: 0xffc5c5c5,
-			unfocused: "$bg_interactable"
+				focused: 0xffc5c5c5,
+				unfocused: "$bg_interactable"
 			}
 		},
 		"spinnery:tab_holder": {
@@ -167,16 +167,16 @@
 		},
 		"spinnery:tooltip": {
 			background: {
-			start: 0xf0100010,
-			end: 0xf0100010,
+				start: 0xf0100010,
+				end: 0xf0100010,
 			},
 			outline: {
-			start: 0x505000ff,
-			end: 0x5028007f,
+				start: 0x505000ff,
+				end: 0x5028007f,
 			},
 			shadow: {
-			start: 0xf0100010,
-			end: 0xf0100010,
+				start: 0xf0100010,
+				end: 0xf0100010,
 			}
 		},
 		"spinnery:bar": {
@@ -185,26 +185,26 @@
 		},
 		"spinnery:vertical_scrollbar": {
 			scroller: {
-			top_left: "$bevel_light",
-			bottom_right: "$bevel_dark",
-			background: "$bg_panel",
+				top_left: "$bevel_light",
+				bottom_right: "$bevel_dark",
+				background: "$bg_panel",
 			},
 			scroll_line: {
-			top_left: "$bevel_dark",
-			bottom_right: "$bevel_light",
-			background: "$bg_interactable",
+				top_left: "$bevel_dark",
+				bottom_right: "$bevel_light",
+				background: "$bg_interactable",
 			},
 		},
 		"spinnery:horizontal_scrollbar": {
 			scroller: {
-			top_left: "$bevel_light",
-			bottom_right: "$bevel_dark",
-			background: "$bg_panel",
+				top_left: "$bevel_light",
+				bottom_right: "$bevel_dark",
+				background: "$bg_panel",
 			},
 			scroll_line: {
-			top_left: "$bevel_dark",
-			bottom_right: "$bevel_light",
-			background: "$bg_interactable",
+				top_left: "$bevel_dark",
+				bottom_right: "$bevel_light",
+				background: "$bg_interactable",
 			}
 		},
 		"spinnery:text_area": {
