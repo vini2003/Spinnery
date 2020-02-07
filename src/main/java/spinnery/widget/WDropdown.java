@@ -5,9 +5,7 @@ import net.fabricmc.api.Environment;
 import org.lwjgl.glfw.GLFW;
 import spinnery.client.BaseRenderer;
 import spinnery.client.TextRenderer;
-import spinnery.widget.api.WFocusedMouseListener;
-import spinnery.widget.api.WModifiableCollection;
-import spinnery.widget.api.WSize;
+import spinnery.widget.api.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,15 +13,27 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+@SuppressWarnings("unchecked")
 @Environment(EnvType.CLIENT)
-@WFocusedMouseListener
 public class WDropdown extends WAbstractWidget implements WModifiableCollection {
+	public enum HideBehavior {
+		TOGGLE,
+		ANYWHERE,
+		ANYWHERE_EXCEPT_CHILD,
+		ONLY_CHILD,
+		INSIDE,
+		INSIDE_EXCEPT_CHILD
+	}
+
 	public List<List<WAbstractWidget>> dropdownWidgets = new ArrayList<>();
 	protected boolean state = false;
 	protected WSize dropdownSize;
+	protected WVirtualArea toggle;
+	protected HideBehavior hideBehavior = HideBehavior.TOGGLE;
 
 	@Override
 	public void onLayoutChange() {
+		toggle = new WVirtualArea(WPosition.of(this), WSize.of(getToggleWidth(), getToggleHeight()));
 		updatePositions();
 		updateHidden();
 	}
@@ -49,14 +59,63 @@ public class WDropdown extends WAbstractWidget implements WModifiableCollection 
 		return state;
 	}
 
+	@SuppressWarnings("UnusedReturnValue")
 	public <W extends WDropdown> W setState(boolean state) {
 		this.state = state;
 		return (W) this;
 	}
 
+	public HideBehavior	getHideBehavior() {
+		return hideBehavior;
+	}
+
+	public <W extends WDropdown> W setHideBehavior(HideBehavior hideBehavior) {
+		this.hideBehavior = hideBehavior;
+		return (W) this;
+	}
+
+	protected void propagateMouseToChildren(int mouseX, int mouseY, int mouseButton) {
+		for (WAbstractWidget widget : getAllWidgets()) {
+			if (!widget.getClass().isAnnotationPresent(WFocusedMouseListener.class) || widget.getFocus()) {
+				widget.onMouseClicked(mouseX, mouseY, mouseButton);
+			}
+		}
+	}
+
 	@Override
 	public void onMouseClicked(int mouseX, int mouseY, int mouseButton) {
-		if (mouseButton == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+		boolean shouldOpen = isWithinBounds(mouseX, mouseY);
+		boolean shouldClose = false;
+
+		if (getState()) {
+			switch (hideBehavior) {
+				case TOGGLE:
+					shouldClose = toggle.isWithinBounds(mouseX, mouseY);
+					break;
+				case ANYWHERE:
+					propagateMouseToChildren(mouseX, mouseY, mouseButton);
+					shouldClose = true;
+					break;
+				case INSIDE:
+					propagateMouseToChildren(mouseX, mouseY, mouseButton);
+					shouldClose = isWithinBounds(mouseX, mouseY);
+					break;
+				case ONLY_CHILD:
+					propagateMouseToChildren(mouseX, mouseY, mouseButton);
+					shouldClose = (isWithinBounds(mouseX, mouseY) && !getFocus());
+					break;
+				case ANYWHERE_EXCEPT_CHILD:
+					shouldClose = (!isWithinBounds(mouseX, mouseY) || getFocus());
+					break;
+				case INSIDE_EXCEPT_CHILD:
+					shouldClose = (isWithinBounds(mouseX, mouseY) && getFocus());
+					break;
+			}
+		}
+
+		boolean shouldToggle = !getState() ? shouldOpen : shouldClose;
+
+		if (shouldToggle && mouseButton == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
 			setState(!getState());
 			updateHidden();
 		}
@@ -90,12 +149,20 @@ public class WDropdown extends WAbstractWidget implements WModifiableCollection 
 
 	@Override
 	public int getWidth() {
-		return Math.max(super.getWidth(), state ? dropdownSize.getWidth() : 0);
+		return Math.max(getToggleWidth(), state ? dropdownSize.getWidth() : 0);
 	}
 
 	@Override
 	public int getHeight() {
-		return super.getHeight() + (state ? dropdownSize.getHeight() : 0);
+		return getToggleHeight() + (state ? dropdownSize.getHeight() : 0);
+	}
+
+	public int getToggleWidth() {
+		return super.getWidth();
+	}
+
+	public int getToggleHeight() {
+		return super.getHeight();
 	}
 
 	public WSize getDropdownSize() {
@@ -139,7 +206,9 @@ public class WDropdown extends WAbstractWidget implements WModifiableCollection 
 		int sX = getWidth();
 		int sY = getHeight();
 
-		BaseRenderer.drawPanel(getX(), getY(), getZ(), getWidth(), getHeight() + 1.75, getStyle().asColor("shadow"), getStyle().asColor("background"), getStyle().asColor("highlight"), getStyle().asColor("outline"));
+		BaseRenderer.drawPanel(x, y, z, sX, sY + 1.75,
+				getStyle().asColor("shadow"), getStyle().asColor("background"),
+				getStyle().asColor("highlight"), getStyle().asColor("outline"));
 
 		if (hasLabel()) {
 			TextRenderer.pass().shadow(isLabelShadowed())

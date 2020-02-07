@@ -63,4 +63,9 @@ public class WVirtualArea implements WLayoutElement {
 	@Override
 	public void draw() {
 	}
+
+	public boolean isWithinBounds(int x, int y) {
+		return x >= position.getX() && x <= position.getX() + size.getWidth()
+				&& y >= position.getY() && y <= position.getY() + size.getHeight();
+	}
 }
