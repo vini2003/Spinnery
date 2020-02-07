@@ -30,6 +30,18 @@ public class WPosition implements WPositioned {
 		return new WPosition().anchor(anchor).set(x, y, 0);
 	}
 
+	public static WPosition ofTopRight(WLayoutElement source) {
+		return WPosition.of(source).add(source.getWidth(), 0, 0);
+	}
+
+	public static WPosition ofBottomLeft(WLayoutElement source) {
+		return WPosition.of(source).add(0, source.getHeight(), 0);
+	}
+
+	public static WPosition ofBottomRight(WLayoutElement source) {
+		return WPosition.of(source).add(source.getWidth(), source.getHeight(), 0);
+	}
+
 	public WPosition anchor(WPositioned anchor) {
 		this.anchor = anchor;
 		return this;
