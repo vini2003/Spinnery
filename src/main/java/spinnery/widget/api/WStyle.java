@@ -83,28 +83,27 @@ public class WStyle {
 		return WSize.of(array.getInt(0, 0), array.getInt(1, 0));
 	}
 
-	// Clockwise from top, returns <vertical, horizontal>
-	public MutablePair<WSize, WSize> asSidedSize(String property) {
+	// Clockwise from top
+	public WPadding asPadding(String property) {
 		JsonElement el = getElement(property);
 		Optional<Number> singleValue = JanksonOps.INSTANCE.getNumberValue(el);
-		MutablePair<WSize, WSize> pair = MutablePair.of(WSize.of(0, 0), WSize.of(0, 0));
 		if (singleValue.isPresent()) {
 			int intValue = singleValue.get().intValue();
 			WSize size = WSize.of(intValue, intValue);
-			return MutablePair.of(size, size);
+			return WPadding.of(intValue);
 		}
 
-		if (!(el instanceof JsonArray)) return pair;
+		if (!(el instanceof JsonArray)) return WPadding.of(0);
 		JsonArray array = (JsonArray) el;
 
 		if (array.size() == 1) {
-			return MutablePair.of(WSize.of(array.getInt(0, 0), array.getInt(0, 0)), WSize.of(array.getInt(0, 0), array.getInt(0, 0)));
+			return WPadding.of(array.getInt(0, 0));
 		} else if (array.size() == 2) {
-			return MutablePair.of(WSize.of(array.getInt(0, 0), array.getInt(0, 0)), WSize.of(array.getInt(1, 0), array.getInt(1, 0)));
+			return WPadding.of(array.getInt(0, 0), array.getInt(1, 0));
 		} else if (array.size() >= 4) {
-			return MutablePair.of(WSize.of(array.getInt(0, 0), array.getInt(2, 0)), WSize.of(array.getInt(1, 0), array.getInt(3, 0)));
+			return WPadding.of(array.getInt(0, 0), array.getInt(1, 0), array.getInt(2, 0), array.getInt(3, 0));
 		}
-		return pair;
+		return WPadding.of(0);
 	}
 
 	public WPosition asPosition(String property) {
