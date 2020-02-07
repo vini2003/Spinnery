@@ -4,10 +4,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import spinnery.client.BaseRenderer;
 import spinnery.client.TextRenderer;
-import spinnery.widget.api.WFocusedKeyboardListener;
-import spinnery.widget.api.WFocusedMouseListener;
-import spinnery.widget.api.WPosition;
-import spinnery.widget.api.WSize;
+import spinnery.widget.api.*;
 
 @Environment(EnvType.CLIENT)
 @WFocusedKeyboardListener
@@ -35,16 +32,6 @@ public class WHorizontalSlider extends WAbstractSlider {
 		total = String.valueOf(this.progress);
 		onLayoutChange();
 		return (W) this;
-	}
-
-	@Override
-	public WPosition getInnerAnchor() {
-		return getPosition().add(1, 1, 0);
-	}
-
-	@Override
-	public WSize getInnerSize() {
-		return getSize().add(-2, -2);
 	}
 
 	@Override

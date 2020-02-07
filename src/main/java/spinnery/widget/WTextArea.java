@@ -29,16 +29,6 @@ public class WTextArea extends WAbstractTextEditor {
         return lineWrap;
     }
 
-    @Override
-    public WPosition getInnerAnchor() {
-        return WPosition.of(this).add(4, 4, 0);
-    }
-
-    @Override
-    public WSize getInnerSize() {
-        return WSize.of(this).add(-8, -8);
-    }
-
     // Essentially this function checks if a given line is a true "new" line, or if it's wrapped.
     // This is useful e.g. for line numbering
     protected boolean hasNewline(int index) {

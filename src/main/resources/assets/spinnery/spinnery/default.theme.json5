@@ -32,14 +32,28 @@
       },
       foreground: 0xff6b6b6b,
       text: 0xffffffff
+    },
+    text_editor: {
+      top_left: "$bevel_dark",
+      bottom_right: "$bevel_light",
+      background: 0xff000000,
+      text: {
+        color: 0xffffffff,
+        shadow: false,
+        shadow_color: 0x00000000
+      },
+      highlight: 0xb30400ff,
+      cursor: 0xffffffff,
+      label: 0xff808080,
+      padding: [4, 4]
     }
   },
   theme: {
     "spinnery:panel": {
-		$extend: [
-			"$panel"
-		]
-	},
+      $extend: [
+        "$panel"
+      ]
+    },
     "spinnery:vertical_list": {
       $extend: ["$panel"]
     },
@@ -165,30 +179,10 @@
       }
     },
     "spinnery:text_area": {
-      top_left: "$bevel_dark",
-      bottom_right: "$bevel_light",
-      background: 0xff000000,
-      text: {
-        color: 0xffffffff,
-        shadow: false,
-        shadow_color: 0x00000000
-      },
-      highlight: 0xb30400ff,
-      cursor: 0xffffffff,
-      label: 0xff808080
+      $extend: ["$text_editor"]
     },
     "spinnery:text_field": {
-      top_left: "$bevel_dark",
-      bottom_right: "$bevel_light",
-      background: 0xff000000,
-      text: {
-        color: 0xffffffff,
-        shadow: false,
-        shadow_color: 0x00000000
-      },
-      highlight: 0xb30400ff,
-      cursor: 0xffffffff,
-      label: 0xff808080
+      $extend: ["$text_editor"]
     }
   }
 }

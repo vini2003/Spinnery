@@ -10,6 +10,8 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 import spinnery.client.BaseRenderer;
 import spinnery.client.TextRenderer;
+import spinnery.widget.api.WPadded;
+import spinnery.widget.api.WPadding;
 import spinnery.widget.api.WPosition;
 import spinnery.widget.api.WSize;
 
@@ -19,7 +21,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Environment(EnvType.CLIENT)
-public abstract class WAbstractTextEditor extends WAbstractWidget {
+public abstract class WAbstractTextEditor extends WAbstractWidget implements WPadded {
     protected String text = "";
     protected final List<String> lines = new ArrayList<>();
     protected double scale = 1.0;
@@ -237,21 +239,6 @@ public abstract class WAbstractTextEditor extends WAbstractWidget {
     public <W extends WAbstractTextEditor> W setText(String text) {
         lines.clear();
         this.text = text;
-        /*StringBuilder currentLine = new StringBuilder();
-        int lineWidth = 0;
-        for (char c : text.toCharArray()) {
-            lineWidth += Math.round(TextRenderer.width(c) * scale);
-            if (lineWidth > getInnerSize().getWidth()) {
-                lines.add(currentLine.toString());
-                lineWidth = (int) Math.round(TextRenderer.width(c) * scale);
-                currentLine = new StringBuilder();
-            }
-            if (c != '\n') currentLine.append(c);
-        }
-        String finalLine = currentLine.toString();
-        if (!finalLine.isEmpty()) {
-            lines.add(finalLine);
-        }*/
         lines.addAll(Arrays.asList(text.split("\n", -1)));
         return (W) this;
     }
@@ -273,9 +260,6 @@ public abstract class WAbstractTextEditor extends WAbstractWidget {
     public boolean isEmpty() {
         return text.isEmpty();
     }
-
-    abstract public WPosition getInnerAnchor();
-    abstract public WSize getInnerSize();
 
     @Override
     public void tick() {
@@ -696,6 +680,11 @@ public abstract class WAbstractTextEditor extends WAbstractWidget {
         } else if (offsetCursorStartY < innerY) {
             yOffset = Math.min(0, yOffset + innerY - (offsetCursorStartY + 2));
         }
+    }
+
+    @Override
+    public WPadding getPadding() {
+        return getStyle().asPadding("padding");
     }
 
     protected void renderField() {

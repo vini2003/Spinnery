@@ -3,6 +3,8 @@ package spinnery.widget;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import org.lwjgl.glfw.GLFW;
+import spinnery.widget.api.WPadded;
+import spinnery.widget.api.WPadding;
 import spinnery.widget.api.WPosition;
 import spinnery.widget.api.WSize;
 
@@ -10,7 +12,7 @@ import java.util.function.Consumer;
 
 @Environment(EnvType.CLIENT)
 @SuppressWarnings("unchecked")
-public abstract class WAbstractSlider extends WAbstractWidget {
+public abstract class WAbstractSlider extends WAbstractWidget implements WPadded {
     protected double min = 0;
     protected double max = 0;
     protected double progress = 0;
@@ -70,8 +72,11 @@ public abstract class WAbstractSlider extends WAbstractWidget {
         return (W) this;
     }
 
-    public abstract WPosition getInnerAnchor();
-    public abstract WSize getInnerSize();
+    @Override
+    public WPadding getPadding() {
+        return getStyle().asPadding("padding");
+    }
+
     public abstract WSize getKnobSize();
     protected abstract void updatePosition(int mouseX, int mouseY);
 

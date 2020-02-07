@@ -4,8 +4,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import spinnery.client.BaseRenderer;
 import spinnery.widget.api.WFocusedKeyboardListener;
-import spinnery.widget.api.WPosition;
-import spinnery.widget.api.WSize;
 
 @Environment(EnvType.CLIENT)
 @WFocusedKeyboardListener
@@ -20,16 +18,6 @@ public class WTextField extends WAbstractTextEditor {
     public <W extends WTextField> W setFixedLength(Integer fixedLength) {
         this.fixedLength = fixedLength;
         return (W) this;
-    }
-
-    @Override
-    public WPosition getInnerAnchor() {
-        return WPosition.of(this).add(4, 4, 0);
-    }
-
-    @Override
-    public WSize getInnerSize() {
-        return WSize.of(this).add(-8, -8);
     }
 
     @SuppressWarnings("unchecked")

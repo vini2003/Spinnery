@@ -38,16 +38,6 @@ public class WVerticalSlider extends WAbstractSlider {
 	}
 
 	@Override
-	public WPosition getInnerAnchor() {
-		return getPosition().add(1, 1, 0);
-	}
-
-	@Override
-	public WSize getInnerSize() {
-		return getSize().add(-2, -2);
-	}
-
-	@Override
 	public WSize getKnobSize() {
 		return WSize.of(getWidth() + 3, 6);
 	}
