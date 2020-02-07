@@ -9,16 +9,19 @@ import io.github.cottonmc.jankson.JanksonOps;
 import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.Level;
 import spinnery.Spinnery;
+import spinnery.registry.ThemeRegistry;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class WTheme {
 	protected final Identifier id;
+	protected final Identifier parent;
 	protected final ImmutableMap<Identifier, WStyle> styles;
 
-	protected WTheme(Identifier id, Map<Identifier, WStyle> styles) {
+	protected WTheme(Identifier id, Identifier parent, Map<Identifier, WStyle> styles) {
 		this.id = id;
+		this.parent = parent;
 		this.styles = ImmutableMap.copyOf(styles);
 	}
 
@@ -60,6 +63,10 @@ public class WTheme {
 	}
 
 	public static WTheme of(Identifier themeId, JsonObject themeDef) {
+		// Add parent logic
+		JsonElement parentProp = themeDef.get("parent");
+		Identifier parent = JanksonOps.INSTANCE.getStringValue(parentProp).map(Identifier::new).orElse(null);
+
 		// Generic validation
 		JsonObject themeProps = themeDef.getObject("theme");
 		if (themeProps == null) {
@@ -117,7 +124,7 @@ public class WTheme {
 			processRefs(properties, vars);
 			styles.put(new Identifier(widgetId), new WStyle(properties));
 		}
-		return new WTheme(themeId, styles);
+		return new WTheme(themeId, parent, styles);
 	}
 
 	public Identifier getId() {
@@ -126,6 +133,11 @@ public class WTheme {
 
 	public WStyle getStyle(Identifier widgetId) {
 		WStyle style = styles.get(widgetId);
+		if (parent != null) {
+			WStyle baseStyle = ThemeRegistry.getStyle(parent, widgetId);
+			if (style == null) return baseStyle;
+			style = WStyle.of(baseStyle).mergeFrom(style);
+		}
 		return style == null ? new WStyle() : style;
 	}
 }
