@@ -39,7 +39,7 @@ public abstract class WAbstractWidget implements Tickable, Comparable<WAbstractW
 	protected WAlignListener runnableOnAlign;
 
 	protected Identifier theme;
-	protected WStyle styleOverrides;
+	protected WStyle styleOverrides = new WStyle();
 
 	public WAbstractWidget() {
 	}
@@ -191,19 +191,16 @@ public abstract class WAbstractWidget implements Tickable, Comparable<WAbstractW
 	@Override
 	@Environment(EnvType.CLIENT)
 	public WStyle getStyle() {
-		if (styleOverrides == null) {
-			Identifier widgetId = WidgetRegistry.getId(getClass());
-			if (widgetId == null) {
-				Class superClass = getClass().getSuperclass();
-				while (superClass != Object.class) {
-					widgetId = WidgetRegistry.getId(superClass);
-					if (widgetId != null) break;
-					superClass = superClass.getSuperclass();
-				}
+		Identifier widgetId = WidgetRegistry.getId(getClass());
+		if (widgetId == null) {
+			Class superClass = getClass().getSuperclass();
+			while (superClass != Object.class) {
+				widgetId = WidgetRegistry.getId(superClass);
+				if (widgetId != null) break;
+				superClass = superClass.getSuperclass();
 			}
-			styleOverrides = ThemeRegistry.getStyle(getTheme(), widgetId);
 		}
-		return styleOverrides;
+		return WStyle.of(ThemeRegistry.getStyle(getTheme(), widgetId)).mergeFrom(styleOverrides);
 	}
 
 	@Environment(EnvType.CLIENT)

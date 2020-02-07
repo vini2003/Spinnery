@@ -5,7 +5,6 @@ import blue.endless.jankson.JsonElement;
 import io.github.cottonmc.jankson.JanksonOps;
 import net.minecraft.util.Identifier;
 import spinnery.Spinnery;
-import spinnery.util.MutablePair;
 import spinnery.widget.WAbstractWidget;
 
 import java.util.HashMap;
@@ -18,12 +17,12 @@ import java.util.stream.IntStream;
 public class WStyle {
 	protected final Map<String, JsonElement> properties = new HashMap<>();
 
-	public WStyle(Map<String, JsonElement> properties) {
-		this.properties.putAll(properties);
+	public static WStyle of(WStyle other) {
+		return new WStyle(other.properties);
 	}
 
-	public WStyle(WStyle other) {
-		this.properties.putAll(other.properties);
+	public WStyle(Map<String, JsonElement> properties) {
+		this.properties.putAll(properties);
 	}
 
 	public WStyle() {
@@ -149,7 +148,7 @@ public class WStyle {
 		// TODO: sided size serialization
 	}
 
-	public <T> void override(String property, T value) {
+	public <T> WStyle override(String property, T value) {
 		Function<T, JsonElement> ser = getSerializer(value);
 		if (ser != null) {
 			properties.put(property, ser.apply(value));
@@ -157,5 +156,11 @@ public class WStyle {
 			Spinnery.LOGGER.warn("Failed to override {}: themes do not support values of class {}",
 					property, value.getClass().getSimpleName());
 		}
+		return this;
+	}
+
+	public WStyle mergeFrom(WStyle other) {
+		this.properties.putAll(other.properties);
+		return this;
 	}
 }
