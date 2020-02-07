@@ -83,7 +83,6 @@ public abstract class WAbstractWidget implements Tickable, Comparable<WAbstractW
 		return (W) this;
 	}
 
-	@Environment(EnvType.CLIENT)
 	public <W extends WAbstractWidget> W setParent(WLayoutElement parent) {
 		this.parent = parent;
 		return (W) this;
