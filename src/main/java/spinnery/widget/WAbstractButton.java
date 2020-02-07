@@ -3,7 +3,7 @@ package spinnery.widget;
 public abstract class WAbstractButton extends WAbstractWidget {
 	protected boolean lowered = false;
 	protected int ticks = 0;
-	protected int delayTicks = 0;
+	protected int delayTicks = 1;
 
 	@Override
 	public void onMouseClicked(int mouseX, int mouseY, int mouseButton) {
@@ -13,7 +13,7 @@ public abstract class WAbstractButton extends WAbstractWidget {
 
 	@Override
 	public void tick() {
-		setLowered(ticks > 0);
+		lowered = ticks > 0;
 		ticks -= ticks > 0 ? 1 : 0;
 	}
 
