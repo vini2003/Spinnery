@@ -15,12 +15,10 @@ import java.util.Map;
 
 public class WTheme {
 	protected final Identifier id;
-	protected final String name;
 	protected final ImmutableMap<Identifier, WStyle> styles;
 
-	protected WTheme(Identifier id, String name, Map<Identifier, WStyle> styles) {
+	protected WTheme(Identifier id, Map<Identifier, WStyle> styles) {
 		this.id = id;
-		this.name = name;
 		this.styles = ImmutableMap.copyOf(styles);
 	}
 
@@ -61,16 +59,14 @@ public class WTheme {
 		}
 	}
 
-	public static WTheme of(JsonObject themeDef) throws SyntaxError {
-		// Get theme metadata and validate
-		String themeId = JanksonOps.INSTANCE.getStringValue(themeDef.get("id")).orElseThrow(() -> new SyntaxError("Missing `id` in theme definition"));
-		String themeName = JanksonOps.INSTANCE.getStringValue(themeDef.get("name")).orElse(themeId);
+	public static WTheme of(Identifier themeId, JsonObject themeDef) {
+		// Generic validation
 		JsonObject themeProps = themeDef.getObject("theme");
 		if (themeProps == null) {
 			Spinnery.LOGGER.warn("Invalid theme definition for theme {}", themeId);
 			return null;
 		}
-		Spinnery.LOGGER.log(Level.INFO, "Parsing theme {}", themeName);
+		Spinnery.LOGGER.log(Level.INFO, "Parsing theme {}", themeId);
 
 		// Get variables
 		JsonObject themeVars = themeDef.getObject("vars");
@@ -121,15 +117,11 @@ public class WTheme {
 			processRefs(properties, vars);
 			styles.put(new Identifier(widgetId), new WStyle(properties));
 		}
-		return new WTheme(new Identifier(themeId), themeName, styles);
+		return new WTheme(themeId, styles);
 	}
 
 	public Identifier getId() {
 		return id;
-	}
-
-	public String getName() {
-		return name;
 	}
 
 	public WStyle getStyle(Identifier widgetId) {

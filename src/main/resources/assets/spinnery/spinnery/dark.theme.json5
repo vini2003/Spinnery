@@ -1,8 +1,4 @@
 {
-  id: "spinnery:dark",
-  name: "Dark Theme",
-  description: "Mercy for your eyes with the default dark theme",
-  authors: ["Spinnery Team"],
   vars: {
 	  bevel_dark: 0xff1b1b1b,
 	  bevel_light: 0xff6a6a6a,

@@ -14,15 +14,9 @@ import spinnery.Spinnery;
 import spinnery.util.ResourceListener;
 import spinnery.widget.api.WTheme;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Objects;
-import java.util.Set;
 
 @Environment(EnvType.CLIENT)
 public class ResourceRegistry {
@@ -36,10 +30,10 @@ public class ResourceRegistry {
 		ThemeRegistry.clear();
 	}
 
-	public static void register(InputStream inputStream) {
+	public static void register(Identifier id, InputStream inputStream) {
 		try {
 			JsonObject themeDef = JanksonFactory.createJankson().load(inputStream);
-			WTheme theme = WTheme.of(themeDef);
+			WTheme theme = WTheme.of(id, themeDef);
 			ThemeRegistry.register(theme);
 		} catch (IOException e) {
 			Spinnery.LOGGER.log(Level.ERROR, "Could not read theme file", e);
@@ -54,7 +48,9 @@ public class ResourceRegistry {
 
 		for (Identifier id : themeFiles) {
 			try {
-				register(resourceManager.getResource(id).getInputStream());
+				Identifier themeId = new Identifier(id.getNamespace(),
+						id.getPath().replaceFirst("^spinnery/", "").replaceFirst("\\.theme\\.json5", ""));
+				register(themeId, resourceManager.getResource(id).getInputStream());
 			} catch (IOException e) {
 				Spinnery.LOGGER.warn("[Spinnery] Failed to load theme {}.", id);
 			}
