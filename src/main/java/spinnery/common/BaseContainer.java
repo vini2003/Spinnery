@@ -14,6 +14,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Tickable;
 import net.minecraft.world.World;
+import org.lwjgl.glfw.GLFW;
 import spinnery.registry.NetworkRegistry;
 import spinnery.util.MouseUtilities;
 import spinnery.util.StackUtilities;
@@ -50,13 +51,15 @@ public class BaseContainer extends Container implements Tickable {
 	}
 
 	@Environment(EnvType.CLIENT)
-	public Set<WSlot> getSplitSlots() {
-		return splitSlots;
-	}
-
-	@Environment(EnvType.CLIENT)
-	public Set<WSlot> getSingleSlots() {
-		return singleSlots;
+	public Set<WSlot> getDragSlots(int mouseButton) {
+		switch (mouseButton) {
+			case 0:
+				return splitSlots;
+			case 1:
+				return singleSlots;
+			default:
+				return null;
+		}
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -73,6 +76,19 @@ public class BaseContainer extends Container implements Tickable {
 	public <C extends BaseContainer> C setPreviewCursorStack(ItemStack previewCursorStack) {
 		this.previewCursorStack = previewCursorStack;
 		return (C) this;
+	}
+
+	@Environment(EnvType.CLIENT)
+	public void flush() {
+		getInterface().getContainer().getDragSlots(GLFW.GLFW_MOUSE_BUTTON_1).clear();
+		getInterface().getContainer().getDragSlots(GLFW.GLFW_MOUSE_BUTTON_2).clear();
+		getInterface().getContainer().getPreviewStacks().clear();
+		getInterface().getContainer().setPreviewCursorStack(ItemStack.EMPTY);
+	}
+
+	@Environment(EnvType.CLIENT)
+	public boolean isDragging() {
+		return getDragSlots(GLFW.GLFW_MOUSE_BUTTON_1).isEmpty() || getDragSlots(GLFW.GLFW_MOUSE_BUTTON_2).isEmpty();
 	}
 
 	public Map<Integer, Inventory> getInventories() {
