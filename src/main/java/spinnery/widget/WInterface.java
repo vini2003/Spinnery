@@ -36,7 +36,7 @@ public class WInterface implements WModifiableCollection, WLayoutElement, WThema
 
 	public WInterface(BaseContainer linkedContainer) {
 		setContainer(linkedContainer);
-		if (getContainer().getLinkedWorld().isClient()) {
+		if (getContainer().getWorld().isClient()) {
 			setClientside(true);
 		}
 	}

@@ -14,6 +14,6 @@ public class MouseUtilities {
 	}
 
 	public static long nanoDelay() {
-		return 100000000;
+		return 150000000;
 	}
 }

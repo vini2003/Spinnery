@@ -2,6 +2,7 @@ package spinnery.widget.api;
 
 public enum WSlotAction {
 	PICKUP,
+	PICKUP_ALL,
 	QUICK_MOVE,
 	SWAP,
 	CLONE,

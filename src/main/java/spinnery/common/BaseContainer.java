@@ -15,6 +15,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Tickable;
 import net.minecraft.world.World;
 import spinnery.registry.NetworkRegistry;
+import spinnery.util.MouseUtilities;
 import spinnery.util.StackUtilities;
 import spinnery.widget.WAbstractWidget;
 import spinnery.widget.WInterface;
@@ -61,6 +62,17 @@ public class BaseContainer extends Container implements Tickable {
 	@Environment(EnvType.CLIENT)
 	public Map<Integer, ItemStack> getPreviewStacks() {
 		return previewStacks;
+	}
+
+	@Environment(EnvType.CLIENT)
+	public ItemStack getPreviewCursorStack() {
+		return previewCursorStack;
+	}
+
+	@Environment(EnvType.CLIENT)
+	public <C extends BaseContainer> C setPreviewCursorStack(ItemStack previewCursorStack) {
+		this.previewCursorStack = previewCursorStack;
+		return (C) this;
 	}
 
 	public Map<Integer, Inventory> getInventories() {
@@ -233,6 +245,17 @@ public class BaseContainer extends Container implements Tickable {
 				}
 				break;
 			}
+			case PICKUP_ALL: {
+				ItemStack stackC = getInterface().getContainer().getPlayerInventory().getCursorStack();
+
+				for (WAbstractWidget widget : getInterface().getAllWidgets()) {
+					if (widget instanceof WSlot && ((WSlot) widget).getStack().isItemEqual(stackC)) {
+						StackUtilities.clamp(((WSlot) widget).getStack(), stackC, ((WSlot) widget).getMaxCount(), stackC.getMaxCount());
+					}
+				}
+
+				return;
+			}
 		}
 
 		slotA.setStack(stackA);
@@ -243,7 +266,7 @@ public class BaseContainer extends Container implements Tickable {
 		return serverInterface;
 	}
 
-	public World getLinkedWorld() {
+	public World getWorld() {
 		return linkedWorld;
 	}
 
