@@ -2,6 +2,7 @@ package spinnery.client;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexFormats;
@@ -119,5 +120,9 @@ public class BaseRenderer {
 
 	public static ItemRenderer getItemRenderer() {
 		return MinecraftClient.getInstance().getItemRenderer();
+	}
+
+	public static TextRenderer getTextRenderer() {
+		return MinecraftClient.getInstance().textRenderer;
 	}
 }

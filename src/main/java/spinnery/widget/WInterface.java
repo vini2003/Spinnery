@@ -21,7 +21,7 @@ import java.util.Set;
 public class WInterface implements WModifiableCollection, WLayoutElement, WThemable {
 	protected BaseContainer linkedContainer;
 	protected Set<WAbstractWidget> heldWidgets = new LinkedHashSet<>();
-	protected Map<Object, WAbstractWidget> cachedWidgets = new HashMap<>();
+	protected Map<Class<? extends WAbstractWidget>, WAbstractWidget> cachedWidgets = new HashMap<>();
 	protected boolean isClientside;
 	protected Identifier theme;
 
@@ -43,6 +43,10 @@ public class WInterface implements WModifiableCollection, WLayoutElement, WThema
 
 	public boolean isClient() {
 		return isClientside;
+	}
+
+	public Map<Class<? extends WAbstractWidget>, WAbstractWidget> getCachedWidgets() {
+		return cachedWidgets;
 	}
 
 	public BaseContainer getContainer() {

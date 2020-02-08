@@ -4,6 +4,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import spinnery.debug.ScreenRegistry;
 import spinnery.registry.NetworkRegistry;
 import spinnery.registry.ResourceRegistry;
 import spinnery.registry.WidgetRegistry;
@@ -19,5 +20,6 @@ public class SpinneryClient implements ClientModInitializer {
 		WidgetRegistry.initialize();
 		ResourceRegistry.initialize();
 		NetworkRegistry.initializeClient();
+		ScreenRegistry.initialize();
 	}
 }

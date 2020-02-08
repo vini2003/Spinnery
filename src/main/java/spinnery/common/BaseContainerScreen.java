@@ -1,11 +1,15 @@
 package spinnery.common;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.ContainerScreen;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import org.lwjgl.glfw.GLFW;
+import spinnery.client.BaseRenderer;
 import spinnery.widget.WInterface;
 import spinnery.widget.WSlot;
 import spinnery.widget.WAbstractWidget;
@@ -30,7 +34,18 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 
 		drawTooltip();
 
-		super.render(mouseX, mouseY, tick);
+		ItemStack stackA = ItemStack.EMPTY;
+
+		if (!getContainer().getPreviewStacks().getOrDefault(Integer.MAX_VALUE, ItemStack.EMPTY).isEmpty()) {
+			stackA = getContainer().getPreviewStacks().get(Integer.MAX_VALUE);
+		} else {
+			stackA = getContainer().getPlayerInventory().getCursorStack();
+		}
+
+		RenderSystem.translatef(0, 0, 32);
+		BaseRenderer.getItemRenderer().renderGuiItem(stackA, mouseX, mouseY);
+		BaseRenderer.getItemRenderer().renderGuiItemOverlay(BaseRenderer.getTextRenderer(), stackA, mouseX, mouseY);
+		RenderSystem.translatef(0, 0, 0);
 	}
 
 	@Override
@@ -43,7 +58,7 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 
 	@Environment(EnvType.CLIENT)
 	public void drawTooltip() {
-		if (getDrawSlot() != null && getLinkedContainer().getLinkedPlayerInventory().getCursorStack().isEmpty() && !getDrawSlot().getStack().isEmpty()) {
+		if (getDrawSlot() != null && getLinkedContainer().getPlayerInventory().getCursorStack().isEmpty() && !getDrawSlot().getStack().isEmpty()) {
 			this.renderTooltip(getDrawSlot().getStack(), getTooltipX(), getTooltipY());
 		}
 	}
