@@ -15,6 +15,7 @@ import spinnery.Spinnery;
 import spinnery.client.BaseRenderer;
 import spinnery.common.BaseContainer;
 import spinnery.registry.NetworkRegistry;
+import spinnery.util.MouseUtilities;
 import spinnery.widget.api.WFocusedMouseListener;
 import spinnery.widget.api.WModifiableCollection;
 import spinnery.widget.api.WPosition;
@@ -30,7 +31,7 @@ public class WSlot extends WAbstractWidget {
 	protected int maximumCount = 0;
 	protected boolean overrideMaximumCount = false;
 	protected int inventoryNumber;
-	protected boolean ignoreOnRelease = false;
+	protected boolean skipRelease = false;
 	protected int containerSyncId = 0;
 
 	@Environment(EnvType.CLIENT)
@@ -78,9 +79,11 @@ public class WSlot extends WAbstractWidget {
 
 		PlayerEntity playerEntity = getInterface().getContainer().getPlayerInventory().player;
 
-		boolean isDragging = !getInterface().getContainer().getSingleSlots().isEmpty() || !getInterface().getContainer().getSplitSlots().isEmpty();
+		boolean isDragging = (!getInterface().getContainer().getSingleSlots().isEmpty()
+						   || !getInterface().getContainer().getSplitSlots().isEmpty())
+						   && System.nanoTime() - MouseUtilities.lastNanos() > MouseUtilities.nanoDelay();
 
-		if (isDragging && !ignoreOnRelease) {
+		if (isDragging && !skipRelease) {
 			Set<WSlot> dragList = mouseButton == 0 ? getInterface().getContainer().getSplitSlots() : mouseButton == 1 ? getInterface().getContainer().getSingleSlots() : null;
 
 			WSlotAction action = mouseButton == 0 ? WSlotAction.DRAG_SPLIT : mouseButton == 1 ? WSlotAction.DRAG_SINGLE : null;
@@ -91,15 +94,15 @@ public class WSlot extends WAbstractWidget {
 			getInterface().getContainer().getSplitSlots().clear();
 			getInterface().getContainer().getSingleSlots().clear();
 			getInterface().getContainer().getPreviewStacks().clear();
-		} else if (!ignoreOnRelease && mouseButton == 0 && !Screen.hasShiftDown() && !playerEntity.inventory.getCursorStack().isEmpty()) {
+		} else if (!skipRelease && mouseButton == 0 && !Screen.hasShiftDown() && !playerEntity.inventory.getCursorStack().isEmpty()) {
 			getInterface().getContainer().onSlotAction(getSlotNumber(), getInventoryNumber(), 0, WSlotAction.PICKUP, playerEntity);
 			ClientSidePacketRegistry.INSTANCE.sendToServer(NetworkRegistry.SLOT_CLICK_PACKET, NetworkRegistry.createSlotClickPacket(containerSyncId, getSlotNumber(), getInventoryNumber(), 0, WSlotAction.PICKUP));
-		} else if (!ignoreOnRelease && mouseButton == 1 && !Screen.hasShiftDown() && !playerEntity.inventory.getCursorStack().isEmpty()) {
+		} else if (!skipRelease && mouseButton == 1 && !Screen.hasShiftDown() && !playerEntity.inventory.getCursorStack().isEmpty()) {
 			getInterface().getContainer().onSlotAction(getSlotNumber(), getInventoryNumber(), 1, WSlotAction.PICKUP, playerEntity);
 			ClientSidePacketRegistry.INSTANCE.sendToServer(NetworkRegistry.SLOT_CLICK_PACKET, NetworkRegistry.createSlotClickPacket(containerSyncId, getSlotNumber(), getInventoryNumber(), 1, WSlotAction.PICKUP));
 		}
 
-		ignoreOnRelease = false;
+		skipRelease = false;
 
 		super.onMouseReleased(mouseX, mouseY, mouseButton);
 	}
@@ -109,6 +112,8 @@ public class WSlot extends WAbstractWidget {
 	public void onMouseClicked(int mouseX, int mouseY, int mouseButton) {
 		containerSyncId = getInterface().getContainer().syncId;
 
+		MouseUtilities.lastNanos = System.nanoTime();
+
 		PlayerEntity playerEntity = getInterface().getContainer().getPlayerInventory().player;
 
 		if (mouseButton == 0 && Screen.hasShiftDown() && getInterface().getCachedWidgets().get(WSlot.class) != this) {
@@ -116,11 +121,11 @@ public class WSlot extends WAbstractWidget {
 			getInterface().getContainer().onSlotAction(getSlotNumber(), getInventoryNumber(), 0, WSlotAction.QUICK_MOVE, playerEntity);
 			ClientSidePacketRegistry.INSTANCE.sendToServer(NetworkRegistry.SLOT_CLICK_PACKET, NetworkRegistry.createSlotClickPacket(containerSyncId, getSlotNumber(), getInventoryNumber(), 0, WSlotAction.QUICK_MOVE));
 		} else if (mouseButton == 0 && !Screen.hasShiftDown() && playerEntity.inventory.getCursorStack().isEmpty()) {
-			ignoreOnRelease = true;
+			skipRelease = true;
 			getInterface().getContainer().onSlotAction(getSlotNumber(), getInventoryNumber(), 0, WSlotAction.PICKUP, playerEntity);
 			ClientSidePacketRegistry.INSTANCE.sendToServer(NetworkRegistry.SLOT_CLICK_PACKET, NetworkRegistry.createSlotClickPacket(containerSyncId, getSlotNumber(), getInventoryNumber(), 0, WSlotAction.PICKUP));
 		} else if (mouseButton == 1 && !Screen.hasShiftDown() && playerEntity.inventory.getCursorStack().isEmpty()) {
-			ignoreOnRelease = true;
+			skipRelease = true;
 			getInterface().getContainer().onSlotAction(getSlotNumber(), getInventoryNumber(), 1, WSlotAction.PICKUP, playerEntity);
 			ClientSidePacketRegistry.INSTANCE.sendToServer(NetworkRegistry.SLOT_CLICK_PACKET, NetworkRegistry.createSlotClickPacket(containerSyncId, getSlotNumber(), getInventoryNumber(), 1, WSlotAction.PICKUP));
 		} else if (mouseButton == 2) {
@@ -138,15 +143,15 @@ public class WSlot extends WAbstractWidget {
 		if (Screen.hasShiftDown() && mouseButton == 0) {
 			getInterface().getContainer().onSlotAction(getSlotNumber(), getInventoryNumber(), mouseButton, WSlotAction.QUICK_MOVE, MinecraftClient.getInstance().player);
 			ClientSidePacketRegistry.INSTANCE.sendToServer(NetworkRegistry.SLOT_CLICK_PACKET, NetworkRegistry.createSlotClickPacket(containerSyncId, getSlotNumber(), getInventoryNumber(), mouseButton, WSlotAction.QUICK_MOVE));
-		} else if (!Screen.hasShiftDown() && getInterface().getCachedWidgets().get(WSlot.class) != this && (mouseButton == 0 || mouseButton == 1)) {
+		} else if (!Screen.hasShiftDown() && getInterface().getCachedWidgets().get(WSlot.class) != this && (mouseButton == 0 || mouseButton == 1) && System.nanoTime() - MouseUtilities.lastNanos() > MouseUtilities.nanoDelay()) {
 			getInterface().getCachedWidgets().put(WSlot.class, this);
 
 			Set<WSlot> dragList = mouseButton == 0 ? getInterface().getContainer().getSplitSlots() : getInterface().getContainer().getSingleSlots();
 
 			dragList.add(this);
 
-			getInterface().getContainer().onSlotDrag(dragList.stream().map(WSlot::getSlotNumber).mapToInt(i -> i).toArray(),
-													 dragList.stream().map(WSlot::getInventoryNumber).mapToInt(i -> i).toArray(),
+			getInterface().getContainer().onSlotDrag(dragList.stream().mapToInt(WSlot::getSlotNumber).toArray(),
+													 dragList.stream().mapToInt(WSlot::getInventoryNumber).toArray(),
 												     mouseButton == 0 ? WSlotAction.DRAG_SPLIT_PREVIEW : WSlotAction.DRAG_SINGLE_PREVIEW);
 		}
 

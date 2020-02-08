@@ -36,6 +36,7 @@ public class BaseContainer extends Container implements Tickable {
 	protected Set<WSlot> splitSlots = new HashSet<>();
 	protected Set<WSlot> singleSlots = new HashSet<>();
 	protected Map<Integer, ItemStack> previewStacks = new HashMap<>();
+	protected ItemStack previewCursorStack = ItemStack.EMPTY;
 
 	protected World linkedWorld;
 	protected final WInterface serverInterface;
@@ -88,7 +89,6 @@ public class BaseContainer extends Container implements Tickable {
 			}
 		}
 
-
 		if (slots.isEmpty()) {
 			return;
 		}
@@ -121,13 +121,14 @@ public class BaseContainer extends Container implements Tickable {
 			}
 
 
-			Pair<ItemStack, ItemStack> stacks = StackUtilities.clamp(stackA, stackB, stackA.getMaxCount(), split);
+			Pair<ItemStack, ItemStack> stacks = StackUtilities.clamp(stackA, stackB, split, split);
 
 			if (action == WSlotAction.DRAG_SINGLE || action == WSlotAction.DRAG_SPLIT) {
 				stackA = stacks.getFirst();
+				slotA.getInterface().getContainer().previewCursorStack = ItemStack.EMPTY;
 				slotA.setStack(stacks.getSecond());
 			} else if (action == WSlotAction.DRAG_SINGLE_PREVIEW || action == WSlotAction.DRAG_SPLIT_PREVIEW) {
-				getPreviewStacks().put(Integer.MAX_VALUE, stacks.getFirst().copy());
+				slotA.getInterface().getContainer().previewCursorStack = stacks.getFirst().copy();
 				slotA.setPreviewStack(stacks.getSecond().copy());
 			}
 		}

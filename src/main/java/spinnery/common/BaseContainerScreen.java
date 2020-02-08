@@ -32,19 +32,23 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 	public void render(int mouseX, int mouseY, float tick) {
 		clientInterface.draw();
 
-		drawTooltip();
-
-		ItemStack stackA = ItemStack.EMPTY;
-
-		if (!getContainer().getPreviewStacks().getOrDefault(Integer.MAX_VALUE, ItemStack.EMPTY).isEmpty()) {
-			stackA = getContainer().getPreviewStacks().get(Integer.MAX_VALUE);
-		} else {
-			stackA = getContainer().getPlayerInventory().getCursorStack();
+		if (getDrawSlot() != null && getLinkedContainer().getPlayerInventory().getCursorStack().isEmpty() && !getDrawSlot().getStack().isEmpty()) {
+			this.renderTooltip(getDrawSlot().getStack(), getTooltipX(), getTooltipY());
 		}
 
-		RenderSystem.translatef(0, 0, 32);
-		BaseRenderer.getItemRenderer().renderGuiItem(stackA, mouseX, mouseY);
-		BaseRenderer.getItemRenderer().renderGuiItemOverlay(BaseRenderer.getTextRenderer(), stackA, mouseX, mouseY);
+		ItemStack stackA;
+
+		if (!getContainer().previewCursorStack.isEmpty()) {
+			stackA = getContainer().previewCursorStack;
+		} else if (getContainer().previewStacks.isEmpty()) {
+			stackA = getContainer().getPlayerInventory().getCursorStack();
+		} else {
+			stackA = ItemStack.EMPTY;
+		}
+
+		RenderSystem.translatef(0, 0, 200);
+		BaseRenderer.getItemRenderer().renderGuiItem(stackA, mouseX - 8, mouseY - 8);
+		BaseRenderer.getItemRenderer().renderGuiItemOverlay(BaseRenderer.getTextRenderer(), stackA, mouseX - 8, mouseY - 8);
 		RenderSystem.translatef(0, 0, 0);
 	}
 
@@ -54,13 +58,6 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 		clientInterface.onDrawMouseoverTooltip(mouseX, mouseY);
 
 		super.drawMouseoverTooltip(mouseX, mouseY);
-	}
-
-	@Environment(EnvType.CLIENT)
-	public void drawTooltip() {
-		if (getDrawSlot() != null && getLinkedContainer().getPlayerInventory().getCursorStack().isEmpty() && !getDrawSlot().getStack().isEmpty()) {
-			this.renderTooltip(getDrawSlot().getStack(), getTooltipX(), getTooltipY());
-		}
 	}
 
 	@Environment(EnvType.CLIENT)
