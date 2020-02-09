@@ -6,7 +6,6 @@ import spinnery.client.BaseRenderer;
 import spinnery.client.TextRenderer;
 import spinnery.widget.api.WDelegatedEventListener;
 import spinnery.widget.api.WEventListener;
-import spinnery.widget.api.WFocusedMouseListener;
 import spinnery.widget.api.WModifiableCollection;
 
 import java.util.Arrays;

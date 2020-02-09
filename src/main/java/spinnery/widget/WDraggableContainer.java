@@ -4,6 +4,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import org.lwjgl.opengl.GL11;
+import spinnery.util.MutablePair;
 import spinnery.widget.api.WHorizontalScrollable;
 import spinnery.widget.api.WModifiableCollection;
 import spinnery.widget.api.WSize;
@@ -21,6 +22,9 @@ public class WDraggableContainer extends WAbstractWidget implements WModifiableC
     protected boolean dragging = false;
     protected float scrollKineticDeltaX = 0;
     protected float scrollKineticDeltaY = 0;
+    protected int xOffset;
+    protected int yOffset;
+    protected MutablePair<Integer, Integer> clickPosition = MutablePair.of(0, 0);
 
     @Override
     public int getStartAnchorX() {
@@ -46,58 +50,40 @@ public class WDraggableContainer extends WAbstractWidget implements WModifiableC
 
     @Override
     public int getStartOffsetX() {
-        int leftX = getStartAnchorX();
-        int leftmostX = leftX;
-        for (WAbstractWidget widget : getWidgets()) {
-            if (widget.getX() < leftmostX) {
-                leftmostX = widget.getX();
-            }
-        }
-        return leftX - leftmostX;
+        return xOffset;
     }
 
     @Override
     public int getStartOffsetY() {
-        int topY = getStartAnchorY();
-        int topmostY = topY;
-        for (WAbstractWidget widget : getWidgets()) {
-            if (widget.getY() < topmostY) {
-                topmostY = widget.getY();
-            }
-        }
-        return topY - topmostY;
+        return yOffset;
     }
 
     @Override
     public void scroll(double deltaX, double deltaY) {
-        for (WAbstractWidget widget : getWidgets()) {
-            widget.setX(widget.getX() + (int) deltaX);
-            widget.setY(widget.getY() + (int) deltaY);
-        }
-        updateHidden();
+        xOffset -= deltaX;
+        yOffset -= deltaY;
+        updateChildren();
     }
 
     @Override
     public void onMouseClicked(int mouseX, int mouseY, int mouseButton) {
-        if (mouseButton == 0 && isWithinBounds(mouseX, mouseY)) {
-            dragging = true;
-        } else {
-            dragging = false;
+        scrollKineticDeltaX = 0;
+        scrollKineticDeltaY = 0;
+        dragging = mouseButton == 0 && isWithinBounds(mouseX, mouseY);
+        if (dragging) {
+            clickPosition.setFirst(mouseX);
+            clickPosition.setSecond(mouseY);
         }
     }
 
     @Override
     public void onMouseDragged(int mouseX, int mouseY, int mouseButton, double deltaX, double deltaY) {
         if (mouseButton == 0 && dragging) {
-            scrollKineticDeltaX += (float) deltaX;
-            scrollKineticDeltaY += (float) deltaY;
-            if (Math.abs(scrollKineticDeltaX) > 5) {
-                scrollKineticDeltaX = (scrollKineticDeltaX / Math.abs(scrollKineticDeltaX)) * 5F;
-            }
-            if (Math.abs(scrollKineticDeltaY) > 5) {
-                scrollKineticDeltaY = (scrollKineticDeltaY / Math.abs(scrollKineticDeltaY)) * 5F;
-            }
-            scroll(deltaX, deltaY);
+            scrollKineticDeltaX += deltaX;
+            scrollKineticDeltaY += deltaY;
+            scroll(mouseX - clickPosition.getFirst(), mouseY - clickPosition.getSecond());
+            clickPosition.setFirst(mouseX);
+            clickPosition.setSecond(mouseY);
         }
         super.onMouseDragged(mouseX, mouseY, mouseButton, deltaX, deltaY);
     }
@@ -152,8 +138,9 @@ public class WDraggableContainer extends WAbstractWidget implements WModifiableC
         }
     }
 
-    public void updateHidden() {
+    public void updateChildren() {
         for (WAbstractWidget w : getWidgets()) {
+            w.getPosition().setOffset(-xOffset, -yOffset, 0);
             boolean hidden = (w.getX() + w.getWidth() < getX())
                     || (w.getX() > getX() + getWidth())
                     || (w.getY() + w.getHeight() < getY())
