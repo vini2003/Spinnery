@@ -11,10 +11,10 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 import spinnery.client.BaseRenderer;
 import spinnery.client.TextRenderer;
-import spinnery.widget.api.WPadded;
-import spinnery.widget.api.WPadding;
 import spinnery.widget.api.Position;
 import spinnery.widget.api.Size;
+import spinnery.widget.api.WPadded;
+import spinnery.widget.api.WPadding;
 
 import java.util.ArrayList;
 import java.util.Arrays;

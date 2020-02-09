@@ -66,8 +66,8 @@ public class StackUtilities {
 			int countA = stackA.getCount();
 			int countB = stackB.getCount();
 
-			int availableA = maxA - countA;
-			int availableB = maxB - countB;
+			int availableA = Math.max(0, maxA - countA);
+			int availableB = Math.max(0, maxB - countB);
 
 			stackB.increment(Math.min(countA, availableB));
 			stackA.setCount(Math.max(countA - availableB, 0));

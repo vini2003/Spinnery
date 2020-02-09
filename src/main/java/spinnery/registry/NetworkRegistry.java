@@ -5,29 +5,38 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.container.SlotActionType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.PacketByteBuf;
-import spinnery.Spinnery;
 import spinnery.common.BaseContainer;
 import spinnery.util.StackUtilities;
 import spinnery.widget.WSlot;
 import spinnery.widget.WAbstractWidget;
 import spinnery.widget.api.WNetworked;
+import spinnery.widget.api.Action;
 
 public class NetworkRegistry {
 	public static final Identifier SLOT_CLICK_PACKET = new Identifier("spinnery", "slot_click");
 	public static final Identifier SLOT_UPDATE_PACKET = new Identifier("spinnery", "slot_update");
+	public static final Identifier SLOT_DRAG_PACKET = new Identifier("spinnery", "slot_drag");
 	public static final Identifier SYNCED_WIDGET_PACKET = new Identifier("spinnery", "synced_widget");
 
-	public static PacketByteBuf createSlotClickPacket(int slotNumber, int inventoryNumber, int button, SlotActionType action) {
+	public static PacketByteBuf createSlotClickPacket(int syncId, int slotNumber, int inventoryNumber, int button, Action action) {
 		PacketByteBuf buffer = new PacketByteBuf(Unpooled.buffer());
+		buffer.writeInt(syncId);
 		buffer.writeInt(slotNumber);
 		buffer.writeInt(inventoryNumber);
 		buffer.writeInt(button);
+		buffer.writeEnumConstant(action);
+		return buffer;
+	}
+
+	public static PacketByteBuf createSlotDragPacket(int syncId, int[] slotNumber, int[] inventoryNumber, Action action) {
+		PacketByteBuf buffer = new PacketByteBuf(Unpooled.buffer());
+		buffer.writeInt(syncId);
+		buffer.writeIntArray(slotNumber);
+		buffer.writeIntArray(inventoryNumber);
 		buffer.writeEnumConstant(action);
 		return buffer;
 	}
@@ -162,21 +171,31 @@ public class NetworkRegistry {
 	public static void initialize() {
 		// TODO: Warn or mitigate packet flooding
 		ServerSidePacketRegistry.INSTANCE.register(SLOT_CLICK_PACKET, (packetContext, packetByteBuffer) -> {
+			int syncId = packetByteBuffer.readInt();
 			int slotNumber = packetByteBuffer.readInt();
 			int inventoryNumber = packetByteBuffer.readInt();
 			int button = packetByteBuffer.readInt();
-			SlotActionType action = packetByteBuffer.readEnumConstant(SlotActionType.class);
-
-			if (Spinnery.IS_DEBUG) {
-				//System.out.println("C2S\n" + "[" + SLOT_CLICK_PACKET + "]\n" + "Slot:\t" + slotNumber + "\nInventory:\t" + inventoryNumber + "\nButton\t" + button + "\nAction:\t" + action);
-			}
+			Action action = packetByteBuffer.readEnumConstant(Action.class);
 
 			packetContext.getTaskQueue().execute(() -> {
-				if (packetContext.getPlayer().container instanceof BaseContainer) {
-					((BaseContainer) packetContext.getPlayer().container).onSlotClicked(slotNumber, inventoryNumber, button, action, packetContext.getPlayer());
+				if (packetContext.getPlayer().container instanceof BaseContainer && packetContext.getPlayer().container.syncId == syncId) {
+					((BaseContainer) packetContext.getPlayer().container).onSlotAction(slotNumber, inventoryNumber, button, action, packetContext.getPlayer());
 				}
 			});
 		});
+
+		ServerSidePacketRegistry.INSTANCE.register(SLOT_DRAG_PACKET, ((packetContext, packetByteBuffer) -> {
+			int syncId = packetByteBuffer.readInt();
+			int[] slotNumbers = packetByteBuffer.readIntArray();
+			int[] inventoryNumbers = packetByteBuffer.readIntArray();
+			Action action = packetByteBuffer.readEnumConstant(Action.class);
+
+			packetContext.getTaskQueue().execute(() -> {
+				if (packetContext.getPlayer().container instanceof BaseContainer && packetContext.getPlayer().container.syncId == syncId) {
+					((BaseContainer) packetContext.getPlayer().container).onSlotDrag(slotNumbers, inventoryNumbers, action);
+				}
+			});
+		}));
 
 		ServerSidePacketRegistry.INSTANCE.register(SYNCED_WIDGET_PACKET, (packetContext, packetByteBuf) -> {
 			int widgetSyncId = packetByteBuf.readInt();
@@ -199,13 +218,9 @@ public class NetworkRegistry {
 					CompoundTag tag = packetByteBuffer.readCompoundTag();
 					ItemStack stack = StackUtilities.read(tag);
 
-					if (Spinnery.IS_DEBUG) {
-						//System.out.println("S2C\n" + "[" + SLOT_UPDATE_PACKET + "]\n" + "Slot:\t" + slotNumber + "\nInventory:\t" + inventoryNumber + "\nTag:\t" + tag.toString() + "\nAction:\t" + stack.toString());
-					}
-
 					packetContext.getTaskQueue().execute(() -> {
-						if (MinecraftClient.getInstance().player.container instanceof BaseContainer && MinecraftClient.getInstance().player.container.syncId == syncId) {
-							BaseContainer container = (BaseContainer) MinecraftClient.getInstance().player.container;
+						if (packetContext.getPlayer().container instanceof BaseContainer && packetContext.getPlayer().container.syncId == syncId) {
+							BaseContainer container = (BaseContainer) packetContext.getPlayer().container;
 
 							container.getInventory(inventoryNumber).setInvStack(slotNumber, stack);
 
@@ -216,8 +231,6 @@ public class NetworkRegistry {
 							}
 						}
 					});
-
-
 				}
 		);
 	}

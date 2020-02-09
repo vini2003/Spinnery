@@ -11,11 +11,6 @@ import spinnery.widget.api.WFocusedMouseListener;
 public class WStaticImage extends WAbstractWidget {
 	protected Identifier texture;
 
-	public WStaticImage texture(Identifier texture) {
-		this.texture = texture;
-		return this;
-	}
-
 	@Override
 	public void draw() {
 		if (isHidden()) {

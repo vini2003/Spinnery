@@ -3,9 +3,9 @@ package spinnery.widget;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import org.lwjgl.glfw.GLFW;
+import spinnery.widget.api.Size;
 import spinnery.widget.api.WPadded;
 import spinnery.widget.api.WPadding;
-import spinnery.widget.api.Size;
 
 import java.util.function.Consumer;
 

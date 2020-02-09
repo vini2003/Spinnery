@@ -1,11 +1,15 @@
 package spinnery.common;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.ContainerScreen;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import org.lwjgl.glfw.GLFW;
+import spinnery.client.BaseRenderer;
 import spinnery.widget.WInterface;
 import spinnery.widget.WSlot;
 import spinnery.widget.WAbstractWidget;
@@ -28,9 +32,24 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 	public void render(int mouseX, int mouseY, float tick) {
 		clientInterface.draw();
 
-		drawTooltip();
+		if (getDrawSlot() != null && getLinkedContainer().getPlayerInventory().getCursorStack().isEmpty() && !getDrawSlot().getStack().isEmpty()) {
+			this.renderTooltip(getDrawSlot().getStack(), getTooltipX(), getTooltipY());
+		}
 
-		super.render(mouseX, mouseY, tick);
+		ItemStack stackA;
+
+		if (getContainer().getPreviewCursorStack().isEmpty()
+		&&	getContainer().getDragSlots(GLFW.GLFW_MOUSE_BUTTON_1).isEmpty()
+		&&  getContainer().getDragSlots(GLFW.GLFW_MOUSE_BUTTON_2).isEmpty()) {
+			stackA = getContainer().getPlayerInventory().getCursorStack();
+		} else {
+			stackA = getContainer().getPreviewCursorStack();
+		}
+
+		RenderSystem.translatef(0, 0, 200);
+		BaseRenderer.getItemRenderer().renderGuiItem(stackA, mouseX - 8, mouseY - 8);
+		BaseRenderer.getItemRenderer().renderGuiItemOverlay(BaseRenderer.getTextRenderer(), stackA, mouseX - 8, mouseY - 8);
+		RenderSystem.translatef(0, 0, 0);
 	}
 
 	@Override
@@ -39,13 +58,6 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 		clientInterface.onDrawMouseoverTooltip(mouseX, mouseY);
 
 		super.drawMouseoverTooltip(mouseX, mouseY);
-	}
-
-	@Environment(EnvType.CLIENT)
-	public void drawTooltip() {
-		if (getDrawSlot() != null && getLinkedContainer().getLinkedPlayerInventory().getCursorStack().isEmpty() && !getDrawSlot().getStack().isEmpty()) {
-			this.renderTooltip(getDrawSlot().getStack(), getTooltipX(), getTooltipY());
-		}
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -84,6 +96,12 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 	public <S extends BaseContainerScreen> S setDrawSlot(WSlot drawSlot) {
 		this.drawSlot = drawSlot;
 		return (S) this;
+	}
+
+	@Override
+	public void resize(MinecraftClient client, int width, int height) {
+		getInterface().onAlign();
+		super.resize(client, width, height);
 	}
 
 	@Override

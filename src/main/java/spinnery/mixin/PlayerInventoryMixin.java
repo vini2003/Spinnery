@@ -21,5 +21,4 @@ public class PlayerInventoryMixin {
 			container.onContentChanged(null);
 		}
 	}
-
 }

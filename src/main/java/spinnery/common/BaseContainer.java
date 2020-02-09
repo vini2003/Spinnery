@@ -1,6 +1,8 @@
 package spinnery.common;
 
 import com.mojang.datafixers.util.Pair;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
 import net.minecraft.container.Container;
 import net.minecraft.container.Slot;
@@ -12,15 +14,18 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Tickable;
 import net.minecraft.world.World;
-import spinnery.Spinnery;
+import org.lwjgl.glfw.GLFW;
 import spinnery.registry.NetworkRegistry;
+import spinnery.util.MutablePair;
 import spinnery.util.StackUtilities;
 import spinnery.widget.WAbstractWidget;
 import spinnery.widget.WInterface;
 import spinnery.widget.WSlot;
 import spinnery.widget.api.WNetworked;
+import spinnery.widget.api.Action;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -30,6 +35,11 @@ public class BaseContainer extends Container implements Tickable {
 
 	public Map<Integer, Inventory> linkedInventories = new HashMap<>();
 
+	protected Set<WSlot> splitSlots = new HashSet<>();
+	protected Set<WSlot> singleSlots = new HashSet<>();
+	protected Map<Integer, Map<Integer, ItemStack>>  previewStacks = new HashMap<>();
+	protected ItemStack previewCursorStack = ItemStack.EMPTY;
+
 	protected World linkedWorld;
 	protected final WInterface serverInterface;
 
@@ -38,6 +48,47 @@ public class BaseContainer extends Container implements Tickable {
 		getInventories().put(PLAYER_INVENTORY, linkedPlayerInventory);
 		setLinkedWorld(linkedPlayerInventory.player.world);
 		serverInterface = new WInterface(this);
+	}
+
+	@Environment(EnvType.CLIENT)
+	public Set<WSlot> getDragSlots(int mouseButton) {
+		switch (mouseButton) {
+			case 0:
+				return splitSlots;
+			case 1:
+				return singleSlots;
+			default:
+				return null;
+		}
+	}
+
+	@Environment(EnvType.CLIENT)
+	public Map<Integer, Map<Integer, ItemStack>> getPreviewStacks() {
+		return previewStacks;
+	}
+
+	@Environment(EnvType.CLIENT)
+	public ItemStack getPreviewCursorStack() {
+		return previewCursorStack;
+	}
+
+	@Environment(EnvType.CLIENT)
+	public <C extends BaseContainer> C setPreviewCursorStack(ItemStack previewCursorStack) {
+		this.previewCursorStack = previewCursorStack;
+		return (C) this;
+	}
+
+	@Environment(EnvType.CLIENT)
+	public void flush() {
+		getInterface().getContainer().getDragSlots(GLFW.GLFW_MOUSE_BUTTON_1).clear();
+		getInterface().getContainer().getDragSlots(GLFW.GLFW_MOUSE_BUTTON_2).clear();
+		getInterface().getContainer().getPreviewStacks().clear();
+		getInterface().getContainer().setPreviewCursorStack(ItemStack.EMPTY);
+	}
+
+	@Environment(EnvType.CLIENT)
+	public boolean isDragging() {
+		return getDragSlots(GLFW.GLFW_MOUSE_BUTTON_1).isEmpty() || getDragSlots(GLFW.GLFW_MOUSE_BUTTON_2).isEmpty();
 	}
 
 	public Map<Integer, Inventory> getInventories() {
@@ -55,7 +106,63 @@ public class BaseContainer extends Container implements Tickable {
 		}
 	}
 
-	public void onSlotClicked(int slotNumber, int inventoryNumber, int button, SlotActionType action, PlayerEntity player) {
+	public void onSlotDrag(int[] slotNumber, int[] inventoryNumber, Action action) {
+		HashMap<Integer, WSlot> slots = new HashMap<>();
+
+		for (int i = 0; i < slotNumber.length; ++i) {
+			for (WAbstractWidget widget : serverInterface.getAllWidgets()) {
+				if (widget instanceof WSlot && ((WSlot) widget).getSlotNumber() == slotNumber[i] && ((WSlot) widget).getInventoryNumber() == inventoryNumber[i]) {
+					slots.put(i, (WSlot) widget);
+				}
+			}
+		}
+
+		if (slots.isEmpty()) {
+			return;
+		}
+
+		int split = -1;
+
+		if (action == Action.DRAG_SPLIT || action == Action.DRAG_SPLIT_PREVIEW) {
+			split = getPlayerInventory().getCursorStack().getCount() / slots.size();
+		} else if (action == Action.DRAG_SINGLE || action == Action.DRAG_SINGLE_PREVIEW) {
+			split = 1;
+		}
+
+		ItemStack stackA = ItemStack.EMPTY;
+
+		if (action == Action.DRAG_SINGLE || action == Action.DRAG_SPLIT) {
+			stackA = getPlayerInventory().getCursorStack();
+		} else if (action == Action.DRAG_SINGLE_PREVIEW || action == Action.DRAG_SPLIT_PREVIEW) {
+			stackA = getPlayerInventory().getCursorStack().copy();
+		}
+
+		for (Integer number : slots.keySet()) {
+			WSlot slotA = slots.get(number);
+
+			ItemStack stackB = ItemStack.EMPTY;
+
+			if (action == Action.DRAG_SINGLE || action == Action.DRAG_SPLIT) {
+				stackB = slotA.getStack();;
+			} else if (action == Action.DRAG_SINGLE_PREVIEW || action == Action.DRAG_SPLIT_PREVIEW) {
+				stackB = slotA.getStack().copy();
+			}
+
+
+			Pair<ItemStack, ItemStack> stacks = StackUtilities.clamp(stackA, stackB, split, split);
+
+			if (action == Action.DRAG_SINGLE || action == Action.DRAG_SPLIT) {
+				stackA = stacks.getFirst();
+				slotA.getInterface().getContainer().previewCursorStack = ItemStack.EMPTY;
+				slotA.setStack(stacks.getSecond());
+			} else if (action == Action.DRAG_SINGLE_PREVIEW || action == Action.DRAG_SPLIT_PREVIEW) {
+				slotA.getInterface().getContainer().previewCursorStack = stacks.getFirst().copy();
+				slotA.setPreviewStack(stacks.getSecond().copy());
+			}
+		}
+	}
+
+	public void onSlotAction(int slotNumber, int inventoryNumber, int button, Action action, PlayerEntity player) {
 		WSlot slotA = null;
 
 		for (WAbstractWidget widget : serverInterface.getAllWidgets()) {
@@ -70,12 +177,6 @@ public class BaseContainer extends Container implements Tickable {
 
 		ItemStack stackA = slotA.getStack();
 		ItemStack stackB = player.inventory.getCursorStack();
-
-		String debugString = "";
-
-		if (Spinnery.IS_DEBUG) {
-			debugString += "?\nAction:\t" + action + "\n";
-		}
 
 		switch (action) {
 			case PICKUP: {
@@ -152,8 +253,7 @@ public class BaseContainer extends Container implements Tickable {
 								Pair<ItemStack, ItemStack> result = StackUtilities.clamp(stackA, stackC, slotA.getMaxCount(), slotB.getMaxCount());
 								stackA = result.getFirst();
 								slotB.setStack(result.getSecond());
-								debugString += "Slot B:\t" + slotB.getStack().toString() + ", " + slotB.getLinkedInventory().getClass().getSimpleName() + "\n";
-									break;
+								break;
 
 							}
 						}
@@ -161,21 +261,28 @@ public class BaseContainer extends Container implements Tickable {
 				}
 				break;
 			}
+			case PICKUP_ALL: {
+				ItemStack stackC = getInterface().getContainer().getPlayerInventory().getCursorStack();
+
+				for (WAbstractWidget widget : getInterface().getAllWidgets()) {
+					if (widget instanceof WSlot && ((WSlot) widget).getStack().isItemEqual(stackC)) {
+						StackUtilities.clamp(((WSlot) widget).getStack(), stackC, ((WSlot) widget).getMaxCount(), stackC.getMaxCount());
+					}
+				}
+
+				return;
+			}
 		}
 
 		slotA.setStack(stackA);
 		((PlayerInventory) linkedInventories.get(PLAYER_INVENTORY)).setCursorStack(stackB);
-
-		if (Spinnery.IS_DEBUG) {
-			System.out.println(debugString + "Slot A:\t" + slotA.getStack().toString() + ", " + slotA.getLinkedInventory().getClass().getSimpleName() + "\nCursor:\t" + ((PlayerInventory) linkedInventories.get(PLAYER_INVENTORY)).getCursorStack().toString() + ", " + PlayerInventory.class.getSimpleName());
-		}
 	}
 
 	public WInterface getInterface() {
 		return serverInterface;
 	}
 
-	public World getLinkedWorld() {
+	public World getWorld() {
 		return linkedWorld;
 	}
 
@@ -184,7 +291,7 @@ public class BaseContainer extends Container implements Tickable {
 		return (C) this;
 	}
 
-	public PlayerInventory getLinkedPlayerInventory() {
+	public PlayerInventory getPlayerInventory() {
 		return (PlayerInventory) linkedInventories.get(PLAYER_INVENTORY);
 	}
 
@@ -206,7 +313,7 @@ public class BaseContainer extends Container implements Tickable {
 					ItemStack stackB = cachedInventories.get(slotA.getInventoryNumber()).get(slotA.getSlotNumber());
 
 					if ((!stackA.isEmpty() || !stackB.isEmpty()) || (stackA.getCount() != stackB.getCount()) || !stackA.isItemEqual(stackB)) {
-						ServerSidePacketRegistry.INSTANCE.sendToPlayer(this.getLinkedPlayerInventory().player, NetworkRegistry.SLOT_UPDATE_PACKET, NetworkRegistry.createSlotUpdatePacket(syncId, slotA.getSlotNumber(), slotA.getInventoryNumber(), slotA.getStack()));
+						ServerSidePacketRegistry.INSTANCE.sendToPlayer(this.getPlayerInventory().player, NetworkRegistry.SLOT_UPDATE_PACKET, NetworkRegistry.createSlotUpdatePacket(syncId, slotA.getSlotNumber(), slotA.getInventoryNumber(), slotA.getStack()));
 					}
 
 					cachedInventories.get(slotA.getInventoryNumber()).put(slotA.getSlotNumber(), slotA.getStack());
@@ -217,7 +324,7 @@ public class BaseContainer extends Container implements Tickable {
 					ItemStack stackB = Optional.ofNullable(cachedInventories.get(slotA.getInventoryNumber()).get(slotA.getSlotNumber())).orElse(ItemStack.EMPTY);
 
 					if ((!stackA.isEmpty() || !stackB.isEmpty()) || (stackA.getCount() != stackB.getCount()) || !stackA.isItemEqual(stackB)) {
-						ServerSidePacketRegistry.INSTANCE.sendToPlayer(this.getLinkedPlayerInventory().player, NetworkRegistry.SLOT_UPDATE_PACKET, NetworkRegistry.createSlotUpdatePacket(syncId, slotA.getSlotNumber(), slotA.getInventoryNumber(), slotA.getStack()));
+						ServerSidePacketRegistry.INSTANCE.sendToPlayer(this.getPlayerInventory().player, NetworkRegistry.SLOT_UPDATE_PACKET, NetworkRegistry.createSlotUpdatePacket(syncId, slotA.getSlotNumber(), slotA.getInventoryNumber(), slotA.getStack()));
 					}
 
 					cachedInventories.get(slotA.getInventoryNumber()).put(slotA.getSlotNumber(), slotA.getStack());

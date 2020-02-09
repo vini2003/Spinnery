@@ -3,8 +3,8 @@ package spinnery.client;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
-import spinnery.widget.api.WColor;
 import spinnery.widget.api.Position;
+import spinnery.widget.api.WColor;
 
 public class TextRenderer {
 	public static RenderPass pass() {
