@@ -145,6 +145,20 @@ public class NetworkRegistry {
 		return buffer;
 	}
 
+	public static PacketByteBuf createCustomInterfaceEventPacket(WNetworked widget, CompoundTag payload) {
+		PacketByteBuf buffer = new PacketByteBuf(Unpooled.buffer());
+		buffer.writeInt(widget.getSyncId());
+		buffer.writeEnumConstant(WNetworked.Event.CUSTOM);
+		widget.appendPayload(WNetworked.Event.CUSTOM, payload);
+		buffer.writeCompoundTag(payload);
+		return buffer;
+	}
+
+	public static void sendCustomInterfaceEvent(WNetworked widget, CompoundTag payload) {
+		ClientSidePacketRegistry.INSTANCE.sendToServer(NetworkRegistry.SYNCED_WIDGET_PACKET,
+				NetworkRegistry.createCustomInterfaceEventPacket(widget, payload));
+	}
+
 	public static void initialize() {
 		// TODO: Warn or mitigate packet flooding
 		ServerSidePacketRegistry.INSTANCE.register(SLOT_CLICK_PACKET, (packetContext, packetByteBuffer) -> {

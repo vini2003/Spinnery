@@ -4,6 +4,7 @@ import net.minecraft.nbt.CompoundTag;
 
 public interface WNetworked {
 	enum Event {
+		CUSTOM,
 		MOUSE_CLICK,
 		MOUSE_RELEASE,
 		MOUSE_DRAG,

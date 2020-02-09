@@ -1,6 +1,9 @@
 package spinnery.widget;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.nbt.CompoundTag;
+import spinnery.registry.NetworkRegistry;
 import spinnery.widget.api.WNetworked;
 
 import java.util.function.BiConsumer;
@@ -34,5 +37,10 @@ public abstract class WNetworkedWidget extends WAbstractWidget implements WNetwo
     public <W extends WNetworkedWidget> W setOnInterfaceEvent(BiConsumer<Event, CompoundTag> consumerOnInterfaceEvent) {
 		this.consumerOnInterfaceEvent = consumerOnInterfaceEvent;
 		return (W) this;
+    }
+
+    @Environment(EnvType.CLIENT)
+    public void sendCustomEvent(CompoundTag payload) {
+        NetworkRegistry.createCustomInterfaceEventPacket(this, payload);
     }
 }
