@@ -6,21 +6,12 @@ import net.minecraft.item.Item;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import spinnery.client.BaseRenderer;
-import spinnery.widget.api.WCollection;
-import spinnery.widget.api.WFocusedMouseListener;
-import spinnery.widget.api.WModifiableCollection;
-import spinnery.widget.api.Position;
-import spinnery.widget.api.Size;
+import spinnery.widget.api.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Environment(EnvType.CLIENT)
-@WFocusedMouseListener
-public class WTabHolder extends WAbstractWidget implements WCollection {
+public class WTabHolder extends WAbstractWidget implements WCollection, WDelegatedEventListener {
 	List<WTab> tabs = new ArrayList<>();
 
 	public void selectTab(int tabNumber) {
@@ -39,7 +30,7 @@ public class WTabHolder extends WAbstractWidget implements WCollection {
 
 	public WTab addTab(Item symbol, Text name) {
 		int tabNumber = tabs.size() + 1;
-		WTab tab = new WTab(this, symbol, name, tabNumber);
+		WTab tab = new WTab(symbol, name, tabNumber);
 		tabs.add(tab);
 		int tabSize = getWidth() / tabs.size();
 		int tabOffset = 0;
@@ -88,6 +79,11 @@ public class WTabHolder extends WAbstractWidget implements WCollection {
 	}
 
 	@Override
+	public Collection<? extends WEventListener> getEventDelegates() {
+		return getWidgets();
+	}
+
+	@Override
 	public boolean contains(WAbstractWidget... widgets) {
 		return getAllWidgets().containsAll(Arrays.asList(widgets));
 	}
@@ -130,20 +126,20 @@ public class WTabHolder extends WAbstractWidget implements WCollection {
 	}
 
 	public class WTab implements WModifiableCollection {
-		Item symbol;
-		Text name;
-		int number;
-		Set<WAbstractWidget> widgets = new LinkedHashSet<>();
+		protected Item symbol;
+		protected Text name;
+		protected int number;
+		protected Set<WAbstractWidget> widgets = new LinkedHashSet<>();
 
-		public WTab(WTabHolder holder, Item symbol, Text name, int number) {
+		public WTab(Item symbol, Text name, int number) {
 			this.symbol = symbol;
 			this.name = name;
 			this.number = number;
-			WTabToggle tabToggle = createChild(WTabToggle.class, Position.of(holder, 0, 0, 0), Size.of(36, 24))
+			WTabToggle tabToggle = createChild(WTabToggle.class, Position.of(WTabHolder.this, 0, 0, 0), Size.of(36, 24))
 					.setSymbol(symbol)
 					.setLabel(name);
-			tabToggle.setParent(holder);
-			tabToggle.setInterface(holder.getInterface());
+			tabToggle.setParent(WTabHolder.this);
+			tabToggle.setInterface(WTabHolder.this.getInterface());
 			this.widgets.add(tabToggle);
 			this.widgets.iterator().next().setOnMouseClicked((widget, mouseX, mouseY, mouseButton) -> {
 				if (getToggle().getToggleState()) {
@@ -163,6 +159,10 @@ public class WTabHolder extends WAbstractWidget implements WCollection {
 		@Override
 		public void add(WAbstractWidget... widgets) {
 			this.widgets.addAll(Arrays.asList(widgets));
+			for (WAbstractWidget newWidget : widgets) {
+				newWidget.setInterface(WTabHolder.this.getInterface());
+				newWidget.setParent(WTabHolder.this);
+			}
 			for (WAbstractWidget widget : getWidgets()) {
 				if (!(widget instanceof WTabToggle)) {
 					widget.setHidden(true);
