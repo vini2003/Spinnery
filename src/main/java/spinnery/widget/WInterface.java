@@ -9,6 +9,7 @@ import net.minecraft.util.Identifier;
 import spinnery.client.BaseRenderer;
 import spinnery.common.BaseContainer;
 import spinnery.registry.NetworkRegistry;
+import spinnery.util.EventUtilities;
 import spinnery.widget.api.*;
 
 import java.util.ArrayList;
@@ -99,9 +100,8 @@ public class WInterface implements WModifiableCollection, WLayoutElement, WThema
 	}
 
 	public void onMouseClicked(int mouseX, int mouseY, int mouseButton) {
-		for (WAbstractWidget widget : getAllWidgets()) {
-			if (widget.getClass().isAnnotationPresent(WFocusedMouseListener.class) && !widget.isFocused())
-				continue;
+		for (WAbstractWidget widget : getWidgets()) {
+			if (!EventUtilities.canReceiveMouse(widget)) continue;
 			widget.onMouseClicked(mouseX, mouseY, mouseButton);
 			if (widget instanceof WNetworked) {
 				ClientSidePacketRegistry.INSTANCE.sendToServer(NetworkRegistry.SYNCED_WIDGET_PACKET,
@@ -111,9 +111,8 @@ public class WInterface implements WModifiableCollection, WLayoutElement, WThema
 	}
 
 	public boolean onMouseReleased(int mouseX, int mouseY, int mouseButton) {
-		for (WAbstractWidget widget : getAllWidgets()) {
-			if (widget.getClass().isAnnotationPresent(WFocusedMouseListener.class) && !widget.isFocused())
-				continue;
+		for (WAbstractWidget widget : getWidgets()) {
+			if (!EventUtilities.canReceiveMouse(widget)) continue;
 			widget.onMouseReleased(mouseX, mouseY, mouseButton);
 			if (widget instanceof WNetworked) {
 				ClientSidePacketRegistry.INSTANCE.sendToServer(NetworkRegistry.SYNCED_WIDGET_PACKET,
@@ -124,9 +123,8 @@ public class WInterface implements WModifiableCollection, WLayoutElement, WThema
 	}
 
 	public boolean onMouseDragged(int mouseX, int mouseY, int mouseButton, int deltaX, int deltaY) {
-		for (WAbstractWidget widget : getAllWidgets()) {
-			if (widget.getClass().isAnnotationPresent(WFocusedMouseListener.class) && !widget.isFocused())
-				continue;
+		for (WAbstractWidget widget : getWidgets()) {
+			if (!EventUtilities.canReceiveMouse(widget)) continue;
 			widget.onMouseDragged(mouseX, mouseY, mouseButton, deltaX, deltaY);
 			if (widget instanceof WNetworked) {
 				ClientSidePacketRegistry.INSTANCE.sendToServer(NetworkRegistry.SYNCED_WIDGET_PACKET,
@@ -137,9 +135,8 @@ public class WInterface implements WModifiableCollection, WLayoutElement, WThema
 	}
 
 	public void onMouseScrolled(int mouseX, int mouseY, double deltaY) {
-		for (WAbstractWidget widget : getAllWidgets()) {
-			if (widget.getClass().isAnnotationPresent(WFocusedMouseListener.class) && !widget.isFocused())
-				continue;
+		for (WAbstractWidget widget : getWidgets()) {
+			if (!EventUtilities.canReceiveMouse(widget)) continue;
 			widget.onMouseScrolled(mouseX, mouseY, deltaY);
 			if (widget instanceof WNetworked) {
 				ClientSidePacketRegistry.INSTANCE.sendToServer(NetworkRegistry.SYNCED_WIDGET_PACKET,
@@ -149,10 +146,9 @@ public class WInterface implements WModifiableCollection, WLayoutElement, WThema
 	}
 
 	public void onMouseMoved(int mouseX, int mouseY) {
-		for (WAbstractWidget widget : getAllWidgets()) {
+		for (WAbstractWidget widget : getWidgets()) {
 			widget.updateFocus(mouseX, mouseY);
-			if (widget.getClass().isAnnotationPresent(WFocusedMouseListener.class) && !widget.isFocused())
-				continue;
+			if (!EventUtilities.canReceiveMouse(widget)) continue;
 			widget.onMouseMoved(mouseX, mouseY);
 			if (widget instanceof WNetworked) {
 				ClientSidePacketRegistry.INSTANCE.sendToServer(NetworkRegistry.SYNCED_WIDGET_PACKET,
@@ -162,9 +158,8 @@ public class WInterface implements WModifiableCollection, WLayoutElement, WThema
 	}
 
 	public void onKeyReleased(int keyCode, int character, int keyModifier) {
-		for (WAbstractWidget widget : getAllWidgets()) {
-			if (widget.getClass().isAnnotationPresent(WFocusedKeyboardListener.class) && !widget.isFocused())
-				continue;
+		for (WAbstractWidget widget : getWidgets()) {
+			if (!EventUtilities.canReceiveKeyboard(widget)) continue;
 			widget.onKeyReleased(keyCode, character, keyModifier);
 			if (widget instanceof WNetworked) {
 				ClientSidePacketRegistry.INSTANCE.sendToServer(NetworkRegistry.SYNCED_WIDGET_PACKET,
@@ -174,9 +169,8 @@ public class WInterface implements WModifiableCollection, WLayoutElement, WThema
 	}
 
 	public void onKeyPressed(int keyCode, int character, int keyModifier) {
-		for (WAbstractWidget widget : getAllWidgets()) {
-			if (widget.getClass().isAnnotationPresent(WFocusedKeyboardListener.class) && !widget.isFocused())
-				continue;
+		for (WAbstractWidget widget : getWidgets()) {
+			if (!EventUtilities.canReceiveKeyboard(widget)) continue;
 			widget.onKeyPressed(keyCode, character, keyModifier);
 			if (widget instanceof WNetworked) {
 				ClientSidePacketRegistry.INSTANCE.sendToServer(NetworkRegistry.SYNCED_WIDGET_PACKET,
@@ -186,9 +180,8 @@ public class WInterface implements WModifiableCollection, WLayoutElement, WThema
 	}
 
 	public void onCharTyped(char character, int keyCode) {
-		for (WAbstractWidget widget : getAllWidgets()) {
-			if (widget.getClass().isAnnotationPresent(WFocusedKeyboardListener.class) && !widget.isFocused())
-				continue;
+		for (WAbstractWidget widget : getWidgets()) {
+			if (!EventUtilities.canReceiveKeyboard(widget)) continue;
 			widget.onCharTyped(character, keyCode);
 			if (widget instanceof WNetworked) {
 				ClientSidePacketRegistry.INSTANCE.sendToServer(NetworkRegistry.SYNCED_WIDGET_PACKET,
@@ -198,13 +191,13 @@ public class WInterface implements WModifiableCollection, WLayoutElement, WThema
 	}
 
 	public void onDrawMouseoverTooltip(int mouseX, int mouseY) {
-		for (WAbstractWidget widget : getAllWidgets()) {
+		for (WAbstractWidget widget : getWidgets()) {
 			widget.onDrawTooltip(mouseX, mouseY);
 		}
 	}
 
 	public void onAlign() {
-		for (WAbstractWidget widget : getAllWidgets()) {
+		for (WAbstractWidget widget : getWidgets()) {
 			widget.align();
 			widget.onAlign();
 		}

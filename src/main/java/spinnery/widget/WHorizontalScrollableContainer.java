@@ -1,34 +1,39 @@
 package spinnery.widget;
 
+import com.google.common.collect.ImmutableSet;
 import net.minecraft.client.MinecraftClient;
 import org.lwjgl.opengl.GL11;
-import spinnery.widget.api.Size;
-import spinnery.widget.api.WHorizontalScrollable;
-import spinnery.widget.api.WModifiableCollection;
-import spinnery.widget.api.Position;
+import spinnery.widget.api.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
-public class WHorizontalScrollableContainer extends WAbstractWidget implements WModifiableCollection, WHorizontalScrollable {
-    public List<List<WAbstractWidget>> listWidgets = new ArrayList<>();
+@SuppressWarnings("unchecked")
+public class WHorizontalScrollableContainer extends WAbstractWidget implements WModifiableCollection, WHorizontalScrollable,
+        WDelegatedEventListener {
+    public Set<WAbstractWidget> widgets = new HashSet<>();
 
     protected WHorizontalScrollbar scrollbar;
 
+    protected int xOffset = 0;
     protected float scrollKineticDelta = 0;
+    protected int rightSpace = 0;
 
     public WHorizontalScrollableContainer() {
-        scrollbar = getFactory().build(WHorizontalScrollbar.class, null, null).scrollable(this);
-        scrollbar.setParent(this);
+        scrollbar = WWidgetFactory.buildDetached(WHorizontalScrollbar.class).scrollable(this).setParent(this);
+    }
+
+    public int getRightSpace() {
+        return rightSpace;
+    }
+
+    public <W extends WHorizontalScrollableContainer> W setRightSpace(int rightSpace) {
+        this.rightSpace = rightSpace;
+        return (W) this;
     }
 
     @Override
     public void onLayoutChange() {
         scrollToStart();
-        updateHidden();
         updateScrollbar();
     }
 
@@ -37,7 +42,7 @@ public class WHorizontalScrollableContainer extends WAbstractWidget implements W
         int scrollBarHeight = 6;
         int scrollBarOffsetX = 0;
         int scrollBarOffsetY = getHeight() - scrollBarHeight;
-        scrollbar.setPosition(Position.of(this, scrollBarOffsetX, scrollBarOffsetY, scrollbar.getPosition().getOffsetZ()));
+        scrollbar.setPosition(Position.of(this, scrollBarOffsetX, scrollBarOffsetY, scrollbar.getPosition().getRelativeZ()));
         scrollbar.setSize(Size.of(scrollBarWidth, scrollBarHeight));
     }
 
@@ -51,73 +56,54 @@ public class WHorizontalScrollableContainer extends WAbstractWidget implements W
     }
 
     @Override
-    public void onMouseClicked(int mouseX, int mouseY, int mouseButton) {
-        scrollbar.onMouseClicked(mouseX, mouseY, mouseButton);
-        super.onMouseClicked(mouseX, mouseY, mouseButton);
-    }
-
-    @Override
-    public void onMouseDragged(int mouseX, int mouseY, int mouseButton, double deltaX, double deltaY) {
-        scrollbar.onMouseDragged(mouseX, mouseY, mouseButton, deltaX, deltaY);
-        super.onMouseDragged(mouseX, mouseY, mouseButton, deltaX, deltaY);
-    }
-
-    @Override
     public void scroll(double deltaX, double deltaY) {
-        if (getListWidgets().size() == 0) {
+        if (getWidgets().size() == 0) {
             return;
         }
 
-        boolean hitLeft = getListWidgets().get(0).stream().anyMatch(widget ->
-                widget.getX() + deltaX > getStartAnchorX()
-        );
+        boolean hitLeft = xOffset - deltaX < 0;
+        boolean hitRight = xOffset - deltaX > getMaxOffsetX();
 
-        boolean hitRight = getListWidgets().get(getListWidgets().size() - 1).stream().anyMatch(widget ->
-                widget.getX() + widget.getWidth() + deltaX <= getStartAnchorX() + getVisibleWidth()
-        );
-
-        if (hitRight && scrollKineticDelta < -2.5) {
+        if (hitRight || hitLeft) {
             scrollKineticDelta = 0;
         }
-
-        if (hitLeft && scrollKineticDelta > 2.5) {
-            scrollKineticDelta = 0;
-        }
-
 
         if (deltaX > 0 && hitLeft) {
             scrollToStart();
         } else if (deltaX < 0 && hitRight) {
             scrollToEnd();
         } else {
-            for (WAbstractWidget widget : getWidgets()) {
-                widget.setX(widget.getX() + (int) deltaX);
-            }
+            xOffset -= deltaX;
         }
 
-        updateHidden();
-    }
-
-    public List<List<WAbstractWidget>> getListWidgets() {
-        return listWidgets;
+        updateChildren();
     }
 
     @Override
     public Set<WAbstractWidget> getWidgets() {
-        Set<WAbstractWidget> widgets = new LinkedHashSet<>();
-        for (List<WAbstractWidget> widgetA : getListWidgets()) {
-            widgets.addAll(widgetA);
-        }
         return widgets;
     }
 
-    public boolean hasScrollbar() {
+    @Override
+    public Collection<? extends WEventListener> getEventDelegates() {
+        Set<WAbstractWidget> delegates = new HashSet<>(widgets);
+        delegates.add(scrollbar);
+        return ImmutableSet.copyOf(delegates);
+    }
+
+    public boolean getScrollbarVisible() {
         return !scrollbar.isHidden();
     }
 
     public <W extends WHorizontalScrollableContainer> W setScrollbarVisible(boolean visible) {
         scrollbar.setHidden(!visible);
         return (W) this;
+    }
+
+    protected int getMaxX() {
+        int max = widgets.stream().mapToInt(w -> w.getPosition().getRelativeX() + w.getWidth()).max().orElse(0);
+        if (max == 0) return getStartAnchorX();
+        return getStartAnchorX() + max - getVisibleWidth() + rightSpace;
     }
 
     @Override
@@ -127,8 +113,8 @@ public class WHorizontalScrollableContainer extends WAbstractWidget implements W
 
     @Override
     public int getEndAnchorX() {
-        if (getWidth() > getInnerWidth()) return getStartAnchorX();
-        return getStartAnchorX() - (getInnerWidth() - getVisibleWidth());
+        if (getWidth() > getUnderlyingWidth()) return getStartAnchorX();
+        return getStartAnchorX() - (getUnderlyingWidth() - getVisibleWidth());
     }
 
     @Override
@@ -137,20 +123,15 @@ public class WHorizontalScrollableContainer extends WAbstractWidget implements W
     }
 
     @Override
-    public Size getInnerSize() {
-        List<List<WAbstractWidget>> widgetLists = getListWidgets();
+    public Size getUnderlyingSize() {
+        Set<WAbstractWidget> widgets = getWidgets();
 
-        // Leftmost widget (lower X)
         int leftmostX = getStartAnchorX();
-        for (WAbstractWidget widget : widgetLists.get(0)) {
+        int rightmostX = leftmostX;
+        for (WAbstractWidget widget : widgets) {
             if (widget.getX() < leftmostX) {
                 leftmostX = widget.getX();
             }
-        }
-
-        // Bottommost widget (higher Y)
-        int rightmostX = leftmostX;
-        for (WAbstractWidget widget : widgetLists.get(widgetLists.size() - 1)) {
             if (widget.getX() + widget.getWidth() > rightmostX) {
                 rightmostX = widget.getX() + widget.getWidth();
             }
@@ -161,20 +142,11 @@ public class WHorizontalScrollableContainer extends WAbstractWidget implements W
 
     @Override
     public int getStartOffsetX() {
-        int leftX = getStartAnchorX();
-        int leftmostX = leftX;
-        for (WAbstractWidget widget : getListWidgets().get(0)) {
-            if (widget.getX() < leftmostX) {
-                leftmostX = widget.getX();
-            }
-        }
-        return leftX - leftmostX;
+        return xOffset;
     }
 
-    @Override
-    public void align() {
-        super.align();
-        scrollToStart();
+    public int getMaxOffsetX() {
+        return getMaxX() - getStartAnchorX();
     }
 
     @Override
@@ -221,78 +193,49 @@ public class WHorizontalScrollableContainer extends WAbstractWidget implements W
 
         GL11.glScissor((int) (x * scale), (int) (rawHeight - (y * scale + sY * scale)), (int) (sX * scale), (int) (sY * scale));
 
-        for (List<WAbstractWidget> widgetB : getListWidgets()) {
-            for (WAbstractWidget widgetC : widgetB) {
-                widgetC.draw();
-            }
+        for (WAbstractWidget widget : widgets) {
+            widget.draw();
         }
 
         GL11.glDisable(GL11.GL_SCISSOR_TEST);
 
         scrollbar.draw();
-
     }
 
     public void scrollToStart() {
-        int x = getStartAnchorX();
-
-        for (List<WAbstractWidget> widgetA : getListWidgets()) {
-            int y = getY();
-            for (WAbstractWidget widgetB : widgetA) {
-                widgetB.setX(x);
-                widgetB.setY(y + 4);
-                y += widgetB.getHeight() + 2;
-            }
-            x += widgetA.get(0).getWidth() + 2;
-        }
+        xOffset = 0;
+        updateChildren();
     }
 
     public void scrollToEnd() {
-        int x = getEndAnchorX();
-
-        for (List<WAbstractWidget> widgetA : getListWidgets()) {
-            int y = getY();
-            for (WAbstractWidget widgetB : widgetA) {
-                widgetB.setX(x);
-                widgetB.setY(y + 4);
-                y += widgetB.getHeight() + 2;
-            }
-            x += widgetA.get(0).getWidth() + 2;
-        }
+        xOffset = getMaxOffsetX();
+        updateChildren();
     }
 
-    public void updateHidden() {
-        for (List<WAbstractWidget> widgetList : getListWidgets()) {
-            for (WAbstractWidget w : widgetList) {
-                boolean startContained = isWithinBounds(w.getX(), w.getY(), 1)
-                        || isWithinBounds(w.getX() + w.getWidth(), w.getY() + w.getHeight(), 1);
-                w.setHidden(!startContained);
-            }
+    public void updateChildren() {
+        for (WAbstractWidget w : getWidgets()) {
+            w.getPosition().setOffsetX(-xOffset);
+            boolean startContained = isWithinBounds(w.getX(), w.getY(), 1)
+                    || isWithinBounds(w.getX() + w.getWidth(), w.getY() + w.getHeight(), 1);
+            w.setHidden(!startContained);
         }
     }
 
     @Override
     public void add(WAbstractWidget... widgetArray) {
-        getListWidgets().add(Arrays.asList(widgetArray));
-        scrollToStart();
-        updateHidden();
+        widgets.addAll(Arrays.asList(widgetArray));
+        onLayoutChange();
     }
 
     @Override
     public void remove(WAbstractWidget... widgetArray) {
-        getListWidgets().remove(Arrays.asList(widgetArray));
-        scrollToStart();
-        updateHidden();
+        widgets.removeAll(Arrays.asList(widgetArray));
+        onLayoutChange();
     }
 
     @Override
     public boolean contains(WAbstractWidget... widgetArray) {
-        for (List<WAbstractWidget> widgetList : getListWidgets()) {
-            if (widgetList.containsAll(Arrays.asList(widgetArray))) {
-                return true;
-            }
-        }
-        return false;
+        return widgets.containsAll(Arrays.asList(widgetArray));
     }
 
     @Override

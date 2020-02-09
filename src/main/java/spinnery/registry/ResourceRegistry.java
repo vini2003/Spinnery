@@ -12,7 +12,7 @@ import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.Level;
 import spinnery.Spinnery;
 import spinnery.util.ResourceListener;
-import spinnery.widget.api.WTheme;
+import spinnery.widget.api.Theme;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,7 +33,7 @@ public class ResourceRegistry {
 	public static void register(Identifier id, InputStream inputStream) {
 		try {
 			JsonObject themeDef = JanksonFactory.createJankson().load(inputStream);
-			WTheme theme = WTheme.of(id, themeDef);
+			Theme theme = Theme.of(id, themeDef);
 			ThemeRegistry.register(theme);
 		} catch (IOException e) {
 			Spinnery.LOGGER.log(Level.ERROR, "Could not read theme file", e);

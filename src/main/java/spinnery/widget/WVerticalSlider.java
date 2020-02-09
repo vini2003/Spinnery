@@ -4,10 +4,10 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import spinnery.client.BaseRenderer;
 import spinnery.client.TextRenderer;
-import spinnery.widget.api.Position;
-import spinnery.widget.api.Size;
 import spinnery.widget.api.WFocusedKeyboardListener;
 import spinnery.widget.api.WFocusedMouseListener;
+import spinnery.widget.api.Position;
+import spinnery.widget.api.Size;
 
 @Environment(EnvType.CLIENT)
 @WFocusedKeyboardListener

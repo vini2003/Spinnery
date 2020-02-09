@@ -4,7 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
 import spinnery.widget.api.Position;
-import spinnery.widget.api.WColor;
+import spinnery.widget.api.Color;
 
 public class TextRenderer {
 	public static RenderPass pass() {
@@ -106,7 +106,7 @@ public class TextRenderer {
 			return scale(size / 9D);
 		}
 
-		public RenderPass color(WColor color) {
+		public RenderPass color(Color color) {
 			return color(color.ARGB);
 		}
 
@@ -120,7 +120,7 @@ public class TextRenderer {
 			return this;
 		}
 
-		public RenderPass shadowColor(WColor color) {
+		public RenderPass shadowColor(Color color) {
 			return shadowColor(color.ARGB);
 		}
 
@@ -142,6 +142,7 @@ public class TextRenderer {
 		public void render() {
 			float oX = x * (1f - (float) scale);
 			float oY = y * (1f - (float) scale);
+			RenderSystem.pushMatrix();
 			RenderSystem.translatef(oX, oY, z);
 			RenderSystem.scaled(scale, scale, 1);
 			if (maxWidth != null) {
@@ -152,8 +153,7 @@ public class TextRenderer {
 				if (shadow) getTextRenderer(font).draw(text, x + 1, y + 1, shadowColor);
 				getTextRenderer(font).draw(text, x, y, color);
 			}
-			RenderSystem.scaled(1 / scale, 1 / scale, 1);
-			RenderSystem.translatef(-oX, -oY, -z);
+			RenderSystem.popMatrix();
 		}
 	}
 }

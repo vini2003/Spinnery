@@ -14,18 +14,18 @@ import java.util.function.Function;
 import java.util.stream.IntStream;
 
 @SuppressWarnings("unused")
-public class WStyle {
+public class Style {
 	protected final Map<String, JsonElement> properties = new HashMap<>();
 
-	public static WStyle of(WStyle other) {
-		return new WStyle(other.properties);
+	public static Style of(Style other) {
+		return new Style(other.properties);
 	}
 
-	public WStyle(Map<String, JsonElement> properties) {
+	public Style(Map<String, JsonElement> properties) {
 		this.properties.putAll(properties);
 	}
 
-	public WStyle() {
+	public Style() {
 	}
 
 	protected JsonElement getElement(String key) {
@@ -66,13 +66,13 @@ public class WStyle {
 		return asNumber(property).doubleValue();
 	}
 
-	public WColor asColor(String property) {
-		return asColor(property, WColor.of("0xff000000"));
+	public Color asColor(String property) {
+		return asColor(property, Color.of("0xff000000"));
 	}
 
-	public WColor asColor(String property, WColor defaultColor) {
+	public Color asColor(String property, Color defaultColor) {
 		return JanksonOps.INSTANCE.getNumberValue(getElement(property))
-				.map(WColor::of).orElse(defaultColor);
+				.map(Color::of).orElse(defaultColor);
 	}
 
 	public Size asSize(String property) {
@@ -83,40 +83,40 @@ public class WStyle {
 	}
 
 	// Clockwise from top
-	public WPadding asPadding(String property) {
+	public Padding asPadding(String property) {
 		JsonElement el = getElement(property);
 		Optional<Number> singleValue = JanksonOps.INSTANCE.getNumberValue(el);
 		if (singleValue.isPresent()) {
 			int intValue = singleValue.get().intValue();
 			Size size = Size.of(intValue, intValue);
-			return WPadding.of(intValue);
+			return Padding.of(intValue);
 		}
 
-		if (!(el instanceof JsonArray)) return WPadding.of(0);
+		if (!(el instanceof JsonArray)) return Padding.of(0);
 		JsonArray array = (JsonArray) el;
 
 		if (array.size() == 1) {
-			return WPadding.of(array.getInt(0, 0));
+			return Padding.of(array.getInt(0, 0));
 		} else if (array.size() == 2) {
-			return WPadding.of(array.getInt(0, 0), array.getInt(1, 0));
+			return Padding.of(array.getInt(0, 0), array.getInt(1, 0));
 		} else if (array.size() >= 4) {
-			return WPadding.of(array.getInt(0, 0), array.getInt(1, 0), array.getInt(2, 0), array.getInt(3, 0));
+			return Padding.of(array.getInt(0, 0), array.getInt(1, 0), array.getInt(2, 0), array.getInt(3, 0));
 		}
-		return WPadding.of(0);
+		return Padding.of(0);
 	}
 
 	public Position asPosition(String property) {
 		JsonElement el = getElement(property);
-		if (!(el instanceof JsonArray)) return new Position().set(0, 0, 0);
+		if (!(el instanceof JsonArray)) return Position.origin();
 		JsonArray array = (JsonArray) el;
-		return new Position().set(array.getInt(0, 0), array.getInt(1, 0), array.getInt(2, 0));
+		return Position.of(array.getInt(0, 0), array.getInt(1, 0), array.getInt(2, 0));
 	}
 
 	public Position asAnchoredPosition(String property, WAbstractWidget anchor) {
 		JsonElement el = getElement(property);
-		if (!(el instanceof JsonArray)) return new Position().anchor(anchor).set(0, 0, 0);
+		if (!(el instanceof JsonArray)) return Position.of(anchor);
 		JsonArray array = (JsonArray) el;
-		return new Position().anchor(anchor).set(array.getInt(0, 0), array.getInt(1, 0), array.getInt(2, 0));
+		return Position.of(anchor, array.getInt(0, 0), array.getInt(1, 0), array.getInt(2, 0));
 	}
 
 	public Identifier asIdentifier(String property) {
@@ -142,13 +142,13 @@ public class WStyle {
 		registerSerializer(Number.class, JanksonOps.INSTANCE::createNumeric);
 		registerSerializer(String.class, JanksonOps.INSTANCE::createString);
 		registerSerializer(Boolean.class, JanksonOps.INSTANCE::createBoolean);
-		registerSerializer(Position.class, v -> JanksonOps.INSTANCE.createIntList(IntStream.of(v.offsetX, v.offsetY, v.offsetZ)));
+		registerSerializer(Position.class, v -> JanksonOps.INSTANCE.createIntList(IntStream.of(v.x, v.y, v.z)));
 		registerSerializer(Size.class, v -> JanksonOps.INSTANCE.createIntList(IntStream.of(v.getWidth(), v.getHeight())));
-		registerSerializer(WColor.class, v -> JanksonOps.INSTANCE.createLong(v.ARGB));
+		registerSerializer(Color.class, v -> JanksonOps.INSTANCE.createLong(v.ARGB));
 		// TODO: sided size serialization
 	}
 
-	public <T> WStyle override(String property, T value) {
+	public <T> Style override(String property, T value) {
 		Function<T, JsonElement> ser = getSerializer(value);
 		if (ser != null) {
 			properties.put(property, ser.apply(value));
@@ -159,7 +159,7 @@ public class WStyle {
 		return this;
 	}
 
-	public WStyle mergeFrom(WStyle other) {
+	public Style mergeFrom(Style other) {
 		this.properties.putAll(other.properties);
 		return this;
 	}

@@ -51,20 +51,14 @@ public class WSlot extends WAbstractWidget {
 	@Environment(EnvType.CLIENT)
 	public static void addPlayerInventory(Position position, Size size, WModifiableCollection parent) {
 		addArray(position, size, parent, 9, BaseContainer.PLAYER_INVENTORY, 9, 3);
-		addArray(position.setOffsetY(position.getOffsetY() + size.getHeight() * 3 + 3), size, parent, 0, BaseContainer.PLAYER_INVENTORY, 9, 1);
+		addArray(position.add(0, size.getHeight() * 3 + 3, 0), size, parent, 0, BaseContainer.PLAYER_INVENTORY, 9, 1);
 	}
 
 	@Environment(EnvType.CLIENT)
 	public static void addArray(Position position, Size size, WModifiableCollection parent, int slotNumber, int inventoryNumber, int arrayWidth, int arrayHeight) {
 		for (int y = 0; y < arrayHeight; ++y) {
 			for (int x = 0; x < arrayWidth; ++x) {
-				Position newPosition;
-				if (position.getAnchor() != null) {
-					newPosition = Position.of(position.getAnchor(), position.getOffsetX() + (size.getWidth() * x), position.getOffsetY() + (size.getHeight() * y), position.getOffsetZ());
-				} else {
-					newPosition = Position.of(position.getX() + (size.getWidth() * x), position.getY() + (size.getHeight() * y), position.getZ());
-				}
-				parent.createChild(WSlot.class, newPosition, size)
+				parent.createChild(WSlot.class, position.add(size.getWidth() * x, size.getHeight() * y, 0), size)
 						.setSlotNumber(slotNumber + y * arrayWidth + x)
 						.setInventoryNumber(inventoryNumber);
 			}

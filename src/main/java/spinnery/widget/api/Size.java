@@ -1,5 +1,8 @@
 package spinnery.widget.api;
 
+/**
+ * Data class representing a width/height pair.
+ */
 public class Size implements WSized {
 	protected int width;
 	protected int height;
@@ -13,10 +16,18 @@ public class Size implements WSized {
 		return new Size(width, height);
 	}
 
+	/**
+	 * Creates a new Size equivalent to that of the given WSized parameter.
+	 * @return Size copy equivalent to given element
+	 */
 	public static Size of(WSized widget) {
 		return new Size(widget.getWidth(), widget.getHeight());
 	}
 
+	/**
+	 * Creates a copy of this Size object, incrementing its width and height by the supplied parameters.
+	 * @return Size copy with incremented fields
+	 */
 	public Size add(int width, int height) {
 		Size newSize = Size.of(this);
 		return newSize.setWidth(newSize.getWidth() + width).setHeight(newSize.getHeight() + height);

@@ -5,7 +5,7 @@ import net.fabricmc.api.Environment;
 import org.lwjgl.glfw.GLFW;
 import spinnery.widget.api.Size;
 import spinnery.widget.api.WPadded;
-import spinnery.widget.api.WPadding;
+import spinnery.widget.api.Padding;
 
 import java.util.function.Consumer;
 
@@ -72,7 +72,7 @@ public abstract class WAbstractSlider extends WAbstractWidget implements WPadded
     }
 
     @Override
-    public WPadding getPadding() {
+    public Padding getPadding() {
         return getStyle().asPadding("padding");
     }
 

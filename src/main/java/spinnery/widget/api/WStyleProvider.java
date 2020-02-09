@@ -1,5 +1,8 @@
 package spinnery.widget.api;
 
+/**
+ * Generic interface representing an object that may provide styles.
+ */
 public interface WStyleProvider {
-	WStyle getStyle();
+	Style getStyle();
 }

@@ -1,9 +1,28 @@
 package spinnery.widget.api;
 
+/**
+ * Data class representing a position offset relative to an anchor. By default, the anchor is <tt>ORIGIN</tt>,
+ * a position with all 0 coordinates.
+ */
 public class Position implements WPositioned {
-	public static final Position ORIGIN = new Position();
+	public static final Position ORIGIN = new Position(new WPositioned() {
+		@Override
+		public int getX() {
+			return 0;
+		}
 
-	protected WPositioned anchor = ORIGIN;
+		@Override
+		public int getY() {
+			return 0;
+		}
+
+		@Override
+		public int getZ() {
+			return 0;
+		}
+	});
+
+	protected WPositioned anchor;
 	protected int x;
 	protected int y;
 	protected int z;
@@ -11,79 +30,171 @@ public class Position implements WPositioned {
 	protected int offsetY;
 	protected int offsetZ;
 
-	protected Position() {
+	protected Position(WPositioned anchor) {
+		this.anchor = anchor;
 	}
 
+	public static Position origin() {
+		return new Position(ORIGIN);
+	}
+
+	/**
+	 * Creates a copy of the given positioned element's position.
+	 *
+	 * @param source positioned element
+	 * @return equivalent position
+	 */
 	public static Position of(WPositioned source) {
-		return new Position().set(source.getX(), source.getY(), source.getZ());
+		return new Position(source);
 	}
 
+	/**
+	 * Creates a position with the given "absolute" (relative to ORIGIN) coordinates.
+	 *
+	 * @param x absolute x
+	 * @param y absolute y
+	 * @param z absolute z
+	 */
 	public static Position of(int x, int y, int z) {
-		return new Position().set(x, y, z);
+		return new Position(ORIGIN).set(x, y, z);
 	}
 
+	/**
+	 * Creates a position with the given coordinates relative to <tt>anchor</tt>.
+	 *
+	 * @param anchor anchor
+	 * @param x relative x
+	 * @param y relative y
+	 * @param z relative z
+	 */
 	public static Position of(WPositioned anchor, int x, int y, int z) {
-		return new Position().anchor(anchor).set(x, y, z);
+		return new Position(anchor).set(x, y, z);
 	}
 
+	/**
+	 * Creates a position with the given coordinates relative to <tt>anchor</tt> and 0 Z offset.
+	 *
+	 * @param anchor anchor
+	 * @param x relative x
+	 * @param y relative y
+	 */
 	public static Position of(WPositioned anchor, int x, int y) {
-		return new Position().anchor(anchor).set(x, y, 0);
+		return new Position(anchor).set(x, y, 0);
 	}
 
+	/**
+	 * Creates a position equivalent to the top-right corner of the given layout element (anchor + element width).
+	 *
+	 * @param source layout element
+	 */
 	public static Position ofTopRight(WLayoutElement source) {
 		return Position.of(source).add(source.getWidth(), 0, 0);
 	}
 
+	/**
+	 * Creates a position equivalent to the bottom-left corner of the given layout element (anchor + element height).
+	 *
+	 * @param source layout element
+	 */
 	public static Position ofBottomLeft(WLayoutElement source) {
 		return Position.of(source).add(0, source.getHeight(), 0);
 	}
 
+	/**
+	 * Creates a position equivalent to the bottom-right corner of the given layout element (anchor + element size).
+	 *
+	 * @param source layout element
+	 */
 	public static Position ofBottomRight(WLayoutElement source) {
 		return Position.of(source).add(source.getWidth(), source.getHeight(), 0);
 	}
 
-	public Position anchor(WPositioned anchor) {
+	public Position setAnchor(WPositioned anchor) {
 		this.anchor = anchor;
 		return this;
 	}
 
+	/**
+	 * Sets new coordinates of this position object relative to its anchor.
+	 * @param x relative x
+	 * @param y relative y
+	 * @param z relative z
+	 * @return same position object
+	 */
 	public Position set(int x, int y, int z) {
-		setOffsetX(x);
-		setOffsetY(y);
-		setOffsetZ(z);
-
-		setX(anchor.getX() + x);
-		setY(anchor.getY() + y);
-		setZ(anchor.getZ() + z);
-
+		setRelativeX(x);
+		setRelativeY(y);
+		setRelativeZ(z);
 		return this;
 	}
 
+	/**
+	 * Sets new offset coordiantes of this position object.
+	 * @param x offset x
+	 * @param y offset y
+	 * @param z offset z
+	 * @return same position object
+	 */
+	public Position setOffset(int x, int y, int z) {
+		setOffsetX(x);
+		setOffsetY(y);
+		setOffsetZ(z);
+		return this;
+	}
+
+	/**
+	 * Copies this position object and increments its coordinates by the given parameters.
+	 * @param x increment relative x
+	 * @param y increment relative y
+	 * @param z increment relative z
+	 * @return new position object
+	 */
 	public Position add(int x, int y, int z) {
 		Position newPos = Position.of(this);
 		newPos.set(newPos.x + x, newPos.y + y, newPos.z + z);
 		return newPos;
 	}
 
-	public void align() {
-		setX(anchor.getX() + getOffsetX());
-		setY(anchor.getY() + getOffsetY());
-		setZ(anchor.getZ() + getOffsetZ());
-	}
-
 	public WPositioned getAnchor() {
 		return anchor;
 	}
 
+	/**
+	 * Gets the absolute X coordinate, which is calculated as the sum of the anchor's coordinate, this
+	 * position's relative coordiate, and this position's offset coordiante.
+	 * @return absolute coordinate
+	 */
 	public int getX() {
+		return anchor.getX() + x + offsetX;
+	}
+
+	/**
+	 * Gets the absolute Y coordinate, which is calculated as the sum of the anchor's coordinate, this
+	 * position's relative coordiate, and this position's offset coordiante.
+	 * @return absolute coordinate
+	 */
+	public int getY() {
+		return anchor.getY() + y + offsetY;
+	}
+
+	/**
+	 * Gets the absolute Y coordinate, which is calculated as the sum of the anchor's coordinate, this
+	 * position's relative coordiate, and this position's offset coordiante.
+	 * @return absolute coordinate
+	 */
+	public int getZ() {
+		return anchor.getZ() + z + offsetZ;
+	}
+
+	public int getRelativeX() {
 		return x;
 	}
 
-	public int getY() {
+	public int getRelativeY() {
 		return y;
 	}
 
-	public int getZ() {
+	public int getRelativeZ() {
 		return z;
 	}
 
@@ -99,18 +210,48 @@ public class Position implements WPositioned {
 		return offsetZ;
 	}
 
+	/**
+	 * Changes this position objects's relative X coordinate in such a way that its absolute X coordinate will be
+	 * equal to the parameter.
+	 * @param x absolute coordinate
+	 * @return same position object
+	 */
 	public Position setX(int x) {
+		return setRelativeX(x - anchor.getX() - offsetX);
+	}
+
+	/**
+	 * Changes this position objects's relative Y coordinate in such a way that its absolute X coordinate will be
+	 * equal to the parameter.
+	 * @param y absolute coordinate
+	 * @return same position object
+	 */
+	public Position setY(int y) {
+		return setRelativeY(y - anchor.getY() - offsetY);
+	}
+
+	/**
+	 * Changes this position objects's relative Z coordinate in such a way that its absolute X coordinate will be
+	 * equal to the parameter.
+	 * @param z absolute coordinate
+	 * @return same position object
+	 */
+	public Position setZ(int z) {
+		return setRelativeZ(z - anchor.getZ() - offsetZ);
+	}
+
+	public Position setRelativeX(int x) {
 		this.x = x;
 		return this;
 	}
 
-	public Position setY(int y) {
+	public Position setRelativeY(int y) {
 		this.y = y;
 		return this;
 	}
 
-	public Position setZ(int z) {
-		this.z = z;
+	public Position setRelativeZ(int offsetZ) {
+		this.z = offsetZ;
 		return this;
 	}
 

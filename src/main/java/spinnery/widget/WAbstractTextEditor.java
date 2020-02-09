@@ -5,6 +5,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.text.Text;
 import net.minecraft.util.Pair;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
@@ -13,13 +14,14 @@ import spinnery.client.TextRenderer;
 import spinnery.widget.api.Position;
 import spinnery.widget.api.Size;
 import spinnery.widget.api.WPadded;
-import spinnery.widget.api.WPadding;
+import spinnery.widget.api.Padding;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+@SuppressWarnings("unchecked")
 @Environment(EnvType.CLIENT)
 public abstract class WAbstractTextEditor extends WAbstractWidget implements WPadded {
     protected String text = "";
@@ -31,6 +33,7 @@ public abstract class WAbstractTextEditor extends WAbstractWidget implements WPa
     protected int yOffset = 0;
     protected int cursorTick = 20;
 
+    @SuppressWarnings("UnusedReturnValue")
     protected class Cursor {
         protected int x;
         protected int y;
@@ -124,6 +127,10 @@ public abstract class WAbstractTextEditor extends WAbstractWidget implements WPa
     protected final Cursor cursor = new Cursor(0, 0);
     protected final Pair<Cursor, Cursor> selection = new Pair<>(new Cursor(-1, -1), new Cursor(-1, -1));
     protected final Cursor mouseClick = new Cursor(0, 0);
+
+    public WAbstractTextEditor() {
+        setText("");
+    }
 
     protected boolean hasSelection() {
         return selection.getLeft().present() && selection.getRight().present();
@@ -241,6 +248,10 @@ public abstract class WAbstractTextEditor extends WAbstractWidget implements WPa
         this.text = text;
         lines.addAll(Arrays.asList(text.split("\n", -1)));
         return (W) this;
+    }
+
+    public <W extends WAbstractTextEditor> W setText(Text text) {
+        return setText(text.asFormattedString());
     }
 
     protected void insertText(String insert) {
@@ -683,7 +694,7 @@ public abstract class WAbstractTextEditor extends WAbstractWidget implements WPa
     }
 
     @Override
-    public WPadding getPadding() {
+    public Padding getPadding() {
         return getStyle().asPadding("padding");
     }
 
@@ -716,6 +727,7 @@ public abstract class WAbstractTextEditor extends WAbstractWidget implements WPa
         int cursorY = innerY + (cH + 2) * (cursor.y - lineOffset) - 2;
         int yRenderOffset = yOffset + lineOffset * cH;
 
+        RenderSystem.pushMatrix();
         RenderSystem.translatef(xOffset, yRenderOffset, 0f);
         for (int i = lineOffset; i < lineOffset + getVisibleLines(); i++) {
             if (i < 0 || !isLineVisible(i) || i > lines.size() - 1) continue;
@@ -737,8 +749,35 @@ public abstract class WAbstractTextEditor extends WAbstractWidget implements WPa
             BaseRenderer.drawRectangle(cursorX, cursorY, z, 1, cH + 2,
                     getStyle().asColor("cursor"));
         }
-        RenderSystem.translatef(-xOffset, -yRenderOffset, 0f);
+        RenderSystem.popMatrix();
 
         GL11.glDisable(GL11.GL_SCISSOR_TEST);
+    }
+
+    public double getScale() {
+        return scale;
+    }
+
+    public <W extends WAbstractTextEditor> W setScale(double scale) {
+        this.scale = scale;
+        return (W) this;
+    }
+
+    public boolean isEditable() {
+        return editable;
+    }
+
+    public <W extends WAbstractTextEditor> W setEditable(boolean editable) {
+        this.editable = editable;
+        return (W) this;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public <W extends WAbstractTextEditor> W setActive(boolean active) {
+        this.active = active;
+        return (W) this;
     }
 }

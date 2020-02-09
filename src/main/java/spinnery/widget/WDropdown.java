@@ -7,15 +7,11 @@ import spinnery.client.BaseRenderer;
 import spinnery.client.TextRenderer;
 import spinnery.widget.api.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @SuppressWarnings("unchecked")
 @Environment(EnvType.CLIENT)
-public class WDropdown extends WAbstractWidget implements WModifiableCollection {
+public class WDropdown extends WAbstractWidget implements WModifiableCollection, WDelegatedEventListener {
 	public enum HideBehavior {
 		TOGGLE,
 		ANYWHERE,
@@ -25,7 +21,7 @@ public class WDropdown extends WAbstractWidget implements WModifiableCollection 
 		INSIDE_EXCEPT_CHILD
 	}
 
-	public List<List<WAbstractWidget>> dropdownWidgets = new ArrayList<>();
+	public Set<WAbstractWidget> widgets = new HashSet<>();
 	protected boolean state = false;
 	protected Size dropdownSize;
 	protected WVirtualArea toggle;
@@ -34,25 +30,19 @@ public class WDropdown extends WAbstractWidget implements WModifiableCollection 
 	@Override
 	public void onLayoutChange() {
 		toggle = new WVirtualArea(Position.of(this), Size.of(getToggleWidth(), getToggleHeight()));
-		updatePositions();
-		updateHidden();
+		updateChildren();
 	}
 
-	public void updateHidden() {
-		for (List<WAbstractWidget> widgetB : getDropdownWidgets()) {
-			for (WAbstractWidget widgetC : widgetB) {
-				widgetC.setHidden(!getState());
-			}
+	protected void updateChildren() {
+		for (WAbstractWidget widget : widgets) {
+			widget.getPosition().setOffset(0, getToggleHeight() + 2, 0);
+			widget.setHidden(!getState());
 		}
 	}
 
-	public List<List<WAbstractWidget>> getDropdownWidgets() {
-		return dropdownWidgets;
-	}
-
-	public <W extends WDropdown> W setDropdownWidgets(List<List<WAbstractWidget>> dropdownWidgets) {
-		this.dropdownWidgets = dropdownWidgets;
-		return (W) this;
+	@Override
+	public Collection<? extends WEventListener> getEventDelegates() {
+		return getWidgets();
 	}
 
 	public boolean getState() {
@@ -74,34 +64,24 @@ public class WDropdown extends WAbstractWidget implements WModifiableCollection 
 		return (W) this;
 	}
 
-	protected void propagateMouseToChildren(int mouseX, int mouseY, int mouseButton) {
-		for (WAbstractWidget widget : getAllWidgets()) {
-			if (!widget.getClass().isAnnotationPresent(WFocusedMouseListener.class) || widget.isFocused()) {
-				widget.onMouseClicked(mouseX, mouseY, mouseButton);
-			}
-		}
-	}
-
 	@Override
 	public void onMouseClicked(int mouseX, int mouseY, int mouseButton) {
 		boolean shouldOpen = isWithinBounds(mouseX, mouseY);
 		boolean shouldClose = false;
 
+		super.onMouseClicked(mouseX, mouseY, mouseButton);
 		if (getState()) {
 			switch (hideBehavior) {
 				case TOGGLE:
 					shouldClose = toggle.isWithinBounds(mouseX, mouseY);
 					break;
 				case ANYWHERE:
-					propagateMouseToChildren(mouseX, mouseY, mouseButton);
 					shouldClose = true;
 					break;
 				case INSIDE:
-					propagateMouseToChildren(mouseX, mouseY, mouseButton);
 					shouldClose = isWithinBounds(mouseX, mouseY);
 					break;
 				case ONLY_CHILD:
-					propagateMouseToChildren(mouseX, mouseY, mouseButton);
 					shouldClose = (isWithinBounds(mouseX, mouseY) && !isFocused());
 					break;
 				case ANYWHERE_EXCEPT_CHILD:
@@ -117,16 +97,14 @@ public class WDropdown extends WAbstractWidget implements WModifiableCollection 
 
 		if (shouldToggle && mouseButton == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
 			setState(!getState());
-			updateHidden();
+			updateChildren();
 		}
-
-		super.onMouseClicked(mouseX, mouseY, mouseButton);
 	}
 
 	@Override
 	public void align() {
 		super.align();
-		updatePositions();
+		updateChildren();
 	}
 
 	@Override
@@ -140,10 +118,6 @@ public class WDropdown extends WAbstractWidget implements WModifiableCollection 
 
 	@Override
 	public Set<WAbstractWidget> getWidgets() {
-		Set<WAbstractWidget> widgets = new LinkedHashSet<>();
-		for (List<WAbstractWidget> widgetA : getDropdownWidgets()) {
-			widgets.addAll(widgetA);
-		}
 		return widgets;
 	}
 
@@ -172,25 +146,6 @@ public class WDropdown extends WAbstractWidget implements WModifiableCollection 
 	public <W extends WDropdown> W setDropdownSize(Size dropdownSize) {
 		this.dropdownSize = dropdownSize;
 		return (W) this;
-	}
-
-	@Override
-	public void center() {
-		int oldX = getX();
-		int oldY = getY();
-
-		super.center();
-
-		int newX = getX();
-		int newY = getY();
-
-		int offsetX = newX - oldX;
-		int offsetY = newY - oldY;
-
-		for (WAbstractWidget widget : getWidgets()) {
-			widget.setX(widget.getX() + offsetX);
-			widget.setY(widget.getY() + offsetY);
-		}
 	}
 
 	@Override
@@ -228,36 +183,20 @@ public class WDropdown extends WAbstractWidget implements WModifiableCollection 
 		}
 	}
 
-	public void updatePositions() {
-		int y = getY() + (hasLabel() ? 20 : 8);
-
-		for (List<WAbstractWidget> widgetA : getDropdownWidgets()) {
-			int x = getX() + 4;
-			for (WAbstractWidget widgetB : widgetA) {
-				widgetB.setX(x);
-				widgetB.setY(y);
-				x += widgetB.getWidth() + 2;
-			}
-			y += widgetA.get(0).getHeight() + 2;
-		}
-	}
-
 	@Override
 	public void add(WAbstractWidget... widgetArray) {
-		getDropdownWidgets().add(Arrays.asList(widgetArray));
-		updatePositions();
-		updateHidden();
+		widgets.addAll(Arrays.asList(widgetArray));
+		updateChildren();
 	}
 
 	@Override
 	public void remove(WAbstractWidget... widgetArray) {
-		getDropdownWidgets().remove(Arrays.asList(widgetArray));
-		updatePositions();
-		updateHidden();
+		widgets.removeAll(Arrays.asList(widgetArray));
+		updateChildren();
 	}
 
 	@Override
 	public boolean contains(WAbstractWidget... widgetArray) {
-		return getDropdownWidgets().containsAll(Arrays.asList(widgetArray));
+		return widgets.containsAll(Arrays.asList(widgetArray));
 	}
 }

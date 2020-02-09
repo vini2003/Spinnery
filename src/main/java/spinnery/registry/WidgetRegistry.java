@@ -28,13 +28,10 @@ public class WidgetRegistry {
 	public static void initialize() {
 		register(new Identifier("spinnery", "widget"), WAbstractWidget.class);
 		register(new Identifier("spinnery", "button"), WButton.class);
-		register(new Identifier("spinnery", "draggable_area"), WDraggableArea.class);
 		register(new Identifier("spinnery", "dropdown"), WDropdown.class);
 		register(new Identifier("spinnery", "dynamic_image"), WDynamicImage.class);
-		register(new Identifier("spinnery", "horizontal_list"), WHorizontalList.class);
 		register(new Identifier("spinnery", "horizontal_slider"), WHorizontalSlider.class);
 		register(new Identifier("spinnery", "panel"), WPanel.class);
-		register(new Identifier("spinnery", "vertical_list"), WVerticalList.class);
 		register(new Identifier("spinnery", "slot"), WSlot.class);
 		register(new Identifier("spinnery", "static_image"), WStaticImage.class);
 		register(new Identifier("spinnery", "static_text"), WStaticText.class);
