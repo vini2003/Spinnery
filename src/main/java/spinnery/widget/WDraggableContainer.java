@@ -38,14 +38,14 @@ public class WDraggableContainer extends WAbstractWidget implements WModifiableC
 
     @Override
     public int getEndAnchorX() {
-        if (getVisibleWidth() > getInnerWidth()) return getStartAnchorX();
-        return getStartAnchorX() - (getInnerWidth() - getVisibleWidth());
+        if (getVisibleWidth() > getUnderlyingWidth()) return getStartAnchorX();
+        return getStartAnchorX() - (getUnderlyingWidth() - getVisibleWidth());
     }
 
     @Override
     public int getEndAnchorY() {
-        if (getVisibleHeight() > getInnerHeight()) return getStartAnchorY();
-        return getStartAnchorY() - (getInnerHeight() - getVisibleHeight());
+        if (getVisibleHeight() > getUnderlyingHeight()) return getStartAnchorY();
+        return getStartAnchorY() - (getUnderlyingHeight() - getVisibleHeight());
     }
 
     @Override
@@ -89,7 +89,7 @@ public class WDraggableContainer extends WAbstractWidget implements WModifiableC
     }
 
     @Override
-    public Size getInnerSize() {
+    public Size getUnderlyingSize() {
         // Leftmost widget (lower X)
         int leftmostX = getStartAnchorX();
         int rightmostX = leftmostX;

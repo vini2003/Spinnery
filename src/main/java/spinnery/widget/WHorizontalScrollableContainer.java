@@ -113,8 +113,8 @@ public class WHorizontalScrollableContainer extends WAbstractWidget implements W
 
     @Override
     public int getEndAnchorX() {
-        if (getWidth() > getInnerWidth()) return getStartAnchorX();
-        return getStartAnchorX() - (getInnerWidth() - getVisibleWidth());
+        if (getWidth() > getUnderlyingWidth()) return getStartAnchorX();
+        return getStartAnchorX() - (getUnderlyingWidth() - getVisibleWidth());
     }
 
     @Override
@@ -123,7 +123,7 @@ public class WHorizontalScrollableContainer extends WAbstractWidget implements W
     }
 
     @Override
-    public Size getInnerSize() {
+    public Size getUnderlyingSize() {
         Set<WAbstractWidget> widgets = getWidgets();
 
         int leftmostX = getStartAnchorX();

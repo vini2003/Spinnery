@@ -5,12 +5,12 @@ package spinnery.widget.api;
  * a part is visible.
  */
 public interface WViewport {
-    Size getInnerSize();
-    default int getInnerHeight() {
-        return getInnerSize().getHeight();
+    Size getUnderlyingSize();
+    default int getUnderlyingHeight() {
+        return getUnderlyingSize().getHeight();
     }
-    default int getInnerWidth() {
-        return getInnerSize().getWidth();
+    default int getUnderlyingWidth() {
+        return getUnderlyingSize().getWidth();
     }
     Size getVisibleSize();
     default int getVisibleHeight() {

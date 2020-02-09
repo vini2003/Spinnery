@@ -15,14 +15,14 @@ public class WVerticalScrollbar extends WAbstractWidget {
 
     public int getScrollerHeight() {
         double outerHeight = getHeight();
-        double innerHeight = scrollable.getInnerHeight();
+        double innerHeight = scrollable.getUnderlyingHeight();
         int calculated = (int) (outerHeight * (outerHeight / Math.max(innerHeight, outerHeight)));
         return Math.max(calculated, 4);
     }
 
     public int getScrollerY() {
         double outerHeight = getHeight();
-        double innerHeight = scrollable.getInnerHeight();
+        double innerHeight = scrollable.getUnderlyingHeight();
         double topOffset = scrollable.getStartOffsetY();
         double percentToEnd = topOffset / (innerHeight - outerHeight);
         double maximumOffset = getHeight() - getScrollerHeight();

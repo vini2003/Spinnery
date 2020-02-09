@@ -109,7 +109,7 @@ public class Position implements WPositioned {
 		return Position.of(source).add(source.getWidth(), source.getHeight(), 0);
 	}
 
-	public Position anchor(WPositioned anchor) {
+	public Position setAnchor(WPositioned anchor) {
 		this.anchor = anchor;
 		return this;
 	}

@@ -113,8 +113,8 @@ public class WVerticalScrollableContainer extends WAbstractWidget implements WMo
 
     @Override
     public int getEndAnchorY() {
-        if (getVisibleHeight() > getInnerHeight()) return getStartAnchorY();
-        return getStartAnchorY() - (getInnerHeight() - getVisibleHeight());
+        if (getVisibleHeight() > getUnderlyingHeight()) return getStartAnchorY();
+        return getStartAnchorY() - (getUnderlyingHeight() - getVisibleHeight());
     }
 
     @Override
@@ -123,7 +123,7 @@ public class WVerticalScrollableContainer extends WAbstractWidget implements WMo
     }
 
     @Override
-    public Size getInnerSize() {
+    public Size getUnderlyingSize() {
         Set<WAbstractWidget> widgets = getWidgets();
 
         int topmostY = getStartAnchorY();

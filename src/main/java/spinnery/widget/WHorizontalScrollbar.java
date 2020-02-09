@@ -15,14 +15,14 @@ public class WHorizontalScrollbar extends WAbstractWidget {
 
     public int getScrollerWidth() {
         double outerWidth = getWidth();
-        double innerWidth = scrollable.getInnerWidth();
+        double innerWidth = scrollable.getUnderlyingWidth();
         int calculated = (int) (outerWidth * (outerWidth / (Math.max(innerWidth, outerWidth))));
         return Math.max(calculated, 4);
     }
 
     public int getScrollerX() {
         double outerWidth = getWidth();
-        double innerWidth = scrollable.getInnerWidth();
+        double innerWidth = scrollable.getUnderlyingWidth();
         double leftOffset = scrollable.getStartOffsetX();
         double percentToEnd = leftOffset / (innerWidth - outerWidth);
         double maximumOffset = getWidth() - getScrollerWidth();
