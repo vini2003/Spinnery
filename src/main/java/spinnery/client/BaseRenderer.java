@@ -10,10 +10,10 @@ import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.texture.TextureManager;
 import net.minecraft.util.Identifier;
 import org.lwjgl.opengl.GL11;
-import spinnery.widget.api.WColor;
+import spinnery.widget.api.Color;
 
 public class BaseRenderer {
-	public static void drawPanel(double x, double y, double z, double sX, double sY, WColor shadow, WColor panel, WColor hilight, WColor outline) {
+	public static void drawPanel(double x, double y, double z, double sX, double sY, Color shadow, Color panel, Color hilight, Color outline) {
 		drawRectangle(x + 3, y + 3, z, sX - 6, sY - 6, panel);
 
 		drawRectangle(x + 2, y + 1, z, sX - 4, 2, hilight);
@@ -35,7 +35,7 @@ public class BaseRenderer {
 		drawRectangle(x + sX - 2, y + sY - 2, z, 1, 1, outline);
 	}
 
-	public static void drawRectangle(double x, double y, double z, double sX, double sY, WColor color) {
+	public static void drawRectangle(double x, double y, double z, double sX, double sY, Color color) {
 		RenderSystem.enableBlend();
 		RenderSystem.disableTexture();
 		RenderSystem.blendFuncSeparate(770, 771, 1, 0);
@@ -57,7 +57,7 @@ public class BaseRenderer {
 		RenderSystem.disableBlend();
 	}
 
-	public static void drawGradient(double startX, double startY, double endX, double endY, double z, WColor colorStart, WColor colorEnd) {
+	public static void drawGradient(double startX, double startY, double endX, double endY, double z, Color colorStart, Color colorEnd) {
 		RenderSystem.disableTexture();
 		RenderSystem.enableBlend();
 		RenderSystem.disableAlphaTest();
@@ -83,7 +83,7 @@ public class BaseRenderer {
 		return Tessellator.getInstance();
 	}
 
-	public static void drawBeveledPanel(double x, double y, double z, double sX, double sY, WColor topleft, WColor panel, WColor bottomright) {
+	public static void drawBeveledPanel(double x, double y, double z, double sX, double sY, Color topleft, Color panel, Color bottomright) {
 		drawRectangle(x, y, z, sX, sY, panel);
 		drawRectangle(x, y, z, sX, 1, topleft);
 		drawRectangle(x, y + 1, z, 1, sY - 1, topleft);
@@ -114,7 +114,7 @@ public class BaseRenderer {
 		return MinecraftClient.getInstance().getTextureManager();
 	}
 
-	public static void drawPixel(double x, double y, double z, WColor color) {
+	public static void drawPixel(double x, double y, double z, Color color) {
 		drawRectangle(x, y, z, 1, 1, color);
 	}
 

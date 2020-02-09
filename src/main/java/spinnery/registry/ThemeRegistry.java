@@ -3,8 +3,8 @@ package spinnery.registry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.util.Identifier;
-import spinnery.widget.api.WStyle;
-import spinnery.widget.api.WTheme;
+import spinnery.widget.api.Style;
+import spinnery.widget.api.Theme;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,14 +13,14 @@ import java.util.Map;
 public class ThemeRegistry {
     public static final Identifier DEFAULT_THEME = new Identifier("spinnery", "default");
 
-    private static WTheme defaultTheme;
-    private static final Map<Identifier, WTheme> themes = new HashMap<>();
+    private static Theme defaultTheme;
+    private static final Map<Identifier, Theme> themes = new HashMap<>();
 
     public static void clear() {
         themes.clear();
     }
 
-    public static void register(WTheme theme) {
+    public static void register(Theme theme) {
         if (theme == null) return;
         if (theme.getId().equals(DEFAULT_THEME)) {
             defaultTheme = theme;
@@ -29,8 +29,8 @@ public class ThemeRegistry {
         }
     }
 
-    public static WStyle getStyle(Identifier themeId, Identifier widgetId) {
-        WTheme theme = themes.get(themeId);
+    public static Style getStyle(Identifier themeId, Identifier widgetId) {
+        Theme theme = themes.get(themeId);
         if (theme == null) theme = defaultTheme;
         return theme.getStyle(widgetId);
     }

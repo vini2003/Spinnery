@@ -3,7 +3,6 @@ package spinnery.widget.api;
 import blue.endless.jankson.JsonArray;
 import blue.endless.jankson.JsonElement;
 import blue.endless.jankson.JsonObject;
-import blue.endless.jankson.api.SyntaxError;
 import com.google.common.collect.ImmutableMap;
 import io.github.cottonmc.jankson.JanksonOps;
 import net.minecraft.util.Identifier;
@@ -14,12 +13,12 @@ import spinnery.registry.ThemeRegistry;
 import java.util.HashMap;
 import java.util.Map;
 
-public class WTheme {
+public class Theme {
 	protected final Identifier id;
 	protected final Identifier parent;
-	protected final ImmutableMap<Identifier, WStyle> styles;
+	protected final ImmutableMap<Identifier, Style> styles;
 
-	protected WTheme(Identifier id, Identifier parent, Map<Identifier, WStyle> styles) {
+	protected Theme(Identifier id, Identifier parent, Map<Identifier, Style> styles) {
 		this.id = id;
 		this.parent = parent;
 		this.styles = ImmutableMap.copyOf(styles);
@@ -62,7 +61,7 @@ public class WTheme {
 		}
 	}
 
-	public static WTheme of(Identifier themeId, JsonObject themeDef) {
+	public static Theme of(Identifier themeId, JsonObject themeDef) {
 		// Add parent logic
 		JsonElement parentProp = themeDef.get("parent");
 		Identifier parent = JanksonOps.INSTANCE.getStringValue(parentProp).map(Identifier::new).orElse(null);
@@ -98,7 +97,7 @@ public class WTheme {
 		}
 
 		// Process widget styles
-		Map<Identifier, WStyle> styles = new HashMap<>();
+		Map<Identifier, Style> styles = new HashMap<>();
 		for (String widgetId : themeProps.keySet()) {
 			Map<String, JsonElement> properties = new HashMap<>();
 			JsonObject widgetProps = themeProps.getObject(widgetId);
@@ -122,22 +121,22 @@ public class WTheme {
 			// Apply actual values
 			flattenObject(properties, null, widgetProps);
 			processRefs(properties, vars);
-			styles.put(new Identifier(widgetId), new WStyle(properties));
+			styles.put(new Identifier(widgetId), new Style(properties));
 		}
-		return new WTheme(themeId, parent, styles);
+		return new Theme(themeId, parent, styles);
 	}
 
 	public Identifier getId() {
 		return id;
 	}
 
-	public WStyle getStyle(Identifier widgetId) {
-		WStyle style = styles.get(widgetId);
+	public Style getStyle(Identifier widgetId) {
+		Style style = styles.get(widgetId);
 		if (parent != null) {
-			WStyle baseStyle = ThemeRegistry.getStyle(parent, widgetId);
+			Style baseStyle = ThemeRegistry.getStyle(parent, widgetId);
 			if (style == null) return baseStyle;
-			style = WStyle.of(baseStyle).mergeFrom(style);
+			style = Style.of(baseStyle).mergeFrom(style);
 		}
-		return style == null ? new WStyle() : style;
+		return style == null ? new Style() : style;
 	}
 }

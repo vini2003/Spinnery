@@ -1,7 +1,7 @@
 package spinnery.widget;
 
 import spinnery.client.BaseRenderer;
-import spinnery.widget.api.WColor;
+import spinnery.widget.api.Color;
 import spinnery.widget.api.WModifiableCollection;
 
 import java.util.Arrays;
@@ -21,12 +21,12 @@ public class WTooltip extends WAbstractWidget implements WModifiableCollection {
         int width = size.getWidth();
         int height = size.getHeight();
 
-        WColor backgroundStart = getStyle().asColor("background.start");
-        WColor backgroundEnd = getStyle().asColor("background.end");
-        WColor colorStart = getStyle().asColor("outline.start");
-        WColor colorEnd = getStyle().asColor("outline.end");
-        WColor shadowStart = getStyle().asColor("shadow.start");
-        WColor shadowEnd = getStyle().asColor("shadow.end");
+        Color backgroundStart = getStyle().asColor("background.start");
+        Color backgroundEnd = getStyle().asColor("background.end");
+        Color colorStart = getStyle().asColor("outline.start");
+        Color colorEnd = getStyle().asColor("outline.end");
+        Color shadowStart = getStyle().asColor("shadow.start");
+        Color shadowEnd = getStyle().asColor("shadow.end");
 
         // Vanilla drawing process
         BaseRenderer.drawGradient(x - 3, y - 4, x + width + 3, y - 3, z, shadowStart, shadowStart); // top border

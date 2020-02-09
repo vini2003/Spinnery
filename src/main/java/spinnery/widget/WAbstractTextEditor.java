@@ -14,7 +14,7 @@ import spinnery.client.TextRenderer;
 import spinnery.widget.api.Position;
 import spinnery.widget.api.Size;
 import spinnery.widget.api.WPadded;
-import spinnery.widget.api.WPadding;
+import spinnery.widget.api.Padding;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -694,7 +694,7 @@ public abstract class WAbstractTextEditor extends WAbstractWidget implements WPa
     }
 
     @Override
-    public WPadding getPadding() {
+    public Padding getPadding() {
         return getStyle().asPadding("padding");
     }
 

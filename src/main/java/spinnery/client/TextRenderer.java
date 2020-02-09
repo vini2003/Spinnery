@@ -4,7 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
 import spinnery.widget.api.Position;
-import spinnery.widget.api.WColor;
+import spinnery.widget.api.Color;
 
 public class TextRenderer {
 	public static RenderPass pass() {
@@ -106,7 +106,7 @@ public class TextRenderer {
 			return scale(size / 9D);
 		}
 
-		public RenderPass color(WColor color) {
+		public RenderPass color(Color color) {
 			return color(color.ARGB);
 		}
 
@@ -120,7 +120,7 @@ public class TextRenderer {
 			return this;
 		}
 
-		public RenderPass shadowColor(WColor color) {
+		public RenderPass shadowColor(Color color) {
 			return shadowColor(color.ARGB);
 		}
 
