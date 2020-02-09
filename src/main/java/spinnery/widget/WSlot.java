@@ -157,7 +157,7 @@ public class WSlot extends WAbstractWidget {
 	@Override
 	@Environment(EnvType.CLIENT)
 	public void onMouseDragged(int mouseX, int mouseY, int button, double deltaX, double deltaY) {
-		if (!isFocused()) return;
+		if (!isFocused() || button == MIDDLE) return;
 
 		PlayerEntity player = getInterface().getContainer().getPlayerInventory().player;
 		BaseContainer container = getInterface().getContainer();
