@@ -82,6 +82,7 @@ public abstract class WAbstractWidget implements Tickable, Comparable<WAbstractW
 	@Environment(EnvType.CLIENT)
 	public <W extends WAbstractWidget> W setHidden(boolean isHidden) {
 		this.isHidden = isHidden;
+		setFocus(false);
 		return (W) this;
 	}
 
