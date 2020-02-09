@@ -727,6 +727,7 @@ public abstract class WAbstractTextEditor extends WAbstractWidget implements WPa
         int cursorY = innerY + (cH + 2) * (cursor.y - lineOffset) - 2;
         int yRenderOffset = yOffset + lineOffset * cH;
 
+        RenderSystem.pushMatrix();
         RenderSystem.translatef(xOffset, yRenderOffset, 0f);
         for (int i = lineOffset; i < lineOffset + getVisibleLines(); i++) {
             if (i < 0 || !isLineVisible(i) || i > lines.size() - 1) continue;
@@ -748,7 +749,7 @@ public abstract class WAbstractTextEditor extends WAbstractWidget implements WPa
             BaseRenderer.drawRectangle(cursorX, cursorY, z, 1, cH + 2,
                     getStyle().asColor("cursor"));
         }
-        RenderSystem.translatef(-xOffset, -yRenderOffset, 0f);
+        RenderSystem.popMatrix();
 
         GL11.glDisable(GL11.GL_SCISSOR_TEST);
     }

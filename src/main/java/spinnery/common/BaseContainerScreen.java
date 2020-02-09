@@ -46,10 +46,11 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 			stackA = getContainer().getPreviewCursorStack();
 		}
 
+		RenderSystem.pushMatrix();
 		RenderSystem.translatef(0, 0, 200);
 		BaseRenderer.getItemRenderer().renderGuiItem(stackA, mouseX - 8, mouseY - 8);
 		BaseRenderer.getItemRenderer().renderGuiItemOverlay(BaseRenderer.getTextRenderer(), stackA, mouseX - 8, mouseY - 8);
-		RenderSystem.translatef(0, 0, 0);
+		RenderSystem.popMatrix();
 	}
 
 	@Override
