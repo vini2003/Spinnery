@@ -21,9 +21,9 @@ public interface WModifiableCollection extends WCollection {
 	}
 
 	default <W extends WAbstractWidget> W createChild(Class<W> wClass, WPosition position, WSize size) {
-		W widget = getFactory().build(wClass, position, size);
-		if (this instanceof WLayoutElement) widget.setParent((WLayoutElement) this);
-		add(widget);
+		W widget = getFactory().build(wClass);
+		if (position != null) widget.setPosition(position);
+		if (size != null) widget.setSize(size);
 		return widget;
 	}
 }

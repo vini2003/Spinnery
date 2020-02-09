@@ -21,8 +21,7 @@ public class WHorizontalScrollableContainer extends WAbstractWidget implements W
     protected float scrollKineticDelta = 0;
 
     public WHorizontalScrollableContainer() {
-        scrollbar = getFactory().build(WHorizontalScrollbar.class, null, null).scrollable(this);
-        scrollbar.setParent(this);
+        scrollbar = WWidgetFactory.buildDetached(WHorizontalScrollbar.class).scrollable(this).setParent(this);
     }
 
     @Override

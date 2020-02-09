@@ -17,8 +17,10 @@ public class WDraggableArea extends WAbstractWidget implements WModifiableCollec
 	protected WDraggableContainer container;
 
 	public WDraggableArea() {
-		container = getFactory().build(WDraggableContainer.class, WPosition.of(this, 4, 4, 0), WSize.of(getWidth() - 8, getHeight() - 8));
-		container.setParent(this);
+		container = WWidgetFactory.buildDetached(WDraggableContainer.class)
+				.setPosition(WPosition.of(this, 4, 4, 0))
+				.setSize(WSize.of(getWidth() - 8, getHeight() - 8))
+				.setParent(this);
 	}
 
 	@Override

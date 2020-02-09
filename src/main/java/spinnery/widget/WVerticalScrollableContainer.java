@@ -21,8 +21,7 @@ public class WVerticalScrollableContainer extends WAbstractWidget implements WMo
     protected float scrollKineticDelta = 0;
 
     public WVerticalScrollableContainer() {
-        scrollbar = getFactory().build(WVerticalScrollbar.class, null, null).scrollable(this);
-        scrollbar.setParent(this);
+        scrollbar = WWidgetFactory.buildDetached(WVerticalScrollbar.class).scrollable(this).setParent(this);
     }
 
     @Override

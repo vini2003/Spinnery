@@ -17,8 +17,10 @@ public class WVerticalList extends WAbstractWidget implements WModifiableCollect
 	protected WVerticalScrollableContainer container;
 
 	public WVerticalList() {
-		container = getFactory().build(WVerticalScrollableContainer.class, WPosition.of(this, 6, 4, 0), WSize.of(getWidth() - 8, getHeight() - 12));
-		container.setParent(this);
+		container = WWidgetFactory.buildDetached(WVerticalScrollableContainer.class)
+				.setPosition(WPosition.of(this, 6, 4, 0))
+				.setSize(WSize.of(getWidth() - 8, getHeight() - 12))
+				.setParent(this);
 	}
 
 	public <W extends WVerticalList> W setScroller(boolean visible) {

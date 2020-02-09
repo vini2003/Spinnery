@@ -17,8 +17,10 @@ public class WHorizontalList extends WAbstractWidget implements WModifiableColle
 	protected WHorizontalScrollableContainer container;
 
 	public WHorizontalList() {
-		container = getFactory().build(WHorizontalScrollableContainer.class, WPosition.of(this, 6, 4, 0), WSize.of(getWidth() - 12, getHeight() - 8));
-		container.setParent(this);
+		container = WWidgetFactory.buildDetached(WHorizontalScrollableContainer.class)
+				.setPosition(WPosition.of(this, 6, 4, 0))
+				.setSize(WSize.of(getWidth() - 12, getHeight() - 8))
+				.setParent(this);
 	}
 
 	public <W extends WHorizontalList> W setScroller(boolean visible) {
