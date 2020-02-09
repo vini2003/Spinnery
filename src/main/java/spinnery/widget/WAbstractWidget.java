@@ -18,7 +18,7 @@ public abstract class WAbstractWidget implements Tickable, Comparable<WAbstractW
 	protected WInterface linkedInterface;
 	protected WLayoutElement parent;
 
-	protected WPosition position = WPosition.ORIGIN;
+	protected WPosition position = WPosition.origin();
 	protected WSize size = WSize.of(0, 0);
 
 	protected Text label = new LiteralText("");
@@ -117,7 +117,6 @@ public abstract class WAbstractWidget implements Tickable, Comparable<WAbstractW
 
 	@Environment(EnvType.CLIENT)
 	public void align() {
-		position.align();
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -125,23 +124,23 @@ public abstract class WAbstractWidget implements Tickable, Comparable<WAbstractW
 		setPosition(WPosition.of(getParent(),
 				getParent().getWidth() / 2 - getWidth() / 2,
 				getParent().getHeight() / 2 - getHeight() / 2,
-				getPosition().getOffsetZ()));
+				getPosition().getRelativeZ()));
 	}
 
 	@Environment(EnvType.CLIENT)
 	public void centerX() {
 		setPosition(WPosition.of(getParent(),
 				getParent().getWidth() / 2 - getWidth() / 2,
-				getPosition().getOffsetY(),
-				getPosition().getOffsetZ()));
+				getPosition().getRelativeY(),
+				getPosition().getRelativeZ()));
 	}
 
 	@Environment(EnvType.CLIENT)
 	public void centerY() {
 		setPosition(WPosition.of(getParent(),
-				getPosition().getOffsetX(),
+				getPosition().getRelativeX(),
 				getParent().getHeight() / 2 - getHeight() / 2,
-				getPosition().getOffsetZ()));
+				getPosition().getRelativeZ()));
 	}
 
 	// Focus helpers
@@ -278,8 +277,7 @@ public abstract class WAbstractWidget implements Tickable, Comparable<WAbstractW
 
 	@Environment(EnvType.CLIENT)
 	public <W extends WAbstractWidget> W setZ(int z) {
-		setPosition(WPosition.of(position).setZ(z));
-		return (W) this;
+		return setPosition(WPosition.of(position).setZ(z));
 	}
 
 	// WSized

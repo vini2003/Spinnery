@@ -36,7 +36,7 @@ public class WHorizontalScrollableContainer extends WAbstractWidget implements W
         int scrollBarHeight = 6;
         int scrollBarOffsetX = 0;
         int scrollBarOffsetY = getHeight() - scrollBarHeight;
-        scrollbar.setPosition(WPosition.of(this, scrollBarOffsetX, scrollBarOffsetY, scrollbar.getPosition().getOffsetZ()));
+        scrollbar.setPosition(WPosition.of(this, scrollBarOffsetX, scrollBarOffsetY, scrollbar.getPosition().getRelativeZ()));
         scrollbar.setSize(WSize.of(scrollBarWidth, scrollBarHeight));
     }
 

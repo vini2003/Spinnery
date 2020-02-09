@@ -107,16 +107,16 @@ public class WStyle {
 
 	public WPosition asPosition(String property) {
 		JsonElement el = getElement(property);
-		if (!(el instanceof JsonArray)) return new WPosition().set(0, 0, 0);
+		if (!(el instanceof JsonArray)) return WPosition.origin();
 		JsonArray array = (JsonArray) el;
-		return new WPosition().set(array.getInt(0, 0), array.getInt(1, 0), array.getInt(2, 0));
+		return WPosition.of(array.getInt(0, 0), array.getInt(1, 0), array.getInt(2, 0));
 	}
 
 	public WPosition asAnchoredPosition(String property, WAbstractWidget anchor) {
 		JsonElement el = getElement(property);
-		if (!(el instanceof JsonArray)) return new WPosition().anchor(anchor).set(0, 0, 0);
+		if (!(el instanceof JsonArray)) return WPosition.of(anchor);
 		JsonArray array = (JsonArray) el;
-		return new WPosition().anchor(anchor).set(array.getInt(0, 0), array.getInt(1, 0), array.getInt(2, 0));
+		return WPosition.of(anchor, array.getInt(0, 0), array.getInt(1, 0), array.getInt(2, 0));
 	}
 
 	public Identifier asIdentifier(String property) {
@@ -142,7 +142,7 @@ public class WStyle {
 		registerSerializer(Number.class, JanksonOps.INSTANCE::createNumeric);
 		registerSerializer(String.class, JanksonOps.INSTANCE::createString);
 		registerSerializer(Boolean.class, JanksonOps.INSTANCE::createBoolean);
-		registerSerializer(WPosition.class, v -> JanksonOps.INSTANCE.createIntList(IntStream.of(v.offsetX, v.offsetY, v.offsetZ)));
+		registerSerializer(WPosition.class, v -> JanksonOps.INSTANCE.createIntList(IntStream.of(v.x, v.y, v.z)));
 		registerSerializer(WSize.class, v -> JanksonOps.INSTANCE.createIntList(IntStream.of(v.getWidth(), v.getHeight())));
 		registerSerializer(WColor.class, v -> JanksonOps.INSTANCE.createLong(v.ARGB));
 		// TODO: sided size serialization

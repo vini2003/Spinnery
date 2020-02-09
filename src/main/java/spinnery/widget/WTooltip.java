@@ -17,7 +17,7 @@ public class WTooltip extends WAbstractWidget implements WModifiableCollection {
 
         int x = position.getX();
         int y = position.getY();
-        int z = position.getOffsetZ();
+        int z = position.getRelativeZ();
         int width = size.getWidth();
         int height = size.getHeight();
 

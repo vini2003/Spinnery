@@ -26,7 +26,7 @@ public class WDraggableArea extends WAbstractWidget implements WModifiableCollec
 	@Override
 	public void onLayoutChange() {
 		if (hasLabel()) {
-			container.setPosition(WPosition.of(this, 6, 16 + 2 + 3, container.getPosition().getOffsetZ()));
+			container.setPosition(WPosition.of(this, 6, 16 + 2 + 3, container.getPosition().getRelativeZ()));
 			container.setSize(WSize.of(getWidth() - 8, getHeight() - (16 + 2 + 3) - 6));
 		} else {
 			container.setPosition(WPosition.of(this, 4, 4, 0));

@@ -1,9 +1,24 @@
 package spinnery.widget.api;
 
 public class WPosition implements WPositioned {
-	public static final WPosition ORIGIN = new WPosition();
+	public static final WPosition ORIGIN = new WPosition(new WPositioned() {
+		@Override
+		public int getX() {
+			return 0;
+		}
 
-	protected WPositioned anchor = ORIGIN;
+		@Override
+		public int getY() {
+			return 0;
+		}
+
+		@Override
+		public int getZ() {
+			return 0;
+		}
+	});
+
+	protected WPositioned anchor;
 	protected int x;
 	protected int y;
 	protected int z;
@@ -11,23 +26,28 @@ public class WPosition implements WPositioned {
 	protected int offsetY;
 	protected int offsetZ;
 
-	protected WPosition() {
+	protected WPosition(WPositioned anchor) {
+		this.anchor = anchor;
+	}
+
+	public static WPosition origin() {
+		return new WPosition(ORIGIN);
 	}
 
 	public static WPosition of(WPositioned source) {
-		return new WPosition().set(source.getX(), source.getY(), source.getZ());
+		return new WPosition(source);
 	}
 
 	public static WPosition of(int x, int y, int z) {
-		return new WPosition().set(x, y, z);
+		return new WPosition(ORIGIN).set(x, y, z);
 	}
 
 	public static WPosition of(WPositioned anchor, int x, int y, int z) {
-		return new WPosition().anchor(anchor).set(x, y, z);
+		return new WPosition(anchor).set(x, y, z);
 	}
 
 	public static WPosition of(WPositioned anchor, int x, int y) {
-		return new WPosition().anchor(anchor).set(x, y, 0);
+		return new WPosition(anchor).set(x, y, 0);
 	}
 
 	public static WPosition ofTopRight(WLayoutElement source) {
@@ -48,14 +68,16 @@ public class WPosition implements WPositioned {
 	}
 
 	public WPosition set(int x, int y, int z) {
+		setRelativeX(x);
+		setRelativeY(y);
+		setRelativeZ(z);
+		return this;
+	}
+
+	public WPosition setOffset(int x, int y, int z) {
 		setOffsetX(x);
 		setOffsetY(y);
 		setOffsetZ(z);
-
-		setX(anchor.getX() + x);
-		setY(anchor.getY() + y);
-		setZ(anchor.getZ() + z);
-
 		return this;
 	}
 
@@ -65,25 +87,31 @@ public class WPosition implements WPositioned {
 		return newPos;
 	}
 
-	public void align() {
-		setX(anchor.getX() + getOffsetX());
-		setY(anchor.getY() + getOffsetY());
-		setZ(anchor.getZ() + getOffsetZ());
-	}
-
 	public WPositioned getAnchor() {
 		return anchor;
 	}
 
 	public int getX() {
-		return x;
+		return anchor.getX() + x + offsetX;
 	}
 
 	public int getY() {
-		return y;
+		return anchor.getY() + y + offsetY;
 	}
 
 	public int getZ() {
+		return anchor.getZ() + z + offsetZ;
+	}
+
+	public int getRelativeX() {
+		return x;
+	}
+
+	public int getRelativeY() {
+		return y;
+	}
+
+	public int getRelativeZ() {
 		return z;
 	}
 
@@ -100,17 +128,29 @@ public class WPosition implements WPositioned {
 	}
 
 	public WPosition setX(int x) {
+		return setRelativeX(x - anchor.getX());
+	}
+
+	public WPosition setY(int y) {
+		return setRelativeY(y - anchor.getY());
+	}
+
+	public WPosition setZ(int z) {
+		return setRelativeZ(z - anchor.getZ());
+	}
+
+	public WPosition setRelativeX(int x) {
 		this.x = x;
 		return this;
 	}
 
-	public WPosition setY(int y) {
+	public WPosition setRelativeY(int y) {
 		this.y = y;
 		return this;
 	}
 
-	public WPosition setZ(int z) {
-		this.z = z;
+	public WPosition setRelativeZ(int offsetZ) {
+		this.z = offsetZ;
 		return this;
 	}
 

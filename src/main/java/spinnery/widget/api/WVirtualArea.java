@@ -6,7 +6,7 @@ import net.minecraft.client.MinecraftClient;
 
 @Environment(EnvType.CLIENT)
 public class WVirtualArea implements WLayoutElement {
-	public static final WVirtualArea SCREEN = new WVirtualArea(WPosition.ORIGIN,
+	public static final WVirtualArea SCREEN = new WVirtualArea(WPosition.origin(),
 			WSize.of(MinecraftClient.getInstance().getWindow().getScaledWidth(),
 					MinecraftClient.getInstance().getWindow().getScaledHeight()));
 
