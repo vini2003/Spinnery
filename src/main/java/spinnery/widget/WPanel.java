@@ -4,16 +4,19 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import spinnery.client.BaseRenderer;
 import spinnery.client.TextRenderer;
+import spinnery.widget.api.WDelegatedEventListener;
+import spinnery.widget.api.WEventListener;
 import spinnery.widget.api.WFocusedMouseListener;
 import spinnery.widget.api.WModifiableCollection;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Environment(EnvType.CLIENT)
 @WFocusedMouseListener
-public class WPanel extends WAbstractWidget implements WModifiableCollection {
+public class WPanel extends WAbstractWidget implements WModifiableCollection, WDelegatedEventListener {
 	protected Set<WAbstractWidget> heldWidgets = new LinkedHashSet<>();
 
 	@Override
@@ -58,5 +61,10 @@ public class WPanel extends WAbstractWidget implements WModifiableCollection {
 	@Override
 	public void remove(WAbstractWidget... widgets) {
 		heldWidgets.removeAll(Arrays.asList(widgets));
+	}
+
+	@Override
+	public Collection<? extends WEventListener> getEventDelegates() {
+		return getWidgets();
 	}
 }

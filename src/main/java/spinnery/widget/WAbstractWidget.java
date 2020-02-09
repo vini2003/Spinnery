@@ -8,13 +8,15 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.Tickable;
 import spinnery.registry.ThemeRegistry;
 import spinnery.registry.WidgetRegistry;
+import spinnery.util.EventUtilities;
 import spinnery.widget.api.*;
 import spinnery.widget.api.listener.*;
 
 import static spinnery.registry.ThemeRegistry.DEFAULT_THEME;
 
 @SuppressWarnings({"unchecked", "rawtypes"})
-public abstract class WAbstractWidget implements Tickable, Comparable<WAbstractWidget>, WLayoutElement, WThemable, WStyleProvider {
+public abstract class WAbstractWidget implements Tickable, Comparable<WAbstractWidget>,
+		WLayoutElement, WThemable, WStyleProvider, WEventListener {
 	protected WInterface linkedInterface;
 	protected WLayoutElement parent;
 
@@ -317,84 +319,156 @@ public abstract class WAbstractWidget implements Tickable, Comparable<WAbstractW
 	// Event runners
 
 	@Environment(EnvType.CLIENT)
+	@Override
 	public void onKeyPressed(int keyPressed, int character, int keyModifier) {
+		if (this instanceof WDelegatedEventListener) {
+			for (WEventListener widget : ((WDelegatedEventListener) this).getEventDelegates()) {
+				if (EventUtilities.canReceiveKeyboard(widget)) widget.onKeyPressed(keyPressed, character, keyModifier);
+			}
+		}
 		if (runnableOnKeyPressed != null) {
 			runnableOnKeyPressed.event(this, keyPressed, character, keyModifier);
 		}
 	}
 
 	@Environment(EnvType.CLIENT)
+	@Override
 	public void onKeyReleased(int keyReleased, int character, int keyModifier) {
+		if (this instanceof WDelegatedEventListener) {
+			for (WEventListener widget : ((WDelegatedEventListener) this).getEventDelegates()) {
+				if (EventUtilities.canReceiveKeyboard(widget)) widget.onKeyReleased(keyReleased, character, keyModifier);
+			}
+		}
 		if (runnableOnKeyReleased != null) {
 			runnableOnKeyReleased.event(this, keyReleased, character, keyModifier);
 		}
 	}
 
 	@Environment(EnvType.CLIENT)
+	@Override
 	public void onCharTyped(char character, int keyCode) {
+		if (this instanceof WDelegatedEventListener) {
+			for (WEventListener widget : ((WDelegatedEventListener) this).getEventDelegates()) {
+				if (EventUtilities.canReceiveKeyboard(widget)) widget.onCharTyped(character, keyCode);
+			}
+		}
 		if (runnableOnCharTyped != null) {
 			runnableOnCharTyped.event(this, character, keyCode);
 		}
 	}
 
 	@Environment(EnvType.CLIENT)
+	@Override
 	public void onFocusGained() {
+		if (this instanceof WDelegatedEventListener) {
+			for (WEventListener widget : ((WDelegatedEventListener) this).getEventDelegates()) {
+				widget.onFocusGained();
+			}
+		}
 		if (runnableOnFocusGained != null) {
 			runnableOnFocusGained.event(this);
 		}
 	}
 
 	@Environment(EnvType.CLIENT)
+	@Override
 	public void onFocusReleased() {
+		if (this instanceof WDelegatedEventListener) {
+			for (WEventListener widget : ((WDelegatedEventListener) this).getEventDelegates()) {
+				widget.onFocusReleased();
+			}
+		}
 		if (runnableOnFocusReleased != null) {
 			runnableOnFocusReleased.event(this);
 		}
 	}
 
 	@Environment(EnvType.CLIENT)
+	@Override
 	public void onMouseReleased(int mouseX, int mouseY, int mouseButton) {
+		if (this instanceof WDelegatedEventListener) {
+			for (WEventListener widget : ((WDelegatedEventListener) this).getEventDelegates()) {
+				widget.onMouseReleased(mouseX, mouseY, mouseButton);
+			}
+		}
 		if (runnableOnMouseReleased != null) {
 			runnableOnMouseReleased.event(this, mouseX, mouseY, mouseButton);
 		}
 	}
 
 	@Environment(EnvType.CLIENT)
+	@Override
 	public void onMouseClicked(int mouseX, int mouseY, int mouseButton) {
+		if (this instanceof WDelegatedEventListener) {
+			for (WEventListener widget : ((WDelegatedEventListener) this).getEventDelegates()) {
+				if (EventUtilities.canReceiveMouse(widget)) widget.onMouseClicked(mouseX, mouseY, mouseButton);
+			}
+		}
 		if (runnableOnMouseClicked != null) {
 			runnableOnMouseClicked.event(this, mouseX, mouseY, mouseButton);
 		}
 	}
 
 	@Environment(EnvType.CLIENT)
+	@Override
 	public void onMouseDragged(int mouseX, int mouseY, int mouseButton, double deltaX, double deltaY) {
+		if (this instanceof WDelegatedEventListener) {
+			for (WEventListener widget : ((WDelegatedEventListener) this).getEventDelegates()) {
+				if (EventUtilities.canReceiveMouse(widget)) widget.onMouseDragged(mouseX, mouseY, mouseButton, deltaX, deltaY);
+			}
+		}
 		if (runnableOnMouseDragged != null) {
 			runnableOnMouseDragged.event(this, mouseX, mouseY, mouseButton, deltaX, deltaY);
 		}
 	}
 
 	@Environment(EnvType.CLIENT)
+	@Override
 	public void onMouseMoved(int mouseX, int mouseY) {
+		if (this instanceof WDelegatedEventListener) {
+			for (WEventListener widget : ((WDelegatedEventListener) this).getEventDelegates()) {
+				if (EventUtilities.canReceiveMouse(widget)) widget.onMouseMoved(mouseX, mouseY);
+			}
+		}
 		if (runnableOnMouseMoved != null) {
 			runnableOnMouseMoved.event(this, mouseX, mouseY);
 		}
 	}
 
 	@Environment(EnvType.CLIENT)
+	@Override
 	public void onMouseScrolled(int mouseX, int mouseY, double deltaY) {
+		if (this instanceof WDelegatedEventListener) {
+			for (WEventListener widget : ((WDelegatedEventListener) this).getEventDelegates()) {
+				if (EventUtilities.canReceiveMouse(widget)) widget.onMouseScrolled(mouseX, mouseY, deltaY);
+			}
+		}
 		if (runnableOnMouseScrolled != null) {
 			runnableOnMouseScrolled.event(this, mouseX, mouseY, deltaY);
 		}
 	}
 
 	@Environment(EnvType.CLIENT)
+	@Override
 	public void onDrawTooltip(int mouseX, int mouseY) {
+		if (this instanceof WDelegatedEventListener) {
+			for (WEventListener widget : ((WDelegatedEventListener) this).getEventDelegates()) {
+				widget.onDrawTooltip(mouseX, mouseY);
+			}
+		}
 		if (runnableOnDrawTooltip != null) {
 			runnableOnDrawTooltip.event(this, mouseX, mouseY);
 		}
 	}
 
 	@Environment(EnvType.CLIENT)
+	@Override
 	public void onAlign() {
+		if (this instanceof WDelegatedEventListener) {
+			for (WEventListener widget : ((WDelegatedEventListener) this).getEventDelegates()) {
+				widget.onAlign();
+			}
+		}
 		if (runnableOnAlign != null) {
 			runnableOnAlign.event(this);
 		}

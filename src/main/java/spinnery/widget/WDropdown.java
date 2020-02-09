@@ -7,15 +7,11 @@ import spinnery.client.BaseRenderer;
 import spinnery.client.TextRenderer;
 import spinnery.widget.api.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @SuppressWarnings("unchecked")
 @Environment(EnvType.CLIENT)
-public class WDropdown extends WAbstractWidget implements WModifiableCollection {
+public class WDropdown extends WAbstractWidget implements WModifiableCollection, WDelegatedEventListener {
 	public enum HideBehavior {
 		TOGGLE,
 		ANYWHERE,
@@ -53,6 +49,11 @@ public class WDropdown extends WAbstractWidget implements WModifiableCollection 
 	public <W extends WDropdown> W setDropdownWidgets(List<List<WAbstractWidget>> dropdownWidgets) {
 		this.dropdownWidgets = dropdownWidgets;
 		return (W) this;
+	}
+
+	@Override
+	public Collection<? extends WEventListener> getEventDelegates() {
+		return getWidgets();
 	}
 
 	public boolean getState() {

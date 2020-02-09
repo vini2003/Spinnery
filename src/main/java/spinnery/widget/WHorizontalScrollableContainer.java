@@ -2,10 +2,7 @@ package spinnery.widget;
 
 import net.minecraft.client.MinecraftClient;
 import org.lwjgl.opengl.GL11;
-import spinnery.widget.api.WHorizontalScrollable;
-import spinnery.widget.api.WModifiableCollection;
-import spinnery.widget.api.WPosition;
-import spinnery.widget.api.WSize;
+import spinnery.widget.api.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -273,15 +270,13 @@ public class WHorizontalScrollableContainer extends WAbstractWidget implements W
     @Override
     public void add(WAbstractWidget... widgetArray) {
         getListWidgets().add(Arrays.asList(widgetArray));
-        scrollToStart();
-        updateHidden();
+        onLayoutChange();
     }
 
     @Override
     public void remove(WAbstractWidget... widgetArray) {
         getListWidgets().remove(Arrays.asList(widgetArray));
-        scrollToStart();
-        updateHidden();
+        onLayoutChange();
     }
 
     @Override
