@@ -1,7 +1,9 @@
-# 2.0 Migration Guide: Screens
+# 2.0 Migration Guide: Coding UIs
 
-This guide concerns itself with migrating your `Screen` classes (`BaseScreen` and `BaseContainerScreen`).
-For brevity, all code snippets are assumed to be located inside the class constructor.
+This guide concerns itself with migrating your `Screen` classes (`BaseScreen` and `BaseContainerScreen`), including
+short descriptions of changes made and examples of commonly required operations.
+
+For brevity, all code snippets are assumed to be located inside the `Screen` class constructor.
 
 ## Setting up the interface
 
@@ -87,3 +89,10 @@ panel.createChild(Button.class, Position.of(mainPanel, 8, 8), Size.of(48, 18))
 
 With the chainable flow, you only need to assign created widgets to variables if you need to use them elsewhere later;
 if they are only created to be added to another widget, storing them in a variable becomes unnecessary.
+
+## Widget changes
+
+* `WDynamicText` has been removed and replaced with `WTextArea` (multiline, supports line wrapping) and `WTextField`
+(single-line, supports maximum length).
+* `WHorizontalList` and `WVerticalList` have been removed. In place of these, use a `WPanel` with a
+`WHorizontalScrollableContainer` or `WVerticalScrollableContainer` child.

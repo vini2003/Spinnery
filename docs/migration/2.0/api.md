@@ -44,6 +44,8 @@ useful in conjunction with `Size.of(Sized source)` to create sizes relative to a
 
 ### Color
 
+`WColor` has been renamed to `Color`.
+
 * `WColor` can now be created via `of` from a color `int`.
 
 ## New utilities
