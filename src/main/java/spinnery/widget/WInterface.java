@@ -218,10 +218,6 @@ public class WInterface implements WModifiableCollection, WLayoutElement, WThema
 
 	@Override
 	public void draw() {
-		Window window =  MinecraftClient.getInstance().getWindow();
-
-		BaseRenderer.drawRectangle(0, 0, 0, window.getWidth(), window.getHeight(), WColor.of(0x90000000));
-
 		List<WAbstractWidget> widgets = new ArrayList<>(getWidgets());
 		Collections.sort(widgets);
 
