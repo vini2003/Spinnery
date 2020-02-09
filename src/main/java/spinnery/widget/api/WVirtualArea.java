@@ -4,6 +4,10 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 
+/**
+ * Utility class representing a virtual layout element that has a parent, position and size, but no drawing
+ * logic.
+ */
 @Environment(EnvType.CLIENT)
 public class WVirtualArea implements WLayoutElement {
 	public static final WVirtualArea SCREEN = new WVirtualArea(Position.origin(),

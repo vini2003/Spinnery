@@ -2,6 +2,11 @@ package spinnery.widget.api;
 
 import net.minecraft.util.math.MathHelper;
 
+/**
+ * Data object representing a color. Components may be accessed via the fields
+ * <tt>A</tt>, <tt>R</tt>, <tt>G</tt>, <tt>B</tt>; the color int may be accessed via the fields
+ * <tt>RGB</tt> and <tt>ARGB</tt>.
+ */
 public class Color {
 	public float A = 1.0f, R = 1.0f, G = 1.0f, B = 1.0f;
 
