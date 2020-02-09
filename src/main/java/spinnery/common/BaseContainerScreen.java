@@ -7,6 +7,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.ContainerScreen;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import org.lwjgl.glfw.GLFW;
 import spinnery.client.BaseRenderer;
@@ -22,8 +23,8 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 	protected WSlot drawSlot;
 
 	@Environment(EnvType.CLIENT)
-	public BaseContainerScreen(Text name, T linkedContainer, PlayerEntity player) {
-		super(linkedContainer, player.inventory, name);
+	public BaseContainerScreen(T linkedContainer, PlayerEntity player) {
+		super(linkedContainer, player.inventory, null);
 		clientInterface = new WInterface(linkedContainer);
 	}
 

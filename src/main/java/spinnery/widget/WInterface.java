@@ -4,7 +4,9 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.util.Window;
 import net.minecraft.util.Identifier;
+import spinnery.client.BaseRenderer;
 import spinnery.common.BaseContainer;
 import spinnery.registry.NetworkRegistry;
 import spinnery.widget.api.*;
@@ -216,6 +218,10 @@ public class WInterface implements WModifiableCollection, WLayoutElement, WThema
 
 	@Override
 	public void draw() {
+		Window window =  MinecraftClient.getInstance().getWindow();
+
+		BaseRenderer.drawRectangle(0, 0, 0, window.getWidth(), window.getHeight(), WColor.of(0x90000000));
+
 		List<WAbstractWidget> widgets = new ArrayList<>(getWidgets());
 		Collections.sort(widgets);
 
