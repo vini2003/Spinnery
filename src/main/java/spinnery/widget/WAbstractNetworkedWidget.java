@@ -6,7 +6,7 @@ import spinnery.widget.api.WNetworked;
 import java.util.function.BiConsumer;
 
 @SuppressWarnings("unchecked")
-public abstract class WNetworkedWidget extends WAbstractWidget implements WNetworked {
+public abstract class WAbstractNetworkedWidget extends WAbstractWidget implements WNetworked {
 	protected BiConsumer<Event, CompoundTag> consumerOnInterfaceEvent;
 	protected int syncId;
 
@@ -15,7 +15,7 @@ public abstract class WNetworkedWidget extends WAbstractWidget implements WNetwo
 		return syncId;
     }
 
-    public <W extends WNetworkedWidget> W setSyncId(int syncId) {
+    public <W extends WAbstractNetworkedWidget> W setSyncId(int syncId) {
         this.syncId = syncId;
         return (W) this;
     }
@@ -31,7 +31,7 @@ public abstract class WNetworkedWidget extends WAbstractWidget implements WNetwo
         return consumerOnInterfaceEvent;
     }
 
-    public <W extends WNetworkedWidget> W setOnInterfaceEvent(BiConsumer<Event, CompoundTag> consumerOnInterfaceEvent) {
+    public <W extends WAbstractNetworkedWidget> W setOnInterfaceEvent(BiConsumer<Event, CompoundTag> consumerOnInterfaceEvent) {
 		this.consumerOnInterfaceEvent = consumerOnInterfaceEvent;
 		return (W) this;
     }

@@ -53,7 +53,7 @@ public class WTexturedButton extends WAbstractWidget {
 	}
 
 	public boolean isActive() {
-		return getFocus();
+		return isFocused();
 	}
 
 	public Identifier getActive() {

@@ -27,13 +27,13 @@ public class WDropdown extends WAbstractWidget implements WModifiableCollection 
 
 	public List<List<WAbstractWidget>> dropdownWidgets = new ArrayList<>();
 	protected boolean state = false;
-	protected WSize dropdownSize;
+	protected Size dropdownSize;
 	protected WVirtualArea toggle;
 	protected HideBehavior hideBehavior = HideBehavior.TOGGLE;
 
 	@Override
 	public void onLayoutChange() {
-		toggle = new WVirtualArea(WPosition.of(this), WSize.of(getToggleWidth(), getToggleHeight()));
+		toggle = new WVirtualArea(Position.of(this), Size.of(getToggleWidth(), getToggleHeight()));
 		updatePositions();
 		updateHidden();
 	}
@@ -76,7 +76,7 @@ public class WDropdown extends WAbstractWidget implements WModifiableCollection 
 
 	protected void propagateMouseToChildren(int mouseX, int mouseY, int mouseButton) {
 		for (WAbstractWidget widget : getAllWidgets()) {
-			if (!widget.getClass().isAnnotationPresent(WFocusedMouseListener.class) || widget.getFocus()) {
+			if (!widget.getClass().isAnnotationPresent(WFocusedMouseListener.class) || widget.isFocused()) {
 				widget.onMouseClicked(mouseX, mouseY, mouseButton);
 			}
 		}
@@ -102,13 +102,13 @@ public class WDropdown extends WAbstractWidget implements WModifiableCollection 
 					break;
 				case ONLY_CHILD:
 					propagateMouseToChildren(mouseX, mouseY, mouseButton);
-					shouldClose = (isWithinBounds(mouseX, mouseY) && !getFocus());
+					shouldClose = (isWithinBounds(mouseX, mouseY) && !isFocused());
 					break;
 				case ANYWHERE_EXCEPT_CHILD:
-					shouldClose = (!isWithinBounds(mouseX, mouseY) || getFocus());
+					shouldClose = (!isWithinBounds(mouseX, mouseY) || isFocused());
 					break;
 				case INSIDE_EXCEPT_CHILD:
-					shouldClose = (isWithinBounds(mouseX, mouseY) && getFocus());
+					shouldClose = (isWithinBounds(mouseX, mouseY) && isFocused());
 					break;
 			}
 		}
@@ -133,9 +133,9 @@ public class WDropdown extends WAbstractWidget implements WModifiableCollection 
 	public boolean updateFocus(int mouseX, int mouseY) {
 		super.updateFocus(mouseX, mouseY);
 
-		setFocus(isWithinBounds(mouseX, mouseY) && getAllWidgets().stream().noneMatch((WAbstractWidget::getFocus)));
+		setFocus(isWithinBounds(mouseX, mouseY) && getAllWidgets().stream().noneMatch((WAbstractWidget::isFocused)));
 
-		return getFocus();
+		return isFocused();
 	}
 
 	@Override
@@ -165,11 +165,11 @@ public class WDropdown extends WAbstractWidget implements WModifiableCollection 
 		return super.getHeight();
 	}
 
-	public WSize getDropdownSize() {
+	public Size getDropdownSize() {
 		return dropdownSize;
 	}
 
-	public <W extends WDropdown> W setDropdownSize(WSize dropdownSize) {
+	public <W extends WDropdown> W setDropdownSize(Size dropdownSize) {
 		this.dropdownSize = dropdownSize;
 		return (W) this;
 	}

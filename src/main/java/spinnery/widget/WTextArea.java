@@ -6,8 +6,6 @@ import org.lwjgl.glfw.GLFW;
 import spinnery.client.BaseRenderer;
 import spinnery.client.TextRenderer;
 import spinnery.widget.api.WFocusedKeyboardListener;
-import spinnery.widget.api.WPosition;
-import spinnery.widget.api.WSize;
 
 import java.util.ArrayList;
 import java.util.List;

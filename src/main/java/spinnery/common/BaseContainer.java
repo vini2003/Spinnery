@@ -16,6 +16,7 @@ import net.minecraft.util.Tickable;
 import net.minecraft.world.World;
 import org.lwjgl.glfw.GLFW;
 import spinnery.registry.NetworkRegistry;
+import spinnery.util.MutablePair;
 import spinnery.util.StackUtilities;
 import spinnery.widget.WAbstractWidget;
 import spinnery.widget.WInterface;
@@ -36,7 +37,7 @@ public class BaseContainer extends Container implements Tickable {
 
 	protected Set<WSlot> splitSlots = new HashSet<>();
 	protected Set<WSlot> singleSlots = new HashSet<>();
-	protected Map<Integer, ItemStack> previewStacks = new HashMap<>();
+	protected Map<Integer, Map<Integer, ItemStack>>  previewStacks = new HashMap<>();
 	protected ItemStack previewCursorStack = ItemStack.EMPTY;
 
 	protected World linkedWorld;
@@ -62,7 +63,7 @@ public class BaseContainer extends Container implements Tickable {
 	}
 
 	@Environment(EnvType.CLIENT)
-	public Map<Integer, ItemStack> getPreviewStacks() {
+	public Map<Integer, Map<Integer, ItemStack>> getPreviewStacks() {
 		return previewStacks;
 	}
 

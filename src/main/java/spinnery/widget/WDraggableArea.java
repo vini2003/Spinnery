@@ -4,9 +4,9 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import spinnery.client.BaseRenderer;
 import spinnery.client.TextRenderer;
+import spinnery.widget.api.Position;
+import spinnery.widget.api.Size;
 import spinnery.widget.api.WModifiableCollection;
-import spinnery.widget.api.WPosition;
-import spinnery.widget.api.WSize;
 
 import java.util.Set;
 
@@ -17,18 +17,18 @@ public class WDraggableArea extends WAbstractWidget implements WModifiableCollec
 	protected WDraggableContainer container;
 
 	public WDraggableArea() {
-		container = getFactory().build(WDraggableContainer.class, WPosition.of(this, 4, 4, 0), WSize.of(getWidth() - 8, getHeight() - 8));
+		container = getFactory().build(WDraggableContainer.class, Position.of(this, 4, 4, 0), Size.of(getWidth() - 8, getHeight() - 8));
 		container.setParent(this);
 	}
 
 	@Override
 	public void onLayoutChange() {
 		if (hasLabel()) {
-			container.setPosition(WPosition.of(this, 6, 16 + 2 + 3, container.getPosition().getOffsetZ()));
-			container.setSize(WSize.of(getWidth() - 8, getHeight() - (16 + 2 + 3) - 6));
+			container.setPosition(Position.of(this, 6, 16 + 2 + 3, container.getPosition().getOffsetZ()));
+			container.setSize(Size.of(getWidth() - 8, getHeight() - (16 + 2 + 3) - 6));
 		} else {
-			container.setPosition(WPosition.of(this, 4, 4, 0));
-			container.setSize(WSize.of(getWidth() - 8, getHeight() - 8));
+			container.setPosition(Position.of(this, 4, 4, 0));
+			container.setSize(Size.of(getWidth() - 8, getHeight() - 8));
 		}
 		container.updateHidden();
 	}
@@ -45,8 +45,8 @@ public class WDraggableArea extends WAbstractWidget implements WModifiableCollec
 
 	@Override
 	public boolean updateFocus(int mouseX, int mouseY) {
-		setFocus(isWithinBounds(mouseX, mouseY) && getWidgets().stream().noneMatch((WAbstractWidget::getFocus)));
-		return getFocus();
+		setFocus(isWithinBounds(mouseX, mouseY) && getWidgets().stream().noneMatch((WAbstractWidget::isFocused)));
+		return isFocused();
 	}
 
 	@Override

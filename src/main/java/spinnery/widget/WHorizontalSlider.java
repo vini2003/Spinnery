@@ -35,8 +35,8 @@ public class WHorizontalSlider extends WAbstractSlider {
 	}
 
 	@Override
-	public WSize getKnobSize() {
-		return WSize.of(6, getHeight() + 3);
+	public Size getKnobSize() {
+		return Size.of(6, getHeight() + 3);
 	}
 
 	@Override
@@ -61,8 +61,8 @@ public class WHorizontalSlider extends WAbstractSlider {
 		BaseRenderer.drawRectangle(x, y + sY, z, (sX), 1, getStyle().asColor("bottom_right.background"));
 		BaseRenderer.drawRectangle(x + (sX), y, z, 1, sY + 1, getStyle().asColor("bottom_right.background"));
 
-		WPosition innerAnchor = getInnerAnchor();
-		WSize innerSize = getInnerSize();
+		Position innerAnchor = getInnerAnchor();
+		Size innerSize = getInnerSize();
 		int innerX = innerAnchor.getX();
 		int innerY = innerAnchor.getY();
 		int innerWidth = innerSize.getWidth();
@@ -74,7 +74,7 @@ public class WHorizontalSlider extends WAbstractSlider {
 		BaseRenderer.drawRectangle(innerX + innerWidth * percentComplete, innerY, z, innerWidth * percentLeft, innerHeight,
 				getStyle().asColor("background.off"));
 
-		WSize knobSize = getKnobSize();
+		Size knobSize = getKnobSize();
 		int knobWidth = knobSize.getWidth();
 		int knobHeight = knobSize.getHeight();
 		int knobX = (int) (x + (innerWidth - (double) knobWidth / 2) * percentComplete);

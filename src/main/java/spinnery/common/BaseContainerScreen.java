@@ -3,7 +3,6 @@ package spinnery.common;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.ContainerScreen;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -38,12 +37,12 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 
 		ItemStack stackA;
 
-		if (!getContainer().previewCursorStack.isEmpty()) {
-			stackA = getContainer().previewCursorStack;
-		} else if (getContainer().previewStacks.isEmpty()) {
+		if (getContainer().getPreviewCursorStack().isEmpty()
+		&&	getContainer().getDragSlots(GLFW.GLFW_MOUSE_BUTTON_1).isEmpty()
+		&&  getContainer().getDragSlots(GLFW.GLFW_MOUSE_BUTTON_2).isEmpty()) {
 			stackA = getContainer().getPlayerInventory().getCursorStack();
 		} else {
-			stackA = ItemStack.EMPTY;
+			stackA = getContainer().getPreviewCursorStack();
 		}
 
 		RenderSystem.translatef(0, 0, 200);
@@ -199,7 +198,7 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 	public void updateTooltip(int mouseX, int mouseY) {
 		setDrawSlot(null);
 		for (WAbstractWidget widgetA : getInterface().getWidgets()) {
-			if (widgetA.getFocus() && widgetA instanceof WSlot) {
+			if (widgetA.isFocused() && widgetA instanceof WSlot) {
 				setDrawSlot((WSlot) widgetA);
 				setTooltipX(mouseX);
 				setTooltipY(mouseY);

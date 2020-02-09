@@ -4,9 +4,9 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import org.lwjgl.opengl.GL11;
+import spinnery.widget.api.Size;
 import spinnery.widget.api.WHorizontalScrollable;
 import spinnery.widget.api.WModifiableCollection;
-import spinnery.widget.api.WSize;
 import spinnery.widget.api.WVerticalScrollable;
 
 import java.util.Arrays;
@@ -103,7 +103,7 @@ public class WDraggableContainer extends WAbstractWidget implements WModifiableC
     }
 
     @Override
-    public WSize getInnerSize() {
+    public Size getInnerSize() {
         // Leftmost widget (lower X)
         int leftmostX = getStartAnchorX();
         int rightmostX = leftmostX;
@@ -123,11 +123,11 @@ public class WDraggableContainer extends WAbstractWidget implements WModifiableC
                 bottommostY = widget.getY() + widget.getHeight();
             }
         }
-        return WSize.of(rightmostX - leftmostX, bottommostY - topmostY);
+        return Size.of(rightmostX - leftmostX, bottommostY - topmostY);
     }
 
     @Override
-    public WSize getVisibleSize() {
+    public Size getVisibleSize() {
         return getSize();
     }
 

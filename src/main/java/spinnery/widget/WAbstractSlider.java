@@ -3,10 +3,9 @@ package spinnery.widget;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import org.lwjgl.glfw.GLFW;
+import spinnery.widget.api.Size;
 import spinnery.widget.api.WPadded;
 import spinnery.widget.api.WPadding;
-import spinnery.widget.api.WPosition;
-import spinnery.widget.api.WSize;
 
 import java.util.function.Consumer;
 
@@ -77,7 +76,7 @@ public abstract class WAbstractSlider extends WAbstractWidget implements WPadded
         return getStyle().asPadding("padding");
     }
 
-    public abstract WSize getKnobSize();
+    public abstract Size getKnobSize();
     protected abstract void updatePosition(int mouseX, int mouseY);
 
     @Override

@@ -28,14 +28,13 @@ import static spinnery.util.MouseUtilities.nanoUpdate;
 
 import static spinnery.widget.api.Action.*;
 
-import spinnery.util.MouseUtilities;
-import spinnery.widget.api.WFocusedMouseListener;
+import spinnery.widget.api.Position;
+import spinnery.widget.api.Size;
 import spinnery.widget.api.WModifiableCollection;
-import spinnery.widget.api.WPosition;
-import spinnery.widget.api.WSize;
 import spinnery.widget.api.Action;
 
-@WFocusedMouseListener
+import java.util.HashMap;
+
 public class WSlot extends WAbstractWidget {
 	protected int slotNumber;
 	protected Identifier previewTexture;
@@ -49,16 +48,16 @@ public class WSlot extends WAbstractWidget {
 	public static final int MIDDLE = 2;
 
 	@Environment(EnvType.CLIENT)
-	public static void addPlayerInventory(WPosition position, WSize size, WModifiableCollection parent) {
+	public static void addPlayerInventory(Position position, Size size, WModifiableCollection parent) {
 		addArray(position, size, parent, 9, BaseContainer.PLAYER_INVENTORY, 9, 3);
 		addArray(position.add(0, size.getHeight() * 3 + 3, 0), size, parent, 0, BaseContainer.PLAYER_INVENTORY, 9, 1);
 	}
 
 	@Environment(EnvType.CLIENT)
-	public static void addArray(WPosition position, WSize size, WModifiableCollection parent, int slotNumber, int inventoryNumber, int arrayWidth, int arrayHeight) {
+	public static void addArray(Position position, Size size, WModifiableCollection parent, int slotNumber, int inventoryNumber, int arrayWidth, int arrayHeight) {
 		for (int y = 0; y < arrayHeight; ++y) {
 			for (int x = 0; x < arrayWidth; ++x) {
-				parent.createChild(WSlot.class, WPosition.of(position.getX() + (size.getWidth() * x), position.getY() + (size.getHeight() * y), position.getZ()), size)
+				parent.createChild(WSlot.class, Position.of(position.getX() + (size.getWidth() * x), position.getY() + (size.getHeight() * y), position.getZ()), size)
 						.setSlotNumber(slotNumber + y * arrayWidth + x)
 						.setInventoryNumber(inventoryNumber);
 			}
@@ -102,6 +101,8 @@ public class WSlot extends WAbstractWidget {
 			if (isDragging) {
 				container.onSlotDrag(slotNumbers, inventoryNumbers, Action.of(button, true));
 				INSTANCE.sendToServer(SLOT_DRAG_PACKET, createSlotDragPacket(container.syncId, slotNumbers, inventoryNumbers, Action.of(button, true)));
+			} else if (!isFocused()) {
+				return;
 			} else if ((button == LEFT || button == RIGHT) && !isCursorEmpty) {
 				container.onSlotAction(slotNumber, inventoryNumber, button, PICKUP, player);
 				INSTANCE.sendToServer(SLOT_CLICK_PACKET, createSlotClickPacket(container.syncId, slotNumber, inventoryNumber, button, PICKUP));
@@ -118,6 +119,8 @@ public class WSlot extends WAbstractWidget {
 	@Override
 	@Environment(EnvType.CLIENT)
 	public void onMouseClicked(int mouseX, int mouseY, int button) {
+		if (!isFocused()) return;
+
 		PlayerEntity player = getInterface().getContainer().getPlayerInventory().player;
 		BaseContainer container = getInterface().getContainer();
 
@@ -154,6 +157,8 @@ public class WSlot extends WAbstractWidget {
 	@Override
 	@Environment(EnvType.CLIENT)
 	public void onMouseDragged(int mouseX, int mouseY, int button, double deltaX, double deltaY) {
+		if (!isFocused()) return;
+
 		PlayerEntity player = getInterface().getContainer().getPlayerInventory().player;
 		BaseContainer container = getInterface().getContainer();
 
@@ -194,7 +199,7 @@ public class WSlot extends WAbstractWidget {
 
 		BaseRenderer.drawBeveledPanel(x, y, z, sX, sY, getStyle().asColor("top_left"), getStyle().asColor("background.unfocused"), getStyle().asColor("bottom_right"));
 
-		if (getFocus()) {
+		if (isFocused()) {
 			BaseRenderer.drawRectangle(x + 1, y + 1, z, sX - 2, sY - 2, getStyle().asColor("background.focused"));
 		}
 
@@ -236,11 +241,13 @@ public class WSlot extends WAbstractWidget {
 	}
 
 	public ItemStack getPreviewStack() {
-		return getInterface().getContainer().getPreviewStacks().getOrDefault(getSlotNumber() + getInventoryNumber(), ItemStack.EMPTY);
+		getInterface().getContainer().getPreviewStacks().putIfAbsent(getInventoryNumber(), new HashMap<>());
+		return getInterface().getContainer().getPreviewStacks().get(getInventoryNumber()).getOrDefault(getSlotNumber(), ItemStack.EMPTY);
 	}
 
 	public <W extends WSlot> W setPreviewStack(ItemStack previewStack) {
-		getInterface().getContainer().getPreviewStacks().put(getSlotNumber() + getInventoryNumber(), previewStack);
+		getInterface().getContainer().getPreviewStacks().putIfAbsent(getInventoryNumber(), new HashMap<>());
+		getInterface().getContainer().getPreviewStacks().get(getInventoryNumber()).put(getSlotNumber(), previewStack);
 		return (W) this;
 	}
 

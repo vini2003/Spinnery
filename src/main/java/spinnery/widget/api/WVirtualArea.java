@@ -6,21 +6,21 @@ import net.minecraft.client.MinecraftClient;
 
 @Environment(EnvType.CLIENT)
 public class WVirtualArea implements WLayoutElement {
-	public static final WVirtualArea SCREEN = new WVirtualArea(WPosition.ORIGIN,
-			WSize.of(MinecraftClient.getInstance().getWindow().getScaledWidth(),
+	public static final WVirtualArea SCREEN = new WVirtualArea(Position.ORIGIN,
+			Size.of(MinecraftClient.getInstance().getWindow().getScaledWidth(),
 					MinecraftClient.getInstance().getWindow().getScaledHeight()));
 
 	protected final WLayoutElement parent;
-	protected final WPosition position;
-	protected final WSize size;
+	protected final Position position;
+	protected final Size size;
 
-	public WVirtualArea(WLayoutElement parent, WPosition position, WSize size) {
+	public WVirtualArea(WLayoutElement parent, Position position, Size size) {
 		this.parent = parent;
 		this.position = position;
 		this.size = size;
 	}
 
-	public WVirtualArea(WPosition position, WSize size) {
+	public WVirtualArea(Position position, Size size) {
 		this.parent = null;
 		this.position = position;
 		this.size = size;

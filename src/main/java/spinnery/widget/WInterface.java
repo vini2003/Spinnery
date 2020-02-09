@@ -98,7 +98,7 @@ public class WInterface implements WModifiableCollection, WLayoutElement, WThema
 
 	public void onMouseClicked(int mouseX, int mouseY, int mouseButton) {
 		for (WAbstractWidget widget : getAllWidgets()) {
-			if (widget.getClass().isAnnotationPresent(WFocusedMouseListener.class) && !widget.getFocus())
+			if (widget.getClass().isAnnotationPresent(WFocusedMouseListener.class) && !widget.isFocused())
 				continue;
 			widget.onMouseClicked(mouseX, mouseY, mouseButton);
 			if (widget instanceof WNetworked) {
@@ -110,7 +110,7 @@ public class WInterface implements WModifiableCollection, WLayoutElement, WThema
 
 	public boolean onMouseReleased(int mouseX, int mouseY, int mouseButton) {
 		for (WAbstractWidget widget : getAllWidgets()) {
-			if (widget.getClass().isAnnotationPresent(WFocusedMouseListener.class) && !widget.getFocus())
+			if (widget.getClass().isAnnotationPresent(WFocusedMouseListener.class) && !widget.isFocused())
 				continue;
 			widget.onMouseReleased(mouseX, mouseY, mouseButton);
 			if (widget instanceof WNetworked) {
@@ -123,7 +123,7 @@ public class WInterface implements WModifiableCollection, WLayoutElement, WThema
 
 	public boolean onMouseDragged(int mouseX, int mouseY, int mouseButton, int deltaX, int deltaY) {
 		for (WAbstractWidget widget : getAllWidgets()) {
-			if (widget.getClass().isAnnotationPresent(WFocusedMouseListener.class) && !widget.getFocus())
+			if (widget.getClass().isAnnotationPresent(WFocusedMouseListener.class) && !widget.isFocused())
 				continue;
 			widget.onMouseDragged(mouseX, mouseY, mouseButton, deltaX, deltaY);
 			if (widget instanceof WNetworked) {
@@ -136,7 +136,7 @@ public class WInterface implements WModifiableCollection, WLayoutElement, WThema
 
 	public void onMouseScrolled(int mouseX, int mouseY, double deltaY) {
 		for (WAbstractWidget widget : getAllWidgets()) {
-			if (widget.getClass().isAnnotationPresent(WFocusedMouseListener.class) && !widget.getFocus())
+			if (widget.getClass().isAnnotationPresent(WFocusedMouseListener.class) && !widget.isFocused())
 				continue;
 			widget.onMouseScrolled(mouseX, mouseY, deltaY);
 			if (widget instanceof WNetworked) {
@@ -149,19 +149,19 @@ public class WInterface implements WModifiableCollection, WLayoutElement, WThema
 	public void onMouseMoved(int mouseX, int mouseY) {
 		for (WAbstractWidget widget : getAllWidgets()) {
 			widget.updateFocus(mouseX, mouseY);
-			if (widget.getClass().isAnnotationPresent(WFocusedMouseListener.class) && !widget.getFocus())
+			if (widget.getClass().isAnnotationPresent(WFocusedMouseListener.class) && !widget.isFocused())
 				continue;
 			widget.onMouseMoved(mouseX, mouseY);
 			if (widget instanceof WNetworked) {
 				ClientSidePacketRegistry.INSTANCE.sendToServer(NetworkRegistry.SYNCED_WIDGET_PACKET,
-						NetworkRegistry.createFocusPacket(((WNetworked) widget), widget.getFocus()));
+						NetworkRegistry.createFocusPacket(((WNetworked) widget), widget.isFocused()));
 			}
 		}
 	}
 
 	public void onKeyReleased(int keyCode, int character, int keyModifier) {
 		for (WAbstractWidget widget : getAllWidgets()) {
-			if (widget.getClass().isAnnotationPresent(WFocusedKeyboardListener.class) && !widget.getFocus())
+			if (widget.getClass().isAnnotationPresent(WFocusedKeyboardListener.class) && !widget.isFocused())
 				continue;
 			widget.onKeyReleased(keyCode, character, keyModifier);
 			if (widget instanceof WNetworked) {
@@ -173,7 +173,7 @@ public class WInterface implements WModifiableCollection, WLayoutElement, WThema
 
 	public void onKeyPressed(int keyCode, int character, int keyModifier) {
 		for (WAbstractWidget widget : getAllWidgets()) {
-			if (widget.getClass().isAnnotationPresent(WFocusedKeyboardListener.class) && !widget.getFocus())
+			if (widget.getClass().isAnnotationPresent(WFocusedKeyboardListener.class) && !widget.isFocused())
 				continue;
 			widget.onKeyPressed(keyCode, character, keyModifier);
 			if (widget instanceof WNetworked) {
@@ -185,7 +185,7 @@ public class WInterface implements WModifiableCollection, WLayoutElement, WThema
 
 	public void onCharTyped(char character, int keyCode) {
 		for (WAbstractWidget widget : getAllWidgets()) {
-			if (widget.getClass().isAnnotationPresent(WFocusedKeyboardListener.class) && !widget.getFocus())
+			if (widget.getClass().isAnnotationPresent(WFocusedKeyboardListener.class) && !widget.isFocused())
 				continue;
 			widget.onCharTyped(character, keyCode);
 			if (widget instanceof WNetworked) {
