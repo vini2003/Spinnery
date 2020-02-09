@@ -15,7 +15,6 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Environment(EnvType.CLIENT)
-@WFocusedMouseListener
 public class WPanel extends WAbstractWidget implements WModifiableCollection, WDelegatedEventListener {
 	protected Set<WAbstractWidget> heldWidgets = new LinkedHashSet<>();
 

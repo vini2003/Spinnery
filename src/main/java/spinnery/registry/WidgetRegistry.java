@@ -31,7 +31,6 @@ public class WidgetRegistry {
 		register(new Identifier("spinnery", "draggable_area"), WDraggableArea.class);
 		register(new Identifier("spinnery", "dropdown"), WDropdown.class);
 		register(new Identifier("spinnery", "dynamic_image"), WDynamicImage.class);
-		register(new Identifier("spinnery", "horizontal_list"), WHorizontalList.class);
 		register(new Identifier("spinnery", "horizontal_slider"), WHorizontalSlider.class);
 		register(new Identifier("spinnery", "panel"), WPanel.class);
 		register(new Identifier("spinnery", "slot"), WSlot.class);

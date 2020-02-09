@@ -64,10 +64,7 @@ public class WVerticalScrollableContainer extends WAbstractWidget implements WMo
         boolean hitTop = yOffset - deltaY < 0;
         boolean hitBottom = yOffset - deltaY > getMaxOffsetY();
 
-        if (hitBottom) {
-            scrollKineticDelta = 0;
-        }
-        if (hitTop) {
+        if (hitTop || hitBottom) {
             scrollKineticDelta = 0;
         }
 
@@ -94,7 +91,7 @@ public class WVerticalScrollableContainer extends WAbstractWidget implements WMo
         return ImmutableSet.copyOf(delegates);
     }
 
-    public boolean hasScrollbar() {
+    public boolean getScrollbarVisible() {
         return !scrollbar.isHidden();
     }
 
@@ -103,7 +100,7 @@ public class WVerticalScrollableContainer extends WAbstractWidget implements WMo
         return (W) this;
     }
 
-    protected int getLowestY() {
+    protected int getMaxY() {
         int max = widgets.stream().mapToInt(w -> w.getPosition().getRelativeY() + w.getHeight()).max().orElse(0);
         if (max == 0) return getStartAnchorY();
         return getStartAnchorY() + max - getVisibleHeight() + bottomSpace;
@@ -127,9 +124,8 @@ public class WVerticalScrollableContainer extends WAbstractWidget implements WMo
 
     @Override
     public WSize getInnerSize() {
-        Set<WAbstractWidget> widgets = getAllWidgets();
+        Set<WAbstractWidget> widgets = getWidgets();
 
-        // Topmost widget (lower Y)
         int topmostY = getStartAnchorY();
         int bottommostY = topmostY;
         for (WAbstractWidget widget : widgets) {
@@ -150,13 +146,7 @@ public class WVerticalScrollableContainer extends WAbstractWidget implements WMo
     }
 
     public int getMaxOffsetY() {
-        return getLowestY() - getStartAnchorY();
-    }
-
-    @Override
-    public void align() {
-        super.align();
-        scrollToStart();
+        return getMaxY() - getStartAnchorY();
     }
 
     @Override
