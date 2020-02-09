@@ -20,4 +20,8 @@ public class MouseUtilities {
 	public static long nanoDelay() {
 		return nanoDelay;
 	}
+
+	public static void nanoUpdate() {
+		lastNanos = System.nanoTime();
+	}
 }

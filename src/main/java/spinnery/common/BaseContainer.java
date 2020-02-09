@@ -16,13 +16,12 @@ import net.minecraft.util.Tickable;
 import net.minecraft.world.World;
 import org.lwjgl.glfw.GLFW;
 import spinnery.registry.NetworkRegistry;
-import spinnery.util.MouseUtilities;
 import spinnery.util.StackUtilities;
 import spinnery.widget.WAbstractWidget;
 import spinnery.widget.WInterface;
 import spinnery.widget.WSlot;
 import spinnery.widget.api.WNetworked;
-import spinnery.widget.api.WSlotAction;
+import spinnery.widget.api.Action;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -106,7 +105,7 @@ public class BaseContainer extends Container implements Tickable {
 		}
 	}
 
-	public void onSlotDrag(int[] slotNumber, int[] inventoryNumber, WSlotAction action) {
+	public void onSlotDrag(int[] slotNumber, int[] inventoryNumber, Action action) {
 		HashMap<Integer, WSlot> slots = new HashMap<>();
 
 		for (int i = 0; i < slotNumber.length; ++i) {
@@ -123,17 +122,17 @@ public class BaseContainer extends Container implements Tickable {
 
 		int split = -1;
 
-		if (action == WSlotAction.DRAG_SPLIT || action == WSlotAction.DRAG_SPLIT_PREVIEW) {
+		if (action == Action.DRAG_SPLIT || action == Action.DRAG_SPLIT_PREVIEW) {
 			split = getPlayerInventory().getCursorStack().getCount() / slots.size();
-		} else if (action == WSlotAction.DRAG_SINGLE || action == WSlotAction.DRAG_SINGLE_PREVIEW) {
+		} else if (action == Action.DRAG_SINGLE || action == Action.DRAG_SINGLE_PREVIEW) {
 			split = 1;
 		}
 
 		ItemStack stackA = ItemStack.EMPTY;
 
-		if (action == WSlotAction.DRAG_SINGLE || action == WSlotAction.DRAG_SPLIT) {
+		if (action == Action.DRAG_SINGLE || action == Action.DRAG_SPLIT) {
 			stackA = getPlayerInventory().getCursorStack();
-		} else if (action == WSlotAction.DRAG_SINGLE_PREVIEW || action == WSlotAction.DRAG_SPLIT_PREVIEW) {
+		} else if (action == Action.DRAG_SINGLE_PREVIEW || action == Action.DRAG_SPLIT_PREVIEW) {
 			stackA = getPlayerInventory().getCursorStack().copy();
 		}
 
@@ -142,27 +141,27 @@ public class BaseContainer extends Container implements Tickable {
 
 			ItemStack stackB = ItemStack.EMPTY;
 
-			if (action == WSlotAction.DRAG_SINGLE || action == WSlotAction.DRAG_SPLIT) {
+			if (action == Action.DRAG_SINGLE || action == Action.DRAG_SPLIT) {
 				stackB = slotA.getStack();;
-			} else if (action == WSlotAction.DRAG_SINGLE_PREVIEW || action == WSlotAction.DRAG_SPLIT_PREVIEW) {
+			} else if (action == Action.DRAG_SINGLE_PREVIEW || action == Action.DRAG_SPLIT_PREVIEW) {
 				stackB = slotA.getStack().copy();
 			}
 
 
 			Pair<ItemStack, ItemStack> stacks = StackUtilities.clamp(stackA, stackB, split, split);
 
-			if (action == WSlotAction.DRAG_SINGLE || action == WSlotAction.DRAG_SPLIT) {
+			if (action == Action.DRAG_SINGLE || action == Action.DRAG_SPLIT) {
 				stackA = stacks.getFirst();
 				slotA.getInterface().getContainer().previewCursorStack = ItemStack.EMPTY;
 				slotA.setStack(stacks.getSecond());
-			} else if (action == WSlotAction.DRAG_SINGLE_PREVIEW || action == WSlotAction.DRAG_SPLIT_PREVIEW) {
+			} else if (action == Action.DRAG_SINGLE_PREVIEW || action == Action.DRAG_SPLIT_PREVIEW) {
 				slotA.getInterface().getContainer().previewCursorStack = stacks.getFirst().copy();
 				slotA.setPreviewStack(stacks.getSecond().copy());
 			}
 		}
 	}
 
-	public void onSlotAction(int slotNumber, int inventoryNumber, int button, WSlotAction action, PlayerEntity player) {
+	public void onSlotAction(int slotNumber, int inventoryNumber, int button, Action action, PlayerEntity player) {
 		WSlot slotA = null;
 
 		for (WAbstractWidget widget : serverInterface.getAllWidgets()) {

@@ -1,6 +1,6 @@
 package spinnery.widget.api;
 
-public enum WSlotAction {
+public enum Action {
 	PICKUP,
 	PICKUP_ALL,
 	QUICK_MOVE,
@@ -10,7 +10,7 @@ public enum WSlotAction {
 	DRAG_SPLIT_PREVIEW,
 	DRAG_SINGLE_PREVIEW;
 
-	public static WSlotAction of(int button, boolean mode) {
+	public static Action of(int button, boolean mode) {
 		switch (button) {
 			case 0:
 				return mode ? DRAG_SPLIT : DRAG_SPLIT_PREVIEW;

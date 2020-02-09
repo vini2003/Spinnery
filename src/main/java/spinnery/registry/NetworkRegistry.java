@@ -5,21 +5,16 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.container.SlotActionType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.PacketByteBuf;
-import spinnery.Spinnery;
 import spinnery.common.BaseContainer;
 import spinnery.util.StackUtilities;
 import spinnery.widget.WSlot;
 import spinnery.widget.WAbstractWidget;
 import spinnery.widget.api.WNetworked;
-import spinnery.widget.api.WSlotAction;
-
-import java.util.Optional;
+import spinnery.widget.api.Action;
 
 public class NetworkRegistry {
 	public static final Identifier SLOT_CLICK_PACKET = new Identifier("spinnery", "slot_click");
@@ -27,7 +22,7 @@ public class NetworkRegistry {
 	public static final Identifier SLOT_DRAG_PACKET = new Identifier("spinnery", "slot_drag");
 	public static final Identifier SYNCED_WIDGET_PACKET = new Identifier("spinnery", "synced_widget");
 
-	public static PacketByteBuf createSlotClickPacket(int syncId, int slotNumber, int inventoryNumber, int button, WSlotAction action) {
+	public static PacketByteBuf createSlotClickPacket(int syncId, int slotNumber, int inventoryNumber, int button, Action action) {
 		PacketByteBuf buffer = new PacketByteBuf(Unpooled.buffer());
 		buffer.writeInt(syncId);
 		buffer.writeInt(slotNumber);
@@ -37,7 +32,7 @@ public class NetworkRegistry {
 		return buffer;
 	}
 
-	public static PacketByteBuf createSlotDragPacket(int syncId, int[] slotNumber, int[] inventoryNumber, WSlotAction action) {
+	public static PacketByteBuf createSlotDragPacket(int syncId, int[] slotNumber, int[] inventoryNumber, Action action) {
 		PacketByteBuf buffer = new PacketByteBuf(Unpooled.buffer());
 		buffer.writeInt(syncId);
 		buffer.writeIntArray(slotNumber);
@@ -166,7 +161,7 @@ public class NetworkRegistry {
 			int slotNumber = packetByteBuffer.readInt();
 			int inventoryNumber = packetByteBuffer.readInt();
 			int button = packetByteBuffer.readInt();
-			WSlotAction action = packetByteBuffer.readEnumConstant(WSlotAction.class);
+			Action action = packetByteBuffer.readEnumConstant(Action.class);
 
 			packetContext.getTaskQueue().execute(() -> {
 				if (packetContext.getPlayer().container instanceof BaseContainer && packetContext.getPlayer().container.syncId == syncId) {
@@ -179,7 +174,7 @@ public class NetworkRegistry {
 			int syncId = packetByteBuffer.readInt();
 			int[] slotNumbers = packetByteBuffer.readIntArray();
 			int[] inventoryNumbers = packetByteBuffer.readIntArray();
-			WSlotAction action = packetByteBuffer.readEnumConstant(WSlotAction.class);
+			Action action = packetByteBuffer.readEnumConstant(Action.class);
 
 			packetContext.getTaskQueue().execute(() -> {
 				if (packetContext.getPlayer().container instanceof BaseContainer && packetContext.getPlayer().container.syncId == syncId) {
