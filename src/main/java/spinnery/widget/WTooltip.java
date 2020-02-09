@@ -1,11 +1,15 @@
 package spinnery.widget;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import spinnery.client.BaseRenderer;
 import spinnery.widget.api.Color;
 import spinnery.widget.api.WModifiableCollection;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 public class WTooltip extends WAbstractWidget implements WModifiableCollection {
@@ -39,6 +43,9 @@ public class WTooltip extends WAbstractWidget implements WModifiableCollection {
         BaseRenderer.drawGradient(x + width + 2, y - 3 + 1, x + width + 3, y + height + 3 - 1, z, colorStart, colorEnd); // right outline
         BaseRenderer.drawGradient(x - 3, y - 3, x + width + 3, y - 3 + 1, z, colorStart, colorStart); // top outline
         BaseRenderer.drawGradient(x - 3, y + height + 2, x + width + 3, y + height + 3, z, colorEnd, colorEnd); // bottom outline
+
+        List<WAbstractWidget> widgets = new ArrayList<>(getWidgets());
+        Collections.sort(widgets);
 
         for (WAbstractWidget widget : widgets) {
             widget.draw();

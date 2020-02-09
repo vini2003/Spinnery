@@ -8,9 +8,12 @@ import spinnery.widget.api.WDelegatedEventListener;
 import spinnery.widget.api.WEventListener;
 import spinnery.widget.api.WModifiableCollection;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 @Environment(EnvType.CLIENT)
@@ -36,7 +39,11 @@ public class WPanel extends WAbstractWidget implements WModifiableCollection, WD
 			BaseRenderer.drawRectangle(x + 1, y + 17, z, sX - 2, 0.75, getStyle().asColor("shadow"));
 		}
 
-		for (WAbstractWidget widget : getWidgets()) {
+		List<WAbstractWidget> widgets = new ArrayList<>(getWidgets());
+		Collections.sort(widgets);
+		Collections.reverse(widgets);
+
+		for (WAbstractWidget widget : widgets) {
 			widget.draw();
 		}
 	}
