@@ -75,11 +75,11 @@ public class WStyle {
 				.map(WColor::of).orElse(defaultColor);
 	}
 
-	public WSize asSize(String property) {
+	public Size asSize(String property) {
 		JsonElement el = getElement(property);
-		if (!(el instanceof JsonArray)) return WSize.of(0, 0);
+		if (!(el instanceof JsonArray)) return Size.of(0, 0);
 		JsonArray array = (JsonArray) el;
-		return WSize.of(array.getInt(0, 0), array.getInt(1, 0));
+		return Size.of(array.getInt(0, 0), array.getInt(1, 0));
 	}
 
 	// Clockwise from top
@@ -88,7 +88,7 @@ public class WStyle {
 		Optional<Number> singleValue = JanksonOps.INSTANCE.getNumberValue(el);
 		if (singleValue.isPresent()) {
 			int intValue = singleValue.get().intValue();
-			WSize size = WSize.of(intValue, intValue);
+			Size size = Size.of(intValue, intValue);
 			return WPadding.of(intValue);
 		}
 
@@ -105,18 +105,18 @@ public class WStyle {
 		return WPadding.of(0);
 	}
 
-	public WPosition asPosition(String property) {
+	public Position asPosition(String property) {
 		JsonElement el = getElement(property);
-		if (!(el instanceof JsonArray)) return WPosition.origin();
+		if (!(el instanceof JsonArray)) return Position.origin();
 		JsonArray array = (JsonArray) el;
-		return WPosition.of(array.getInt(0, 0), array.getInt(1, 0), array.getInt(2, 0));
+		return Position.of(array.getInt(0, 0), array.getInt(1, 0), array.getInt(2, 0));
 	}
 
-	public WPosition asAnchoredPosition(String property, WAbstractWidget anchor) {
+	public Position asAnchoredPosition(String property, WAbstractWidget anchor) {
 		JsonElement el = getElement(property);
-		if (!(el instanceof JsonArray)) return WPosition.of(anchor);
+		if (!(el instanceof JsonArray)) return Position.of(anchor);
 		JsonArray array = (JsonArray) el;
-		return WPosition.of(anchor, array.getInt(0, 0), array.getInt(1, 0), array.getInt(2, 0));
+		return Position.of(anchor, array.getInt(0, 0), array.getInt(1, 0), array.getInt(2, 0));
 	}
 
 	public Identifier asIdentifier(String property) {
@@ -142,8 +142,8 @@ public class WStyle {
 		registerSerializer(Number.class, JanksonOps.INSTANCE::createNumeric);
 		registerSerializer(String.class, JanksonOps.INSTANCE::createString);
 		registerSerializer(Boolean.class, JanksonOps.INSTANCE::createBoolean);
-		registerSerializer(WPosition.class, v -> JanksonOps.INSTANCE.createIntList(IntStream.of(v.x, v.y, v.z)));
-		registerSerializer(WSize.class, v -> JanksonOps.INSTANCE.createIntList(IntStream.of(v.getWidth(), v.getHeight())));
+		registerSerializer(Position.class, v -> JanksonOps.INSTANCE.createIntList(IntStream.of(v.x, v.y, v.z)));
+		registerSerializer(Size.class, v -> JanksonOps.INSTANCE.createIntList(IntStream.of(v.getWidth(), v.getHeight())));
 		registerSerializer(WColor.class, v -> JanksonOps.INSTANCE.createLong(v.ARGB));
 		// TODO: sided size serialization
 	}

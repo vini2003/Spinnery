@@ -23,13 +23,13 @@ public class WDropdown extends WAbstractWidget implements WModifiableCollection,
 
 	public Set<WAbstractWidget> widgets = new HashSet<>();
 	protected boolean state = false;
-	protected WSize dropdownSize;
+	protected Size dropdownSize;
 	protected WVirtualArea toggle;
 	protected HideBehavior hideBehavior = HideBehavior.TOGGLE;
 
 	@Override
 	public void onLayoutChange() {
-		toggle = new WVirtualArea(WPosition.of(this), WSize.of(getToggleWidth(), getToggleHeight()));
+		toggle = new WVirtualArea(Position.of(this), Size.of(getToggleWidth(), getToggleHeight()));
 		updateChildren();
 	}
 
@@ -82,13 +82,13 @@ public class WDropdown extends WAbstractWidget implements WModifiableCollection,
 					shouldClose = isWithinBounds(mouseX, mouseY);
 					break;
 				case ONLY_CHILD:
-					shouldClose = (isWithinBounds(mouseX, mouseY) && !getFocus());
+					shouldClose = (isWithinBounds(mouseX, mouseY) && !isFocused());
 					break;
 				case ANYWHERE_EXCEPT_CHILD:
-					shouldClose = (!isWithinBounds(mouseX, mouseY) || getFocus());
+					shouldClose = (!isWithinBounds(mouseX, mouseY) || isFocused());
 					break;
 				case INSIDE_EXCEPT_CHILD:
-					shouldClose = (isWithinBounds(mouseX, mouseY) && getFocus());
+					shouldClose = (isWithinBounds(mouseX, mouseY) && isFocused());
 					break;
 			}
 		}
@@ -111,9 +111,9 @@ public class WDropdown extends WAbstractWidget implements WModifiableCollection,
 	public boolean updateFocus(int mouseX, int mouseY) {
 		super.updateFocus(mouseX, mouseY);
 
-		setFocus(isWithinBounds(mouseX, mouseY) && getAllWidgets().stream().noneMatch((WAbstractWidget::getFocus)));
+		setFocus(isWithinBounds(mouseX, mouseY) && getAllWidgets().stream().noneMatch((WAbstractWidget::isFocused)));
 
-		return getFocus();
+		return isFocused();
 	}
 
 	@Override
@@ -139,11 +139,11 @@ public class WDropdown extends WAbstractWidget implements WModifiableCollection,
 		return super.getHeight();
 	}
 
-	public WSize getDropdownSize() {
+	public Size getDropdownSize() {
 		return dropdownSize;
 	}
 
-	public <W extends WDropdown> W setDropdownSize(WSize dropdownSize) {
+	public <W extends WDropdown> W setDropdownSize(Size dropdownSize) {
 		this.dropdownSize = dropdownSize;
 		return (W) this;
 	}

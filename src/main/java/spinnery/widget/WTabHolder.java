@@ -9,8 +9,8 @@ import spinnery.client.BaseRenderer;
 import spinnery.widget.api.WCollection;
 import spinnery.widget.api.WFocusedMouseListener;
 import spinnery.widget.api.WModifiableCollection;
-import spinnery.widget.api.WPosition;
-import spinnery.widget.api.WSize;
+import spinnery.widget.api.Position;
+import spinnery.widget.api.Size;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -46,7 +46,7 @@ public class WTabHolder extends WAbstractWidget implements WCollection {
 		for (int i = 0; i < tabs.size(); i++) {
 			WTabToggle button = tabs.get(i).getToggle();
 			button.setWidth(tabSize);
-			button.setPosition(WPosition.of(this, tabOffset, 0, 0));
+			button.setPosition(Position.of(this, tabOffset, 0, 0));
 			tabOffset += tabSize;
 		}
 		return tab;
@@ -139,7 +139,7 @@ public class WTabHolder extends WAbstractWidget implements WCollection {
 			this.symbol = symbol;
 			this.name = name;
 			this.number = number;
-			WTabToggle tabToggle = createChild(WTabToggle.class, WPosition.of(holder, 0, 0, 0), WSize.of(36, 24))
+			WTabToggle tabToggle = createChild(WTabToggle.class, Position.of(holder, 0, 0, 0), Size.of(36, 24))
 					.setSymbol(symbol)
 					.setLabel(name);
 			tabToggle.setParent(holder);

@@ -6,8 +6,8 @@ import spinnery.client.BaseRenderer;
 import spinnery.client.TextRenderer;
 import spinnery.widget.api.WFocusedKeyboardListener;
 import spinnery.widget.api.WFocusedMouseListener;
-import spinnery.widget.api.WPosition;
-import spinnery.widget.api.WSize;
+import spinnery.widget.api.Position;
+import spinnery.widget.api.Size;
 
 @Environment(EnvType.CLIENT)
 @WFocusedKeyboardListener
@@ -38,8 +38,8 @@ public class WVerticalSlider extends WAbstractSlider {
 	}
 
 	@Override
-	public WSize getKnobSize() {
-		return WSize.of(getWidth() + 3, 6);
+	public Size getKnobSize() {
+		return Size.of(getWidth() + 3, 6);
 	}
 
 	@Override
@@ -64,8 +64,8 @@ public class WVerticalSlider extends WAbstractSlider {
 		BaseRenderer.drawRectangle(x, y + (sY) - 1, z, sX, 1, getStyle().asColor("bottom_right.background"));
 		BaseRenderer.drawRectangle(x + sX, y, z, 1, sY, getStyle().asColor("bottom_right.background"));
 
-		WPosition innerAnchor = getInnerAnchor();
-		WSize innerSize = getInnerSize();
+		Position innerAnchor = getInnerAnchor();
+		Size innerSize = getInnerSize();
 		int innerX = innerAnchor.getX();
 		int innerY = innerAnchor.getY();
 		int innerWidth = innerSize.getWidth();
@@ -77,7 +77,7 @@ public class WVerticalSlider extends WAbstractSlider {
 		BaseRenderer.drawRectangle(innerX, innerY, z, innerWidth, innerHeight * percentLeft,
 				getStyle().asColor("background.off"));
 
-		WSize knobSize = getKnobSize();
+		Size knobSize = getKnobSize();
 		int knobWidth = knobSize.getWidth();
 		int knobHeight = knobSize.getHeight();
 		int knobY = (int) (y + (innerHeight - (double) knobSize.getHeight() / 2) * percentLeft);

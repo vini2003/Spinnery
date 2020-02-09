@@ -18,8 +18,8 @@ import spinnery.common.BaseContainer;
 import spinnery.registry.NetworkRegistry;
 import spinnery.widget.api.WFocusedMouseListener;
 import spinnery.widget.api.WModifiableCollection;
-import spinnery.widget.api.WPosition;
-import spinnery.widget.api.WSize;
+import spinnery.widget.api.Position;
+import spinnery.widget.api.Size;
 
 @WFocusedMouseListener
 public class WSlot extends WAbstractWidget {
@@ -52,16 +52,16 @@ public class WSlot extends WAbstractWidget {
 	}
 
 	@Environment(EnvType.CLIENT)
-	public static void addPlayerInventory(WPosition position, WSize size, WModifiableCollection parent) {
+	public static void addPlayerInventory(Position position, Size size, WModifiableCollection parent) {
 		addArray(position, size, parent, 9, BaseContainer.PLAYER_INVENTORY, 9, 3);
 		addArray(position.add(0, size.getHeight() * 3 + 3, 0), size, parent, 0, BaseContainer.PLAYER_INVENTORY, 9, 1);
 	}
 
 	@Environment(EnvType.CLIENT)
-	public static void addArray(WPosition position, WSize size, WModifiableCollection parent, int slotNumber, int inventoryNumber, int arrayWidth, int arrayHeight) {
+	public static void addArray(Position position, Size size, WModifiableCollection parent, int slotNumber, int inventoryNumber, int arrayWidth, int arrayHeight) {
 		for (int y = 0; y < arrayHeight; ++y) {
 			for (int x = 0; x < arrayWidth; ++x) {
-				parent.createChild(WSlot.class, WPosition.of(position.getX() + (size.getWidth() * x), position.getY() + (size.getHeight() * y), position.getZ()), size)
+				parent.createChild(WSlot.class, Position.of(position.getX() + (size.getWidth() * x), position.getY() + (size.getHeight() * y), position.getZ()), size)
 						.slot(slotNumber + y * arrayWidth + x)
 						.inventory(inventoryNumber);
 			}
@@ -165,7 +165,7 @@ public class WSlot extends WAbstractWidget {
 
 		BaseRenderer.drawBeveledPanel(x, y, z, sX, sY, getStyle().asColor("top_left"), getStyle().asColor("background.unfocused"), getStyle().asColor("bottom_right"));
 
-		if (getFocus()) {
+		if (isFocused()) {
 			BaseRenderer.drawRectangle(x + 1, y + 1, z, sX - 2, sY - 2, getStyle().asColor("background.focused"));
 		}
 

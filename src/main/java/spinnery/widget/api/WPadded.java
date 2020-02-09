@@ -4,15 +4,15 @@ public interface WPadded extends WInnerSized {
     WPadding getPadding();
 
     @Override
-    default WSize getInnerSize() {
-        return WSize.of(this).add(
+    default Size getInnerSize() {
+        return Size.of(this).add(
                 -(getPadding().getLeft() + getPadding().getRight()),
                 -(getPadding().getTop() + getPadding().getBottom())
         );
     }
 
     @Override
-    default WPosition getInnerAnchor() {
-        return WPosition.of(this, getPadding().getLeft(), getPadding().getTop());
+    default Position getInnerAnchor() {
+        return Position.of(this, getPadding().getLeft(), getPadding().getTop());
     }
 }

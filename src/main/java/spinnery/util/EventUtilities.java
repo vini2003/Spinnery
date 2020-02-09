@@ -14,7 +14,7 @@ public class EventUtilities {
      */
     public static <T extends WEventListener> boolean canReceiveMouse(T target) {
         if (target instanceof WAbstractWidget) {
-            return !target.getClass().isAnnotationPresent(WFocusedMouseListener.class) || ((WAbstractWidget) target).getFocus();
+            return !target.getClass().isAnnotationPresent(WFocusedMouseListener.class) || ((WAbstractWidget) target).isFocused();
         }
         return true;
     }
@@ -27,7 +27,7 @@ public class EventUtilities {
      */
     public static <T extends WEventListener> boolean canReceiveKeyboard(T target) {
         if (target instanceof WAbstractWidget) {
-            return !target.getClass().isAnnotationPresent(WFocusedKeyboardListener.class) || ((WAbstractWidget) target).getFocus();
+            return !target.getClass().isAnnotationPresent(WFocusedKeyboardListener.class) || ((WAbstractWidget) target).isFocused();
         }
         return true;
     }

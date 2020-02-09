@@ -187,7 +187,7 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 	public void updateTooltip(int mouseX, int mouseY) {
 		setDrawSlot(null);
 		for (WAbstractWidget widgetA : getInterface().getWidgets()) {
-			if (widgetA.getFocus() && widgetA instanceof WSlot) {
+			if (widgetA.isFocused() && widgetA instanceof WSlot) {
 				setDrawSlot((WSlot) widgetA);
 				setTooltipX(mouseX);
 				setTooltipY(mouseY);

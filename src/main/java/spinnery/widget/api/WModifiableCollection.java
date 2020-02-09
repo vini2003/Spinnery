@@ -16,11 +16,11 @@ public interface WModifiableCollection extends WCollection {
 		return createChild(wClass, null, null);
 	}
 
-	default <W extends WAbstractWidget> W createChild(Class<W> wClass, WPosition position) {
+	default <W extends WAbstractWidget> W createChild(Class<W> wClass, Position position) {
 		return createChild(wClass, position, null);
 	}
 
-	default <W extends WAbstractWidget> W createChild(Class<W> wClass, WPosition position, WSize size) {
+	default <W extends WAbstractWidget> W createChild(Class<W> wClass, Position position, Size size) {
 		W widget = getFactory().build(wClass);
 		if (position != null) widget.setPosition(position);
 		if (size != null) widget.setSize(size);

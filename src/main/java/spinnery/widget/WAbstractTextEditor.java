@@ -13,8 +13,8 @@ import spinnery.client.BaseRenderer;
 import spinnery.client.TextRenderer;
 import spinnery.widget.api.WPadded;
 import spinnery.widget.api.WPadding;
-import spinnery.widget.api.WPosition;
-import spinnery.widget.api.WSize;
+import spinnery.widget.api.Position;
+import spinnery.widget.api.Size;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -173,7 +173,7 @@ public abstract class WAbstractTextEditor extends WAbstractWidget implements WPa
     }
 
     protected Cursor getCursorFromMouse(int mouseX, int mouseY) {
-        WPosition innerPos = getInnerAnchor();
+        Position innerPos = getInnerAnchor();
         int x = -1;
         int y = -1;
         int lineOffset = getLineOffset();
@@ -656,8 +656,8 @@ public abstract class WAbstractTextEditor extends WAbstractWidget implements WPa
     }
 
     @Override
-    public boolean getFocus() {
-        return super.getFocus() || active;
+    public boolean isFocused() {
+        return super.isFocused() || active;
     }
 
     protected int getXOffsetStep() {
@@ -665,8 +665,8 @@ public abstract class WAbstractTextEditor extends WAbstractWidget implements WPa
     }
 
     protected void onCursorMove() {
-        WPosition innerPos = getInnerAnchor();
-        WSize innerSize = getInnerSize();
+        Position innerPos = getInnerAnchor();
+        Size innerSize = getInnerSize();
         int innerX = innerPos.getX();
         int innerY = innerPos.getY();
         int innerWidth = innerSize.getWidth();
@@ -701,8 +701,8 @@ public abstract class WAbstractTextEditor extends WAbstractWidget implements WPa
     protected void renderField() {
         int z = getZ();
 
-        WPosition innerPos = getInnerAnchor();
-        WSize innerSize = getInnerSize();
+        Position innerPos = getInnerAnchor();
+        Size innerSize = getInnerSize();
         int innerX = innerPos.getX();
         int innerY = innerPos.getY();
         int innerWidth = innerSize.getWidth();

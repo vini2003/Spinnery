@@ -42,8 +42,8 @@ public class WHorizontalScrollableContainer extends WAbstractWidget implements W
         int scrollBarHeight = 6;
         int scrollBarOffsetX = 0;
         int scrollBarOffsetY = getHeight() - scrollBarHeight;
-        scrollbar.setPosition(WPosition.of(this, scrollBarOffsetX, scrollBarOffsetY, scrollbar.getPosition().getRelativeZ()));
-        scrollbar.setSize(WSize.of(scrollBarWidth, scrollBarHeight));
+        scrollbar.setPosition(Position.of(this, scrollBarOffsetX, scrollBarOffsetY, scrollbar.getPosition().getRelativeZ()));
+        scrollbar.setSize(Size.of(scrollBarWidth, scrollBarHeight));
     }
 
     @Override
@@ -118,12 +118,12 @@ public class WHorizontalScrollableContainer extends WAbstractWidget implements W
     }
 
     @Override
-    public WSize getVisibleSize() {
-        return WSize.of(getWidth(), getHeight() - (!scrollbar.isHidden() ? scrollbar.getHeight() : 0));
+    public Size getVisibleSize() {
+        return Size.of(getWidth(), getHeight() - (!scrollbar.isHidden() ? scrollbar.getHeight() : 0));
     }
 
     @Override
-    public WSize getInnerSize() {
+    public Size getInnerSize() {
         Set<WAbstractWidget> widgets = getWidgets();
 
         int leftmostX = getStartAnchorX();
@@ -137,7 +137,7 @@ public class WHorizontalScrollableContainer extends WAbstractWidget implements W
             }
         }
 
-        return WSize.of(rightmostX - leftmostX, getVisibleHeight());
+        return Size.of(rightmostX - leftmostX, getVisibleHeight());
     }
 
     @Override
@@ -151,8 +151,8 @@ public class WHorizontalScrollableContainer extends WAbstractWidget implements W
 
     @Override
     public boolean updateFocus(int mouseX, int mouseY) {
-        setFocus(isWithinBounds(mouseX, mouseY) && getWidgets().stream().noneMatch((WAbstractWidget::getFocus)));
-        return getFocus();
+        setFocus(isWithinBounds(mouseX, mouseY) && getWidgets().stream().noneMatch((WAbstractWidget::isFocused)));
+        return isFocused();
     }
 
     @Override

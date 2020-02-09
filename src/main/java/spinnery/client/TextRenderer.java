@@ -4,7 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
 import spinnery.widget.api.WColor;
-import spinnery.widget.api.WPosition;
+import spinnery.widget.api.Position;
 
 public class TextRenderer {
 	public static RenderPass pass() {
@@ -86,7 +86,7 @@ public class TextRenderer {
 			return this;
 		}
 
-		public RenderPass at(WPosition position) {
+		public RenderPass at(Position position) {
 			return at(position.getX(), position.getY(), position.getZ());
 		}
 

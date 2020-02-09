@@ -146,7 +146,7 @@ public class WInterface implements WModifiableCollection, WLayoutElement, WThema
 			widget.onMouseMoved(mouseX, mouseY);
 			if (widget instanceof WNetworked) {
 				ClientSidePacketRegistry.INSTANCE.sendToServer(NetworkRegistry.SYNCED_WIDGET_PACKET,
-						NetworkRegistry.createFocusPacket(((WNetworked) widget), widget.getFocus()));
+						NetworkRegistry.createFocusPacket(((WNetworked) widget), widget.isFocused()));
 			}
 		}
 	}

@@ -20,8 +20,8 @@ public abstract class WAbstractWidget implements Tickable, Comparable<WAbstractW
 	protected WInterface linkedInterface;
 	protected WLayoutElement parent;
 
-	protected WPosition position = WPosition.origin();
-	protected WSize size = WSize.of(0, 0);
+	protected Position position = Position.origin();
+	protected Size size = Size.of(0, 0);
 
 	protected Text label = new LiteralText("");
 	protected boolean isHidden = false;
@@ -124,7 +124,7 @@ public abstract class WAbstractWidget implements Tickable, Comparable<WAbstractW
 
 	@Environment(EnvType.CLIENT)
 	public void center() {
-		setPosition(WPosition.of(getParent(),
+		setPosition(Position.of(getParent(),
 				getParent().getWidth() / 2 - getWidth() / 2,
 				getParent().getHeight() / 2 - getHeight() / 2,
 				getPosition().getRelativeZ()));
@@ -132,7 +132,7 @@ public abstract class WAbstractWidget implements Tickable, Comparable<WAbstractW
 
 	@Environment(EnvType.CLIENT)
 	public void centerX() {
-		setPosition(WPosition.of(getParent(),
+		setPosition(Position.of(getParent(),
 				getParent().getWidth() / 2 - getWidth() / 2,
 				getPosition().getRelativeY(),
 				getPosition().getRelativeZ()));
@@ -140,7 +140,7 @@ public abstract class WAbstractWidget implements Tickable, Comparable<WAbstractW
 
 	@Environment(EnvType.CLIENT)
 	public void centerY() {
-		setPosition(WPosition.of(getParent(),
+		setPosition(Position.of(getParent(),
 				getPosition().getRelativeX(),
 				getParent().getHeight() / 2 - getHeight() / 2,
 				getPosition().getRelativeZ()));
@@ -168,20 +168,20 @@ public abstract class WAbstractWidget implements Tickable, Comparable<WAbstractW
 		}
 
 		setFocus(isWithinBounds(mouseX, mouseY));
-		return getFocus();
+		return isFocused();
 	}
 
 	@Environment(EnvType.CLIENT)
-	public boolean getFocus() {
+	public boolean isFocused() {
 		return hasFocus;
 	}
 
 	@Environment(EnvType.CLIENT)
 	public void setFocus(boolean hasFocus) {
-		if (!getFocus() && hasFocus) {
+		if (!isFocused() && hasFocus) {
 			onFocusGained();
 		}
-		if (getFocus() && !hasFocus) {
+		if (isFocused() && !hasFocus) {
 			onFocusReleased();
 		}
 		this.hasFocus = hasFocus;
@@ -242,7 +242,7 @@ public abstract class WAbstractWidget implements Tickable, Comparable<WAbstractW
 	// WPositioned
 
 	@Environment(EnvType.CLIENT)
-	public WPosition getPosition() {
+	public Position getPosition() {
 		return position;
 	}
 
@@ -262,7 +262,7 @@ public abstract class WAbstractWidget implements Tickable, Comparable<WAbstractW
 	}
 
 	@Environment(EnvType.CLIENT)
-	public <W extends WAbstractWidget> W setPosition(WPosition position) {
+	public <W extends WAbstractWidget> W setPosition(Position position) {
 		this.position = position;
 		onLayoutChange();
 		return (W) this;
@@ -270,23 +270,23 @@ public abstract class WAbstractWidget implements Tickable, Comparable<WAbstractW
 
 	@Environment(EnvType.CLIENT)
 	public <W extends WAbstractWidget> W setX(int x) {
-		return setPosition(WPosition.of(position).setX(x));
+		return setPosition(Position.of(position).setX(x));
 	}
 
 	@Environment(EnvType.CLIENT)
 	public <W extends WAbstractWidget> W setY(int y) {
-		return setPosition(WPosition.of(position).setY(y));
+		return setPosition(Position.of(position).setY(y));
 	}
 
 	@Environment(EnvType.CLIENT)
 	public <W extends WAbstractWidget> W setZ(int z) {
-		return setPosition(WPosition.of(position).setZ(z));
+		return setPosition(Position.of(position).setZ(z));
 	}
 
 	// WSized
 
 	@Environment(EnvType.CLIENT)
-	public WSize getSize() {
+	public Size getSize() {
 		return size;
 	}
 
@@ -301,7 +301,7 @@ public abstract class WAbstractWidget implements Tickable, Comparable<WAbstractW
 	}
 
 	@Environment(EnvType.CLIENT)
-	public <W extends WAbstractWidget> W setSize(WSize size) {
+	public <W extends WAbstractWidget> W setSize(Size size) {
 		this.size = size;
 		onLayoutChange();
 		return (W) this;
@@ -309,12 +309,12 @@ public abstract class WAbstractWidget implements Tickable, Comparable<WAbstractW
 
 	@Environment(EnvType.CLIENT)
 	public <W extends WAbstractWidget> W setWidth(int width) {
-		return setSize(WSize.of(size).setWidth(width));
+		return setSize(Size.of(size).setWidth(width));
 	}
 
 	@Environment(EnvType.CLIENT)
 	public <W extends WAbstractWidget> W setHeight(int height) {
-		return setSize(WSize.of(size).setHeight(height));
+		return setSize(Size.of(size).setHeight(height));
 	}
 
 	// Event runners
