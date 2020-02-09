@@ -3,6 +3,7 @@ package spinnery.common;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.ContainerScreen;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -95,6 +96,12 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 	public <S extends BaseContainerScreen> S setDrawSlot(WSlot drawSlot) {
 		this.drawSlot = drawSlot;
 		return (S) this;
+	}
+
+	@Override
+	public void resize(MinecraftClient client, int width, int height) {
+		getInterface().onAlign();
+		super.resize(client, width, height);
 	}
 
 	@Override
