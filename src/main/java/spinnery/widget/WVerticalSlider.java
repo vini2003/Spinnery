@@ -9,26 +9,13 @@ import spinnery.widget.api.WFocusedMouseListener;
 import spinnery.widget.api.Position;
 import spinnery.widget.api.Size;
 
-@SuppressWarnings("unchecked")
 @Environment(EnvType.CLIENT)
 @WFocusedKeyboardListener
 @WFocusedMouseListener
 public class WVerticalSlider extends WAbstractSlider {
-	protected String total = "0.0";
-	protected int tY;
-
 	@Override
-	public void onLayoutChange() {
-		tY = (getY() + getHeight() / 2 - TextRenderer.height() / 2);
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public WVerticalSlider setProgress(double progress) {
-		super.setProgress(progress);
-		total = String.valueOf(this.progress);
-		onLayoutChange();
-		return this;
+	public Position getProgressTextAnchor() {
+		return Position.of(this).add(getWidth() + 4, getHeight() / 2 - TextRenderer.height() / 2, 0);
 	}
 
 	@Override
@@ -56,8 +43,11 @@ public class WVerticalSlider extends WAbstractSlider {
 		int sX = getWidth();
 		int sY = getHeight();
 
-		TextRenderer.pass().shadow(isLabelShadowed()).text(total).at(x + sX + 4, tY, z)
-				.color(getStyle().asColor("label.color")).shadowColor(getStyle().asColor("label.shadow_color")).render();
+		if (isProgressVisible()) {
+			Position tPos = getProgressTextAnchor();
+			TextRenderer.pass().shadow(isLabelShadowed()).text(getFormattedProgress()).at(tPos.getX(), tPos.getY(), tPos.getZ())
+					.color(getStyle().asColor("label.color")).shadowColor(getStyle().asColor("label.shadow_color")).render();
+		}
 
 		BaseRenderer.drawRectangle(x, y, z, sX, 1, getStyle().asColor("top_left.background"));
 		BaseRenderer.drawRectangle(x, y, z, 1, (sY), getStyle().asColor("top_left.background"));

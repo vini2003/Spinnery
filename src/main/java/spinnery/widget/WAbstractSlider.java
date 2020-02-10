@@ -3,6 +3,7 @@ package spinnery.widget;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import org.lwjgl.glfw.GLFW;
+import spinnery.widget.api.Position;
 import spinnery.widget.api.Size;
 import spinnery.widget.api.WPadded;
 import spinnery.widget.api.Padding;
@@ -16,6 +17,7 @@ public abstract class WAbstractSlider extends WAbstractWidget implements WPadded
     protected double max = 0;
     protected double progress = 0;
     protected double step = 1;
+    protected boolean progressVisible = true;
     protected Consumer<WAbstractSlider> runnableOnProgressChange;
 
     public double getMin() {
@@ -33,6 +35,16 @@ public abstract class WAbstractSlider extends WAbstractWidget implements WPadded
     public double getProgress() {
         return progress;
     }
+
+    public boolean isProgressVisible() {
+        return progressVisible;
+    }
+
+    public String getFormattedProgress() {
+        return String.valueOf(progress);
+    }
+
+    abstract public Position getProgressTextAnchor();
 
     public <W extends WAbstractSlider> W setMin(double min) {
         this.min = min;
@@ -61,6 +73,11 @@ public abstract class WAbstractSlider extends WAbstractWidget implements WPadded
         if (runnableOnProgressChange != null) {
             runnableOnProgressChange.accept(this);
         }
+        return (W) this;
+    }
+
+    public <W extends WAbstractSlider> W setProgressVisible(boolean progressVisible) {
+        this.progressVisible = progressVisible;
         return (W) this;
     }
 

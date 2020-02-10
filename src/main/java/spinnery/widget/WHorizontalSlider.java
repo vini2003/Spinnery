@@ -10,12 +10,10 @@ import spinnery.widget.api.*;
 @WFocusedKeyboardListener
 @WFocusedMouseListener
 public class WHorizontalSlider extends WAbstractSlider {
-	protected String total = "0.0";
-	protected int tX;
-
 	@Override
-	public void onLayoutChange() {
-		tX = getX() + (getWidth() + 7) / 2 - TextRenderer.width(String.valueOf(progress)) / 2;
+	public Position getProgressTextAnchor() {
+		String formatted = getFormattedProgress();
+		return Position.of(this).add((getWidth() + 5) / 2 - TextRenderer.width(formatted) / 2, getHeight() + 4, 0);
 	}
 
 	@Override
@@ -23,15 +21,6 @@ public class WHorizontalSlider extends WAbstractSlider {
 		double innerWidth = getInnerSize().getWidth();
 		double percentComplete = Math.max(0, (mouseX - getInnerAnchor().getX()) / innerWidth);
 		setProgress(min + percentComplete * (max - min));
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public <W extends WAbstractSlider> W setProgress(double progress) {
-		super.setProgress(progress);
-		total = String.valueOf(this.progress);
-		onLayoutChange();
-		return (W) this;
 	}
 
 	@Override
@@ -52,8 +41,11 @@ public class WHorizontalSlider extends WAbstractSlider {
 		int sX = getWidth();
 		int sY = getHeight();
 
-		TextRenderer.pass().shadow(isLabelShadowed()).text(total).at(tX, y + sY + 4, z)
-				.color(getStyle().asColor("label.color")).shadowColor(getStyle().asColor("label.shadow_color")).render();
+		if (isProgressVisible()) {
+			Position tPos = getProgressTextAnchor();
+			TextRenderer.pass().shadow(isLabelShadowed()).text(getFormattedProgress()).at(tPos.getX(), tPos.getY(), tPos.getZ())
+					.color(getStyle().asColor("label.color")).shadowColor(getStyle().asColor("label.shadow_color")).render();
+		}
 
 		BaseRenderer.drawRectangle(x, y, z, (sX), 1, getStyle().asColor("top_left.background"));
 		BaseRenderer.drawRectangle(x, y, z, 1, sY, getStyle().asColor("top_left.background"));
