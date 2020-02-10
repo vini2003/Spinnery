@@ -196,7 +196,7 @@ public abstract class WAbstractTextEditor extends WAbstractWidget implements WPa
             }
         }
         for (int j = 0; j < getLineLength(y); j++) {
-            if (offsetMouseX >= innerPos.getX() + getXOffset(y, j) && offsetMouseX <= innerPos.getX() + getXOffset(y, j + 1)) {
+            if (offsetMouseX + 2 >= innerPos.getX() + getXOffset(y, j) && offsetMouseX + 2 <= innerPos.getX() + getXOffset(y, j + 1)) {
                 x = j;
                 break;
             }
