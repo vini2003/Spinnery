@@ -134,9 +134,10 @@
 			top_left: "$bevel_dark",
 			bottom_right: "$bevel_light",
 			background: {
-				focused: 0xffc5c5c5,
+				focused: "$bg_interactable",
 				unfocused: "$bg_interactable"
-			}
+			},
+			overlay: 0x80ffffff
 		},
 		"spinnery:tab_holder": {
 			$extend: [

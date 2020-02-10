@@ -216,6 +216,10 @@ public class WSlot extends WAbstractWidget {
 		BaseRenderer.getItemRenderer().renderGuiItem(stackA, 1 + x + (sX - 18) / 2, 1 + y + (sY - 18) / 2);
 		BaseRenderer.getItemRenderer().renderGuiItemOverlay(MinecraftClient.getInstance().textRenderer, stackA, 1 + x + (sX - 18) / 2, 1 + y + (sY - 18) / 2, stackA.getCount() == 1 ? "" : withSuffix(stackA.getCount()));
 		RenderSystem.disableLighting();
+
+		if (isFocused()) {
+			BaseRenderer.drawRectangle(x + 1, y + 1, z + 300, sX - 2, sY - 2, getStyle().asColor("overlay"));
+		}
 	}
 
 	@Environment(EnvType.CLIENT)
