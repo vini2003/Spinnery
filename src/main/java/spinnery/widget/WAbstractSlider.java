@@ -36,11 +36,17 @@ public abstract class WAbstractSlider extends WAbstractWidget implements WPadded
 
     public <W extends WAbstractSlider> W setMin(double min) {
         this.min = min;
+        if (progress < min) {
+            setProgress(min);
+        }
         return (W) this;
     }
 
     public <W extends WAbstractSlider> W setMax(double max) {
         this.max = max;
+        if (progress > max) {
+            setProgress(max);
+        }
         return (W) this;
     }
 

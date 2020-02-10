@@ -10,7 +10,7 @@ import spinnery.widget.api.*;
 @WFocusedKeyboardListener
 @WFocusedMouseListener
 public class WHorizontalSlider extends WAbstractSlider {
-	protected String total = "0";
+	protected String total = "0.0";
 	protected int tX;
 
 	@Override

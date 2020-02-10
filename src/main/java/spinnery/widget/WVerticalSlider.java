@@ -9,6 +9,7 @@ import spinnery.widget.api.WFocusedMouseListener;
 import spinnery.widget.api.Position;
 import spinnery.widget.api.Size;
 
+@SuppressWarnings("unchecked")
 @Environment(EnvType.CLIENT)
 @WFocusedKeyboardListener
 @WFocusedMouseListener
