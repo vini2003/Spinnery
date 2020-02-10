@@ -4,21 +4,27 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
-import net.minecraft.text.Text;
 import spinnery.client.BaseRenderer;
 import spinnery.client.TextRenderer;
 import spinnery.widget.api.WFocusedMouseListener;
 
+@SuppressWarnings("unchecked")
 @Environment(EnvType.CLIENT)
 @WFocusedMouseListener
 public class WTabToggle extends WAbstractToggle {
-	Item symbol;
+	protected ItemConvertible symbol;
 
 	@Override
 	public void onMouseClicked(int mouseX, int mouseY, int mouseButton) {
-		if (!getToggleState()) {
-			super.onMouseClicked(mouseX, mouseY, mouseButton);
+		super.onMouseClicked(mouseX, mouseY, mouseButton);
+		setToggleState(true);
+		if (parent instanceof WTabHolder.WTab) {
+			WTabHolder.WTab tab = (WTabHolder.WTab) parent;
+			if (tab.getParent() instanceof WTabHolder) {
+				((WTabHolder) tab.getParent()).selectTab(tab.getNumber());
+			}
 		}
 	}
 
@@ -49,10 +55,10 @@ public class WTabToggle extends WAbstractToggle {
 	}
 
 	public Item getSymbol() {
-		return symbol;
+		return symbol.asItem();
 	}
 
-	public <W extends WTabToggle> W setSymbol(Item symbol) {
+	public <W extends WTabToggle> W setSymbol(ItemConvertible symbol) {
 		this.symbol = symbol;
 		return (W) this;
 	}
