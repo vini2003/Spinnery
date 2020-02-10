@@ -12,16 +12,16 @@ import java.util.*;
 
 @Environment(EnvType.CLIENT)
 public class WTabHolder extends WAbstractWidget implements WCollection, WDelegatedEventListener {
-	List<WTab> tabs = new ArrayList<>();
+	List<WTab> widgets = new ArrayList<>();
 
 	public void selectTab(int tabNumber) {
-		for (int i = 0; i < tabs.size(); i++) {
-			for (WAbstractWidget widget : tabs.get(i).getWidgets()) {
-				if (widget != tabs.get(i).getToggle()) {
+		for (int i = 0; i < widgets.size(); i++) {
+			for (WAbstractWidget widget : widgets.get(i).getWidgets()) {
+				if (widget != widgets.get(i).getToggle()) {
 					widget.setHidden(i + 1 != tabNumber);
 				} else {
 					if (i + 1 != tabNumber) {
-						tabs.get(i).getToggle().setToggleState(false);
+						widgets.get(i).getToggle().setToggleState(false);
 					}
 				}
 			}
@@ -29,15 +29,18 @@ public class WTabHolder extends WAbstractWidget implements WCollection, WDelegat
 	}
 
 	public WTab addTab(Item symbol, Text name) {
-		int tabNumber = tabs.size() + 1;
+		int tabNumber = widgets.size() + 1;
 		WTab tab = new WTab(symbol, name, tabNumber);
-		tabs.add(tab);
-		int tabSize = getWidth() / tabs.size();
+		widgets.add(tab);
+		int tabSize = getWidth() / widgets.size();
 		int tabOffset = 0;
-		for (int i = 0; i < tabs.size(); i++) {
-			WTabToggle button = tabs.get(i).getToggle();
-			button.setWidth(tabSize);
-			button.setPosition(Position.of(this, tabOffset, 0, 0));
+		for (int i = 0; i < widgets.size(); i++) {
+			WTab oldTab = widgets.get(i);
+			oldTab.setWidth(tabSize);
+			oldTab.setPosition(Position.of(this, tabOffset, 0, 0));
+			WTabToggle toggle = widgets.get(i).getToggle();
+			toggle.setWidth(tabSize);
+			toggle.setPosition(Position.of(this, tabOffset, 0, 0));
 			tabOffset += tabSize;
 		}
 		return tab;
@@ -48,7 +51,7 @@ public class WTabHolder extends WAbstractWidget implements WCollection, WDelegat
 	}
 
 	public WTab removeTab(int tabNumber) {
-		return tabs.remove(tabNumber);
+		return widgets.remove(tabNumber);
 	}
 
 	@Override
@@ -62,17 +65,13 @@ public class WTabHolder extends WAbstractWidget implements WCollection, WDelegat
 
 	@Override
 	public Set<WAbstractWidget> getWidgets() {
-		Set<WAbstractWidget> widgets = new LinkedHashSet<>();
-		for (WTab tab : tabs) {
-			widgets.addAll(tab.getWidgets());
-		}
-		return widgets;
+		return new HashSet<>(widgets);
 	}
 
 	@Override
 	public Set<WAbstractWidget> getAllWidgets() {
 		Set<WAbstractWidget> widgets = new LinkedHashSet<>();
-		for (WTab tab : tabs) {
+		for (WTab tab : this.widgets) {
 			widgets.addAll(tab.getAllWidgets());
 		}
 		return widgets;
@@ -92,7 +91,7 @@ public class WTabHolder extends WAbstractWidget implements WCollection, WDelegat
 	public void center() {
 		super.center();
 
-		for (WTab tab : tabs) {
+		for (WTab tab : widgets) {
 			for (WAbstractWidget widget : tab.getWidgets()) {
 				widget.align();
 			}
@@ -112,24 +111,19 @@ public class WTabHolder extends WAbstractWidget implements WCollection, WDelegat
 		int sX = getWidth();
 		int sY = getHeight();
 
-		for (WTab tab : tabs) {
-			tab.getToggle().draw();
-		}
-
 		BaseRenderer.drawPanel(x, y + 24, z, sX, sY - 24, getStyle().asColor("shadow"), getStyle().asColor("background"), getStyle().asColor("highlight"), getStyle().asColor("outline"));
 
-		for (WAbstractWidget widget : getAllWidgets()) {
-			if (!(widget instanceof WTabToggle)) {
-				widget.draw();
-			}
+		for (WAbstractWidget widget : getWidgets()) {
+			widget.draw();
 		}
 	}
 
-	public class WTab implements WModifiableCollection {
+	public class WTab extends WAbstractWidget implements WDrawableCollection, WModifiableCollection {
 		protected Item symbol;
 		protected Text name;
 		protected int number;
 		protected Set<WAbstractWidget> widgets = new LinkedHashSet<>();
+		protected List<WLayoutElement> orderedWidgets = new ArrayList<>();
 
 		public WTab(Item symbol, Text name, int number) {
 			this.symbol = symbol;
@@ -146,6 +140,9 @@ public class WTabHolder extends WAbstractWidget implements WCollection, WDelegat
 					selectTab(this.number);
 				}
 			});
+			this.setOnMouseClicked((widget, mouseX, mouseY, button) -> {
+				tabToggle.onMouseClicked(mouseX, mouseY, button);
+			});
 		}
 
 		public Set<WAbstractWidget> getWidgets() {
@@ -154,6 +151,23 @@ public class WTabHolder extends WAbstractWidget implements WCollection, WDelegat
 
 		public WTabToggle getToggle() {
 			return (WTabToggle) widgets.iterator().next();
+		}
+
+		@Override
+		public void onLayoutChange() {
+			recalculateCache();
+		}
+
+		@Override
+		public void recalculateCache() {
+			orderedWidgets = new ArrayList<>(getWidgets());
+			Collections.sort(orderedWidgets);
+			Collections.reverse(orderedWidgets);
+		}
+
+		@Override
+		public List<WLayoutElement> getOrderedWidgets() {
+			return orderedWidgets;
 		}
 
 		@Override
@@ -168,16 +182,25 @@ public class WTabHolder extends WAbstractWidget implements WCollection, WDelegat
 					widget.setHidden(true);
 				}
 			}
+			onLayoutChange();
 		}
 
 		@Override
 		public void remove(WAbstractWidget... widgets) {
 			this.widgets.removeAll(Arrays.asList(widgets));
+			onLayoutChange();
 		}
 
 		@Override
 		public boolean contains(WAbstractWidget... widgets) {
 			return this.widgets.containsAll(Arrays.asList(widgets));
+		}
+
+		@Override
+		public void draw() {
+			for (WLayoutElement widget : getOrderedWidgets()) {
+				widget.draw();
+			}
 		}
 	}
 }

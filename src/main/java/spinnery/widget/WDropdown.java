@@ -11,7 +11,7 @@ import java.util.*;
 
 @SuppressWarnings("unchecked")
 @Environment(EnvType.CLIENT)
-public class WDropdown extends WAbstractWidget implements WModifiableCollection, WDelegatedEventListener {
+public class WDropdown extends WAbstractWidget implements WDrawableCollection, WModifiableCollection, WDelegatedEventListener {
 	public enum HideBehavior {
 		TOGGLE,
 		ANYWHERE,
@@ -21,17 +21,13 @@ public class WDropdown extends WAbstractWidget implements WModifiableCollection,
 		INSIDE_EXCEPT_CHILD
 	}
 
-	public Set<WAbstractWidget> widgets = new HashSet<>();
+	protected Set<WAbstractWidget> widgets = new HashSet<>();
+	protected List<WLayoutElement> orderedWidgets = new ArrayList<>();
+
 	protected boolean state = false;
 	protected Size dropdownSize;
 	protected WVirtualArea toggle;
 	protected HideBehavior hideBehavior = HideBehavior.TOGGLE;
-
-	@Override
-	public void onLayoutChange() {
-		toggle = new WVirtualArea(Position.of(this), Size.of(getToggleWidth(), getToggleHeight()));
-		updateChildren();
-	}
 
 	protected void updateChildren() {
 		for (WAbstractWidget widget : widgets) {
@@ -177,22 +173,43 @@ public class WDropdown extends WAbstractWidget implements WModifiableCollection,
 		}
 
 		if (getState()) {
-			for (WAbstractWidget widgetC : getAllWidgets()) {
+			for (WLayoutElement widgetC : getOrderedWidgets()) {
 				widgetC.draw();
 			}
 		}
 	}
 
 	@Override
+	public void onLayoutChange() {
+		toggle = new WVirtualArea(Position.of(this), Size.of(getToggleWidth(), getToggleHeight()));
+		updateChildren();
+		recalculateCache();
+	}
+
+	@Override
+	public void recalculateCache() {
+		orderedWidgets = new ArrayList<>(getWidgets());
+		Collections.sort(orderedWidgets);
+		Collections.reverse(orderedWidgets);
+	}
+
+	@Override
+	public List<WLayoutElement> getOrderedWidgets() {
+		return orderedWidgets;
+	}
+
+	@Override
 	public void add(WAbstractWidget... widgetArray) {
 		widgets.addAll(Arrays.asList(widgetArray));
 		updateChildren();
+		onLayoutChange();
 	}
 
 	@Override
 	public void remove(WAbstractWidget... widgetArray) {
 		widgets.removeAll(Arrays.asList(widgetArray));
 		updateChildren();
+		onLayoutChange();
 	}
 
 	@Override

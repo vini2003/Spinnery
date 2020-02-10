@@ -5,7 +5,9 @@ import net.fabricmc.api.Environment;
 import spinnery.client.BaseRenderer;
 import spinnery.client.TextRenderer;
 import spinnery.widget.api.WDelegatedEventListener;
+import spinnery.widget.api.WDrawableCollection;
 import spinnery.widget.api.WEventListener;
+import spinnery.widget.api.WLayoutElement;
 import spinnery.widget.api.WModifiableCollection;
 
 import java.util.ArrayList;
@@ -17,8 +19,9 @@ import java.util.List;
 import java.util.Set;
 
 @Environment(EnvType.CLIENT)
-public class WPanel extends WAbstractWidget implements WModifiableCollection, WDelegatedEventListener {
+public class WPanel extends WAbstractWidget implements WModifiableCollection, WDrawableCollection, WDelegatedEventListener {
 	protected Set<WAbstractWidget> heldWidgets = new LinkedHashSet<>();
+	protected List<WLayoutElement> orderedWidgets = new ArrayList<>();
 
 	@Override
 	public void draw() {
@@ -39,13 +42,26 @@ public class WPanel extends WAbstractWidget implements WModifiableCollection, WD
 			BaseRenderer.drawRectangle(x + 1, y + 17, z, sX - 2, 0.75, getStyle().asColor("shadow"));
 		}
 
-		List<WAbstractWidget> widgets = new ArrayList<>(getWidgets());
-		Collections.sort(widgets);
-		Collections.reverse(widgets);
-
-		for (WAbstractWidget widget : widgets) {
+		for (WLayoutElement widget : getOrderedWidgets()) {
 			widget.draw();
 		}
+	}
+
+	@Override
+	public void onLayoutChange() {
+		recalculateCache();
+	}
+
+	@Override
+	public void recalculateCache() {
+		orderedWidgets = new ArrayList<>(getWidgets());
+		Collections.sort(orderedWidgets);
+		Collections.reverse(orderedWidgets);
+	}
+
+	@Override
+	public List<WLayoutElement> getOrderedWidgets() {
+		return orderedWidgets;
 	}
 
 	@Override
@@ -61,11 +77,13 @@ public class WPanel extends WAbstractWidget implements WModifiableCollection, WD
 	@Override
 	public void add(WAbstractWidget... widgets) {
 		heldWidgets.addAll(Arrays.asList(widgets));
+		onLayoutChange();
 	}
 
 	@Override
 	public void remove(WAbstractWidget... widgets) {
 		heldWidgets.removeAll(Arrays.asList(widgets));
+		onLayoutChange();
 	}
 
 	@Override

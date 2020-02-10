@@ -8,9 +8,9 @@ import spinnery.widget.api.*;
 import java.util.*;
 
 @SuppressWarnings("unchecked")
-public class WHorizontalScrollableContainer extends WAbstractWidget implements WModifiableCollection, WHorizontalScrollable,
-        WDelegatedEventListener {
-    public Set<WAbstractWidget> widgets = new HashSet<>();
+public class WHorizontalScrollableContainer extends WAbstractWidget implements WDrawableCollection, WModifiableCollection, WHorizontalScrollable, WDelegatedEventListener {
+    protected Set<WAbstractWidget> widgets = new HashSet<>();
+    protected List<WLayoutElement> orderedWidgets = new ArrayList<>();
 
     protected WHorizontalScrollbar scrollbar;
 
@@ -29,12 +29,6 @@ public class WHorizontalScrollableContainer extends WAbstractWidget implements W
     public <W extends WHorizontalScrollableContainer> W setRightSpace(int rightSpace) {
         this.rightSpace = rightSpace;
         return (W) this;
-    }
-
-    @Override
-    public void onLayoutChange() {
-        scrollToStart();
-        updateScrollbar();
     }
 
     public void updateScrollbar() {
@@ -193,7 +187,7 @@ public class WHorizontalScrollableContainer extends WAbstractWidget implements W
 
         GL11.glScissor((int) (x * scale), (int) (rawHeight - (y * scale + sY * scale)), (int) (sX * scale), (int) (sY * scale));
 
-        for (WAbstractWidget widget : widgets) {
+        for (WLayoutElement widget : getOrderedWidgets()) {
             widget.draw();
         }
 
@@ -222,6 +216,25 @@ public class WHorizontalScrollableContainer extends WAbstractWidget implements W
     }
 
     @Override
+    public void onLayoutChange() {
+        scrollToStart();
+        updateScrollbar();
+        recalculateCache();
+    }
+
+    @Override
+    public void recalculateCache() {
+        orderedWidgets = new ArrayList<>(getWidgets());
+        Collections.sort(orderedWidgets);
+        Collections.reverse(orderedWidgets);
+    }
+
+    @Override
+    public List<WLayoutElement> getOrderedWidgets() {
+        return orderedWidgets;
+    }
+
+    @Override
     public void add(WAbstractWidget... widgetArray) {
         widgets.addAll(Arrays.asList(widgetArray));
         onLayoutChange();
@@ -230,6 +243,7 @@ public class WHorizontalScrollableContainer extends WAbstractWidget implements W
     @Override
     public void remove(WAbstractWidget... widgetArray) {
         widgets.removeAll(Arrays.asList(widgetArray));
+        onLayoutChange();
         onLayoutChange();
     }
 

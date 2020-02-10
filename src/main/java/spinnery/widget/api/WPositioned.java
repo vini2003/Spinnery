@@ -9,7 +9,15 @@ package spinnery.widget.api;
  * provides more convenience methods and standard logic.
  */
 public interface WPositioned {
-	int getX();
-	int getY();
-	int getZ();
+	default int getX() {
+		return 0;
+	}
+
+	default int getY() {
+		return 0;
+	}
+
+	default int getZ() {
+		return 0;
+	}
 }

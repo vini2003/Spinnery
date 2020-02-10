@@ -8,9 +8,9 @@ import spinnery.widget.api.*;
 import java.util.*;
 
 @SuppressWarnings({"UnusedReturnValue", "unchecked"})
-public class WVerticalScrollableContainer extends WAbstractWidget implements WModifiableCollection, WVerticalScrollable,
-        WDelegatedEventListener {
-    public Set<WAbstractWidget> widgets = new HashSet<>();
+public class WVerticalScrollableContainer extends WAbstractWidget implements WDrawableCollection, WModifiableCollection, WVerticalScrollable, WDelegatedEventListener {
+    protected Set<WAbstractWidget> widgets = new HashSet<>();
+    protected List<WLayoutElement> orderedWidgets = new ArrayList<>();
 
     protected WVerticalScrollbar scrollbar;
 
@@ -29,12 +29,6 @@ public class WVerticalScrollableContainer extends WAbstractWidget implements WMo
     public <W extends WVerticalScrollableContainer> W setBottomSpace(int bottomSpace) {
         this.bottomSpace = bottomSpace;
         return (W) this;
-    }
-
-    @Override
-    public void onLayoutChange() {
-        scrollToStart();
-        updateScrollbar();
     }
 
     public void updateScrollbar() {
@@ -200,6 +194,25 @@ public class WVerticalScrollableContainer extends WAbstractWidget implements WMo
                     || isWithinBounds(w.getX() + w.getWidth(), w.getY() + w.getHeight(), 1);
             w.setHidden(!startContained);
         }
+    }
+
+    @Override
+    public void onLayoutChange() {
+        scrollToStart();
+        updateScrollbar();
+        recalculateCache();
+    }
+
+    @Override
+    public void recalculateCache() {
+        orderedWidgets = new ArrayList<>(getWidgets());
+        Collections.sort(orderedWidgets);
+        Collections.reverse(orderedWidgets);
+    }
+
+    @Override
+    public List<WLayoutElement> getOrderedWidgets() {
+        return orderedWidgets;
     }
 
     @Override

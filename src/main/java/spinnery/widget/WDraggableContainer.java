@@ -5,19 +5,24 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import org.lwjgl.opengl.GL11;
 import spinnery.util.MutablePair;
+import spinnery.widget.api.WDrawableCollection;
 import spinnery.widget.api.WHorizontalScrollable;
+import spinnery.widget.api.WLayoutElement;
 import spinnery.widget.api.WModifiableCollection;
 import spinnery.widget.api.Size;
 import spinnery.widget.api.WVerticalScrollable;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 @Environment(EnvType.CLIENT)
-public class WDraggableContainer extends WAbstractWidget implements WModifiableCollection,
-        WVerticalScrollable, WHorizontalScrollable {
-    private Set<WAbstractWidget> widgets = new LinkedHashSet<>();
+public class WDraggableContainer extends WAbstractWidget implements WDrawableCollection, WModifiableCollection, WVerticalScrollable, WHorizontalScrollable {
+    protected Set<WAbstractWidget> widgets = new LinkedHashSet<>();
+    protected List<WLayoutElement> orderedWidgets = new ArrayList<>();
 
     protected boolean dragging = false;
     protected float scrollKineticDeltaX = 0;
@@ -164,8 +169,8 @@ public class WDraggableContainer extends WAbstractWidget implements WModifiableC
         GL11.glEnable(GL11.GL_SCISSOR_TEST);
         GL11.glScissor((int) (x * scale), (int) (rawHeight - (y * scale + sY * scale)), (int) (sX * scale), (int) (sY * scale));
 
-        for (WAbstractWidget w : getWidgets()) {
-            w.draw();
+        for (WLayoutElement widget : getOrderedWidgets()) {
+            widget.draw();
         }
 
         GL11.glDisable(GL11.GL_SCISSOR_TEST);
@@ -174,13 +179,32 @@ public class WDraggableContainer extends WAbstractWidget implements WModifiableC
     // Collection
 
     @Override
+    public void onLayoutChange() {
+        recalculateCache();
+    }
+
+    @Override
+    public void recalculateCache() {
+        orderedWidgets = new ArrayList<>(getWidgets());
+        Collections.sort(orderedWidgets);
+        Collections.reverse(orderedWidgets);
+    }
+
+    @Override
+    public List<WLayoutElement> getOrderedWidgets() {
+        return orderedWidgets;
+    }
+
+    @Override
     public void add(WAbstractWidget... widgets) {
         this.widgets.addAll(Arrays.asList(widgets));
+        onLayoutChange();
     }
 
     @Override
     public void remove(WAbstractWidget... widgets) {
         this.widgets.removeAll(Arrays.asList(widgets));
+        onLayoutChange();
     }
 
     @Override

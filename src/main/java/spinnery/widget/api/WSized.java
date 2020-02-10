@@ -5,6 +5,11 @@ package spinnery.widget.api;
  * interface; other use cases should probably implement a less generic interface, such as {@link WLayoutElement}.
  */
 public interface WSized {
-	int getWidth();
-	int getHeight();
+	default int getWidth() {
+		return 0;
+	}
+
+	default int getHeight() {
+		return 0;
+	}
 }

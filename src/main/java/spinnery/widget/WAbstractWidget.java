@@ -15,7 +15,7 @@ import spinnery.widget.api.listener.*;
 import static spinnery.registry.ThemeRegistry.DEFAULT_THEME;
 
 @SuppressWarnings({"unchecked", "rawtypes"})
-public abstract class WAbstractWidget implements Tickable, Comparable<WAbstractWidget>,
+public abstract class WAbstractWidget implements Tickable,
 		WLayoutElement, WThemable, WStyleProvider, WEventListener {
 	protected WInterface linkedInterface;
 	protected WLayoutElement parent;
@@ -179,12 +179,14 @@ public abstract class WAbstractWidget implements Tickable, Comparable<WAbstractW
 	@Environment(EnvType.CLIENT)
 	public void setFocus(boolean hasFocus) {
 		if (!isFocused() && hasFocus) {
+			this.hasFocus = hasFocus;
 			onFocusGained();
 		}
 		if (isFocused() && !hasFocus) {
+			this.hasFocus = hasFocus;
 			onFocusReleased();
 		}
-		this.hasFocus = hasFocus;
+
 	}
 
 	// WStyleProvider
@@ -366,7 +368,7 @@ public abstract class WAbstractWidget implements Tickable, Comparable<WAbstractW
 				widget.onFocusGained();
 			}
 		}
-		if (runnableOnFocusGained != null) {
+		if (runnableOnFocusGained != null && isFocused()) {
 			runnableOnFocusGained.event(this);
 		}
 	}
@@ -379,7 +381,7 @@ public abstract class WAbstractWidget implements Tickable, Comparable<WAbstractW
 				widget.onFocusReleased();
 			}
 		}
-		if (runnableOnFocusReleased != null) {
+		if (runnableOnFocusReleased != null && !isFocused()) {
 			runnableOnFocusReleased.event(this);
 		}
 	}
@@ -610,12 +612,5 @@ public abstract class WAbstractWidget implements Tickable, Comparable<WAbstractW
 	@Environment(EnvType.CLIENT)
 	public <W extends WAbstractWidget> WAlignListener<W> getOnAlign() {
 		return runnableOnAlign;
-	}
-
-	// Comparable
-
-	@Override
-	public int compareTo(WAbstractWidget o) {
-		return Integer.compare(o.getZ(), getZ());
 	}
 }

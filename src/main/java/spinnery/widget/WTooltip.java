@@ -3,6 +3,8 @@ package spinnery.widget;
 import com.mojang.blaze3d.systems.RenderSystem;
 import spinnery.client.BaseRenderer;
 import spinnery.widget.api.Color;
+import spinnery.widget.api.WDrawableCollection;
+import spinnery.widget.api.WLayoutElement;
 import spinnery.widget.api.WModifiableCollection;
 
 import java.util.ArrayList;
@@ -12,8 +14,9 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-public class WTooltip extends WAbstractWidget implements WModifiableCollection {
-    private Set<WAbstractWidget> widgets = new LinkedHashSet<>();
+public class WTooltip extends WAbstractWidget implements WDrawableCollection, WModifiableCollection {
+    protected Set<WAbstractWidget> widgets = new LinkedHashSet<>();
+    protected List<WLayoutElement> orderedWidgets = new ArrayList<>();
 
     @Override
     public void draw() {
@@ -47,19 +50,38 @@ public class WTooltip extends WAbstractWidget implements WModifiableCollection {
         List<WAbstractWidget> widgets = new ArrayList<>(getWidgets());
         Collections.sort(widgets);
 
-        for (WAbstractWidget widget : widgets) {
+        for (WLayoutElement widget : getOrderedWidgets()) {
             widget.draw();
         }
     }
 
     @Override
+    public void onLayoutChange() {
+        recalculateCache();
+    }
+
+    @Override
+    public void recalculateCache() {
+        orderedWidgets = new ArrayList<>(getWidgets());
+        Collections.sort(orderedWidgets);
+        Collections.reverse(orderedWidgets);
+    }
+
+    @Override
+    public List<WLayoutElement> getOrderedWidgets() {
+        return orderedWidgets;
+    }
+
+    @Override
     public void add(WAbstractWidget... widgets) {
         this.widgets.addAll(Arrays.asList(widgets));
+        onLayoutChange();
     }
 
     @Override
     public void remove(WAbstractWidget... widgets) {
         this.widgets.removeAll(Arrays.asList(widgets));
+        onLayoutChange();
     }
 
     @Override

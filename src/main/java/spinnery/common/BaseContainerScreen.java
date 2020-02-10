@@ -23,8 +23,8 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 	protected WSlot drawSlot;
 
 	@Environment(EnvType.CLIENT)
-	public BaseContainerScreen(T linkedContainer, PlayerEntity player) {
-		super(linkedContainer, player.inventory, null);
+	public BaseContainerScreen(Text name, T linkedContainer, PlayerEntity player) {
+		super(linkedContainer, player.inventory, name);
 		clientInterface = new WInterface(linkedContainer);
 	}
 

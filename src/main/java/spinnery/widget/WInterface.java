@@ -21,12 +21,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class WInterface implements WModifiableCollection, WLayoutElement, WThemable {
+public class WInterface implements WDrawableCollection, WModifiableCollection, WLayoutElement, WThemable {
 	protected BaseContainer linkedContainer;
-	protected Set<WAbstractWidget> heldWidgets = new LinkedHashSet<>();
+	protected Set<WAbstractWidget> widgets = new LinkedHashSet<>();
+	protected List<WLayoutElement> orderedWidgets = new ArrayList<>();
 	protected Map<Class<? extends WAbstractWidget>, WAbstractWidget> cachedWidgets = new HashMap<>();
 	protected boolean isClientside;
 	protected Identifier theme;
+	protected boolean isBlurred = false;
 
 	public <W extends WInterface> W setClientside(Boolean clientside) {
 		isClientside = clientside;
@@ -61,6 +63,15 @@ public class WInterface implements WModifiableCollection, WLayoutElement, WThema
 		return (W) this;
 	}
 
+	public <W extends WInterface> W setBlurred(boolean isBlurred) {
+		this.isBlurred = isBlurred;
+		return (W) this;
+	}
+
+	public boolean isBlurred() {
+		return isBlurred;
+	}
+
 	@Override
 	public Identifier getTheme() {
 		return theme;
@@ -81,22 +92,41 @@ public class WInterface implements WModifiableCollection, WLayoutElement, WThema
 
 	@Override
 	public Set<WAbstractWidget> getWidgets() {
-		return heldWidgets;
+		return widgets;
+	}
+
+	@Override
+	public void onLayoutChange() {
+		recalculateCache();
+	}
+
+	@Override
+	public void recalculateCache() {
+		orderedWidgets = new ArrayList<>(getWidgets());
+		Collections.sort(orderedWidgets);
+		Collections.reverse(orderedWidgets);
+	}
+
+	@Override
+	public List<WLayoutElement> getOrderedWidgets() {
+		return orderedWidgets;
 	}
 
 	@Override
 	public void add(WAbstractWidget... widgets) {
-		heldWidgets.addAll(Arrays.asList(widgets));
+		this.widgets.addAll(Arrays.asList(widgets));
+		onLayoutChange();
 	}
 
 	@Override
 	public void remove(WAbstractWidget... widgets) {
-		heldWidgets.removeAll(Arrays.asList(widgets));
+		this.widgets.removeAll(Arrays.asList(widgets));
+		onLayoutChange();
 	}
 
 	@Override
 	public boolean contains(WAbstractWidget... widgets) {
-		return heldWidgets.containsAll(Arrays.asList(widgets));
+		return this.widgets.containsAll(Arrays.asList(widgets));
 	}
 
 	public void onMouseClicked(int mouseX, int mouseY, int mouseButton) {
@@ -211,10 +241,12 @@ public class WInterface implements WModifiableCollection, WLayoutElement, WThema
 
 	@Override
 	public void draw() {
-		List<WAbstractWidget> widgets = new ArrayList<>(getWidgets());
-		Collections.sort(widgets);
+		if (isBlurred()) {
+			Window window =  MinecraftClient.getInstance().getWindow();
+			BaseRenderer.drawRectangle(0, 0, 0, window.getWidth(), window.getHeight(), Color.of(0x90000000));
+		}
 
-		for (WAbstractWidget widget : widgets) {
+		for (WLayoutElement widget : getOrderedWidgets()) {
 			widget.draw();
 		}
 	}
