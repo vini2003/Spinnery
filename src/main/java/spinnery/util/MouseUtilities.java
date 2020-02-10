@@ -1,13 +1,9 @@
 package spinnery.util;
 
 public class MouseUtilities {
+	public static final long nanoDelay = 150000000;
 	public static int mouseX = 0, mouseY = 0;
 	public static long lastNanos = 0;
-	public static final long nanoDelay = 150000000;
-
-	public static long lastNanos() {
-		return lastNanos;
-	}
 
 	public static void lastNanos(long lastNanos) {
 		MouseUtilities.lastNanos = lastNanos;
@@ -15,6 +11,10 @@ public class MouseUtilities {
 
 	public static long nanoInterval() {
 		return System.nanoTime() - lastNanos();
+	}
+
+	public static long lastNanos() {
+		return lastNanos;
 	}
 
 	public static long nanoDelay() {

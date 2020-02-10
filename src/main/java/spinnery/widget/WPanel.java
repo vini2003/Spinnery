@@ -48,6 +48,12 @@ public class WPanel extends WAbstractWidget implements WModifiableCollection, WD
 	}
 
 	@Override
+	public void add(WAbstractWidget... widgets) {
+		heldWidgets.addAll(Arrays.asList(widgets));
+		onLayoutChange();
+	}
+
+	@Override
 	public void onLayoutChange() {
 		recalculateCache();
 	}
@@ -72,12 +78,6 @@ public class WPanel extends WAbstractWidget implements WModifiableCollection, WD
 	@Override
 	public boolean contains(WAbstractWidget... widgets) {
 		return heldWidgets.containsAll(Arrays.asList(widgets));
-	}
-
-	@Override
-	public void add(WAbstractWidget... widgets) {
-		heldWidgets.addAll(Arrays.asList(widgets));
-		onLayoutChange();
 	}
 
 	@Override

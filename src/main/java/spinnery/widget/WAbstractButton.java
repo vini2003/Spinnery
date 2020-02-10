@@ -6,15 +6,15 @@ public abstract class WAbstractButton extends WAbstractWidget {
 	protected int delayTicks = 1;
 
 	@Override
-	public void onMouseClicked(int mouseX, int mouseY, int mouseButton) {
-		setLowered(true);
-		super.onMouseClicked(mouseX, mouseY, mouseButton);
-	}
-
-	@Override
 	public void tick() {
 		lowered = ticks > 0;
 		ticks -= ticks > 0 ? 1 : 0;
+	}
+
+	@Override
+	public void onMouseClicked(int mouseX, int mouseY, int mouseButton) {
+		setLowered(true);
+		super.onMouseClicked(mouseX, mouseY, mouseButton);
 	}
 
 	public int getDelay() {

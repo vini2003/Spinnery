@@ -16,13 +16,12 @@ import net.minecraft.util.Tickable;
 import net.minecraft.world.World;
 import org.lwjgl.glfw.GLFW;
 import spinnery.registry.NetworkRegistry;
-import spinnery.util.MutablePair;
 import spinnery.util.StackUtilities;
 import spinnery.widget.WAbstractWidget;
 import spinnery.widget.WInterface;
 import spinnery.widget.WSlot;
-import spinnery.widget.api.WNetworked;
 import spinnery.widget.api.Action;
+import spinnery.widget.api.WNetworked;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -32,16 +31,14 @@ import java.util.Set;
 
 public class BaseContainer extends Container implements Tickable {
 	public static final int PLAYER_INVENTORY = 0;
-
+	protected final WInterface serverInterface;
 	public Map<Integer, Inventory> linkedInventories = new HashMap<>();
-
+	public Map<Integer, Map<Integer, ItemStack>> cachedInventories = new HashMap<>();
 	protected Set<WSlot> splitSlots = new HashSet<>();
 	protected Set<WSlot> singleSlots = new HashSet<>();
-	protected Map<Integer, Map<Integer, ItemStack>>  previewStacks = new HashMap<>();
+	protected Map<Integer, Map<Integer, ItemStack>> previewStacks = new HashMap<>();
 	protected ItemStack previewCursorStack = ItemStack.EMPTY;
-
 	protected World linkedWorld;
-	protected final WInterface serverInterface;
 
 	public BaseContainer(int synchronizationID, PlayerInventory linkedPlayerInventory) {
 		super(null, synchronizationID);
@@ -50,21 +47,13 @@ public class BaseContainer extends Container implements Tickable {
 		serverInterface = new WInterface(this);
 	}
 
-	@Environment(EnvType.CLIENT)
-	public Set<WSlot> getDragSlots(int mouseButton) {
-		switch (mouseButton) {
-			case 0:
-				return splitSlots;
-			case 1:
-				return singleSlots;
-			default:
-				return null;
-		}
+	public Map<Integer, Inventory> getInventories() {
+		return linkedInventories;
 	}
 
-	@Environment(EnvType.CLIENT)
-	public Map<Integer, Map<Integer, ItemStack>> getPreviewStacks() {
-		return previewStacks;
+	public <C extends BaseContainer> C setLinkedWorld(World linkedWorld) {
+		this.linkedWorld = linkedWorld;
+		return (C) this;
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -87,12 +76,29 @@ public class BaseContainer extends Container implements Tickable {
 	}
 
 	@Environment(EnvType.CLIENT)
-	public boolean isDragging() {
-		return getDragSlots(GLFW.GLFW_MOUSE_BUTTON_1).isEmpty() || getDragSlots(GLFW.GLFW_MOUSE_BUTTON_2).isEmpty();
+	public Set<WSlot> getDragSlots(int mouseButton) {
+		switch (mouseButton) {
+			case 0:
+				return splitSlots;
+			case 1:
+				return singleSlots;
+			default:
+				return null;
+		}
 	}
 
-	public Map<Integer, Inventory> getInventories() {
-		return linkedInventories;
+	public WInterface getInterface() {
+		return serverInterface;
+	}
+
+	@Environment(EnvType.CLIENT)
+	public Map<Integer, Map<Integer, ItemStack>> getPreviewStacks() {
+		return previewStacks;
+	}
+
+	@Environment(EnvType.CLIENT)
+	public boolean isDragging() {
+		return getDragSlots(GLFW.GLFW_MOUSE_BUTTON_1).isEmpty() || getDragSlots(GLFW.GLFW_MOUSE_BUTTON_2).isEmpty();
 	}
 
 	public void onInterfaceEvent(int widgetSyncId, WNetworked.Event event, CompoundTag payload) {
@@ -143,7 +149,7 @@ public class BaseContainer extends Container implements Tickable {
 			ItemStack stackB = ItemStack.EMPTY;
 
 			if (action == Action.DRAG_SINGLE || action == Action.DRAG_SPLIT) {
-				stackB = slotA.getStack();;
+				stackB = slotA.getStack();
 			} else if (action == Action.DRAG_SINGLE_PREVIEW || action == Action.DRAG_SPLIT_PREVIEW) {
 				stackB = slotA.getStack().copy();
 			}
@@ -160,6 +166,10 @@ public class BaseContainer extends Container implements Tickable {
 				slotA.setPreviewStack(stacks.getSecond().copy());
 			}
 		}
+	}
+
+	public PlayerInventory getPlayerInventory() {
+		return (PlayerInventory) linkedInventories.get(PLAYER_INVENTORY);
 	}
 
 	public void onSlotAction(int slotNumber, int inventoryNumber, int button, Action action, PlayerEntity player) {
@@ -278,28 +288,25 @@ public class BaseContainer extends Container implements Tickable {
 		((PlayerInventory) linkedInventories.get(PLAYER_INVENTORY)).setCursorStack(stackB);
 	}
 
-	public WInterface getInterface() {
-		return serverInterface;
-	}
-
 	public World getWorld() {
 		return linkedWorld;
-	}
-
-	public <C extends BaseContainer> C setLinkedWorld(World linkedWorld) {
-		this.linkedWorld = linkedWorld;
-		return (C) this;
-	}
-
-	public PlayerInventory getPlayerInventory() {
-		return (PlayerInventory) linkedInventories.get(PLAYER_INVENTORY);
 	}
 
 	public Inventory getInventory(int inventoryNumber) {
 		return linkedInventories.get(inventoryNumber);
 	}
 
-	public Map<Integer, Map<Integer, ItemStack>> cachedInventories = new HashMap<>();
+	@Deprecated
+	@Override
+	public Slot addSlot(Slot slot) {
+		return super.addSlot(slot);
+	}
+
+	@Deprecated
+	@Override
+	public ItemStack onSlotClick(int identifier, int button, SlotActionType action, PlayerEntity player) {
+		return ItemStack.EMPTY;
+	}
 
 	@Override
 	public void onContentChanged(Inventory inventory) {
@@ -331,18 +338,6 @@ public class BaseContainer extends Container implements Tickable {
 				}
 			}
 		}
-	}
-
-	@Deprecated
-	@Override
-	public Slot addSlot(Slot slot) {
-		return super.addSlot(slot);
-	}
-
-	@Deprecated
-	@Override
-	public ItemStack onSlotClick(int identifier, int button, SlotActionType action, PlayerEntity player) {
-		return ItemStack.EMPTY;
 	}
 
 	@Deprecated

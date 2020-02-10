@@ -11,6 +11,26 @@ import net.minecraft.nbt.CompoundTag;
  * the compound NBT tag.
  */
 public interface WNetworked {
+	/**
+	 * Returns the synchronisation ID for this widget, which is used to uniquely identify widgets between the client
+	 * and server. The value may not be constant; however, the process that returns the ID must be strictly deterministic.
+	 *
+	 * @return synchronisation ID
+	 */
+	int getSyncId();
+
+	void onInterfaceEvent(Event event, CompoundTag payload);
+
+	/**
+	 * Appends custom data to the packet payload. Called after the default payload has been constructed, but before
+	 * the packet has been sent.
+	 *
+	 * @param event   interface event
+	 * @param payload payload NBT tag
+	 */
+	default void appendPayload(Event event, CompoundTag payload) {
+	}
+
 	enum Event {
 		CUSTOM,
 		MOUSE_CLICK,
@@ -22,20 +42,4 @@ public interface WNetworked {
 		KEY_RELEASE,
 		CHAR_TYPE,
 	}
-
-	/**
-	 * Returns the synchronisation ID for this widget, which is used to uniquely identify widgets between the client
-	 * and server. The value may not be constant; however, the process that returns the ID must be strictly deterministic.
-	 * @return synchronisation ID
-	 */
-    int getSyncId();
-    void onInterfaceEvent(Event event, CompoundTag payload);
-
-	/**
-	 * Appends custom data to the packet payload. Called after the default payload has been constructed, but before
-	 * the packet has been sent.
-	 * @param event interface event
-	 * @param payload payload NBT tag
-	 */
-	default void appendPayload(Event event, CompoundTag payload) {}
 }

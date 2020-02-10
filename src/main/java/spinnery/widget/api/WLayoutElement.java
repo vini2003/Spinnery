@@ -1,7 +1,5 @@
 package spinnery.widget.api;
 
-import spinnery.widget.WAbstractWidget;
-
 /**
  * Generic interface representing a layout element.
  *
@@ -9,18 +7,19 @@ import spinnery.widget.WAbstractWidget;
  * Every widget must implement this interface
  */
 public interface WLayoutElement extends WPositioned, WSized, Comparable<WLayoutElement> {
-    void draw();
+	void draw();
 
-    /**
-     * Runs whenever the layout has been changed significantly enough to warrant potential adjustment of
-     * this layout element. Such layout changes include e.g. changes in position and size of this element, or
-     * realignment of the parent element. Other widgets may call this method when they change their layout
-     * in other ways, e.g. adding or removing a label.
-     */
-    default void onLayoutChange() {}
+	/**
+	 * Runs whenever the layout has been changed significantly enough to warrant potential adjustment of
+	 * this layout element. Such layout changes include e.g. changes in position and size of this element, or
+	 * realignment of the parent element. Other widgets may call this method when they change their layout
+	 * in other ways, e.g. adding or removing a label.
+	 */
+	default void onLayoutChange() {
+	}
 
-    @Override
-    default int compareTo(WLayoutElement element) {
-        return Integer.compare(element.getZ(), getZ());
-    }
+	@Override
+	default int compareTo(WLayoutElement element) {
+		return Integer.compare(element.getZ(), getZ());
+	}
 }

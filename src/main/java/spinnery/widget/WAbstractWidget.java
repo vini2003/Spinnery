@@ -9,8 +9,26 @@ import net.minecraft.util.Tickable;
 import spinnery.registry.ThemeRegistry;
 import spinnery.registry.WidgetRegistry;
 import spinnery.util.EventUtilities;
-import spinnery.widget.api.*;
-import spinnery.widget.api.listener.*;
+import spinnery.widget.api.Position;
+import spinnery.widget.api.Size;
+import spinnery.widget.api.Style;
+import spinnery.widget.api.WDelegatedEventListener;
+import spinnery.widget.api.WEventListener;
+import spinnery.widget.api.WLayoutElement;
+import spinnery.widget.api.WStyleProvider;
+import spinnery.widget.api.WThemable;
+import spinnery.widget.api.listener.WAlignListener;
+import spinnery.widget.api.listener.WCharTypeListener;
+import spinnery.widget.api.listener.WFocusGainListener;
+import spinnery.widget.api.listener.WFocusLossListener;
+import spinnery.widget.api.listener.WKeyPressListener;
+import spinnery.widget.api.listener.WKeyReleaseListener;
+import spinnery.widget.api.listener.WMouseClickListener;
+import spinnery.widget.api.listener.WMouseDragListener;
+import spinnery.widget.api.listener.WMouseMoveListener;
+import spinnery.widget.api.listener.WMouseReleaseListener;
+import spinnery.widget.api.listener.WMouseScrollListener;
+import spinnery.widget.api.listener.WTooltipDrawListener;
 
 import static spinnery.registry.ThemeRegistry.DEFAULT_THEME;
 
@@ -48,13 +66,13 @@ public abstract class WAbstractWidget implements Tickable,
 
 	////// SHARED //////
 
+	public WInterface getInterface() {
+		return linkedInterface;
+	}
+
 	public <W extends WAbstractWidget> W setInterface(WInterface linkedInterface) {
 		this.linkedInterface = linkedInterface;
 		return (W) this;
-	}
-
-	public WInterface getInterface() {
-		return linkedInterface;
 	}
 
 	@Override
@@ -64,6 +82,16 @@ public abstract class WAbstractWidget implements Tickable,
 	////// CLIENTSIDE //////
 
 	// Common functionality
+
+	@Environment(EnvType.CLIENT)
+	public boolean hasLabel() {
+		return !label.asFormattedString().isEmpty();
+	}
+
+	@Environment(EnvType.CLIENT)
+	public Text getLabel() {
+		return label;
+	}
 
 	@Environment(EnvType.CLIENT)
 	public <W extends WAbstractWidget> W setLabel(Text label) {
@@ -80,111 +108,9 @@ public abstract class WAbstractWidget implements Tickable,
 	}
 
 	@Environment(EnvType.CLIENT)
-	public <W extends WAbstractWidget> W setHidden(boolean isHidden) {
-		this.isHidden = isHidden;
-		setFocus(false);
-		return (W) this;
-	}
-
-	public <W extends WAbstractWidget> W setParent(WLayoutElement parent) {
-		this.parent = parent;
-		return (W) this;
-	}
-
-	@Environment(EnvType.CLIENT)
-	public boolean hasLabel() {
-		return !label.asFormattedString().isEmpty();
-	}
-
-	@Environment(EnvType.CLIENT)
-	public Text getLabel() {
-		return label;
-	}
-
-	@Environment(EnvType.CLIENT)
 	public boolean isLabelShadowed() {
 		return getStyle().asBoolean("label.shadow");
 	}
-
-	@Environment(EnvType.CLIENT)
-	public boolean isHidden() {
-		return isHidden;
-	}
-
-	@Environment(EnvType.CLIENT)
-	public WLayoutElement getParent() {
-		return parent;
-	}
-
-	// Alignment helpers
-
-	@Environment(EnvType.CLIENT)
-	public void align() {
-	}
-
-	@Environment(EnvType.CLIENT)
-	public void center() {
-		setPosition(Position.of(getPosition())
-				.setX(getParent().getX() + getParent().getWidth() / 2 - getWidth() / 2)
-				.setY(getParent().getY() + getParent().getHeight() / 2 - getHeight() / 2));
-	}
-
-	@Environment(EnvType.CLIENT)
-	public void centerX() {
-		setPosition(Position.of(getPosition())
-				.setX(getParent().getX() + getParent().getWidth() / 2 - getWidth() / 2));
-	}
-
-	@Environment(EnvType.CLIENT)
-	public void centerY() {
-		setPosition(Position.of(getPosition())
-				.setY(getParent().getY() + getParent().getHeight() / 2 - getHeight() / 2));
-	}
-
-	// Focus helpers
-
-	@Environment(EnvType.CLIENT)
-	public boolean isWithinBounds(int positionX, int positionY) {
-		return isWithinBounds(positionX, positionY, 0);
-	}
-
-	@Environment(EnvType.CLIENT)
-	public boolean isWithinBounds(int positionX, int positionY, int tolerance) {
-		return positionX + tolerance > getX()
-				&& positionX - tolerance < getX() + getWidth()
-				&& positionY + tolerance > getY()
-				&& positionY - tolerance < getY() + getHeight();
-	}
-
-	@Environment(EnvType.CLIENT)
-	public boolean updateFocus(int mouseX, int mouseY) {
-		if (isHidden()) {
-			return false;
-		}
-
-		setFocus(isWithinBounds(mouseX, mouseY));
-		return isFocused();
-	}
-
-	@Environment(EnvType.CLIENT)
-	public boolean isFocused() {
-		return hasFocus;
-	}
-
-	@Environment(EnvType.CLIENT)
-	public void setFocus(boolean hasFocus) {
-		if (!isFocused() && hasFocus) {
-			this.hasFocus = hasFocus;
-			onFocusGained();
-		}
-		if (isFocused() && !hasFocus) {
-			this.hasFocus = hasFocus;
-			onFocusReleased();
-		}
-
-	}
-
-	// WStyleProvider
 
 	@Override
 	@Environment(EnvType.CLIENT)
@@ -201,20 +127,13 @@ public abstract class WAbstractWidget implements Tickable,
 		return Style.of(ThemeRegistry.getStyle(getTheme(), widgetId)).mergeFrom(styleOverrides);
 	}
 
-	@Environment(EnvType.CLIENT)
-	public <W extends WAbstractWidget> W overrideStyle(String property, Object value) {
-		getStyle().override(property, value);
-		return (W) this;
-	}
-
-	// WThemable
-
 	@Override
 	@Environment(EnvType.CLIENT)
 	public Identifier getTheme() {
 		if (theme != null) return theme;
 		if (parent != null && parent instanceof WThemable) return ((WThemable) parent).getTheme();
-		if (linkedInterface != null && linkedInterface.getTheme() != null) return linkedInterface.getTheme();
+		if (linkedInterface != null && linkedInterface.getTheme() != null)
+			return linkedInterface.getTheme();
 		return DEFAULT_THEME;
 	}
 
@@ -229,14 +148,18 @@ public abstract class WAbstractWidget implements Tickable,
 		return setTheme(new Identifier(theme));
 	}
 
-	// WLayoutElement
+	// Alignment helpers
 
-	@Override
 	@Environment(EnvType.CLIENT)
-	public void draw() {
+	public void align() {
 	}
 
-	// WPositioned
+	@Environment(EnvType.CLIENT)
+	public void center() {
+		setPosition(Position.of(getPosition())
+				.setX(getParent().getX() + getParent().getWidth() / 2 - getWidth() / 2)
+				.setY(getParent().getY() + getParent().getHeight() / 2 - getHeight() / 2));
+	}
 
 	@Environment(EnvType.CLIENT)
 	public Position getPosition() {
@@ -244,19 +167,38 @@ public abstract class WAbstractWidget implements Tickable,
 	}
 
 	@Environment(EnvType.CLIENT)
-	public int getX() {
-		return position.getX();
+	public WLayoutElement getParent() {
+		return parent;
+	}
+
+	// Focus helpers
+
+	public <W extends WAbstractWidget> W setParent(WLayoutElement parent) {
+		this.parent = parent;
+		return (W) this;
 	}
 
 	@Environment(EnvType.CLIENT)
-	public int getY() {
-		return position.getY();
+	public int getWidth() {
+		return size.getWidth();
 	}
 
 	@Environment(EnvType.CLIENT)
-	public int getZ() {
-		return position.getZ();
+	public int getHeight() {
+		return size.getHeight();
 	}
+
+	@Environment(EnvType.CLIENT)
+	public <W extends WAbstractWidget> W setHeight(int height) {
+		return setSize(Size.of(size).setHeight(height));
+	}
+
+	@Environment(EnvType.CLIENT)
+	public <W extends WAbstractWidget> W setWidth(int width) {
+		return setSize(Size.of(size).setWidth(width));
+	}
+
+	// WStyleProvider
 
 	@Environment(EnvType.CLIENT)
 	public <W extends WAbstractWidget> W setPosition(Position position) {
@@ -266,36 +208,38 @@ public abstract class WAbstractWidget implements Tickable,
 	}
 
 	@Environment(EnvType.CLIENT)
-	public <W extends WAbstractWidget> W setX(int x) {
-		return setPosition(Position.of(position).setX(x));
+	public void centerX() {
+		setPosition(Position.of(getPosition())
+				.setX(getParent().getX() + getParent().getWidth() / 2 - getWidth() / 2));
+	}
+
+	// WThemable
+
+	@Environment(EnvType.CLIENT)
+	public void centerY() {
+		setPosition(Position.of(getPosition())
+				.setY(getParent().getY() + getParent().getHeight() / 2 - getHeight() / 2));
 	}
 
 	@Environment(EnvType.CLIENT)
-	public <W extends WAbstractWidget> W setY(int y) {
-		return setPosition(Position.of(position).setY(y));
+	public <W extends WAbstractWidget> W overrideStyle(String property, Object value) {
+		getStyle().override(property, value);
+		return (W) this;
 	}
 
+	@Override
 	@Environment(EnvType.CLIENT)
-	public <W extends WAbstractWidget> W setZ(int z) {
-		return setPosition(Position.of(position).setZ(z));
+	public void draw() {
 	}
 
-	// WSized
+	// WLayoutElement
 
 	@Environment(EnvType.CLIENT)
 	public Size getSize() {
 		return size;
 	}
 
-	@Environment(EnvType.CLIENT)
-	public int getHeight() {
-		return size.getHeight();
-	}
-
-	@Environment(EnvType.CLIENT)
-	public int getWidth() {
-		return size.getWidth();
-	}
+	// WPositioned
 
 	@Environment(EnvType.CLIENT)
 	public <W extends WAbstractWidget> W setSize(Size size) {
@@ -305,23 +249,12 @@ public abstract class WAbstractWidget implements Tickable,
 	}
 
 	@Environment(EnvType.CLIENT)
-	public <W extends WAbstractWidget> W setWidth(int width) {
-		return setSize(Size.of(size).setWidth(width));
-	}
-
-	@Environment(EnvType.CLIENT)
-	public <W extends WAbstractWidget> W setHeight(int height) {
-		return setSize(Size.of(size).setHeight(height));
-	}
-
-	// Event runners
-
-	@Environment(EnvType.CLIENT)
 	@Override
 	public void onKeyPressed(int keyPressed, int character, int keyModifier) {
 		if (this instanceof WDelegatedEventListener) {
 			for (WEventListener widget : ((WDelegatedEventListener) this).getEventDelegates()) {
-				if (EventUtilities.canReceiveKeyboard(widget)) widget.onKeyPressed(keyPressed, character, keyModifier);
+				if (EventUtilities.canReceiveKeyboard(widget))
+					widget.onKeyPressed(keyPressed, character, keyModifier);
 			}
 		}
 		if (runnableOnKeyPressed != null) {
@@ -334,7 +267,8 @@ public abstract class WAbstractWidget implements Tickable,
 	public void onKeyReleased(int keyReleased, int character, int keyModifier) {
 		if (this instanceof WDelegatedEventListener) {
 			for (WEventListener widget : ((WDelegatedEventListener) this).getEventDelegates()) {
-				if (EventUtilities.canReceiveKeyboard(widget)) widget.onKeyReleased(keyReleased, character, keyModifier);
+				if (EventUtilities.canReceiveKeyboard(widget))
+					widget.onKeyReleased(keyReleased, character, keyModifier);
 			}
 		}
 		if (runnableOnKeyReleased != null) {
@@ -347,7 +281,8 @@ public abstract class WAbstractWidget implements Tickable,
 	public void onCharTyped(char character, int keyCode) {
 		if (this instanceof WDelegatedEventListener) {
 			for (WEventListener widget : ((WDelegatedEventListener) this).getEventDelegates()) {
-				if (EventUtilities.canReceiveKeyboard(widget)) widget.onCharTyped(character, keyCode);
+				if (EventUtilities.canReceiveKeyboard(widget))
+					widget.onCharTyped(character, keyCode);
 			}
 		}
 		if (runnableOnCharTyped != null) {
@@ -399,7 +334,8 @@ public abstract class WAbstractWidget implements Tickable,
 	public void onMouseClicked(int mouseX, int mouseY, int mouseButton) {
 		if (this instanceof WDelegatedEventListener) {
 			for (WEventListener widget : ((WDelegatedEventListener) this).getEventDelegates()) {
-				if (EventUtilities.canReceiveMouse(widget)) widget.onMouseClicked(mouseX, mouseY, mouseButton);
+				if (EventUtilities.canReceiveMouse(widget))
+					widget.onMouseClicked(mouseX, mouseY, mouseButton);
 			}
 		}
 		if (runnableOnMouseClicked != null) {
@@ -407,12 +343,15 @@ public abstract class WAbstractWidget implements Tickable,
 		}
 	}
 
+	// WSized
+
 	@Environment(EnvType.CLIENT)
 	@Override
 	public void onMouseDragged(int mouseX, int mouseY, int mouseButton, double deltaX, double deltaY) {
 		if (this instanceof WDelegatedEventListener) {
 			for (WEventListener widget : ((WDelegatedEventListener) this).getEventDelegates()) {
-				if (EventUtilities.canReceiveMouse(widget)) widget.onMouseDragged(mouseX, mouseY, mouseButton, deltaX, deltaY);
+				if (EventUtilities.canReceiveMouse(widget))
+					widget.onMouseDragged(mouseX, mouseY, mouseButton, deltaX, deltaY);
 			}
 		}
 		if (runnableOnMouseDragged != null) {
@@ -425,7 +364,8 @@ public abstract class WAbstractWidget implements Tickable,
 	public void onMouseMoved(int mouseX, int mouseY) {
 		if (this instanceof WDelegatedEventListener) {
 			for (WEventListener widget : ((WDelegatedEventListener) this).getEventDelegates()) {
-				if (widget instanceof WAbstractWidget) ((WAbstractWidget) widget).updateFocus(mouseX, mouseY);
+				if (widget instanceof WAbstractWidget)
+					((WAbstractWidget) widget).updateFocus(mouseX, mouseY);
 				if (EventUtilities.canReceiveMouse(widget)) widget.onMouseMoved(mouseX, mouseY);
 			}
 		}
@@ -435,11 +375,97 @@ public abstract class WAbstractWidget implements Tickable,
 	}
 
 	@Environment(EnvType.CLIENT)
+	public boolean updateFocus(int mouseX, int mouseY) {
+		if (isHidden()) {
+			return false;
+		}
+
+		setFocus(isWithinBounds(mouseX, mouseY));
+		return isFocused();
+	}
+
+	@Environment(EnvType.CLIENT)
+	public boolean isHidden() {
+		return isHidden;
+	}
+
+	@Environment(EnvType.CLIENT)
+	public <W extends WAbstractWidget> W setHidden(boolean isHidden) {
+		this.isHidden = isHidden;
+		setFocus(false);
+		return (W) this;
+	}
+
+	@Environment(EnvType.CLIENT)
+	public void setFocus(boolean hasFocus) {
+		if (!isFocused() && hasFocus) {
+			this.hasFocus = hasFocus;
+			onFocusGained();
+		}
+		if (isFocused() && !hasFocus) {
+			this.hasFocus = hasFocus;
+			onFocusReleased();
+		}
+
+	}
+
+	// Event runners
+
+	@Environment(EnvType.CLIENT)
+	public boolean isFocused() {
+		return hasFocus;
+	}
+
+	@Environment(EnvType.CLIENT)
+	public boolean isWithinBounds(int positionX, int positionY) {
+		return isWithinBounds(positionX, positionY, 0);
+	}
+
+	@Environment(EnvType.CLIENT)
+	public boolean isWithinBounds(int positionX, int positionY, int tolerance) {
+		return positionX + tolerance > getX()
+				&& positionX - tolerance < getX() + getWidth()
+				&& positionY + tolerance > getY()
+				&& positionY - tolerance < getY() + getHeight();
+	}
+
+	@Environment(EnvType.CLIENT)
+	public int getX() {
+		return position.getX();
+	}
+
+	@Environment(EnvType.CLIENT)
+	public int getY() {
+		return position.getY();
+	}
+
+	@Environment(EnvType.CLIENT)
+	public int getZ() {
+		return position.getZ();
+	}
+
+	@Environment(EnvType.CLIENT)
+	public <W extends WAbstractWidget> W setZ(int z) {
+		return setPosition(Position.of(position).setZ(z));
+	}
+
+	@Environment(EnvType.CLIENT)
+	public <W extends WAbstractWidget> W setY(int y) {
+		return setPosition(Position.of(position).setY(y));
+	}
+
+	@Environment(EnvType.CLIENT)
+	public <W extends WAbstractWidget> W setX(int x) {
+		return setPosition(Position.of(position).setX(x));
+	}
+
+	@Environment(EnvType.CLIENT)
 	@Override
 	public void onMouseScrolled(int mouseX, int mouseY, double deltaY) {
 		if (this instanceof WDelegatedEventListener) {
 			for (WEventListener widget : ((WDelegatedEventListener) this).getEventDelegates()) {
-				if (EventUtilities.canReceiveMouse(widget)) widget.onMouseScrolled(mouseX, mouseY, deltaY);
+				if (EventUtilities.canReceiveMouse(widget))
+					widget.onMouseScrolled(mouseX, mouseY, deltaY);
 			}
 		}
 		if (runnableOnMouseScrolled != null) {
@@ -477,9 +503,19 @@ public abstract class WAbstractWidget implements Tickable,
 	// Event runner setters
 
 	@Environment(EnvType.CLIENT)
+	public <W extends WAbstractWidget> WFocusGainListener<W> getOnFocusGained() {
+		return runnableOnFocusGained;
+	}
+
+	@Environment(EnvType.CLIENT)
 	public <W extends WAbstractWidget> W setOnFocusGained(WFocusGainListener<W> linkedRunnable) {
 		this.runnableOnFocusGained = linkedRunnable;
 		return (W) this;
+	}
+
+	@Environment(EnvType.CLIENT)
+	public <W extends WAbstractWidget> WFocusLossListener<W> getOnFocusReleased() {
+		return runnableOnFocusReleased;
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -489,9 +525,19 @@ public abstract class WAbstractWidget implements Tickable,
 	}
 
 	@Environment(EnvType.CLIENT)
+	public <W extends WAbstractWidget> WKeyPressListener<W> getOnKeyPressed() {
+		return runnableOnKeyPressed;
+	}
+
+	@Environment(EnvType.CLIENT)
 	public <W extends WAbstractWidget> W setOnKeyPressed(WKeyPressListener<W> linkedRunnable) {
 		this.runnableOnKeyPressed = linkedRunnable;
 		return (W) this;
+	}
+
+	@Environment(EnvType.CLIENT)
+	public <W extends WAbstractWidget> WCharTypeListener<W> getOnCharTyped() {
+		return runnableOnCharTyped;
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -501,15 +547,32 @@ public abstract class WAbstractWidget implements Tickable,
 	}
 
 	@Environment(EnvType.CLIENT)
+	public <W extends WAbstractWidget> WKeyReleaseListener<W> getOnKeyReleased() {
+		return runnableOnKeyReleased;
+	}
+
+	@Environment(EnvType.CLIENT)
 	public <W extends WAbstractWidget> W setOnKeyReleased(WKeyReleaseListener<W> linkedRunnable) {
 		this.runnableOnKeyReleased = linkedRunnable;
 		return (W) this;
 	}
 
 	@Environment(EnvType.CLIENT)
-	public <W extends WAbstractWidget> W setOnMouseClicked(WMouseClickListener<W>linkedRunnable) {
+	public <W extends WAbstractWidget> WMouseClickListener<W> getOnMouseClicked() {
+		return runnableOnMouseClicked;
+	}
+
+	@Environment(EnvType.CLIENT)
+	public <W extends WAbstractWidget> W setOnMouseClicked(WMouseClickListener<W> linkedRunnable) {
 		this.runnableOnMouseClicked = linkedRunnable;
 		return (W) this;
+	}
+
+	// Event runner getters
+
+	@Environment(EnvType.CLIENT)
+	public <W extends WAbstractWidget> WMouseDragListener<W> getOnMouseDragged() {
+		return runnableOnMouseDragged;
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -519,9 +582,19 @@ public abstract class WAbstractWidget implements Tickable,
 	}
 
 	@Environment(EnvType.CLIENT)
+	public <W extends WAbstractWidget> WMouseMoveListener<W> getOnMouseMoved() {
+		return runnableOnMouseMoved;
+	}
+
+	@Environment(EnvType.CLIENT)
 	public <W extends WAbstractWidget> W setOnMouseMoved(WMouseMoveListener<W> linkedRunnable) {
 		this.runnableOnMouseMoved = linkedRunnable;
 		return (W) this;
+	}
+
+	@Environment(EnvType.CLIENT)
+	public <W extends WAbstractWidget> WMouseScrollListener<W> getOnMouseScrolled() {
+		return runnableOnMouseScrolled;
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -531,9 +604,19 @@ public abstract class WAbstractWidget implements Tickable,
 	}
 
 	@Environment(EnvType.CLIENT)
+	public <W extends WAbstractWidget> WMouseReleaseListener<W> getOnMouseReleased() {
+		return runnableOnMouseReleased;
+	}
+
+	@Environment(EnvType.CLIENT)
 	public <W extends WAbstractWidget> W setOnMouseReleased(WMouseReleaseListener<W> linkedRunnable) {
 		this.runnableOnMouseReleased = linkedRunnable;
 		return (W) this;
+	}
+
+	@Environment(EnvType.CLIENT)
+	public <W extends WAbstractWidget> WTooltipDrawListener<W> getOnDrawTooltip() {
+		return runnableOnDrawTooltip;
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -543,70 +626,13 @@ public abstract class WAbstractWidget implements Tickable,
 	}
 
 	@Environment(EnvType.CLIENT)
+	public <W extends WAbstractWidget> WAlignListener<W> getOnAlign() {
+		return runnableOnAlign;
+	}
+
+	@Environment(EnvType.CLIENT)
 	public <W extends WAbstractWidget> W setOnAlign(WAlignListener<W> linkedRunnable) {
 		this.runnableOnAlign = linkedRunnable;
 		return (W) this;
-	}
-
-	// Event runner getters
-
-	@Environment(EnvType.CLIENT)
-	public <W extends WAbstractWidget> WFocusGainListener<W> getOnFocusGained() {
-		return runnableOnFocusGained;
-	}
-
-	@Environment(EnvType.CLIENT)
-	public <W extends WAbstractWidget> WFocusLossListener<W> getOnFocusReleased() {
-		return runnableOnFocusReleased;
-	}
-
-	@Environment(EnvType.CLIENT)
-	public <W extends WAbstractWidget> WKeyPressListener<W> getOnKeyPressed() {
-		return runnableOnKeyPressed;
-	}
-
-	@Environment(EnvType.CLIENT)
-	public <W extends WAbstractWidget> WCharTypeListener<W> getOnCharTyped() {
-		return runnableOnCharTyped;
-	}
-
-	@Environment(EnvType.CLIENT)
-	public <W extends WAbstractWidget> WKeyReleaseListener<W> getOnKeyReleased() {
-		return runnableOnKeyReleased;
-	}
-
-	@Environment(EnvType.CLIENT)
-	public <W extends WAbstractWidget> WMouseClickListener<W>getOnMouseClicked() {
-		return runnableOnMouseClicked;
-	}
-
-	@Environment(EnvType.CLIENT)
-	public <W extends WAbstractWidget> WMouseDragListener<W> getOnMouseDragged() {
-		return runnableOnMouseDragged;
-	}
-
-	@Environment(EnvType.CLIENT)
-	public <W extends WAbstractWidget> WMouseMoveListener<W> getOnMouseMoved() {
-		return runnableOnMouseMoved;
-	}
-
-	@Environment(EnvType.CLIENT)
-	public <W extends WAbstractWidget> WMouseScrollListener<W> getOnMouseScrolled() {
-		return runnableOnMouseScrolled;
-	}
-
-	@Environment(EnvType.CLIENT)
-	public <W extends WAbstractWidget> WMouseReleaseListener<W> getOnMouseReleased() {
-		return runnableOnMouseReleased;
-	}
-
-	@Environment(EnvType.CLIENT)
-	public <W extends WAbstractWidget> WTooltipDrawListener<W> getOnDrawTooltip() {
-		return runnableOnDrawTooltip;
-	}
-
-	@Environment(EnvType.CLIENT)
-	public <W extends WAbstractWidget> WAlignListener<W> getOnAlign() {
-		return runnableOnAlign;
 	}
 }

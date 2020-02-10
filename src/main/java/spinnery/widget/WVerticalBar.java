@@ -3,8 +3,6 @@ package spinnery.widget;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.util.Identifier;
-import org.apache.commons.lang3.mutable.Mutable;
 import org.lwjgl.opengl.GL11;
 import spinnery.client.BaseRenderer;
 

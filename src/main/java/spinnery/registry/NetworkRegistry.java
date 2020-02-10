@@ -11,10 +11,10 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.PacketByteBuf;
 import spinnery.common.BaseContainer;
 import spinnery.util.StackUtilities;
-import spinnery.widget.WSlot;
 import spinnery.widget.WAbstractWidget;
-import spinnery.widget.api.WNetworked;
+import spinnery.widget.WSlot;
 import spinnery.widget.api.Action;
+import spinnery.widget.api.WNetworked;
 
 public class NetworkRegistry {
 	public static final Identifier SLOT_CLICK_PACKET = new Identifier("spinnery", "slot_click");
@@ -154,6 +154,11 @@ public class NetworkRegistry {
 		return buffer;
 	}
 
+	public static void sendCustomInterfaceEvent(WNetworked widget, CompoundTag payload) {
+		ClientSidePacketRegistry.INSTANCE.sendToServer(NetworkRegistry.SYNCED_WIDGET_PACKET,
+				NetworkRegistry.createCustomInterfaceEventPacket(widget, payload));
+	}
+
 	public static PacketByteBuf createCustomInterfaceEventPacket(WNetworked widget, CompoundTag payload) {
 		PacketByteBuf buffer = new PacketByteBuf(Unpooled.buffer());
 		buffer.writeInt(widget.getSyncId());
@@ -161,11 +166,6 @@ public class NetworkRegistry {
 		widget.appendPayload(WNetworked.Event.CUSTOM, payload);
 		buffer.writeCompoundTag(payload);
 		return buffer;
-	}
-
-	public static void sendCustomInterfaceEvent(WNetworked widget, CompoundTag payload) {
-		ClientSidePacketRegistry.INSTANCE.sendToServer(NetworkRegistry.SYNCED_WIDGET_PACKET,
-				NetworkRegistry.createCustomInterfaceEventPacket(widget, payload));
 	}
 
 	public static void initialize() {

@@ -1,41 +1,44 @@
 {
-  vars: {
-	  bevel_dark: 0xff1b1b1b,
-	  bevel_light: 0xff6a6a6a,
-	  bg_panel: 0xff393939,
-	  bg_interactable: 0xff292929,
-	  text_shadow: 0x00000000
-  },
-  prototypes: {
-	  label: {
-		  label: {
-			  color: 0xffffffff,
-			  shadow: true,
-			  shadow_color: "$text_shadow"
-		  }
-	  },
-	  panel: {
-		  shadow: 0xff262626,
-		  background: "$bg_panel",
-		  highlight: 0xff474747,
-		  outline: 0xff000000
-	  },
-	  slider: {
-		  top_left: {
-			  background: "$bevel_dark",
-			  foreground: "$bevel_light"
-		  },
-		  bottom_right: {
+	vars: {
+		bevel_dark: 0xff1b1b1b,
+		bevel_light: 0xff6a6a6a,
+		bg_panel: 0xff393939,
+		bg_interactable: 0xff292929,
+		text_shadow: 0x00000000
+	},
+	prototypes: {
+		label: {
+			label: {
+				color: 0xffffffff,
+				shadow: true,
+				shadow_color: "$text_shadow"
+			}
+		},
+		panel: {
+			shadow: 0xff262626,
+			background: "$bg_panel",
+			highlight: 0xff474747,
+			outline: 0xff000000
+		},
+		slider: {
+			top_left: {
+				background: "$bevel_dark",
+				foreground: "$bevel_light"
+			},
+			bottom_right: {
 				background: "$bevel_light",
 				foreground: "$bevel_dark"
-		  },
-		  background: {
+			},
+			background: {
 				on: 0xff00c116,
 				off: "$bg_interactable"
-		  },
-		  foreground: 0xff3a3a3a,
-			padding: [1, 1]
-	  },
+			},
+			foreground: 0xff3a3a3a,
+			padding: [
+				1,
+				1
+			]
+		},
 		text_editor: {
 			top_left: "$bevel_dark",
 			bottom_right: "$bevel_light",
@@ -48,38 +51,41 @@
 			highlight: 0xb30400ff,
 			cursor: 0xffffffff,
 			label: 0xff808080,
-			padding: [4, 4]
+			padding: [
+				4,
+				4
+			]
 		}
-  },
-  theme: {
-	  "spinnery:panel": {
-		  $extend: [
-			  "$panel",
-			  "$label"
-		  ]
-	  },
-	  "spinnery:vertical_list": {
-		  $extend: [
-			  "$panel",
-			  "$label"
-		  ]
-	  },
-	  "spinnery:horizontal_list": {
-		  $extend: [
-			  "$panel",
-			  "$label"
-		  ]
-	  },
-	  "spinnery:draggable_area": {
-		  $extend: [
-			  "$panel",
-			  "$label"
-		  ],
-		  area: {
-			  start: 0xff141414,
-			  end: 0xff202020
-		  },
-	  },
+	},
+	theme: {
+		"spinnery:panel": {
+			$extend: [
+				"$panel",
+				"$label"
+			]
+		},
+		"spinnery:vertical_list": {
+			$extend: [
+				"$panel",
+				"$label"
+			]
+		},
+		"spinnery:horizontal_list": {
+			$extend: [
+				"$panel",
+				"$label"
+			]
+		},
+		"spinnery:draggable_area": {
+			$extend: [
+				"$panel",
+				"$label"
+			],
+			area: {
+				start: 0xff141414,
+				end: 0xff202020
+			},
+		},
 		"spinnery:dropdown": {
 			$extend: [
 				"$panel",
@@ -159,11 +165,11 @@
 			},
 			highlight: {
 				on: 0xff353535,
-			off: 0xff474747
+				off: 0xff474747
 			},
 			outline: {
-			on: 0xff000000,
-			off: 0xff000000,
+				on: 0xff000000,
+				off: 0xff000000,
 			},
 		},
 		"spinnery:tooltip": {
@@ -209,10 +215,14 @@
 			}
 		},
 		"spinnery:text_area": {
-			$extend: ["$text_editor"]
+			$extend: [
+				"$text_editor"
+			]
 		},
 		"spinnery:text_field": {
-			$extend: ["$text_editor"]
+			$extend: [
+				"$text_editor"
+			]
 		}
-  }
+	}
 }

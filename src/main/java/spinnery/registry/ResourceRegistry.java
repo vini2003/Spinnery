@@ -30,18 +30,6 @@ public class ResourceRegistry {
 		ThemeRegistry.clear();
 	}
 
-	public static void register(Identifier id, InputStream inputStream) {
-		try {
-			JsonObject themeDef = JanksonFactory.createJankson().load(inputStream);
-			Theme theme = Theme.of(id, themeDef);
-			ThemeRegistry.register(theme);
-		} catch (IOException e) {
-			Spinnery.LOGGER.log(Level.ERROR, "Could not read theme file", e);
-		} catch (SyntaxError syntaxError) {
-			Spinnery.LOGGER.log(Level.ERROR, "Syntax error in theme file", syntaxError);
-		}
-	}
-
 	public static void load(ResourceManager resourceManager) {
 		Collection<Identifier> themeFiles = resourceManager.findResources("spinnery",
 				(string) -> string.endsWith(".theme.json5"));
@@ -54,6 +42,18 @@ public class ResourceRegistry {
 			} catch (IOException e) {
 				Spinnery.LOGGER.warn("[Spinnery] Failed to load theme {}.", id);
 			}
+		}
+	}
+
+	public static void register(Identifier id, InputStream inputStream) {
+		try {
+			JsonObject themeDef = JanksonFactory.createJankson().load(inputStream);
+			Theme theme = Theme.of(id, themeDef);
+			ThemeRegistry.register(theme);
+		} catch (IOException e) {
+			Spinnery.LOGGER.log(Level.ERROR, "Could not read theme file", e);
+		} catch (SyntaxError syntaxError) {
+			Spinnery.LOGGER.log(Level.ERROR, "Syntax error in theme file", syntaxError);
 		}
 	}
 }

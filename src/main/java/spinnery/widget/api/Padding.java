@@ -7,69 +7,69 @@ import java.util.Objects;
  * are ordered clockwise from the top).
  */
 public class Padding {
-    protected final int top;
-    protected final int bottom;
-    protected final int left;
-    protected final int right;
+	protected final int top;
+	protected final int bottom;
+	protected final int left;
+	protected final int right;
 
-    public static Padding of(int top, int right, int bottom, int left) {
-        return new Padding(top, right, bottom, left);
-    }
+	public Padding(int top, int right, int bottom, int left) {
+		this.top = top;
+		this.bottom = bottom;
+		this.left = left;
+		this.right = right;
+	}
 
-    public static Padding of(int vertical, int horizontal) {
-        return new Padding(vertical, horizontal, vertical, horizontal);
-    }
+	public static Padding of(int top, int right, int bottom, int left) {
+		return new Padding(top, right, bottom, left);
+	}
 
-    public static Padding of(int all) {
-        return new Padding(all, all, all, all);
-    }
+	public static Padding of(int vertical, int horizontal) {
+		return new Padding(vertical, horizontal, vertical, horizontal);
+	}
 
-    public Padding(int top, int right, int bottom, int left) {
-        this.top = top;
-        this.bottom = bottom;
-        this.left = left;
-        this.right = right;
-    }
+	public static Padding of(int all) {
+		return new Padding(all, all, all, all);
+	}
 
-    public int getTop() {
-        return top;
-    }
+	public int getTop() {
+		return top;
+	}
 
-    public int getBottom() {
-        return bottom;
-    }
+	public int getBottom() {
+		return bottom;
+	}
 
-    public int getLeft() {
-        return left;
-    }
+	public int getLeft() {
+		return left;
+	}
 
-    public int getRight() {
-        return right;
-    }
+	public int getRight() {
+		return right;
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Padding padding = (Padding) o;
-        return top == padding.top &&
-                bottom == padding.bottom &&
-                left == padding.left &&
-                right == padding.right;
-    }
+	@Override
+	public int hashCode() {
+		return Objects.hash(top, bottom, left, right);
+	}
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(top, bottom, left, right);
-    }
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Padding padding = (Padding) o;
+		return top == padding.top &&
+				bottom == padding.bottom &&
+				left == padding.left &&
+				right == padding.right;
+	}
 
-    @Override
-    public String toString() {
-        return "WPadding{" +
-                "top=" + top +
-                ", right=" + right +
-                ", bottom=" + bottom +
-                ", left=" + left +
-                '}';
-    }
+	@Override
+	public String toString() {
+		return "WPadding{" +
+				"top=" + top +
+				", right=" + right +
+				", bottom=" + bottom +
+				", left=" + left +
+				'}';
+	}
 }

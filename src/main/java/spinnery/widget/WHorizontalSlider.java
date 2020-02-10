@@ -4,30 +4,15 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import spinnery.client.BaseRenderer;
 import spinnery.client.TextRenderer;
-import spinnery.widget.api.*;
+import spinnery.widget.api.Position;
+import spinnery.widget.api.Size;
+import spinnery.widget.api.WFocusedKeyboardListener;
+import spinnery.widget.api.WFocusedMouseListener;
 
 @Environment(EnvType.CLIENT)
 @WFocusedKeyboardListener
 @WFocusedMouseListener
 public class WHorizontalSlider extends WAbstractSlider {
-	@Override
-	public Position getProgressTextAnchor() {
-		String formatted = getFormattedProgress();
-		return Position.of(this).add((getWidth() + 5) / 2 - TextRenderer.width(formatted) / 2, getHeight() + 4, 0);
-	}
-
-	@Override
-	protected void updatePosition(int mouseX, int mouseY) {
-		double innerWidth = getInnerSize().getWidth();
-		double percentComplete = Math.max(0, (mouseX - getInnerAnchor().getX()) / innerWidth);
-		setProgress(min + percentComplete * (max - min));
-	}
-
-	@Override
-	public Size getKnobSize() {
-		return Size.of(6, getHeight() + 3);
-	}
-
 	@Override
 	public void draw() {
 		if (isHidden()) {
@@ -74,5 +59,23 @@ public class WHorizontalSlider extends WAbstractSlider {
 		BaseRenderer.drawBeveledPanel(clampedX, y - 1, z, knobWidth, knobHeight,
 				getStyle().asColor("top_left.foreground"), getStyle().asColor("foreground"),
 				getStyle().asColor("bottom_right.foreground"));
+	}
+
+	@Override
+	public Position getProgressTextAnchor() {
+		String formatted = getFormattedProgress();
+		return Position.of(this).add((getWidth() + 5) / 2 - TextRenderer.width(formatted) / 2, getHeight() + 4, 0);
+	}
+
+	@Override
+	public Size getKnobSize() {
+		return Size.of(6, getHeight() + 3);
+	}
+
+	@Override
+	protected void updatePosition(int mouseX, int mouseY) {
+		double innerWidth = getInnerSize().getWidth();
+		double percentComplete = Math.max(0, (mouseX - getInnerAnchor().getX()) / innerWidth);
+		setProgress(min + percentComplete * (max - min));
 	}
 }

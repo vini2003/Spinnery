@@ -52,6 +52,11 @@ public class WTexturedButton extends WAbstractWidget {
 		return (W) this;
 	}
 
+	public <W extends WTexturedButton> W setDisabled(boolean disabled) {
+		this.isDisabled = disabled;
+		return (W) this;
+	}
+
 	public boolean isActive() {
 		return isFocused();
 	}
@@ -65,20 +70,15 @@ public class WTexturedButton extends WAbstractWidget {
 		return (W) this;
 	}
 
-	public <W extends WTexturedButton> W setDisabled(boolean disabled) {
-		this.isDisabled = disabled;
-		return (W) this;
+	@Override
+	public void onMouseReleased(int mouseX, int mouseY, int mouseButton) {
+		if (isDisabled) return;
+		super.onMouseReleased(mouseX, mouseY, mouseButton);
 	}
 
 	@Override
 	public void onMouseClicked(int mouseX, int mouseY, int mouseButton) {
 		if (isDisabled) return;
 		super.onMouseClicked(mouseX, mouseY, mouseButton);
-	}
-
-	@Override
-	public void onMouseReleased(int mouseX, int mouseY, int mouseButton) {
-		if (isDisabled) return;
-		super.onMouseReleased(mouseX, mouseY, mouseButton);
 	}
 }

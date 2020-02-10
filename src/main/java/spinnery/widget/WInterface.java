@@ -10,7 +10,12 @@ import spinnery.client.BaseRenderer;
 import spinnery.common.BaseContainer;
 import spinnery.registry.NetworkRegistry;
 import spinnery.util.EventUtilities;
-import spinnery.widget.api.*;
+import spinnery.widget.api.Color;
+import spinnery.widget.api.WDrawableCollection;
+import spinnery.widget.api.WLayoutElement;
+import spinnery.widget.api.WModifiableCollection;
+import spinnery.widget.api.WNetworked;
+import spinnery.widget.api.WThemable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,13 +35,13 @@ public class WInterface implements WDrawableCollection, WModifiableCollection, W
 	protected Identifier theme;
 	protected boolean isBlurred = false;
 
+	public WInterface() {
+		setClientside(true);
+	}
+
 	public <W extends WInterface> W setClientside(Boolean clientside) {
 		isClientside = clientside;
 		return (W) this;
-	}
-
-	public WInterface() {
-		setClientside(true);
 	}
 
 	public WInterface(BaseContainer linkedContainer) {
@@ -44,14 +49,6 @@ public class WInterface implements WDrawableCollection, WModifiableCollection, W
 		if (getContainer().getWorld().isClient()) {
 			setClientside(true);
 		}
-	}
-
-	public boolean isClient() {
-		return isClientside;
-	}
-
-	public Map<Class<? extends WAbstractWidget>, WAbstractWidget> getCachedWidgets() {
-		return cachedWidgets;
 	}
 
 	public BaseContainer getContainer() {
@@ -63,13 +60,12 @@ public class WInterface implements WDrawableCollection, WModifiableCollection, W
 		return (W) this;
 	}
 
-	public <W extends WInterface> W setBlurred(boolean isBlurred) {
-		this.isBlurred = isBlurred;
-		return (W) this;
+	public boolean isClient() {
+		return isClientside;
 	}
 
-	public boolean isBlurred() {
-		return isBlurred;
+	public Map<Class<? extends WAbstractWidget>, WAbstractWidget> getCachedWidgets() {
+		return cachedWidgets;
 	}
 
 	@Override
@@ -91,13 +87,9 @@ public class WInterface implements WDrawableCollection, WModifiableCollection, W
 	}
 
 	@Override
-	public Set<WAbstractWidget> getWidgets() {
-		return widgets;
-	}
-
-	@Override
-	public void onLayoutChange() {
-		recalculateCache();
+	public void add(WAbstractWidget... widgets) {
+		this.widgets.addAll(Arrays.asList(widgets));
+		onLayoutChange();
 	}
 
 	@Override
@@ -108,25 +100,24 @@ public class WInterface implements WDrawableCollection, WModifiableCollection, W
 	}
 
 	@Override
-	public List<WLayoutElement> getOrderedWidgets() {
-		return orderedWidgets;
+	public Set<WAbstractWidget> getWidgets() {
+		return widgets;
 	}
 
 	@Override
-	public void add(WAbstractWidget... widgets) {
-		this.widgets.addAll(Arrays.asList(widgets));
-		onLayoutChange();
+	public boolean contains(WAbstractWidget... widgets) {
+		return this.widgets.containsAll(Arrays.asList(widgets));
+	}
+
+	@Override
+	public List<WLayoutElement> getOrderedWidgets() {
+		return orderedWidgets;
 	}
 
 	@Override
 	public void remove(WAbstractWidget... widgets) {
 		this.widgets.removeAll(Arrays.asList(widgets));
 		onLayoutChange();
-	}
-
-	@Override
-	public boolean contains(WAbstractWidget... widgets) {
-		return this.widgets.containsAll(Arrays.asList(widgets));
 	}
 
 	public void onMouseClicked(int mouseX, int mouseY, int mouseButton) {
@@ -242,13 +233,27 @@ public class WInterface implements WDrawableCollection, WModifiableCollection, W
 	@Override
 	public void draw() {
 		if (isBlurred()) {
-			Window window =  MinecraftClient.getInstance().getWindow();
+			Window window = MinecraftClient.getInstance().getWindow();
 			BaseRenderer.drawRectangle(0, 0, 0, window.getWidth(), window.getHeight(), Color.of(0x90000000));
 		}
 
 		for (WLayoutElement widget : getOrderedWidgets()) {
 			widget.draw();
 		}
+	}
+
+	public boolean isBlurred() {
+		return isBlurred;
+	}
+
+	public <W extends WInterface> W setBlurred(boolean isBlurred) {
+		this.isBlurred = isBlurred;
+		return (W) this;
+	}
+
+	@Override
+	public void onLayoutChange() {
+		recalculateCache();
 	}
 
 	@Override

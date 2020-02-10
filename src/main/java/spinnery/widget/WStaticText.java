@@ -43,16 +43,6 @@ public class WStaticText extends WAbstractWidget {
 	}
 
 	@Override
-	public int getWidth() {
-		return TextRenderer.width(text);
-	}
-
-	@Override
-	public int getHeight() {
-		return TextRenderer.height(font);
-	}
-
-	@Override
 	public void draw() {
 		if (isHidden()) {
 			return;
@@ -65,6 +55,16 @@ public class WStaticText extends WAbstractWidget {
 		TextRenderer.pass().text(getText()).font(font).at(x, y, z).scale(scale).maxWidth(maxWidth)
 				.shadow(getStyle().asBoolean("shadow")).shadowColor(getStyle().asColor("shadowColor"))
 				.color(getStyle().asColor("text")).render();
+	}
+
+	@Override
+	public int getHeight() {
+		return TextRenderer.height(font);
+	}
+
+	@Override
+	public int getWidth() {
+		return TextRenderer.width(text);
 	}
 
 	public Text getText() {

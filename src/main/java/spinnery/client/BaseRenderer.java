@@ -43,18 +43,26 @@ public class BaseRenderer {
 
 		getBufferBuilder().begin(GL11.GL_TRIANGLES, VertexFormats.POSITION);
 
-		getBufferBuilder().vertex(x, y, z).next();
-		getBufferBuilder().vertex(x, y + sY, z).next();
-		getBufferBuilder().vertex(x + sX, y, z).next();
+		getBufferBuilder().vertex(x, y, 0).next();
+		getBufferBuilder().vertex(x, y + sY, 0).next();
+		getBufferBuilder().vertex(x + sX, y, 0).next();
 
-		getBufferBuilder().vertex(x, y + sY, z).next();
-		getBufferBuilder().vertex(x + sX, y + sY, z).next();
-		getBufferBuilder().vertex(x + sX, y, z).next();
+		getBufferBuilder().vertex(x, y + sY, 0).next();
+		getBufferBuilder().vertex(x + sX, y + sY, 0).next();
+		getBufferBuilder().vertex(x + sX, y, 0).next();
 
 		getTesselator().draw();
 
 		RenderSystem.enableTexture();
 		RenderSystem.disableBlend();
+	}
+
+	public static BufferBuilder getBufferBuilder() {
+		return getTesselator().getBuffer();
+	}
+
+	public static Tessellator getTesselator() {
+		return Tessellator.getInstance();
 	}
 
 	public static void drawGradient(double startX, double startY, double endX, double endY, double z, Color colorStart, Color colorEnd) {
@@ -64,23 +72,15 @@ public class BaseRenderer {
 		RenderSystem.defaultBlendFunc();
 		RenderSystem.shadeModel(7425);
 		getBufferBuilder().begin(7, VertexFormats.POSITION_COLOR);
-		getBufferBuilder().vertex(endX, startY, z).color(colorStart.R, colorStart.G, colorStart.B, colorStart.A).next();
-		getBufferBuilder().vertex(startX, startY, z).color(colorStart.R, colorStart.G, colorStart.B, colorStart.A).next();
-		getBufferBuilder().vertex(startX, endY, z).color(colorEnd.R, colorEnd.G, colorEnd.B, colorEnd.A).next();
-		getBufferBuilder().vertex(endX, endY, z).color(colorEnd.R, colorEnd.G, colorEnd.B, colorEnd.A).next();
+		getBufferBuilder().vertex(endX, startY, 0).color(colorStart.R, colorStart.G, colorStart.B, colorStart.A).next();
+		getBufferBuilder().vertex(startX, startY, 0).color(colorStart.R, colorStart.G, colorStart.B, colorStart.A).next();
+		getBufferBuilder().vertex(startX, endY, 0).color(colorEnd.R, colorEnd.G, colorEnd.B, colorEnd.A).next();
+		getBufferBuilder().vertex(endX, endY, 0).color(colorEnd.R, colorEnd.G, colorEnd.B, colorEnd.A).next();
 		getTesselator().draw();
 		RenderSystem.shadeModel(7424);
 		RenderSystem.disableBlend();
 		RenderSystem.enableAlphaTest();
 		RenderSystem.enableTexture();
-	}
-
-	public static BufferBuilder getBufferBuilder() {
-		return getTesselator().getBuffer();
-	}
-
-	public static Tessellator getTesselator() {
-		return Tessellator.getInstance();
 	}
 
 	public static void drawBeveledPanel(double x, double y, double z, double sX, double sY, Color topleft, Color panel, Color bottomright) {
@@ -100,10 +100,10 @@ public class BaseRenderer {
 
 		getBufferBuilder().begin(GL11.GL_QUADS, VertexFormats.POSITION_TEXTURE);
 
-		getBufferBuilder().vertex(x, y + sY, z).texture(0, 1).next();
-		getBufferBuilder().vertex(x + sX, y + sY, z).texture(1, 1).next();
-		getBufferBuilder().vertex(x + sX, y, z).texture(1, 0).next();
-		getBufferBuilder().vertex(x, y, z).texture(0, 0).next();
+		getBufferBuilder().vertex(x, y + sY, 0).texture(0, 1).next();
+		getBufferBuilder().vertex(x + sX, y + sY, 0).texture(1, 1).next();
+		getBufferBuilder().vertex(x + sX, y, 0).texture(1, 0).next();
+		getBufferBuilder().vertex(x, y, 0).texture(0, 0).next();
 
 		getTesselator().draw();
 

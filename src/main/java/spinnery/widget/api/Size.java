@@ -17,20 +17,22 @@ public class Size implements WSized {
 	}
 
 	/**
-	 * Creates a new Size equivalent to that of the given WSized parameter.
-	 * @return Size copy equivalent to given element
-	 */
-	public static Size of(WSized widget) {
-		return new Size(widget.getWidth(), widget.getHeight());
-	}
-
-	/**
 	 * Creates a copy of this Size object, incrementing its width and height by the supplied parameters.
+	 *
 	 * @return Size copy with incremented fields
 	 */
 	public Size add(int width, int height) {
 		Size newSize = Size.of(this);
 		return newSize.setWidth(newSize.getWidth() + width).setHeight(newSize.getHeight() + height);
+	}
+
+	/**
+	 * Creates a new Size equivalent to that of the given WSized parameter.
+	 *
+	 * @return Size copy equivalent to given element
+	 */
+	public static Size of(WSized widget) {
+		return new Size(widget.getWidth(), widget.getHeight());
 	}
 
 	public int getWidth() {

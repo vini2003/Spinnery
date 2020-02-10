@@ -7,9 +7,23 @@ import net.minecraft.item.ItemConvertible;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import spinnery.client.BaseRenderer;
-import spinnery.widget.api.*;
+import spinnery.widget.api.Position;
+import spinnery.widget.api.Size;
+import spinnery.widget.api.WCollection;
+import spinnery.widget.api.WDelegatedEventListener;
+import spinnery.widget.api.WDrawableCollection;
+import spinnery.widget.api.WEventListener;
+import spinnery.widget.api.WLayoutElement;
+import spinnery.widget.api.WModifiableCollection;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
 @Environment(EnvType.CLIENT)
 public class WTabHolder extends WAbstractWidget implements WCollection, WDelegatedEventListener {
@@ -24,6 +38,10 @@ public class WTabHolder extends WAbstractWidget implements WCollection, WDelegat
 				widget.setHidden(tab.getNumber() != tabNumber);
 			}
 		}
+	}
+
+	public WTab addTab(Item symbol, String name) {
+		return addTab(symbol, new LiteralText(name));
 	}
 
 	public WTab addTab(Item symbol, Text name) {
@@ -45,10 +63,6 @@ public class WTabHolder extends WAbstractWidget implements WCollection, WDelegat
 		return tab;
 	}
 
-	public WTab addTab(Item symbol, String name) {
-		return addTab(symbol, new LiteralText(name));
-	}
-
 	public WTab removeTab(int tabNumber) {
 		return tabs.remove(tabNumber);
 	}
@@ -68,13 +82,13 @@ public class WTabHolder extends WAbstractWidget implements WCollection, WDelegat
 	}
 
 	@Override
-	public Collection<? extends WEventListener> getEventDelegates() {
-		return tabs;
+	public boolean contains(WAbstractWidget... widgets) {
+		return getAllWidgets().containsAll(Arrays.asList(widgets));
 	}
 
 	@Override
-	public boolean contains(WAbstractWidget... widgets) {
-		return getAllWidgets().containsAll(Arrays.asList(widgets));
+	public Collection<? extends WEventListener> getEventDelegates() {
+		return tabs;
 	}
 
 	@Override
@@ -115,15 +129,30 @@ public class WTabHolder extends WAbstractWidget implements WCollection, WDelegat
 					.setInterface(WTabHolder.this.getInterface());
 		}
 
-		public Set<WAbstractWidget> getWidgets() {
-			return widgets;
-		}
-
 		@Override
 		public Collection<? extends WEventListener> getEventDelegates() {
 			Set<WAbstractWidget> delegates = new HashSet<>(widgets);
 			delegates.add(toggle);
 			return delegates;
+		}
+
+		@Override
+		public void add(WAbstractWidget... widgets) {
+			for (WAbstractWidget newWidget : widgets) {
+				newWidget.setInterface(WTabHolder.this.getInterface());
+				newWidget.setParent(this);
+				this.widgets.add(newWidget);
+			}
+			for (WAbstractWidget widget : getWidgets()) {
+				if (!(widget instanceof WTabToggle)) {
+					widget.setHidden(true);
+				}
+			}
+			onLayoutChange();
+		}
+
+		public Set<WAbstractWidget> getWidgets() {
+			return widgets;
 		}
 
 		@Override
@@ -144,29 +173,14 @@ public class WTabHolder extends WAbstractWidget implements WCollection, WDelegat
 		}
 
 		@Override
-		public void add(WAbstractWidget... widgets) {
-			for (WAbstractWidget newWidget : widgets) {
-				newWidget.setInterface(WTabHolder.this.getInterface());
-				newWidget.setParent(this);
-				this.widgets.add(newWidget);
-			}
-			for (WAbstractWidget widget : getWidgets()) {
-				if (!(widget instanceof WTabToggle)) {
-					widget.setHidden(true);
-				}
-			}
-			onLayoutChange();
+		public boolean contains(WAbstractWidget... widgets) {
+			return this.widgets.containsAll(Arrays.asList(widgets));
 		}
 
 		@Override
 		public void remove(WAbstractWidget... widgets) {
 			this.widgets.removeAll(Arrays.asList(widgets));
 			onLayoutChange();
-		}
-
-		@Override
-		public boolean contains(WAbstractWidget... widgets) {
-			return this.widgets.containsAll(Arrays.asList(widgets));
 		}
 
 		@Override
@@ -190,13 +204,13 @@ public class WTabHolder extends WAbstractWidget implements WCollection, WDelegat
 			return this;
 		}
 
+		public WTabToggle getToggle() {
+			return toggle;
+		}
+
 		public WTab setName(Text name) {
 			getToggle().setLabel(name);
 			return this;
-		}
-
-		public WTabToggle getToggle() {
-			return toggle;
 		}
 	}
 }

@@ -6,15 +6,17 @@ package spinnery.widget.api;
  * method of describing such widgets using a {@link Padding} property.
  */
 public interface WInnerSized extends WLayoutElement {
-    /**
-     * Gets the size of the inner area.
-     * @return size of inner area
-     */
-    Size getInnerSize();
+	/**
+	 * Gets the size of the inner area.
+	 *
+	 * @return size of inner area
+	 */
+	Size getInnerSize();
 
-    /**
-     * Gets the position of the inner area's top left corner.
-     * @return position of inner area
-     */
-    Position getInnerAnchor();
+	/**
+	 * Gets the position of the inner area's top left corner.
+	 *
+	 * @return position of inner area
+	 */
+	Position getInnerAnchor();
 }

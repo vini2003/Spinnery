@@ -20,11 +20,6 @@ public class BaseScreen extends Screen {
 		getScreenInterface().draw();
 	}
 
-	public <S extends BaseScreen> S setIsPauseScreen(boolean isPauseScreen) {
-		this.isPauseScreen = isPauseScreen;
-		return (S) this;
-	}
-
 	public WInterface getScreenInterface() {
 		return screenInterface;
 	}
@@ -55,6 +50,11 @@ public class BaseScreen extends Screen {
 	public void resize(MinecraftClient client, int width, int height) {
 		screenInterface.onAlign();
 		super.resize(client, width, height);
+	}
+
+	public <S extends BaseScreen> S setIsPauseScreen(boolean isPauseScreen) {
+		this.isPauseScreen = isPauseScreen;
+		return (S) this;
 	}
 
 	@Override

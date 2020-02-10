@@ -9,8 +9,8 @@ import java.util.Set;
  * Generic interface representing a collection of widgets. This interface does not presume the ability to
  * add or remove widgets from the collection, and simply provides accessors to the collection's children.
  *
- * @see WModifiableCollection
  * @author EngiN33R
+ * @see WModifiableCollection
  * @since 2.0.0
  */
 public interface WCollection {

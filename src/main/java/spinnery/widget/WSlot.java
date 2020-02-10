@@ -13,40 +13,36 @@ import org.apache.logging.log4j.Level;
 import spinnery.Spinnery;
 import spinnery.client.BaseRenderer;
 import spinnery.common.BaseContainer;
-
-import static net.fabricmc.fabric.api.network.ClientSidePacketRegistry.INSTANCE;
-
-import static spinnery.registry.NetworkRegistry.SLOT_CLICK_PACKET;
-import static spinnery.registry.NetworkRegistry.SLOT_DRAG_PACKET;
-
-import static spinnery.registry.NetworkRegistry.createSlotClickPacket;
-import static spinnery.registry.NetworkRegistry.createSlotDragPacket;
-
-import static spinnery.util.MouseUtilities.nanoDelay;
-import static spinnery.util.MouseUtilities.nanoInterval;
-import static spinnery.util.MouseUtilities.nanoUpdate;
-
-import static spinnery.widget.api.Action.*;
-
+import spinnery.widget.api.Action;
 import spinnery.widget.api.Position;
 import spinnery.widget.api.Size;
-import spinnery.widget.api.WLayoutElement;
 import spinnery.widget.api.WModifiableCollection;
-import spinnery.widget.api.Action;
 
 import java.util.HashMap;
 
+import static net.fabricmc.fabric.api.network.ClientSidePacketRegistry.INSTANCE;
+import static spinnery.registry.NetworkRegistry.SLOT_CLICK_PACKET;
+import static spinnery.registry.NetworkRegistry.SLOT_DRAG_PACKET;
+import static spinnery.registry.NetworkRegistry.createSlotClickPacket;
+import static spinnery.registry.NetworkRegistry.createSlotDragPacket;
+import static spinnery.util.MouseUtilities.nanoDelay;
+import static spinnery.util.MouseUtilities.nanoInterval;
+import static spinnery.util.MouseUtilities.nanoUpdate;
+import static spinnery.widget.api.Action.CLONE;
+import static spinnery.widget.api.Action.PICKUP;
+import static spinnery.widget.api.Action.PICKUP_ALL;
+import static spinnery.widget.api.Action.QUICK_MOVE;
+
 public class WSlot extends WAbstractWidget {
+	public static final int LEFT = 0;
+	public static final int RIGHT = 1;
+	public static final int MIDDLE = 2;
 	protected int slotNumber;
 	protected Identifier previewTexture;
 	protected int maximumCount = 0;
 	protected boolean overrideMaximumCount = false;
 	protected int inventoryNumber;
 	protected boolean skipRelease = false;
-
-	public static final int LEFT = 0;
-	public static final int RIGHT = 1;
-	public static final int MIDDLE = 2;
 
 	@Environment(EnvType.CLIENT)
 	public static void addPlayerInventory(Position position, Size size, WModifiableCollection parent) {
@@ -84,6 +80,42 @@ public class WSlot extends WAbstractWidget {
 
 	public int getMaxCount() {
 		return maximumCount;
+	}
+
+	@Override
+	@Environment(EnvType.CLIENT)
+	public void draw() {
+		if (isHidden()) {
+			return;
+		}
+
+		int x = getX();
+		int y = getY();
+		int z = getZ();
+
+		int sX = getWidth();
+		int sY = getHeight();
+
+		BaseRenderer.drawBeveledPanel(x, y, z, sX, sY, getStyle().asColor("top_left"), getStyle().asColor("background.unfocused"), getStyle().asColor("bottom_right"));
+
+		if (isFocused()) {
+			BaseRenderer.drawRectangle(x + 1, y + 1, z, sX - 2, sY - 2, getStyle().asColor("background.focused"));
+		}
+
+		if (hasPreviewTexture()) {
+			BaseRenderer.drawImage(x + 1, y + 1, z, sX - 2, sY - 2, getPreviewTexture());
+		}
+
+		ItemStack stackA = getPreviewStack().isEmpty() ? getStack() : getPreviewStack();
+
+		RenderSystem.enableLighting();
+		BaseRenderer.getItemRenderer().renderGuiItem(stackA, 1 + x + (sX - 18) / 2, 1 + y + (sY - 18) / 2);
+		BaseRenderer.getItemRenderer().renderGuiItemOverlay(MinecraftClient.getInstance().textRenderer, stackA, 1 + x + (sX - 18) / 2, 1 + y + (sY - 18) / 2, stackA.getCount() == 1 ? "" : withSuffix(stackA.getCount()));
+		RenderSystem.disableLighting();
+
+		if (isFocused()) {
+			BaseRenderer.drawRectangle(x + 1, y + 1, z + 300, sX - 2, sY - 2, getStyle().asColor("overlay"));
+		}
 	}
 
 	@Override
@@ -176,7 +208,7 @@ public class WSlot extends WAbstractWidget {
 				container.onSlotAction(slotNumber, inventoryNumber, button, QUICK_MOVE, player);
 				INSTANCE.sendToServer(SLOT_CLICK_PACKET, createSlotClickPacket(container.syncId, slotNumber, inventoryNumber, button, QUICK_MOVE));
 			}
-		} else  {
+		} else {
 			if ((button == LEFT || button == RIGHT) && nanoInterval() > nanoDelay()) {
 				container.getDragSlots(button).add(this);
 				container.onSlotDrag(slotNumbers, inventoryNumbers, Action.of(button, false));
@@ -186,40 +218,22 @@ public class WSlot extends WAbstractWidget {
 		super.onMouseDragged(mouseX, mouseY, button, deltaX, deltaY);
 	}
 
-	@Override
-	@Environment(EnvType.CLIENT)
-	public void draw() {
-		if (isHidden()) {
-			return;
-		}
+	public int getSlotNumber() {
+		return slotNumber;
+	}
 
-		int x = getX();
-		int y = getY();
-		int z = getZ();
+	public int getInventoryNumber() {
+		return inventoryNumber;
+	}
 
-		int sX = getWidth();
-		int sY = getHeight();
+	public <W extends WSlot> W setInventoryNumber(int inventoryNumber) {
+		this.inventoryNumber = inventoryNumber;
+		return (W) this;
+	}
 
-		BaseRenderer.drawBeveledPanel(x, y, z, sX, sY, getStyle().asColor("top_left"), getStyle().asColor("background.unfocused"), getStyle().asColor("bottom_right"));
-
-		if (isFocused()) {
-			BaseRenderer.drawRectangle(x + 1, y + 1, z, sX - 2, sY - 2, getStyle().asColor("background.focused"));
-		}
-
-		if (hasPreviewTexture()) {
-			BaseRenderer.drawImage(x + 1, y + 1, z, sX - 2, sY - 2, getPreviewTexture());
-		}
-
-		ItemStack stackA = getPreviewStack().isEmpty() ? getStack() : getPreviewStack();
-
-		RenderSystem.enableLighting();
-		BaseRenderer.getItemRenderer().renderGuiItem(stackA, 1 + x + (sX - 18) / 2, 1 + y + (sY - 18) / 2);
-		BaseRenderer.getItemRenderer().renderGuiItemOverlay(MinecraftClient.getInstance().textRenderer, stackA, 1 + x + (sX - 18) / 2, 1 + y + (sY - 18) / 2, stackA.getCount() == 1 ? "" : withSuffix(stackA.getCount()));
-		RenderSystem.disableLighting();
-
-		if (isFocused()) {
-			BaseRenderer.drawRectangle(x + 1, y + 1, z + 300, sX - 2, sY - 2, getStyle().asColor("overlay"));
-		}
+	public <W extends WSlot> W setSlotNumber(int slotNumber) {
+		this.slotNumber = slotNumber;
+		return (W) this;
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -238,6 +252,11 @@ public class WSlot extends WAbstractWidget {
 		return (W) this;
 	}
 
+	public ItemStack getPreviewStack() {
+		getInterface().getContainer().getPreviewStacks().putIfAbsent(getInventoryNumber(), new HashMap<>());
+		return getInterface().getContainer().getPreviewStacks().get(getInventoryNumber()).getOrDefault(getSlotNumber(), ItemStack.EMPTY);
+	}
+
 	public ItemStack getStack() {
 		try {
 			return getLinkedInventory().getInvStack(getSlotNumber());
@@ -245,17 +264,6 @@ public class WSlot extends WAbstractWidget {
 			Spinnery.LOGGER.log(Level.ERROR, "Cannot access slot " + getSlotNumber() + ", as it does exist in the inventory!");
 			return ItemStack.EMPTY;
 		}
-	}
-
-	public ItemStack getPreviewStack() {
-		getInterface().getContainer().getPreviewStacks().putIfAbsent(getInventoryNumber(), new HashMap<>());
-		return getInterface().getContainer().getPreviewStacks().get(getInventoryNumber()).getOrDefault(getSlotNumber(), ItemStack.EMPTY);
-	}
-
-	public <W extends WSlot> W setPreviewStack(ItemStack previewStack) {
-		getInterface().getContainer().getPreviewStacks().putIfAbsent(getInventoryNumber(), new HashMap<>());
-		getInterface().getContainer().getPreviewStacks().get(getInventoryNumber()).put(getSlotNumber(), previewStack);
-		return (W) this;
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -295,21 +303,9 @@ public class WSlot extends WAbstractWidget {
 		return (W) this;
 	}
 
-	public int getSlotNumber() {
-		return slotNumber;
-	}
-
-	public int getInventoryNumber() {
-		return inventoryNumber;
-	}
-
-	public <W extends WSlot> W setInventoryNumber(int inventoryNumber) {
-		this.inventoryNumber = inventoryNumber;
-		return (W) this;
-	}
-
-	public <W extends WSlot> W setSlotNumber(int slotNumber) {
-		this.slotNumber = slotNumber;
+	public <W extends WSlot> W setPreviewStack(ItemStack previewStack) {
+		getInterface().getContainer().getPreviewStacks().putIfAbsent(getInventoryNumber(), new HashMap<>());
+		getInterface().getContainer().getPreviewStacks().get(getInventoryNumber()).put(getSlotNumber(), previewStack);
 		return (W) this;
 	}
 }

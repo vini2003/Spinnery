@@ -15,11 +15,19 @@ import java.util.stream.IntStream;
 
 @SuppressWarnings("unused")
 public class Style {
-	protected final Map<String, JsonElement> properties = new HashMap<>();
+	protected static Map<Class<?>, Function<?, JsonElement>> jsonSerializers = new HashMap<>();
 
-	public static Style of(Style other) {
-		return new Style(other.properties);
+	static {
+		registerSerializer(Number.class, JanksonOps.INSTANCE::createNumeric);
+		registerSerializer(String.class, JanksonOps.INSTANCE::createString);
+		registerSerializer(Boolean.class, JanksonOps.INSTANCE::createBoolean);
+		registerSerializer(Position.class, v -> JanksonOps.INSTANCE.createIntList(IntStream.of(v.x, v.y, v.z)));
+		registerSerializer(Size.class, v -> JanksonOps.INSTANCE.createIntList(IntStream.of(v.getWidth(), v.getHeight())));
+		registerSerializer(Color.class, v -> JanksonOps.INSTANCE.createLong(v.ARGB));
+		// TODO: sided size serialization
 	}
+
+	protected final Map<String, JsonElement> properties = new HashMap<>();
 
 	public Style(Map<String, JsonElement> properties) {
 		this.properties.putAll(properties);
@@ -28,30 +36,34 @@ public class Style {
 	public Style() {
 	}
 
-	protected JsonElement getElement(String key) {
-		return properties.get(key);
+	public static Style of(Style other) {
+		return new Style(other.properties);
+	}
+
+	// GETTERS
+
+	protected static <T> void registerSerializer(Class<T> vClass, Function<T, JsonElement> serializer) {
+		jsonSerializers.put(vClass, serializer);
 	}
 
 	public boolean contains(String key) {
 		return properties.get(key) != null;
 	}
 
-	// GETTERS
-
 	public boolean asBoolean(String property) {
 		return JanksonOps.INSTANCE.getNumberValue(getElement(property)).orElse(0).intValue() == 1;
 	}
 
-	public String asString(String property) {
-		return JanksonOps.INSTANCE.getStringValue(getElement(property)).orElse("");
-	}
-
-	protected Number asNumber(String property) {
-		return JanksonOps.INSTANCE.getNumberValue(getElement(property)).orElse(0);
+	protected JsonElement getElement(String key) {
+		return properties.get(key);
 	}
 
 	public int asInt(String property) {
 		return asNumber(property).intValue();
+	}
+
+	protected Number asNumber(String property) {
+		return JanksonOps.INSTANCE.getNumberValue(getElement(property)).orElse(0);
 	}
 
 	public long asLong(String property) {
@@ -112,6 +124,8 @@ public class Style {
 		return Position.of(array.getInt(0, 0), array.getInt(1, 0), array.getInt(2, 0));
 	}
 
+	// SETTERS
+
 	public Position asAnchoredPosition(String property, WAbstractWidget anchor) {
 		JsonElement el = getElement(property);
 		if (!(el instanceof JsonArray)) return Position.of(anchor);
@@ -123,29 +137,8 @@ public class Style {
 		return new Identifier(asString(property));
 	}
 
-	// SETTERS
-
-	protected static Map<Class<?>, Function<?, JsonElement>> jsonSerializers = new HashMap<>();
-	protected static <T> void registerSerializer(Class<T> vClass, Function<T, JsonElement> serializer) {
-		jsonSerializers.put(vClass, serializer);
-	}
-	@SuppressWarnings("unchecked")
-	protected static <T> Function<T, JsonElement> getSerializer(T value) {
-		for (Class<?> serClass : jsonSerializers.keySet()) {
-			if (serClass.isAssignableFrom(value.getClass())) {
-				return (Function<T, JsonElement>) jsonSerializers.get(serClass);
-			}
-		}
-		return null;
-	}
-	static {
-		registerSerializer(Number.class, JanksonOps.INSTANCE::createNumeric);
-		registerSerializer(String.class, JanksonOps.INSTANCE::createString);
-		registerSerializer(Boolean.class, JanksonOps.INSTANCE::createBoolean);
-		registerSerializer(Position.class, v -> JanksonOps.INSTANCE.createIntList(IntStream.of(v.x, v.y, v.z)));
-		registerSerializer(Size.class, v -> JanksonOps.INSTANCE.createIntList(IntStream.of(v.getWidth(), v.getHeight())));
-		registerSerializer(Color.class, v -> JanksonOps.INSTANCE.createLong(v.ARGB));
-		// TODO: sided size serialization
+	public String asString(String property) {
+		return JanksonOps.INSTANCE.getStringValue(getElement(property)).orElse("");
 	}
 
 	public <T> Style override(String property, T value) {
@@ -157,6 +150,16 @@ public class Style {
 					property, value.getClass().getSimpleName());
 		}
 		return this;
+	}
+
+	@SuppressWarnings("unchecked")
+	protected static <T> Function<T, JsonElement> getSerializer(T value) {
+		for (Class<?> serClass : jsonSerializers.keySet()) {
+			if (serClass.isAssignableFrom(value.getClass())) {
+				return (Function<T, JsonElement>) jsonSerializers.get(serClass);
+			}
+		}
+		return null;
 	}
 
 	public Style mergeFrom(Style other) {

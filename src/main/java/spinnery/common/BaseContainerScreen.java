@@ -7,13 +7,12 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.ContainerScreen;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import org.lwjgl.glfw.GLFW;
 import spinnery.client.BaseRenderer;
+import spinnery.widget.WAbstractWidget;
 import spinnery.widget.WInterface;
 import spinnery.widget.WSlot;
-import spinnery.widget.WAbstractWidget;
 import spinnery.widget.api.WCollection;
 
 public class BaseContainerScreen<T extends BaseContainer> extends ContainerScreen<T> {
@@ -40,8 +39,8 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 		ItemStack stackA;
 
 		if (getContainer().getPreviewCursorStack().isEmpty()
-		&&	getContainer().getDragSlots(GLFW.GLFW_MOUSE_BUTTON_1).isEmpty()
-		&&  getContainer().getDragSlots(GLFW.GLFW_MOUSE_BUTTON_2).isEmpty()) {
+				&& getContainer().getDragSlots(GLFW.GLFW_MOUSE_BUTTON_1).isEmpty()
+				&& getContainer().getDragSlots(GLFW.GLFW_MOUSE_BUTTON_2).isEmpty()) {
 			stackA = getContainer().getPlayerInventory().getCursorStack();
 		} else {
 			stackA = getContainer().getPreviewCursorStack();
@@ -62,48 +61,9 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 		super.drawMouseoverTooltip(mouseX, mouseY);
 	}
 
-	@Environment(EnvType.CLIENT)
-	public WSlot getDrawSlot() {
-		return drawSlot;
-	}
-
-	@Environment(EnvType.CLIENT)
-	public T getLinkedContainer() {
-		return super.container;
-	}
-
-	@Environment(EnvType.CLIENT)
-	public int getTooltipX() {
-		return tooltipX;
-	}
-
-	@Environment(EnvType.CLIENT)
-	public <S extends BaseContainerScreen> S setTooltipX(int tooltipX) {
-		this.tooltipX = tooltipX;
-		return (S) this;
-	}
-
-	@Environment(EnvType.CLIENT)
-	public int getTooltipY() {
-		return tooltipY;
-	}
-
-	@Environment(EnvType.CLIENT)
-	public <S extends BaseContainerScreen> S setTooltipY(int tooltipY) {
-		this.tooltipY = tooltipY;
-		return (S) this;
-	}
-
-	@Environment(EnvType.CLIENT)
-	public <S extends BaseContainerScreen> S setDrawSlot(WSlot drawSlot) {
-		this.drawSlot = drawSlot;
-		return (S) this;
-	}
-
 	@Override
-	public void resize(MinecraftClient client, int width, int height) {
-		getInterface().onAlign();
-		super.resize(client, width, height);
+	@Environment(EnvType.CLIENT)
+	protected void drawBackground(float tick, int mouseX, int mouseY) {
 	}
 
 	@Override
@@ -112,16 +72,6 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 		getInterface().onMouseClicked((int) mouseX, (int) mouseY, mouseButton);
 
 		return false;
-	}
-
-	@Override
-	@Environment(EnvType.CLIENT)
-	protected void drawBackground(float tick, int mouseX, int mouseY) {
-	}
-
-	@Environment(EnvType.CLIENT)
-	public WInterface getInterface() {
-		return clientInterface;
 	}
 
 	@Override
@@ -169,6 +119,55 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 	public void tick() {
 		getInterface().tick();
 		super.tick();
+	}
+
+	@Environment(EnvType.CLIENT)
+	public WSlot getDrawSlot() {
+		return drawSlot;
+	}
+
+	@Environment(EnvType.CLIENT)
+	public T getLinkedContainer() {
+		return super.container;
+	}
+
+	@Environment(EnvType.CLIENT)
+	public int getTooltipX() {
+		return tooltipX;
+	}
+
+	@Environment(EnvType.CLIENT)
+	public <S extends BaseContainerScreen> S setTooltipX(int tooltipX) {
+		this.tooltipX = tooltipX;
+		return (S) this;
+	}
+
+	@Environment(EnvType.CLIENT)
+	public int getTooltipY() {
+		return tooltipY;
+	}
+
+	@Environment(EnvType.CLIENT)
+	public <S extends BaseContainerScreen> S setTooltipY(int tooltipY) {
+		this.tooltipY = tooltipY;
+		return (S) this;
+	}
+
+	@Environment(EnvType.CLIENT)
+	public <S extends BaseContainerScreen> S setDrawSlot(WSlot drawSlot) {
+		this.drawSlot = drawSlot;
+		return (S) this;
+	}
+
+	@Override
+	public void resize(MinecraftClient client, int width, int height) {
+		getInterface().onAlign();
+		super.resize(client, width, height);
+	}
+
+	@Environment(EnvType.CLIENT)
+	public WInterface getInterface() {
+		return clientInterface;
 	}
 
 	@Override

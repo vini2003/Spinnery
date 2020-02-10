@@ -3,8 +3,8 @@ package spinnery.client;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
-import spinnery.widget.api.Position;
 import spinnery.widget.api.Color;
+import spinnery.widget.api.Position;
 
 public class TextRenderer {
 	public static RenderPass pass() {
@@ -97,13 +97,13 @@ public class TextRenderer {
 			return this;
 		}
 
+		public RenderPass size(int size) {
+			return scale(size / 9D);
+		}
+
 		public RenderPass scale(double scale) {
 			this.scale = scale;
 			return this;
-		}
-
-		public RenderPass size(int size) {
-			return scale(size / 9D);
 		}
 
 		public RenderPass color(Color color) {

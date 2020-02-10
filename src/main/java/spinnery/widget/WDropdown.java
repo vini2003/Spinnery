@@ -5,59 +5,115 @@ import net.fabricmc.api.Environment;
 import org.lwjgl.glfw.GLFW;
 import spinnery.client.BaseRenderer;
 import spinnery.client.TextRenderer;
-import spinnery.widget.api.*;
+import spinnery.widget.api.Position;
+import spinnery.widget.api.Size;
+import spinnery.widget.api.WDelegatedEventListener;
+import spinnery.widget.api.WDrawableCollection;
+import spinnery.widget.api.WEventListener;
+import spinnery.widget.api.WLayoutElement;
+import spinnery.widget.api.WModifiableCollection;
+import spinnery.widget.api.WVirtualArea;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @SuppressWarnings("unchecked")
 @Environment(EnvType.CLIENT)
 public class WDropdown extends WAbstractWidget implements WDrawableCollection, WModifiableCollection, WDelegatedEventListener {
-	public enum HideBehavior {
-		TOGGLE,
-		ANYWHERE,
-		ANYWHERE_EXCEPT_CHILD,
-		ONLY_CHILD,
-		INSIDE,
-		INSIDE_EXCEPT_CHILD
-	}
-
 	protected Set<WAbstractWidget> widgets = new HashSet<>();
 	protected List<WLayoutElement> orderedWidgets = new ArrayList<>();
-
 	protected boolean state = false;
 	protected Size dropdownSize;
 	protected WVirtualArea toggle;
 	protected HideBehavior hideBehavior = HideBehavior.TOGGLE;
-
-	protected void updateChildren() {
-		for (WAbstractWidget widget : widgets) {
-			widget.getPosition().setOffset(0, getToggleHeight() + 2, 0);
-			widget.setHidden(!getState());
-		}
-	}
 
 	@Override
 	public Collection<? extends WEventListener> getEventDelegates() {
 		return getWidgets();
 	}
 
-	public boolean getState() {
-		return state;
+	@Override
+	public Set<WAbstractWidget> getWidgets() {
+		return widgets;
 	}
 
-	@SuppressWarnings("UnusedReturnValue")
-	public <W extends WDropdown> W setState(boolean state) {
-		this.state = state;
-		return (W) this;
+	@Override
+	public boolean contains(WAbstractWidget... widgetArray) {
+		return widgets.containsAll(Arrays.asList(widgetArray));
 	}
 
-	public HideBehavior	getHideBehavior() {
+	public HideBehavior getHideBehavior() {
 		return hideBehavior;
 	}
 
 	public <W extends WDropdown> W setHideBehavior(HideBehavior hideBehavior) {
 		this.hideBehavior = hideBehavior;
 		return (W) this;
+	}
+
+	@Override
+	public void align() {
+		super.align();
+		updateChildren();
+	}
+
+	@Override
+	public boolean updateFocus(int mouseX, int mouseY) {
+		super.updateFocus(mouseX, mouseY);
+
+		setFocus(isWithinBounds(mouseX, mouseY) && getAllWidgets().stream().noneMatch((WAbstractWidget::isFocused)));
+
+		return isFocused();
+	}
+
+	@Override
+	public void draw() {
+		if (isHidden()) {
+			return;
+		}
+
+		int x = getX();
+		int y = getY();
+		int z = getZ();
+
+		int sX = getWidth();
+		int sY = getHeight();
+
+		BaseRenderer.drawPanel(x, y, z, sX, sY + 1.75,
+				getStyle().asColor("shadow"), getStyle().asColor("background"),
+				getStyle().asColor("highlight"), getStyle().asColor("outline"));
+
+		if (hasLabel()) {
+			TextRenderer.pass().shadow(isLabelShadowed())
+					.text(getLabel()).at(x + sX / 2 - TextRenderer.width(getLabel()) / 2, y + 6, z)
+					.color(getStyle().asColor("label.color")).shadowColor(getStyle().asColor("label.shadow_color")).render();
+
+			if (getState()) {
+				BaseRenderer.drawRectangle(x, y + 16, z, sX, 1, getStyle().asColor("outline"));
+				BaseRenderer.drawRectangle(x + 1, y + 17, z, sX - 2, 0.75, getStyle().asColor("shadow"));
+			}
+		}
+
+		if (getState()) {
+			for (WLayoutElement widgetC : getOrderedWidgets()) {
+				widgetC.draw();
+			}
+		}
+	}
+
+	@Override
+	public int getHeight() {
+		return getToggleHeight() + (state ? dropdownSize.getHeight() : 0);
+	}
+
+	@Override
+	public int getWidth() {
+		return Math.max(getToggleWidth(), state ? dropdownSize.getWidth() : 0);
 	}
 
 	@Override
@@ -97,42 +153,29 @@ public class WDropdown extends WAbstractWidget implements WDrawableCollection, W
 		}
 	}
 
-	@Override
-	public void align() {
-		super.align();
-		updateChildren();
+	public boolean getState() {
+		return state;
 	}
 
-	@Override
-	public boolean updateFocus(int mouseX, int mouseY) {
-		super.updateFocus(mouseX, mouseY);
-
-		setFocus(isWithinBounds(mouseX, mouseY) && getAllWidgets().stream().noneMatch((WAbstractWidget::isFocused)));
-
-		return isFocused();
-	}
-
-	@Override
-	public Set<WAbstractWidget> getWidgets() {
-		return widgets;
-	}
-
-	@Override
-	public int getWidth() {
-		return Math.max(getToggleWidth(), state ? dropdownSize.getWidth() : 0);
-	}
-
-	@Override
-	public int getHeight() {
-		return getToggleHeight() + (state ? dropdownSize.getHeight() : 0);
-	}
-
-	public int getToggleWidth() {
-		return super.getWidth();
+	protected void updateChildren() {
+		for (WAbstractWidget widget : widgets) {
+			widget.getPosition().setOffset(0, getToggleHeight() + 2, 0);
+			widget.setHidden(!getState());
+		}
 	}
 
 	public int getToggleHeight() {
 		return super.getHeight();
+	}
+
+	@SuppressWarnings("UnusedReturnValue")
+	public <W extends WDropdown> W setState(boolean state) {
+		this.state = state;
+		return (W) this;
+	}
+
+	public int getToggleWidth() {
+		return super.getWidth();
 	}
 
 	public Size getDropdownSize() {
@@ -145,38 +188,10 @@ public class WDropdown extends WAbstractWidget implements WDrawableCollection, W
 	}
 
 	@Override
-	public void draw() {
-		if (isHidden()) {
-			return;
-		}
-
-		int x = getX();
-		int y = getY();
-		int z = getZ();
-
-		int sX = getWidth();
-		int sY = getHeight();
-
-		BaseRenderer.drawPanel(x, y, z, sX, sY + 1.75,
-				getStyle().asColor("shadow"), getStyle().asColor("background"),
-				getStyle().asColor("highlight"), getStyle().asColor("outline"));
-
-		if (hasLabel()) {
-			TextRenderer.pass().shadow(isLabelShadowed())
-					.text(getLabel()).at(x + sX / 2 - TextRenderer.width(getLabel()) / 2, y + 6, z)
-					.color(getStyle().asColor("label.color")).shadowColor(getStyle().asColor("label.shadow_color")).render();
-
-			if (getState()) {
-				BaseRenderer.drawRectangle(x, y + 16, z, sX, 1, getStyle().asColor("outline"));
-				BaseRenderer.drawRectangle(x + 1, y + 17, z, sX - 2, 0.75, getStyle().asColor("shadow"));
-			}
-		}
-
-		if (getState()) {
-			for (WLayoutElement widgetC : getOrderedWidgets()) {
-				widgetC.draw();
-			}
-		}
+	public void add(WAbstractWidget... widgetArray) {
+		widgets.addAll(Arrays.asList(widgetArray));
+		updateChildren();
+		onLayoutChange();
 	}
 
 	@Override
@@ -199,21 +214,18 @@ public class WDropdown extends WAbstractWidget implements WDrawableCollection, W
 	}
 
 	@Override
-	public void add(WAbstractWidget... widgetArray) {
-		widgets.addAll(Arrays.asList(widgetArray));
-		updateChildren();
-		onLayoutChange();
-	}
-
-	@Override
 	public void remove(WAbstractWidget... widgetArray) {
 		widgets.removeAll(Arrays.asList(widgetArray));
 		updateChildren();
 		onLayoutChange();
 	}
 
-	@Override
-	public boolean contains(WAbstractWidget... widgetArray) {
-		return widgets.containsAll(Arrays.asList(widgetArray));
+	public enum HideBehavior {
+		TOGGLE,
+		ANYWHERE,
+		ANYWHERE_EXCEPT_CHILD,
+		ONLY_CHILD,
+		INSIDE,
+		INSIDE_EXCEPT_CHILD
 	}
 }
