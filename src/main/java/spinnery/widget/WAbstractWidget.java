@@ -430,6 +430,7 @@ public abstract class WAbstractWidget implements Tickable,
 	public void onMouseMoved(int mouseX, int mouseY) {
 		if (this instanceof WDelegatedEventListener) {
 			for (WEventListener widget : ((WDelegatedEventListener) this).getEventDelegates()) {
+				if (widget instanceof WAbstractWidget) ((WAbstractWidget) widget).updateFocus(mouseX, mouseY);
 				if (EventUtilities.canReceiveMouse(widget)) widget.onMouseMoved(mouseX, mouseY);
 			}
 		}
