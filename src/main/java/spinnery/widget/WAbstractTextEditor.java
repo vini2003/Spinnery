@@ -254,6 +254,19 @@ public abstract class WAbstractTextEditor extends WAbstractWidget implements WPa
         return setText(text.asFormattedString());
     }
 
+    public String getText() {
+        return text;
+    }
+
+    public List<String> getLines() {
+        return lines;
+    }
+
+    public String getLine(int index) {
+        if (index < 0 || index > lines.size() - 1) return "";
+        return lines.get(index);
+    }
+
     protected void insertText(String insert) {
         int cursorIndex = getStringIndex(cursor);
         setText(text.substring(0, cursorIndex) + insert + text.substring(cursorIndex));
