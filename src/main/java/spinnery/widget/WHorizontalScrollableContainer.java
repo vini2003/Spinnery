@@ -150,25 +150,6 @@ public class WHorizontalScrollableContainer extends WAbstractWidget implements W
     }
 
     @Override
-    public void center() {
-        int oldX = getX();
-        int oldY = getY();
-
-        super.center();
-
-        int newX = getX();
-        int newY = getY();
-
-        int offsetX = newX - oldX;
-        int offsetY = newY - oldY;
-
-        for (WAbstractWidget widget : getWidgets()) {
-            widget.setX(widget.getX() + offsetX);
-            widget.setY(widget.getY() + offsetY);
-        }
-    }
-
-    @Override
     public void draw() {
         if (isHidden()) {
             return;

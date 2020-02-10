@@ -124,26 +124,21 @@ public abstract class WAbstractWidget implements Tickable,
 
 	@Environment(EnvType.CLIENT)
 	public void center() {
-		setPosition(Position.of(getParent(),
-				getParent().getWidth() / 2 - getWidth() / 2,
-				getParent().getHeight() / 2 - getHeight() / 2,
-				getPosition().getRelativeZ()));
+		setPosition(Position.of(getPosition())
+				.setX(getParent().getX() + getParent().getWidth() / 2 - getWidth() / 2)
+				.setY(getParent().getY() + getParent().getHeight() / 2 - getHeight() / 2));
 	}
 
 	@Environment(EnvType.CLIENT)
 	public void centerX() {
-		setPosition(Position.of(getParent(),
-				getParent().getWidth() / 2 - getWidth() / 2,
-				getPosition().getRelativeY(),
-				getPosition().getRelativeZ()));
+		setPosition(Position.of(getPosition())
+				.setX(getParent().getX() + getParent().getWidth() / 2 - getWidth() / 2));
 	}
 
 	@Environment(EnvType.CLIENT)
 	public void centerY() {
-		setPosition(Position.of(getParent(),
-				getPosition().getRelativeX(),
-				getParent().getHeight() / 2 - getHeight() / 2,
-				getPosition().getRelativeZ()));
+		setPosition(Position.of(getPosition())
+				.setY(getParent().getY() + getParent().getHeight() / 2 - getHeight() / 2));
 	}
 
 	// Focus helpers

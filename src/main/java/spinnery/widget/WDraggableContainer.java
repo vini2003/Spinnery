@@ -124,25 +124,6 @@ public class WDraggableContainer extends WAbstractWidget implements WDrawableCol
 
     // Layout
 
-    @Override
-    public void center() {
-        int oldX = getX();
-        int oldY = getY();
-
-        super.center();
-
-        int newX = getX();
-        int newY = getY();
-
-        int offsetX = newX - oldX;
-        int offsetY = newY - oldY;
-
-        for (WAbstractWidget widget : getWidgets()) {
-            widget.setX(widget.getX() + offsetX);
-            widget.setY(widget.getY() + offsetY);
-        }
-    }
-
     public void updateChildren() {
         for (WAbstractWidget w : getWidgets()) {
             w.getPosition().setOffset(-xOffset, -yOffset, 0);
