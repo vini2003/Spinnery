@@ -5,8 +5,9 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.LiteralText;
 import org.lwjgl.glfw.GLFW;
 import spinnery.widget.WInterface;
+import spinnery.widget.api.WInterfaceProvider;
 
-public class BaseScreen extends Screen {
+public class BaseScreen extends Screen implements WInterfaceProvider {
 	protected final WInterface screenInterface = new WInterface();
 
 	private boolean isPauseScreen = false;
@@ -17,10 +18,11 @@ public class BaseScreen extends Screen {
 
 	@Override
 	public void render(int mouseX, int mouseY, float tick) {
-		getScreenInterface().draw();
+		getInterface().draw();
 	}
 
-	public WInterface getScreenInterface() {
+	@Override
+	public WInterface getInterface() {
 		return screenInterface;
 	}
 
@@ -38,7 +40,7 @@ public class BaseScreen extends Screen {
 
 	@Override
 	public void tick() {
-		getScreenInterface().tick();
+		getInterface().tick();
 	}
 
 	@Override

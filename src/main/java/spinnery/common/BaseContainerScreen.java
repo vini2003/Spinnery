@@ -14,8 +14,9 @@ import spinnery.widget.WAbstractWidget;
 import spinnery.widget.WInterface;
 import spinnery.widget.WSlot;
 import spinnery.widget.api.WCollection;
+import spinnery.widget.api.WInterfaceProvider;
 
-public class BaseContainerScreen<T extends BaseContainer> extends ContainerScreen<T> {
+public class BaseContainerScreen<T extends BaseContainer> extends ContainerScreen<T> implements WInterfaceProvider {
 	protected final WInterface clientInterface;
 	protected int tooltipX = 0;
 	protected int tooltipY = 0;
@@ -165,6 +166,7 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 		super.resize(client, width, height);
 	}
 
+	@Override
 	@Environment(EnvType.CLIENT)
 	public WInterface getInterface() {
 		return clientInterface;

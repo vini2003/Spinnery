@@ -28,11 +28,11 @@ public class InGameHudScreen {
 		onInitialize.removeAll(Arrays.asList(r));
 	}
 
-	public static WInterface getHolder() {
+	public static WInterface getInterface() {
 		return hudInterface;
 	}
 
-	public static InGameHud getInGameHude() {
+	public static InGameHud getInGameHud() {
 		return inGameHudCache;
 	}
 
