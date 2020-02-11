@@ -80,6 +80,7 @@ public class WDraggableContainer extends WAbstractWidget implements WDrawableCol
 
 	@Override
 	public void onLayoutChange() {
+		super.onLayoutChange();
 		recalculateCache();
 	}
 

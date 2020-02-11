@@ -1,5 +1,7 @@
 package spinnery.widget.api;
 
+import java.util.Objects;
+
 /**
  * Data class representing a width/height pair.
  */
@@ -51,5 +53,19 @@ public class Size implements WSized {
 	public Size setHeight(int height) {
 		this.height = height;
 		return this;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Size size = (Size) o;
+		return getWidth() == size.getWidth() &&
+				getHeight() == size.getHeight();
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(getWidth(), getHeight());
 	}
 }

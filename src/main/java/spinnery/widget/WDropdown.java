@@ -196,6 +196,7 @@ public class WDropdown extends WAbstractWidget implements WDrawableCollection, W
 
 	@Override
 	public void onLayoutChange() {
+		super.onLayoutChange();
 		toggle = new WVirtualArea(Position.of(this), Size.of(getToggleWidth(), getToggleHeight()));
 		updateChildren();
 		recalculateCache();

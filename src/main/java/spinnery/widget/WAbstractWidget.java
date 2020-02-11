@@ -171,6 +171,11 @@ public abstract class WAbstractWidget implements Tickable,
 		return parent;
 	}
 
+	@Override
+	public void onLayoutChange() {
+		if (parent != null) parent.onLayoutChange();
+	}
+
 	// Focus helpers
 
 	public <W extends WAbstractWidget> W setParent(WLayoutElement parent) {
@@ -202,8 +207,10 @@ public abstract class WAbstractWidget implements Tickable,
 
 	@Environment(EnvType.CLIENT)
 	public <W extends WAbstractWidget> W setPosition(Position position) {
-		this.position = position;
-		onLayoutChange();
+		if (!this.position.equals(position)) {
+			this.position = position;
+			onLayoutChange();
+		}
 		return (W) this;
 	}
 
@@ -243,8 +250,10 @@ public abstract class WAbstractWidget implements Tickable,
 
 	@Environment(EnvType.CLIENT)
 	public <W extends WAbstractWidget> W setSize(Size size) {
-		this.size = size;
-		onLayoutChange();
+		if (!this.size.equals(size)) {
+			this.size = size;
+			onLayoutChange();
+		}
 		return (W) this;
 	}
 

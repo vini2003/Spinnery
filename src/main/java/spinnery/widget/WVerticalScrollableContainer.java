@@ -156,6 +156,7 @@ public class WVerticalScrollableContainer extends WAbstractWidget implements WDr
 
 	@Override
 	public void onLayoutChange() {
+		super.onLayoutChange();
 		scrollToStart();
 		updateScrollbar();
 		recalculateCache();

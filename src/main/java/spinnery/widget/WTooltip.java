@@ -69,6 +69,7 @@ public class WTooltip extends WAbstractWidget implements WDrawableCollection, WM
 
 	@Override
 	public void onLayoutChange() {
+		super.onLayoutChange();
 		recalculateCache();
 	}
 

@@ -154,6 +154,7 @@ public class WHorizontalScrollableContainer extends WAbstractWidget implements W
 
 	@Override
 	public void onLayoutChange() {
+		super.onLayoutChange();
 		scrollToStart();
 		updateScrollbar();
 		recalculateCache();

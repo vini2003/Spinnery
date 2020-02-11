@@ -55,6 +55,7 @@ public class WPanel extends WAbstractWidget implements WModifiableCollection, WD
 
 	@Override
 	public void onLayoutChange() {
+		super.onLayoutChange();
 		recalculateCache();
 	}
 

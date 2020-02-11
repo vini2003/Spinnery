@@ -157,6 +157,7 @@ public class WTabHolder extends WAbstractWidget implements WCollection, WDelegat
 
 		@Override
 		public void onLayoutChange() {
+			super.onLayoutChange();
 			recalculateCache();
 		}
 
