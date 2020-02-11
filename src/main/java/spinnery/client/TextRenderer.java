@@ -61,6 +61,7 @@ public class TextRenderer {
 
 	public static class RenderPass {
 		private String text;
+		private String shadowText;
 		private int x;
 		private int y;
 		private int z;
@@ -73,16 +74,19 @@ public class TextRenderer {
 
 		public RenderPass text(String text) {
 			this.text = text;
+			this.shadowText = text.replaceAll("§[0-9a-f]", "");
 			return this;
 		}
 
 		public RenderPass text(char c) {
 			this.text = String.valueOf(c);
+			this.shadowText = text;
 			return this;
 		}
 
 		public RenderPass text(Text text) {
 			this.text = text.asFormattedString();
+			this.shadowText = this.text.replaceAll("§[0-9a-f]", "");
 			return this;
 		}
 
@@ -147,10 +151,10 @@ public class TextRenderer {
 			RenderSystem.scaled(scale, scale, 1);
 			if (maxWidth != null) {
 				if (shadow)
-					getTextRenderer(font).drawTrimmed(text, x + 1, y + 1, maxWidth, shadowColor);
+					getTextRenderer(font).drawTrimmed(shadowText, x + 1, y + 1, maxWidth, shadowColor);
 				getTextRenderer(font).drawTrimmed(text, x, y, maxWidth, color);
 			} else {
-				if (shadow) getTextRenderer(font).draw(text, x + 1, y + 1, shadowColor);
+				if (shadow) getTextRenderer(font).draw(shadowText, x + 1, y + 1, shadowColor);
 				getTextRenderer(font).draw(text, x, y, color);
 			}
 			RenderSystem.popMatrix();
