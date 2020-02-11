@@ -50,6 +50,11 @@ public class WHorizontalScrollableContainer extends WAbstractWidget implements W
 			return;
 		}
 
+		if (getUnderlyingWidth() <= getVisibleWidth()) {
+			scrollToStart();
+			return;
+		}
+
 		boolean hitLeft = xOffset - deltaX < 0;
 		boolean hitRight = xOffset - deltaX > getMaxOffsetX();
 
@@ -121,7 +126,9 @@ public class WHorizontalScrollableContainer extends WAbstractWidget implements W
 	@Override
 	public Size getVisibleSize() {
 		return Size.of(getWidth(), getHeight() - (!scrollbar.isHidden() ? scrollbar.getHeight() : 0));
-	}	@Override
+	}
+
+	@Override
 	public int getStartAnchorX() {
 		return getX();
 	}
@@ -150,7 +157,9 @@ public class WHorizontalScrollableContainer extends WAbstractWidget implements W
 		scrollToStart();
 		updateScrollbar();
 		recalculateCache();
-	}	@Override
+	}
+
+	@Override
 	public int getStartOffsetX() {
 		return xOffset;
 	}
@@ -249,10 +258,4 @@ public class WHorizontalScrollableContainer extends WAbstractWidget implements W
 			super.onMouseScrolled(mouseX, mouseY, deltaY);
 		}
 	}
-
-
-
-
-
-
 }

@@ -50,6 +50,11 @@ public class WVerticalScrollableContainer extends WAbstractWidget implements WDr
 			return;
 		}
 
+		if (getUnderlyingHeight() <= getVisibleHeight()) {
+			scrollToStart();
+			return;
+		}
+
 		boolean hitTop = yOffset - deltaY < 0;
 		boolean hitBottom = yOffset - deltaY > getMaxOffsetY();
 
@@ -121,14 +126,18 @@ public class WVerticalScrollableContainer extends WAbstractWidget implements WDr
 	@Override
 	public Size getVisibleSize() {
 		return Size.of(getWidth() - (!scrollbar.isHidden() ? scrollbar.getWidth() : 0), getHeight());
-	}	@Override
+	}
+
+	@Override
 	public int getStartAnchorY() {
 		return getY();
 	}
 
 	public int getMaxOffsetY() {
 		return getMaxY() - getStartAnchorY();
-	}	@Override
+	}
+
+	@Override
 	public int getEndAnchorY() {
 		if (getVisibleHeight() > getUnderlyingHeight()) return getStartAnchorY();
 		return getStartAnchorY() - (getUnderlyingHeight() - getVisibleHeight());
@@ -150,7 +159,9 @@ public class WVerticalScrollableContainer extends WAbstractWidget implements WDr
 		scrollToStart();
 		updateScrollbar();
 		recalculateCache();
-	}	@Override
+	}
+
+	@Override
 	public int getStartOffsetY() {
 		return yOffset;
 	}
@@ -248,10 +259,4 @@ public class WVerticalScrollableContainer extends WAbstractWidget implements WDr
 		}
 		super.onMouseScrolled(mouseX, mouseY, deltaY);
 	}
-
-
-
-
-
-
 }

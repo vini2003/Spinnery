@@ -70,7 +70,9 @@ public class WDraggableContainer extends WAbstractWidget implements WDrawableCol
 	public void add(WAbstractWidget... widgets) {
 		this.widgets.addAll(Arrays.asList(widgets));
 		onLayoutChange();
-	}	@Override
+	}
+
+	@Override
 	public int getEndAnchorX() {
 		if (getVisibleWidth() > getUnderlyingWidth()) return getStartAnchorX();
 		return getStartAnchorX() - (getUnderlyingWidth() - getVisibleWidth());
@@ -79,7 +81,9 @@ public class WDraggableContainer extends WAbstractWidget implements WDrawableCol
 	@Override
 	public void onLayoutChange() {
 		recalculateCache();
-	}	@Override
+	}
+
+	@Override
 	public int getEndAnchorY() {
 		if (getVisibleHeight() > getUnderlyingHeight()) return getStartAnchorY();
 		return getStartAnchorY() - (getUnderlyingHeight() - getVisibleHeight());
@@ -90,7 +94,9 @@ public class WDraggableContainer extends WAbstractWidget implements WDrawableCol
 		orderedWidgets = new ArrayList<>(getWidgets());
 		Collections.sort(orderedWidgets);
 		Collections.reverse(orderedWidgets);
-	}	@Override
+	}
+
+	@Override
 	public int getStartOffsetX() {
 		return xOffset;
 	}
@@ -98,7 +104,9 @@ public class WDraggableContainer extends WAbstractWidget implements WDrawableCol
 	@Override
 	public List<WLayoutElement> getOrderedWidgets() {
 		return orderedWidgets;
-	}	@Override
+	}
+
+	@Override
 	public int getStartOffsetY() {
 		return yOffset;
 	}
@@ -197,16 +205,4 @@ public class WDraggableContainer extends WAbstractWidget implements WDrawableCol
 	public boolean contains(WAbstractWidget... widgets) {
 		return this.widgets.containsAll(Arrays.asList(widgets));
 	}
-
-
-
-
-
-
-
-
-
-
-
-
 }
