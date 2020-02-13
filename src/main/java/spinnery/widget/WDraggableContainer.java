@@ -161,6 +161,7 @@ public class WDraggableContainer extends WAbstractWidget implements WDrawableCol
 			clickPosition.setFirst(mouseX);
 			clickPosition.setSecond(mouseY);
 		}
+		super.onMouseClicked(mouseX, mouseY, mouseButton);
 	}
 
 	@Override

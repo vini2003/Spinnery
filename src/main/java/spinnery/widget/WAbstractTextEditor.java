@@ -173,6 +173,7 @@ public abstract class WAbstractTextEditor extends WAbstractWidget implements WPa
 			clearSelection();
 		}
 		cursorTick = 20;
+		super.onKeyPressed(keyPressed, character, keyModifier);
 	}
 
 	@Override
@@ -192,6 +193,7 @@ public abstract class WAbstractTextEditor extends WAbstractWidget implements WPa
 			onCursorMove();
 		}
 		cursorTick = 20;
+		super.onCharTyped(character, keyCode);
 	}
 
 	@Override
@@ -209,6 +211,7 @@ public abstract class WAbstractTextEditor extends WAbstractWidget implements WPa
 				if (hasSelection()) clearSelection();
 			}
 		}
+		super.onMouseClicked(mouseX, mouseY, mouseButton);
 	}
 
 	@Override
@@ -239,6 +242,7 @@ public abstract class WAbstractTextEditor extends WAbstractWidget implements WPa
 			}
 			if (cursorUpdated) onCursorMove();
 		}
+		super.onMouseDragged(mouseX, mouseY, mouseButton, deltaX, deltaY);
 	}
 
 	@Override
@@ -254,6 +258,7 @@ public abstract class WAbstractTextEditor extends WAbstractWidget implements WPa
 		yOffset += deltaY * cH;
 		if (yOffset > 0) yOffset = 0;
 		if (yOffset < -textHeight) yOffset = -textHeight;
+		super.onMouseScrolled(mouseX, mouseY, deltaY);
 	}
 
 	protected int getTextHeight() {
