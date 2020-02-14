@@ -16,7 +16,7 @@ public class WHorizontalBar extends WAbstractBar {
 
 		int x = getX();
 		int y = getY();
-		int z = getZ() + 25;
+		int z = getZ();
 
 		int sX = getWidth();
 		int sY = getHeight();

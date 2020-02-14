@@ -373,8 +373,19 @@ public abstract class WAbstractWidget implements Tickable,
 	public void onMouseMoved(int mouseX, int mouseY) {
 		if (this instanceof WDelegatedEventListener) {
 			for (WEventListener widget : ((WDelegatedEventListener) this).getEventDelegates()) {
-				if (widget instanceof WAbstractWidget)
-					((WAbstractWidget) widget).updateFocus(mouseX, mouseY);
+				if (widget instanceof WAbstractWidget) {
+					WAbstractWidget updateWidget = ((WAbstractWidget) widget);
+					boolean then = updateWidget.hasFocus;
+					updateWidget.updateFocus(mouseX, mouseY);
+					boolean now = updateWidget.hasFocus;
+
+					if (then && !now) {
+						updateWidget.onFocusReleased();
+					} else if (!then && now) {
+						updateWidget.onFocusGained();
+					}
+
+				}
 				if (EventUtilities.canReceiveMouse(widget)) widget.onMouseMoved(mouseX, mouseY);
 			}
 		}
@@ -409,13 +420,10 @@ public abstract class WAbstractWidget implements Tickable,
 	public void setFocus(boolean hasFocus) {
 		if (!isFocused() && hasFocus) {
 			this.hasFocus = hasFocus;
-			onFocusGained();
 		}
 		if (isFocused() && !hasFocus) {
 			this.hasFocus = hasFocus;
-			onFocusReleased();
 		}
-
 	}
 
 	// Event runners

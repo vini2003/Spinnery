@@ -47,11 +47,11 @@ public class TextRenderer {
 	}
 
 	public static int width(Text text, Font font) {
-		return width(text.asString(), font);
+		return width(text.asFormattedString(), font);
 	}
 
 	public static int width(Text text) {
-		return width(text.asString(), Font.DEFAULT);
+		return width(text.asFormattedString(), Font.DEFAULT);
 	}
 
 	public enum Font {
