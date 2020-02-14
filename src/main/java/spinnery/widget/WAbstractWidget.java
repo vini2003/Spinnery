@@ -230,7 +230,7 @@ public abstract class WAbstractWidget implements Tickable,
 
 	@Environment(EnvType.CLIENT)
 	public <W extends WAbstractWidget> W overrideStyle(String property, Object value) {
-		getStyle().override(property, value);
+		styleOverrides.override(property, value);
 		return (W) this;
 	}
 
