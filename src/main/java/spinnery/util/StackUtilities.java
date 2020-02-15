@@ -9,9 +9,10 @@ import net.minecraft.util.registry.Registry;
 
 public class StackUtilities {
 	/**
+	 * Write item stack to compound NBT with support for counts greater than 64.
+	 *
 	 * @param stack ItemStack CompoundTag will be written from
 	 * @return ItemStack from tag
-	 * @reason Support >64 ItemStack#count.
 	 */
 	public static CompoundTag write(ItemStack stack) {
 		Identifier identifier = Registry.ITEM.getId(stack.getItem());
@@ -28,9 +29,10 @@ public class StackUtilities {
 	}
 
 	/**
+	 * Read item stack from compound NBT with support for counts greater than 64.
+	 *
 	 * @param tag CompoundTag ItemStack will be read from
 	 * @return ItemStack from tag
-	 * @reason Support >64 ItemStack#count.
 	 */
 	public static ItemStack read(CompoundTag tag) {
 		Item item = Registry.ITEM.get(new Identifier(tag.getString("id")));
@@ -51,12 +53,12 @@ public class StackUtilities {
 	}
 
 	/**
+	 * Support merging stacks with customized maximum count.
 	 * @param stackA Source ItemStack
 	 * @param stackB Destination ItemStack
 	 * @param maxA   Max. count of stackA
 	 * @param maxB   Max. count of stackB
-	 * @return Results
-	 * @reason Support merge of stacks with customized maximum count.
+	 * @return Resulting item stacks
 	 */
 	public static Pair<ItemStack, ItemStack> clamp(ItemStack stackA, ItemStack stackB, int maxA, int maxB) {
 		Item itemA = stackA.getItem();

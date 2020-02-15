@@ -1,5 +1,8 @@
 package spinnery.widget.api;
 
+/**
+ * Generic interface providing standard event hook methods.
+ */
 public interface WEventListener {
 	void onKeyPressed(int keyPressed, int character, int keyModifier);
 
@@ -23,5 +26,8 @@ public interface WEventListener {
 
 	void onDrawTooltip(int mouseX, int mouseY);
 
+	/**
+	 * Hook method called on game GUI alignment, e.g. when the game window is resized.
+	 */
 	void onAlign();
 }
