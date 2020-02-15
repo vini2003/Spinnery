@@ -285,6 +285,8 @@ public class BaseContainer extends Container implements Tickable {
 
 				for (WAbstractWidget widget : getInterface().getAllWidgets()) {
 					if (widget instanceof WSlot && StackUtilities.equal(((WSlot) widget).getStack(), stackC)) {
+						if (((WSlot) widget).isLocked()) continue;
+
 						StackUtilities.clamp(((WSlot) widget).getStack(), stackC, ((WSlot) widget).getMaxCount(), stackC.getMaxCount());
 					}
 				}

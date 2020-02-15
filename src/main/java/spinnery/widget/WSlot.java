@@ -327,7 +327,11 @@ public class WSlot extends WAbstractWidget {
 
 	public ItemStack getStack() {
 		try {
-			return getLinkedInventory().getInvStack(getSlotNumber());
+			ItemStack stackA = getLinkedInventory().getInvStack(getSlotNumber());;
+			if (!isOverrideMaximumCount()) {
+				setMaximumCount(stackA.getMaxCount());
+			}
+			return stackA;
 		} catch (ArrayIndexOutOfBoundsException exception) {
 			Spinnery.LOGGER.log(Level.ERROR, "Cannot access slot " + getSlotNumber() + ", as it does exist in the inventory!");
 			return ItemStack.EMPTY;
