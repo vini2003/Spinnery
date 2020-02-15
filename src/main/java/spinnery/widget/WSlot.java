@@ -7,7 +7,9 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tag.Tag;
 import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.Level;
 import spinnery.Spinnery;
@@ -18,7 +20,10 @@ import spinnery.widget.api.Position;
 import spinnery.widget.api.Size;
 import spinnery.widget.api.WModifiableCollection;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 import static net.fabricmc.fabric.api.network.ClientSidePacketRegistry.INSTANCE;
 import static spinnery.registry.NetworkRegistry.SLOT_CLICK_PACKET;
@@ -38,11 +43,17 @@ public class WSlot extends WAbstractWidget {
 	public static final int RIGHT = 1;
 	public static final int MIDDLE = 2;
 	protected int slotNumber;
-	protected Identifier previewTexture;
+	protected int inventoryNumber;
 	protected int maximumCount = 0;
 	protected boolean overrideMaximumCount = false;
-	protected int inventoryNumber;
 	protected boolean skipRelease = false;
+	protected boolean isLocked = false;
+	protected boolean isWhitelist = false;
+	protected Identifier previewTexture;
+	protected List<Item> acceptItems = new ArrayList<>();
+	protected List<Item> denyItems = new ArrayList<>();
+	protected List<Tag<Item>> acceptTags = new ArrayList<>();
+	protected List<Tag<Item>> denyTags = new ArrayList<>();
 
 	@Environment(EnvType.CLIENT)
 	public static void addPlayerInventory(Position position, Size size, WModifiableCollection parent) {
@@ -76,6 +87,54 @@ public class WSlot extends WAbstractWidget {
 						.setInventoryNumber(inventoryNumber);
 			}
 		}
+	}
+
+	public boolean isWhitelist() {
+		return isWhitelist;
+	}
+
+	public <W extends WSlot> W setWhitelist() {
+		this.isWhitelist = true;
+		return (W) this;
+	}
+
+	public <W extends WSlot> W setBlacklist() {
+		this.isWhitelist = false;
+		return (W) this;
+	}
+
+	public <W extends WSlot> W accept(Tag<Item>... tags) {
+		this.acceptTags.addAll(Arrays.asList(tags));
+		return (W) this;
+	}
+
+	public <W extends WSlot> W accept(Item... stacks) {
+		this.acceptItems.addAll(Arrays.asList(stacks));
+		return (W) this;
+	}
+
+	public <W extends WSlot> W refuse(Tag<Item>... tags) {
+		this.denyTags.addAll(Arrays.asList(tags));
+		return (W) this;
+	}
+
+	public <W extends WSlot> W refuse(Item... items) {
+		this.denyItems.addAll(Arrays.asList(items));
+		return (W) this;
+	}
+
+	public boolean accepts(ItemStack... stacks) {
+		if (isWhitelist) {
+			return Arrays.stream(stacks).allMatch(stack ->
+					(acceptItems.contains(stack.getItem()) || acceptTags.stream().anyMatch(tag -> tag.contains(stack.getItem()))));
+		} else {
+			return Arrays.stream(stacks).noneMatch(stack ->
+					(denyItems.contains(stack.getItem()) || denyTags.stream().anyMatch(tag -> tag.contains(stack.getItem()))));
+		}
+	}
+
+	public boolean refuses(ItemStack... stacks) {
+		return !accepts(stacks);
 	}
 
 	public int getMaxCount() {
@@ -121,7 +180,7 @@ public class WSlot extends WAbstractWidget {
 	@Override
 	@Environment(EnvType.CLIENT)
 	public void onMouseReleased(int mouseX, int mouseY, int button) {
-		if (button == MIDDLE) return;
+		if (button == MIDDLE || isLocked()) return;
 
 		PlayerEntity player = getInterface().getContainer().getPlayerInventory().player;
 		BaseContainer container = getInterface().getContainer();
@@ -154,7 +213,7 @@ public class WSlot extends WAbstractWidget {
 	@Override
 	@Environment(EnvType.CLIENT)
 	public void onMouseClicked(int mouseX, int mouseY, int button) {
-		if (!isFocused()) return;
+		if (!isFocused() || isLocked()) return;
 
 		PlayerEntity player = getInterface().getContainer().getPlayerInventory().player;
 		BaseContainer container = getInterface().getContainer();
@@ -192,7 +251,7 @@ public class WSlot extends WAbstractWidget {
 	@Override
 	@Environment(EnvType.CLIENT)
 	public void onMouseDragged(int mouseX, int mouseY, int button, double deltaX, double deltaY) {
-		if (!isFocused() || button == MIDDLE) return;
+		if (!isFocused() || button == MIDDLE || isLocked()) return;
 
 		PlayerEntity player = getInterface().getContainer().getPlayerInventory().player;
 		BaseContainer container = getInterface().getContainer();
@@ -216,6 +275,15 @@ public class WSlot extends WAbstractWidget {
 		}
 
 		super.onMouseDragged(mouseX, mouseY, button, deltaX, deltaY);
+	}
+
+	public boolean isLocked() {
+		return isLocked;
+	}
+
+	public <W extends WSlot> W setLocked(boolean isLocked) {
+		this.isLocked = isLocked;
+		return (W) this;
 	}
 
 	public int getSlotNumber() {

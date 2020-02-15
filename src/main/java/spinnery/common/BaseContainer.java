@@ -38,12 +38,12 @@ public class BaseContainer extends Container implements Tickable {
 	protected Set<WSlot> singleSlots = new HashSet<>();
 	protected Map<Integer, Map<Integer, ItemStack>> previewStacks = new HashMap<>();
 	protected ItemStack previewCursorStack = ItemStack.EMPTY;
-	protected World linkedWorld;
+	protected World world;
 
 	public BaseContainer(int synchronizationID, PlayerInventory linkedPlayerInventory) {
 		super(null, synchronizationID);
 		getInventories().put(PLAYER_INVENTORY, linkedPlayerInventory);
-		setLinkedWorld(linkedPlayerInventory.player.world);
+		setWorld(linkedPlayerInventory.player.world);
 		serverInterface = new WInterface(this);
 	}
 
@@ -51,8 +51,8 @@ public class BaseContainer extends Container implements Tickable {
 		return linkedInventories;
 	}
 
-	public <C extends BaseContainer> C setLinkedWorld(World linkedWorld) {
-		this.linkedWorld = linkedWorld;
+	public <C extends BaseContainer> C setWorld(World world) {
+		this.world = world;
 		return (C) this;
 	}
 
@@ -146,6 +146,8 @@ public class BaseContainer extends Container implements Tickable {
 		for (Integer number : slots.keySet()) {
 			WSlot slotA = slots.get(number);
 
+			if (slotA.refuses(stackA)) continue;
+
 			ItemStack stackB = ItemStack.EMPTY;
 
 			if (action == Action.DRAG_SINGLE || action == Action.DRAG_SPLIT) {
@@ -153,7 +155,6 @@ public class BaseContainer extends Container implements Tickable {
 			} else if (action == Action.DRAG_SINGLE_PREVIEW || action == Action.DRAG_SPLIT_PREVIEW) {
 				stackB = slotA.getStack().copy();
 			}
-
 
 			Pair<ItemStack, ItemStack> stacks = StackUtilities.clamp(stackA, stackB, split, split);
 
@@ -185,19 +186,23 @@ public class BaseContainer extends Container implements Tickable {
 			return;
 		}
 
-		ItemStack stackA = slotA.getStack();
-		ItemStack stackB = player.inventory.getCursorStack();
+		ItemStack stackA = slotA.getStack().copy();
+		ItemStack stackB = player.inventory.getCursorStack().copy();
 
 		switch (action) {
 			case PICKUP: {
-				if (!stackA.isItemEqual(stackB) || stackA.getTag() != stackB.getTag()) {
+				if (!StackUtilities.equal(stackA, stackB)) {
 					if (button == 0) { // Swap with existing // LMB
 						if (slotA.isOverrideMaximumCount()) {
 							if (stackA.isEmpty()) {
+								if (slotA.refuses(stackB)) return;
+
 								ItemStack stackC = stackA.copy();
 								stackA = stackB.copy();
 								stackB = stackC.copy();
 							} else if (stackB.isEmpty()) {
+								if (slotA.refuses(stackB)) return;
+
 								int maxA = slotA.getMaxCount();
 								int maxB = stackB.getMaxCount();
 
@@ -213,6 +218,8 @@ public class BaseContainer extends Container implements Tickable {
 								stackA.decrement(Math.min(countA, availableB));
 							}
 						} else {
+							if (!stackB.isEmpty() && slotA.refuses(stackB)) return;
+
 							ItemStack stackC = stackA.copy();
 							stackA = stackB.copy();
 							stackB = stackC.copy();
@@ -258,8 +265,10 @@ public class BaseContainer extends Container implements Tickable {
 						WSlot slotB = ((WSlot) widget);
 						ItemStack stackC = slotB.getStack();
 
+						if (slotB.refuses(stackC)) continue;
+
 						if (!stackA.isEmpty() && (stackC.getCount() < slotB.getMaxCount() || stackC.getCount() < stackA.getMaxCount())) {
-							if (stackC.isEmpty() || (stackA.isItemEqual(stackC) && stackA.getTag() == stackB.getTag())) {
+							if (stackC.isEmpty() || StackUtilities.equal(stackA, stackB)) {
 								Pair<ItemStack, ItemStack> result = StackUtilities.clamp(stackA, stackC, slotA.getMaxCount(), slotB.getMaxCount());
 								stackA = result.getFirst();
 								slotB.setStack(result.getSecond());
@@ -275,7 +284,7 @@ public class BaseContainer extends Container implements Tickable {
 				ItemStack stackC = getInterface().getContainer().getPlayerInventory().getCursorStack();
 
 				for (WAbstractWidget widget : getInterface().getAllWidgets()) {
-					if (widget instanceof WSlot && ((WSlot) widget).getStack().isItemEqual(stackC)) {
+					if (widget instanceof WSlot && StackUtilities.equal(((WSlot) widget).getStack(), stackC)) {
 						StackUtilities.clamp(((WSlot) widget).getStack(), stackC, ((WSlot) widget).getMaxCount(), stackC.getMaxCount());
 					}
 				}
@@ -289,7 +298,7 @@ public class BaseContainer extends Container implements Tickable {
 	}
 
 	public World getWorld() {
-		return linkedWorld;
+		return world;
 	}
 
 	public Inventory getInventory(int inventoryNumber) {
@@ -310,6 +319,8 @@ public class BaseContainer extends Container implements Tickable {
 
 	@Override
 	public void onContentChanged(Inventory inventory) {
+		if (world.isClient) return;
+
 		for (WAbstractWidget widget : serverInterface.getAllWidgets()) {
 			if (widget instanceof WSlot) {
 				WSlot slotA = ((WSlot) widget);

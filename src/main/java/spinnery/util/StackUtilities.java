@@ -95,4 +95,8 @@ public class StackUtilities {
 
 		return new Pair<>(stackA, stackB);
 	}
+
+	public static boolean equal(ItemStack stackA, ItemStack stackB) {
+		return ItemStack.areItemsEqual(stackA, stackB);
+	}
 }

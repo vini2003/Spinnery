@@ -3,8 +3,13 @@ package spinnery.common;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.keybinding.FabricKeyBinding;
+import net.fabricmc.fabric.api.client.keybinding.KeyBindingRegistry;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.ContainerScreen;
+import net.minecraft.client.options.GameOptions;
+import net.minecraft.client.options.KeyBinding;
+import net.minecraft.client.util.InputUtil;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
@@ -14,6 +19,7 @@ import spinnery.widget.WAbstractWidget;
 import spinnery.widget.WInterface;
 import spinnery.widget.WSlot;
 import spinnery.widget.api.WCollection;
+import spinnery.widget.api.WContextLock;
 import spinnery.widget.api.WInterfaceProvider;
 
 public class BaseContainerScreen<T extends BaseContainer> extends ContainerScreen<T> implements WInterfaceProvider {
@@ -102,12 +108,14 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 	public boolean keyPressed(int keyCode, int character, int keyModifier) {
 		clientInterface.onKeyPressed(keyCode, character, keyModifier);
 
-		if (keyCode == GLFW.GLFW_KEY_ESCAPE) {
-			minecraft.player.closeContainer();
-			return true;
-		} else {
-			return false;
+		if (keyCode == GLFW.GLFW_KEY_ESCAPE || MinecraftClient.getInstance().options.keyInventory.matchesKey(keyCode, character)) {
+			if (clientInterface.getAllWidgets().stream().noneMatch(widget -> widget instanceof WContextLock && ((WContextLock) widget).isActive())) {
+				minecraft.player.closeContainer();
+				return true;
+			}
 		}
+
+		return false;
 	}
 
 	@Override

@@ -14,6 +14,7 @@ import spinnery.client.TextRenderer;
 import spinnery.widget.api.Padding;
 import spinnery.widget.api.Position;
 import spinnery.widget.api.Size;
+import spinnery.widget.api.WContextLock;
 import spinnery.widget.api.WPadded;
 
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ import java.util.Objects;
 
 @SuppressWarnings("unchecked")
 @Environment(EnvType.CLIENT)
-public abstract class WAbstractTextEditor extends WAbstractWidget implements WPadded {
+public abstract class WAbstractTextEditor extends WAbstractWidget implements WPadded, WContextLock {
 	protected final List<String> lines = new ArrayList<>();
 	protected final Cursor cursor = new Cursor(0, 0);
 	protected final Pair<Cursor, Cursor> selection = new Pair<>(new Cursor(-1, -1), new Cursor(-1, -1));
@@ -35,6 +36,7 @@ public abstract class WAbstractTextEditor extends WAbstractWidget implements WPa
 	protected int xOffset = 0;
 	protected int yOffset = 0;
 	protected int cursorTick = 20;
+
 	public WAbstractTextEditor() {
 		setText("");
 	}
@@ -199,9 +201,9 @@ public abstract class WAbstractTextEditor extends WAbstractWidget implements WPa
 	@Override
 	public void onMouseClicked(int mouseX, int mouseY, int mouseButton) {
 		if (!isHidden() && editable && mouseButton == 0) {
-			active = isWithinBounds(mouseX, mouseY);
+			setActive(isWithinBounds(mouseX, mouseY));
 			cursorTick = 20;
-			if (active) {
+			if (isActive()) {
 				Cursor mousePos = getCursorFromMouse(mouseX, mouseY);
 				if (mousePos.present()) {
 					mouseClick.assign(mousePos);
@@ -702,7 +704,7 @@ public abstract class WAbstractTextEditor extends WAbstractWidget implements WPa
 		return active;
 	}
 
-	public <W extends WAbstractTextEditor> W setActive(boolean active) {
+	public <W extends WAbstractWidget> W setActive(boolean active) {
 		this.active = active;
 		return (W) this;
 	}
