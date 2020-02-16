@@ -13,7 +13,7 @@ Firstly, add Spinnery's Bintray to your `build.gradle`'s `repositories`:
 ```gradle
 	maven {
 		name = "Spinnery"
-		url  "https://dl.bintray.com/vini2003/Spinnery"
+		url  "https://dl.bintray.com/spinnery/Spinnery"
 	}
 ```
 

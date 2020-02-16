@@ -5,10 +5,6 @@ plugins {
 }
 
 repositories {
-	maven {
-		name 'Cotton'
-		url "http://server.bbkr.space:8081/artifactory/libs-release"
-	}
 }
 
 if (file("${rootDir}/${System.getenv("CONFIG")}").exists())
