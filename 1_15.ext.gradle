@@ -1,0 +1,7 @@
+project.ext {
+    minecraft_version = "1.15.2"
+    yarn_mappings = "1.15.2+build.14"
+    loader_version = "0.7.8+build.184"
+    fabric_version = "0.4.32+build.292-1.15"
+    version_meta = "fabric-1.15"
+}
