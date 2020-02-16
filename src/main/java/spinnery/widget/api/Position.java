@@ -1,12 +1,15 @@
 package spinnery.widget.api;
 
+import blue.endless.jankson.JsonElement;
+import spinnery.util.JanksonUtils;
+
 import java.util.Objects;
 
 /**
  * Data class representing a position offset relative to an anchor. By default, the anchor is <tt>ORIGIN</tt>,
  * a position with all 0 coordinates.
  */
-public class Position implements WPositioned {
+public class Position implements WPositioned, JanksonSerializable {
 	public static final Position ORIGIN = new Position(new WPositioned() {
 		@Override
 		public int getX() {
@@ -294,5 +297,10 @@ public class Position implements WPositioned {
 	@Override
 	public int hashCode() {
 		return Objects.hash(getAnchor(), getX(), getY(), getZ());
+	}
+
+	@Override
+	public JsonElement toJson() {
+		return JanksonUtils.arrayOfPrimitives(x, y, z);
 	}
 }

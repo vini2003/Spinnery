@@ -1,5 +1,7 @@
 package spinnery.widget.api;
 
+import blue.endless.jankson.JsonElement;
+import blue.endless.jankson.JsonPrimitive;
 import net.minecraft.util.math.MathHelper;
 
 /**
@@ -7,7 +9,7 @@ import net.minecraft.util.math.MathHelper;
  * <tt>A</tt>, <tt>R</tt>, <tt>G</tt>, <tt>B</tt>; the color int may be accessed via the fields
  * <tt>RGB</tt> and <tt>ARGB</tt>.
  */
-public class Color {
+public class Color implements JanksonSerializable {
 	public float A = 1.0f, R = 1.0f, G = 1.0f, B = 1.0f;
 
 	public int ARGB = 0xffffffff;
@@ -55,5 +57,10 @@ public class Color {
 		int g = (intColor >> 8) & 0xFF;
 		int b = (intColor & 0xFF);
 		return new Color(r, g, b, a);
+	}
+
+	@Override
+	public JsonElement toJson() {
+		return new JsonPrimitive(ARGB);
 	}
 }

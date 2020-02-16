@@ -3,12 +3,13 @@ package spinnery.widget.api;
 import blue.endless.jankson.JsonArray;
 import blue.endless.jankson.JsonElement;
 import blue.endless.jankson.JsonObject;
+import blue.endless.jankson.JsonPrimitive;
 import com.google.common.collect.ImmutableMap;
-import io.github.cottonmc.jankson.JanksonOps;
 import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.Level;
 import spinnery.Spinnery;
 import spinnery.registry.ThemeRegistry;
+import spinnery.util.JanksonUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -34,7 +35,7 @@ public class Theme {
 	private static void processRefs(Map<String, JsonElement> style, Map<String, JsonElement> refs) {
 		for (String property : style.keySet()) {
 			JsonElement el = style.get(property);
-			String strValue = JanksonOps.INSTANCE.getStringValue(el).orElse("");
+			String strValue = JanksonUtils.asString(el).orElse("");
 			// Look up variables
 			if (strValue.startsWith("$") && !strValue.startsWith("$$")) {
 				style.put(property, refs.get(strValue));
@@ -42,7 +43,7 @@ public class Theme {
 			}
 
 			if (strValue.startsWith("$$")) {
-				style.put(property, JanksonOps.INSTANCE.createString(strValue.substring(1)));
+				style.put(property, new JsonPrimitive(strValue.substring(1)));
 			} else {
 				style.put(property, el);
 			}
@@ -64,7 +65,7 @@ public class Theme {
 	public static Theme of(Identifier themeId, JsonObject themeDef) {
 		// Add parent logic
 		JsonElement parentProp = themeDef.get("parent");
-		Identifier parent = JanksonOps.INSTANCE.getStringValue(parentProp).map(Identifier::new).orElse(null);
+		Identifier parent = JanksonUtils.asString(parentProp).map(Identifier::new).orElse(null);
 
 		// Generic validation
 		JsonObject themeProps = themeDef.getObject("theme");
@@ -110,7 +111,7 @@ public class Theme {
 			JsonElement protoArray = widgetProps.remove("$extend");
 			if (protoArray instanceof JsonArray) {
 				for (JsonElement el : (JsonArray) protoArray) {
-					String protoName = JanksonOps.INSTANCE.getStringValue(el).orElse("");
+					String protoName = JanksonUtils.asString(el).orElse("");
 					JsonObject protoObj = prototypes.get(protoName);
 					if (!protoName.isEmpty() && protoObj != null) {
 						properties.putAll(protoObj);

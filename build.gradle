@@ -53,8 +53,8 @@ dependencies {
 	modCompile "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
 	// Jankson-Fabric
-	modApi "io.github.cottonmc:Jankson-Fabric:${project.jankson_version}"
-	include "io.github.cottonmc:Jankson-Fabric:${project.jankson_version}"
+	modCompile "blue.endless:jankson:1.2.0"
+	include "blue.endless:jankson:1.2.0"
 }
 
 processResources {

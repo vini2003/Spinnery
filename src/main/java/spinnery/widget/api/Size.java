@@ -1,11 +1,14 @@
 package spinnery.widget.api;
 
+import blue.endless.jankson.JsonElement;
+import spinnery.util.JanksonUtils;
+
 import java.util.Objects;
 
 /**
  * Data class representing a width/height pair.
  */
-public class Size implements WSized {
+public class Size implements WSized, JanksonSerializable {
 	protected int width;
 	protected int height;
 
@@ -67,5 +70,10 @@ public class Size implements WSized {
 	@Override
 	public int hashCode() {
 		return Objects.hash(getWidth(), getHeight());
+	}
+
+	@Override
+	public JsonElement toJson() {
+		return JanksonUtils.arrayOfPrimitives(width, height);
 	}
 }
