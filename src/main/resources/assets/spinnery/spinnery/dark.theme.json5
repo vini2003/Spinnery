@@ -186,9 +186,13 @@
 				end: 0xf0100010,
 			}
 		},
-		"spinnery:bar": {
-			background: "spinnery:textures/bar_background_dark.png",
-			foreground: "spinnery:textures/bar_foreground_dark.png"
+		"spinnery:horizontal_bar": {
+			background: "spinnery:textures/horizontal_bar_background_dark.png",
+			foreground: "spinnery:textures/horizontal_bar_foreground_dark.png"
+		},
+		"spinnery:vertical_bar": {
+			background: "spinnery:textures/vertical_bar_background_dark.png",
+			foreground: "spinnery:textures/vertical_bar_foreground_dark.png"
 		},
 		"spinnery:vertical_scrollbar": {
 			scroller: {
