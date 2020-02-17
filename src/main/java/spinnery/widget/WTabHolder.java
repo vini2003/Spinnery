@@ -27,7 +27,7 @@ import java.util.Set;
 
 @Environment(EnvType.CLIENT)
 public class WTabHolder extends WAbstractWidget implements WCollection, WDelegatedEventListener {
-	List<WTab> tabs = new ArrayList<>();
+	protected List<WTab> tabs = new ArrayList<>();
 
 	public void selectTab(int tabNumber) {
 		for (WTab tab : tabs) {
@@ -50,21 +50,32 @@ public class WTabHolder extends WAbstractWidget implements WCollection, WDelegat
 				.setSymbol(symbol).setName(name).setNumber(tabNumber)
 				.setParent(this).setInterface(getInterface());
 		tabs.add(tab);
-		int tabSize = getWidth() / tabs.size();
-		int tabOffset = 0;
-		for (WTab oldTab : tabs) {
-			oldTab.setWidth(tabSize);
-			oldTab.setPosition(Position.of(this, tabOffset, 0, 0));
-			WTabToggle toggle = oldTab.getToggle();
-			toggle.setWidth(tabSize);
-			toggle.setPosition(Position.of(this, tabOffset, 0, 0));
-			tabOffset += tabSize;
-		}
+		updateTabs();
 		return tab;
 	}
 
 	public WTab removeTab(int tabNumber) {
 		return tabs.remove(tabNumber);
+	}
+
+	protected void updateTabs() {
+		if (tabs.size() == 0) return;
+		int tabSize = getWidth() / tabs.size();
+		int tabOffset = 0;
+		for (WTab tab : tabs) {
+			tab.setWidth(tabSize);
+			tab.setPosition(Position.of(this, tabOffset, 0, 0));
+			WTabToggle toggle = tab.getToggle();
+			toggle.setWidth(tabSize);
+			toggle.setPosition(Position.of(this, tabOffset, 0, 0));
+			tabOffset += tabSize;
+		}
+	}
+
+	@Override
+	public void onLayoutChange() {
+		super.onLayoutChange();
+		updateTabs();
 	}
 
 	@Override
