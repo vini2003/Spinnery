@@ -24,15 +24,15 @@ public class WHorizontalBar extends WAbstractBar {
 		int rawHeight = MinecraftClient.getInstance().getWindow().getHeight();
 		double scale = MinecraftClient.getInstance().getWindow().getScaleFactor();
 
-		int sBGY = (int) ((((float) sY / limit.getValue().intValue()) * progress.getValue().intValue()));
+		int sBGX = (int) ((((float) sX / limit.getValue().intValue()) * progress.getValue().intValue()));
 
 		GL11.glEnable(GL11.GL_SCISSOR_TEST);
 
-		GL11.glScissor((int) (x * scale), (int) (rawHeight - ((y + sY - sBGY) * scale)), (int) (sX * scale), (int) ((sY - sBGY) * scale));
+		GL11.glScissor((int) (x * scale), (int) (rawHeight - ((y + sY) * scale)), (int) (sX * scale), (int) (sY * scale));
 
 		BaseRenderer.drawImage(getX(), getY(), z, getWidth(), getHeight(), getBackgroundTexture());
 
-		GL11.glScissor((int) (x * scale), (int) (rawHeight - ((y + sY) * scale)), (int) (sX * scale), (int) (sBGY * scale));
+		GL11.glScissor((int) (x * scale), (int) (rawHeight - ((y + sY) * scale)), (int) (sBGX * scale), (int) (sY * scale));
 
 		BaseRenderer.drawImage(getX(), getY(), z, getWidth(), getHeight(), getForegroundTexture());
 

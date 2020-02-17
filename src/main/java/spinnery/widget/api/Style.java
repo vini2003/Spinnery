@@ -2,29 +2,26 @@ package spinnery.widget.api;
 
 import blue.endless.jankson.JsonArray;
 import blue.endless.jankson.JsonElement;
-import io.github.cottonmc.jankson.JanksonOps;
+import blue.endless.jankson.JsonPrimitive;
 import net.minecraft.util.Identifier;
 import spinnery.Spinnery;
+import spinnery.util.JanksonUtils;
 import spinnery.widget.WAbstractWidget;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
-import java.util.stream.IntStream;
 
 @SuppressWarnings("unused")
 public class Style {
 	protected static Map<Class<?>, Function<?, JsonElement>> jsonSerializers = new HashMap<>();
 
 	static {
-		registerSerializer(Number.class, JanksonOps.INSTANCE::createNumeric);
-		registerSerializer(String.class, JanksonOps.INSTANCE::createString);
-		registerSerializer(Boolean.class, JanksonOps.INSTANCE::createBoolean);
-		registerSerializer(Position.class, v -> JanksonOps.INSTANCE.createIntList(IntStream.of(v.x, v.y, v.z)));
-		registerSerializer(Size.class, v -> JanksonOps.INSTANCE.createIntList(IntStream.of(v.getWidth(), v.getHeight())));
-		registerSerializer(Color.class, v -> JanksonOps.INSTANCE.createLong(v.ARGB));
-		// TODO: sided size serialization
+		registerSerializer(Number.class, value -> new JsonPrimitive(value.longValue()));
+		registerSerializer(String.class, JsonPrimitive::new);
+		registerSerializer(Boolean.class, JsonPrimitive::new);
+		registerSerializer(JanksonSerializable.class, JanksonSerializable::toJson);
 	}
 
 	protected final Map<String, JsonElement> properties = new HashMap<>();
@@ -51,7 +48,7 @@ public class Style {
 	}
 
 	public boolean asBoolean(String property) {
-		return JanksonOps.INSTANCE.getNumberValue(getElement(property)).orElse(0).intValue() == 1;
+		return JanksonUtils.asBoolean(getElement(property)).orElse(false);
 	}
 
 	protected JsonElement getElement(String key) {
@@ -63,7 +60,7 @@ public class Style {
 	}
 
 	protected Number asNumber(String property) {
-		return JanksonOps.INSTANCE.getNumberValue(getElement(property)).orElse(0);
+		return JanksonUtils.asNumber(getElement(property)).orElse(0);
 	}
 
 	public long asLong(String property) {
@@ -83,8 +80,7 @@ public class Style {
 	}
 
 	public Color asColor(String property, Color defaultColor) {
-		return JanksonOps.INSTANCE.getNumberValue(getElement(property))
-				.map(Color::of).orElse(defaultColor);
+		return JanksonUtils.asNumber(getElement(property)).map(Color::of).orElse(defaultColor);
 	}
 
 	public Size asSize(String property) {
@@ -97,7 +93,7 @@ public class Style {
 	// Clockwise from top
 	public Padding asPadding(String property) {
 		JsonElement el = getElement(property);
-		Optional<Number> singleValue = JanksonOps.INSTANCE.getNumberValue(el);
+		Optional<Number> singleValue = JanksonUtils.asNumber(el);
 		if (singleValue.isPresent()) {
 			int intValue = singleValue.get().intValue();
 			Size size = Size.of(intValue, intValue);
@@ -138,7 +134,7 @@ public class Style {
 	}
 
 	public String asString(String property) {
-		return JanksonOps.INSTANCE.getStringValue(getElement(property)).orElse("");
+		return JanksonUtils.asString(getElement(property)).orElse("");
 	}
 
 	public <T> Style override(String property, T value) {

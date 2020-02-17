@@ -5,17 +5,16 @@ plugins {
 }
 
 repositories {
-	maven {
-		name 'Cotton'
-		url "http://server.bbkr.space:8081/artifactory/libs-release"
-	}
 }
+
+if (file("${rootDir}/${System.getenv("CONFIG")}").exists())
+	apply from: "${rootDir}/${System.getenv("CONFIG")}"
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
 archivesBaseName = project.archives_base_name
-version = project.mod_version
+version = "${project.ext.mod_version}+${project.ext.version_meta}"
 group = project.maven_group
 
 bintray {
@@ -25,13 +24,13 @@ bintray {
 	pkg {
 		repo = 'Spinnery'
 		name = project.archives_base_name
-		userOrg = user
+		userOrg = 'spinnery'
 		licenses = ['LGPL-3.0']
 		vcsUrl = 'https://github.com/vini2003/Spinnery.git'
 		version {
-			name = project.mod_version
+			name = project.version
 			released  = new Date()
-			vcsTag = project.mod_version
+			vcsTag = project.version
 		}
 	}
 }
@@ -53,8 +52,8 @@ dependencies {
 	modCompile "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
 	// Jankson-Fabric
-	modApi "io.github.cottonmc:Jankson-Fabric:${project.jankson_version}"
-	include "io.github.cottonmc:Jankson-Fabric:${project.jankson_version}"
+	modCompile "blue.endless:jankson:1.2.0"
+	include "blue.endless:jankson:1.2.0"
 }
 
 processResources {
@@ -88,7 +87,7 @@ publishing {
 		SpinneryPublication(MavenPublication) {
 			groupId 'com.github.vini2003'
 			artifactId 'spinnery'
-			version project.mod_version
+			version project.version
 
 			artifact(remapJar) {
 				builtBy remapJar

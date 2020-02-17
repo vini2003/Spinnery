@@ -1,8 +1,8 @@
 package spinnery.registry;
 
+import blue.endless.jankson.Jankson;
 import blue.endless.jankson.JsonObject;
 import blue.endless.jankson.api.SyntaxError;
-import io.github.cottonmc.jankson.JanksonFactory;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
@@ -47,7 +47,7 @@ public class ResourceRegistry {
 
 	public static void register(Identifier id, InputStream inputStream) {
 		try {
-			JsonObject themeDef = JanksonFactory.createJankson().load(inputStream);
+			JsonObject themeDef = Jankson.builder().build().load(inputStream);
 			Theme theme = Theme.of(id, themeDef);
 			ThemeRegistry.register(theme);
 		} catch (IOException e) {

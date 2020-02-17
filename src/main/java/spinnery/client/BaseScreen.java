@@ -30,8 +30,8 @@ public class BaseScreen extends Screen implements WInterfaceProvider {
 	public boolean keyPressed(int keyCode, int character, int keyModifier) {
 		screenInterface.onKeyPressed(keyCode, character, keyModifier);
 
-		if (character == GLFW.GLFW_KEY_ESCAPE) {
-			minecraft.player.closeScreen();
+		if (keyCode == GLFW.GLFW_KEY_ESCAPE && shouldCloseOnEsc()) {
+			onClose();
 			return true;
 		} else {
 			return false;

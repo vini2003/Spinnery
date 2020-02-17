@@ -279,6 +279,9 @@ public abstract class WAbstractTextEditor extends WAbstractWidget implements WPa
 		int prevY;
 		Cursor prevCursor;
 		switch (keyPressed) {
+			case GLFW.GLFW_KEY_ESCAPE:
+				active = false;
+				break;
 			case GLFW.GLFW_KEY_ENTER:
 				insertText("\n");
 				cursor.right();

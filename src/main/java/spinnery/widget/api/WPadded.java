@@ -1,5 +1,9 @@
 package spinnery.widget.api;
 
+/**
+ * Utility interface building on {@link WInnerSized} that enables simple use of a {@link Padding} value to provide
+ * the inner anchor and size.
+ */
 public interface WPadded extends WInnerSized {
 	@Override
 	default Size getInnerSize() {
