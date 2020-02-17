@@ -143,6 +143,8 @@ public class BaseContainer extends Container implements Tickable {
 			stackA = getPlayerInventory().getCursorStack().copy();
 		}
 
+		if (stackA.isEmpty()) return;
+
 		for (Integer number : slots.keySet()) {
 			WSlot slotA = slots.get(number);
 
@@ -235,7 +237,7 @@ public class BaseContainer extends Container implements Tickable {
 							ItemStack stackC = stackA.split(Math.min(stackA.getCount(), stackA.getMaxCount()) / 2);
 							stackB = stackC.copy();
 						} else {
-							ItemStack stackC = stackA.split(stackA.getCount() / 2);
+							ItemStack stackC = stackA.split(Math.max(1, stackA.getCount() / 2));
 							stackB = stackC.copy();
 						}
 					}

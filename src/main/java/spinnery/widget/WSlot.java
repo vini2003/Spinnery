@@ -15,6 +15,7 @@ import org.apache.logging.log4j.Level;
 import spinnery.Spinnery;
 import spinnery.client.BaseRenderer;
 import spinnery.common.BaseContainer;
+import spinnery.util.StackUtilities;
 import spinnery.widget.api.Action;
 import spinnery.widget.api.Position;
 import spinnery.widget.api.Size;
@@ -269,6 +270,8 @@ public class WSlot extends WAbstractWidget {
 			}
 		} else {
 			if ((button == LEFT || button == RIGHT) && nanoInterval() > nanoDelay()) {
+				if (!container.getDragSlots(button).isEmpty() && !StackUtilities.equal(container.getDragSlots(button).iterator().next().getStack(), getStack())) return;
+
 				container.getDragSlots(button).add(this);
 				container.onSlotDrag(slotNumbers, inventoryNumbers, Action.of(button, false));
 			}
