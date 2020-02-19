@@ -270,7 +270,12 @@ public class WSlot extends WAbstractWidget {
 			}
 		} else {
 			if ((button == LEFT || button == RIGHT) && nanoInterval() > nanoDelay()) {
-				if (!container.getDragSlots(button).isEmpty() && !StackUtilities.equal(container.getDragSlots(button).iterator().next().getStack(), getStack())) return;
+				if (!container.getDragSlots(button).isEmpty()) {
+					ItemStack stackA = container.getDragSlots(button).iterator().next().getStack();
+					ItemStack stackB = getStack();
+
+					if ((stackA.getItem() != stackB.getItem() || stackA.getTag() != stackB.getTag())) return;
+				}
 
 				container.getDragSlots(button).add(this);
 				container.onSlotDrag(slotNumbers, inventoryNumbers, Action.of(button, false));
