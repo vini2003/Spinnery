@@ -171,6 +171,7 @@ public class WDropdown extends WAbstractWidget implements WDrawableCollection, W
 	@SuppressWarnings("UnusedReturnValue")
 	public <W extends WDropdown> W setState(boolean state) {
 		this.state = state;
+		updateChildren();
 		return (W) this;
 	}
 

@@ -506,13 +506,13 @@ public abstract class WAbstractWidget implements Tickable,
 	@Environment(EnvType.CLIENT)
 	@Override
 	public void onAlign() {
+		if (runnableOnAlign != null) {
+			runnableOnAlign.event(this);
+		}
 		if (this instanceof WDelegatedEventListener) {
 			for (WEventListener widget : ((WDelegatedEventListener) this).getEventDelegates()) {
 				widget.onAlign();
 			}
-		}
-		if (runnableOnAlign != null) {
-			runnableOnAlign.event(this);
 		}
 		onLayoutChange();
 	}
