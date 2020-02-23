@@ -388,4 +388,13 @@ public class WSlot extends WAbstractWidget {
 		getInterface().getContainer().getPreviewStacks().get(getInventoryNumber()).put(getSlotNumber(), previewStack);
 		return (W) this;
 	}
+
+	public static <W extends WSlot> W setStack(WSlot slot, ItemStack stack) {
+		slot.setStack(stack);
+		return (W) slot;
+	}
+
+	public void acceptStack(ItemStack itemStack) {
+		setStack(itemStack);
+	}
 }

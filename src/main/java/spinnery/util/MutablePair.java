@@ -1,5 +1,9 @@
 package spinnery.util;
 
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
+import java.util.function.Consumer;
+
 public class MutablePair<L, R> {
 	private L first;
 	private R second;
@@ -26,6 +30,17 @@ public class MutablePair<L, R> {
 
 	public MutablePair setSecond(R second) {
 		this.second = second;
+		return this;
+	}
+
+	public MutablePair apply(Consumer<L> l, Consumer<R> r) {
+		l.accept(first);
+		r.accept(second);
+		return this;
+	}
+
+	public MutablePair andThen(Consumer<MutablePair> c) {
+		c.accept(this);
 		return this;
 	}
 }

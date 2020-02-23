@@ -1,10 +1,8 @@
 package spinnery.common;
 
-import com.mojang.datafixers.util.Pair;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
-import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.container.Container;
 import net.minecraft.container.Slot;
 import net.minecraft.container.SlotActionType;
@@ -14,10 +12,10 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.Tickable;
 import net.minecraft.world.World;
 import org.lwjgl.glfw.GLFW;
 import spinnery.registry.NetworkRegistry;
+import spinnery.util.MutablePair;
 import spinnery.util.StackUtilities;
 import spinnery.widget.WAbstractWidget;
 import spinnery.widget.WInterface;
@@ -30,6 +28,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public class BaseContainer extends Container {
 	public static final int PLAYER_INVENTORY = 0;
@@ -129,20 +129,20 @@ public class BaseContainer extends Container {
 			return;
 		}
 
-		int split = -1;
+		int split;
 
-		if (action == Action.DRAG_SPLIT || action == Action.DRAG_SPLIT_PREVIEW) {
+		if (action.isSplit()) {
 			split = getPlayerInventory().getCursorStack().getCount() / slots.size();
-		} else if (action == Action.DRAG_SINGLE || action == Action.DRAG_SINGLE_PREVIEW) {
+		} else {
 			split = 1;
 		}
 
-		ItemStack stackA = ItemStack.EMPTY;
+		ItemStack stackA;
 
-		if (action == Action.DRAG_SINGLE || action == Action.DRAG_SPLIT) {
-			stackA = getPlayerInventory().getCursorStack();
-		} else if (action == Action.DRAG_SINGLE_PREVIEW || action == Action.DRAG_SPLIT_PREVIEW) {
+		if (action.isPreview()) {
 			stackA = getPlayerInventory().getCursorStack().copy();
+		} else {
+			stackA = getPlayerInventory().getCursorStack();
 		}
 
 		if (stackA.isEmpty()) {
@@ -155,23 +155,23 @@ public class BaseContainer extends Container {
 
 			if (slotA.refuses(stackA)) continue;
 
-			ItemStack stackB = ItemStack.EMPTY;
+			ItemStack stackB;
 
-			if (action == Action.DRAG_SINGLE || action == Action.DRAG_SPLIT) {
-				stackB = slotA.getStack();
-			} else if (action == Action.DRAG_SINGLE_PREVIEW || action == Action.DRAG_SPLIT_PREVIEW) {
+			if (action.isPreview()) {
 				stackB = slotA.getStack().copy();
+			} else {
+				stackB = slotA.getStack();
 			}
 
-			Pair<ItemStack, ItemStack> stacks = StackUtilities.clamp(stackA, stackB, split, split);
+			MutablePair<ItemStack, ItemStack> stacks = StackUtilities.merge(stackA, stackB, split, Math.min(stackA.getMaxCount(), split));
 
-			if (action == Action.DRAG_SINGLE || action == Action.DRAG_SPLIT) {
+			if (action.isPreview()) {
+				slotA.getInterface().getContainer().previewCursorStack = stacks.getFirst().copy();
+				slotA.setPreviewStack(stacks.getSecond().copy());
+			} else {
 				stackA = stacks.getFirst();
 				slotA.getInterface().getContainer().previewCursorStack = ItemStack.EMPTY;
 				slotA.setStack(stacks.getSecond());
-			} else if (action == Action.DRAG_SINGLE_PREVIEW || action == Action.DRAG_SPLIT_PREVIEW) {
-				slotA.getInterface().getContainer().previewCursorStack = stacks.getFirst().copy();
-				slotA.setPreviewStack(stacks.getSecond().copy());
 			}
 		}
 	}
@@ -181,80 +181,54 @@ public class BaseContainer extends Container {
 	}
 
 	public void onSlotAction(int slotNumber, int inventoryNumber, int button, Action action, PlayerEntity player) {
-		WSlot slotA = null;
+		WSlot slotT = null;
 
 		for (WAbstractWidget widget : serverInterface.getAllWidgets()) {
 			if (widget instanceof WSlot && ((WSlot) widget).getSlotNumber() == slotNumber && ((WSlot) widget).getInventoryNumber() == inventoryNumber) {
-				slotA = (WSlot) widget;
+				slotT = (WSlot) widget;
 			}
 		}
 
-		if (slotA == null) {
+		if (slotT == null) {
 			return;
 		}
+
+		WSlot slotA = slotT;
 
 		ItemStack stackA = slotA.getStack().copy();
 		ItemStack stackB = player.inventory.getCursorStack().copy();
 
+		PlayerInventory inventory = getPlayerInventory();
+
 		switch (action) {
 			case PICKUP: {
 				if (!StackUtilities.equal(stackA, stackB)) {
-					if (button == 0) { // Swap with existing // LMB
+					if (button == 0) { // Interact with existing // LMB
 						if (slotA.isOverrideMaximumCount()) {
 							if (stackA.isEmpty()) {
 								if (slotA.refuses(stackB)) return;
 
-								ItemStack stackC = stackA.copy();
-								stackA = stackB.copy();
-								stackB = stackC.copy();
+								StackUtilities.merge(stackB, stackA, stackB.getMaxCount(), slotA.getMaxCount()).apply(inventory::setCursorStack, slotA::acceptStack);
 							} else if (stackB.isEmpty()) {
 								if (slotA.refuses(stackB)) return;
 
-								int maxA = slotA.getMaxCount();
-								int maxB = stackB.getMaxCount();
-
-								int countA = stackA.getCount();
-								int countB = stackB.getCount();
-
-								int availableA = maxA - countA;
-								int availableB = maxB - countB;
-
-								ItemStack stackC = stackA.copy();
-								stackC.setCount(Math.min(countA, availableB));
-								stackB = stackC.copy();
-								stackA.decrement(Math.min(countA, availableB));
+								StackUtilities.merge(stackA, stackB, slotA.getInventoryNumber() == PLAYER_INVENTORY ? stackB.getMaxCount() : slotA.getMaxCount(), stackB.getMaxCount()).apply(slotA::acceptStack, inventory::setCursorStack);
 							}
 						} else {
 							if (!stackB.isEmpty() && slotA.refuses(stackB)) return;
 
-							ItemStack stackC = stackA.copy();
-							stackA = stackB.copy();
-							stackB = stackC.copy();
+							StackUtilities.merge(stackA, stackB, stackA.isEmpty() || slotA.getInventoryNumber() == PLAYER_INVENTORY ? stackB.getMaxCount() : slotA.getMaxCount(), stackB.getMaxCount()).apply(slotA::acceptStack, inventory::setCursorStack);
 						}
-					} else if (button == 1 && !stackB.isEmpty()) { // Add to existing // RMB
-						if (stackA.isEmpty()) { // If existing is empty, initialize it // RMB
-							stackA = new ItemStack(stackB.getItem(), 1);
-							stackA.setTag(stackB.getTag());
-							stackB.decrement(1);
-						}
+					} else if (button == 1 && !stackB.isEmpty()) { // Interact with existing // RMB
+						StackUtilities.merge(inventory::getCursorStack, slotA::getStack, inventory.getCursorStack()::getMaxCount, () -> (slotA.getStack().getCount() == slotA.getMaxCount() ? 0 : slotA.getStack().getCount() + 1)).apply(inventory::setCursorStack, slotA::setStack);
 					} else if (button == 1) { // Split existing // RMB
-						if (slotA.isOverrideMaximumCount()) {
-							ItemStack stackC = stackA.split(Math.min(stackA.getCount(), stackA.getMaxCount()) / 2);
-							stackB = stackC.copy();
-						} else {
-							ItemStack stackC = stackA.split(Math.max(1, stackA.getCount() / 2));
-							stackB = stackC.copy();
-						}
+						StackUtilities.merge(slotA::getStack, inventory::getCursorStack, inventory.getCursorStack()::getMaxCount, () -> Math.max(1, Math.min(slotA.getStack().getMaxCount() / 2, slotA.getStack().getCount() / 2))).apply(slotA::setStack, inventory::setCursorStack);
 					}
 				} else {
 					if (button == 0) {
-						StackUtilities.clamp(stackB, stackA, stackB.getMaxCount(), slotA.getMaxCount()); // Add to existing // LMB
+						StackUtilities.merge(inventory::getCursorStack, slotA::getStack, stackB::getMaxCount, slotA::getMaxCount).apply(inventory::setCursorStack, slotA::setStack); // Add to existing // LMB
 					} else {
-						boolean canStackTransfer = stackB.getCount() >= 1 && stackA.getCount() < slotA.getMaxCount();
-						if (canStackTransfer) { // Add to existing // RMB
-							stackA.increment(1);
-							stackB.decrement(1);
-						}
+						StackUtilities.merge(inventory::getCursorStack, slotA::getStack, inventory.getCursorStack()::getMaxCount, () -> (slotA.getStack().getCount() == slotA.getMaxCount() ? 0 : slotA.getStack().getCount() + 1)).apply(inventory::setCursorStack, slotA::setStack); // Add to existing // RMB
 					}
 				}
 				break;
@@ -263,6 +237,7 @@ public class BaseContainer extends Container {
 				if (player.isCreative()) {
 					stackB = new ItemStack(stackA.getItem(), stackA.getMaxCount()); // Clone existing // MMB
 					stackB.setTag(stackA.getTag());
+					inventory.setCursorStack(stackB);
 				}
 				break;
 			}
@@ -271,39 +246,31 @@ public class BaseContainer extends Container {
 					if (widget instanceof WSlot && ((WSlot) widget).getLinkedInventory() != slotA.getLinkedInventory()) {
 						WSlot slotB = ((WSlot) widget);
 						ItemStack stackC = slotB.getStack();
+						stackA = slotA.getStack();
 
-						if (slotB.refuses(stackC)) continue;
+						if (slotB.refuses(stackA)) continue;
 
-						if (!stackA.isEmpty() && (stackC.getCount() < slotB.getMaxCount() || stackC.getCount() < stackA.getMaxCount())) {
-							if (stackC.isEmpty() || (stackA.getItem() == stackC.getItem() && stackA.getTag() == stackC.getTag())) {
-								Pair<ItemStack, ItemStack> result = StackUtilities.clamp(stackA, stackC, slotA.getMaxCount(), slotB.getMaxCount());
-								stackA = result.getFirst();
-								slotB.setStack(result.getSecond());
-								break;
-
-							}
+						if ((!slotA.getStack().isEmpty() && stackC.isEmpty()) || (StackUtilities.equal(stackA, stackC) && stackC.getCount() < (slotB.getInventoryNumber() == PLAYER_INVENTORY ? stackA.getMaxCount() : slotB.getMaxCount()))) {
+							int maxB = stackC.isEmpty() || slotB.getInventoryNumber() == PLAYER_INVENTORY ? stackA.getMaxCount() : slotB.getMaxCount();
+							StackUtilities.merge(slotA::getStack, slotB::getStack, slotA::getMaxCount, () -> maxB).apply(slotA::setStack, slotB::setStack);
+							break;
 						}
 					}
 				}
 				break;
 			}
 			case PICKUP_ALL: {
-				ItemStack stackC = getInterface().getContainer().getPlayerInventory().getCursorStack();
-
 				for (WAbstractWidget widget : getInterface().getAllWidgets()) {
-					if (widget instanceof WSlot && StackUtilities.equal(((WSlot) widget).getStack(), stackC)) {
-						if (((WSlot) widget).isLocked()) continue;
+					if (widget instanceof WSlot && StackUtilities.equal(((WSlot) widget).getStack(), stackB)) {
+						WSlot slotB = (WSlot) widget;
 
-						StackUtilities.clamp(((WSlot) widget).getStack(), stackC, ((WSlot) widget).getMaxCount(), stackC.getMaxCount());
+						if (slotB.isLocked()) continue;
+
+						StackUtilities.merge(slotB::getStack, inventory::getCursorStack, slotB::getMaxCount, stackB::getMaxCount).apply(slotB::setStack, inventory::setCursorStack);
 					}
 				}
-
-				return;
 			}
 		}
-
-		slotA.setStack(stackA);
-		((PlayerInventory) linkedInventories.get(PLAYER_INVENTORY)).setCursorStack(stackB);
 	}
 
 	public World getWorld() {

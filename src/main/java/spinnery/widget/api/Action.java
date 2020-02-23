@@ -20,4 +20,16 @@ public enum Action {
 				return null;
 		}
 	}
+
+	public boolean isPreview() {
+		return this == DRAG_SINGLE_PREVIEW || this == DRAG_SPLIT_PREVIEW;
+	}
+
+	public boolean isSplit() {
+		return this == DRAG_SPLIT || this == DRAG_SPLIT_PREVIEW;
+	}
+
+	public boolean isSingle() {
+		return this == DRAG_SINGLE || this == DRAG_SINGLE_PREVIEW;
+	}
 }
