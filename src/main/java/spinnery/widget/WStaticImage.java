@@ -4,20 +4,12 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.util.Identifier;
 import spinnery.client.BaseRenderer;
+import spinnery.widget.api.WFocusedMouseListener;
 
 @Environment(EnvType.CLIENT)
-public class WStaticImage extends WWidget implements WClient, WFocusedMouseListener {
+@WFocusedMouseListener
+public class WStaticImage extends WAbstractWidget {
 	protected Identifier texture;
-
-	public WStaticImage(WPosition position, WSize size, WInterface linkedInterface, Identifier texture) {
-		setInterface(linkedInterface);
-
-		setPosition(position);
-
-		setSize(size);
-
-		setTexture(texture);
-	}
 
 	@Override
 	public void draw() {
@@ -39,7 +31,8 @@ public class WStaticImage extends WWidget implements WClient, WFocusedMouseListe
 		return texture;
 	}
 
-	public void setTexture(Identifier texture) {
+	public <W extends WStaticImage> W setTexture(Identifier texture) {
 		this.texture = texture;
+		return (W) this;
 	}
 }

@@ -4,96 +4,81 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.util.Identifier;
 import spinnery.client.BaseRenderer;
+import spinnery.widget.api.WFocusedMouseListener;
 
 @Environment(EnvType.CLIENT)
-public class WTexturedButton extends WWidget implements WFocusedMouseListener {
-	protected Identifier texture;
-	protected Identifier textureActive;
-	protected Identifier textureDisabled;
+@WFocusedMouseListener
+public class WTexturedButton extends WAbstractWidget {
+	protected Identifier inactive;
+	protected Identifier active;
+	protected Identifier disabled;
 
-	protected boolean disabled = false;
+	protected boolean isDisabled = false;
 
-	public WTexturedButton(WPosition position, WSize size, WInterface linkedInterface, Identifier texture) {
-		this(position, size, linkedInterface, texture, null, null);
+	public Identifier getInactive() {
+		return inactive;
 	}
 
-	public WTexturedButton(WPosition position, WSize size, WInterface linkedInterface, Identifier texture, Identifier textureActive, Identifier textureDisabled) {
-		this(position, size, linkedInterface);
-		setTexture(texture);
-		setTextureActive(textureActive);
-		setTextureDisabled(textureDisabled);
-	}
-
-	protected WTexturedButton(WPosition position, WSize size, WInterface linkedInterface) {
-		setPosition(position);
-		setSize(size);
-		setInterface(linkedInterface);
-	}
-
-	public WTexturedButton(WPosition position, WSize size, WInterface linkedInterface, Identifier texture, Identifier textureActive) {
-		this(position, size, linkedInterface, texture, textureActive, null);
-	}
-
-	public Identifier getTexture() {
-		return texture;
-	}
-
-	public void setTexture(Identifier texture) {
-		this.texture = texture;
+	public <W extends WTexturedButton> W setInactive(Identifier inactive) {
+		this.inactive = inactive;
+		return (W) this;
 	}
 
 	@Override
 	public void draw() {
-		BaseRenderer.drawImage(getX(), getY(), getZ(), getSize().getX(), getSize().getY(), getDrawTexture());
+		BaseRenderer.drawImage(getX(), getY(), getZ(), getWidth(), getHeight(), getDrawTexture());
 	}
 
 	protected Identifier getDrawTexture() {
-		if (isDisabled() && getTextureDisabled() != null) {
-			return textureDisabled;
+		if (isDisabled() && getDisabled() != null) {
+			return disabled;
 		}
-		if (isActive() && getTextureActive() != null) {
-			return textureActive;
+		if (isActive() && getActive() != null) {
+			return active;
 		}
-		return texture;
+		return inactive;
 	}
 
 	public boolean isDisabled() {
+		return isDisabled;
+	}
+
+	public Identifier getDisabled() {
 		return disabled;
 	}
 
-	public Identifier getTextureDisabled() {
-		return textureDisabled;
+	public <W extends WTexturedButton> W setDisabled(Identifier disabled) {
+		this.disabled = disabled;
+		return (W) this;
 	}
 
-	public void setTextureDisabled(Identifier textureDisabled) {
-		this.textureDisabled = textureDisabled;
+	public <W extends WTexturedButton> W setDisabled(boolean disabled) {
+		this.isDisabled = disabled;
+		return (W) this;
 	}
 
 	public boolean isActive() {
-		return getFocus();
+		return isFocused();
 	}
 
-	public Identifier getTextureActive() {
-		return textureActive;
+	public Identifier getActive() {
+		return active;
 	}
 
-	public void setTextureActive(Identifier textureActive) {
-		this.textureActive = textureActive;
+	public <W extends WTexturedButton> W setActive(Identifier active) {
+		this.active = active;
+		return (W) this;
 	}
 
-	public void setDisabled(boolean disabled) {
-		this.disabled = disabled;
+	@Override
+	public void onMouseReleased(int mouseX, int mouseY, int mouseButton) {
+		if (isDisabled) return;
+		super.onMouseReleased(mouseX, mouseY, mouseButton);
 	}
 
 	@Override
 	public void onMouseClicked(int mouseX, int mouseY, int mouseButton) {
-		if (disabled) return;
+		if (isDisabled) return;
 		super.onMouseClicked(mouseX, mouseY, mouseButton);
-	}
-
-	@Override
-	public void onMouseReleased(double mouseX, double mouseY, int mouseButton) {
-		if (disabled) return;
-		super.onMouseReleased(mouseX, mouseY, mouseButton);
 	}
 }

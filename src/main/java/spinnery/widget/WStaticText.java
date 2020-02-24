@@ -2,67 +2,44 @@ package spinnery.widget;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
-import spinnery.client.BaseRenderer;
-
-import java.util.Map;
+import spinnery.client.TextRenderer;
+import spinnery.widget.api.WFocusedMouseListener;
 
 @Environment(EnvType.CLIENT)
-public class WStaticText extends WWidget implements WClient, WFocusedMouseListener {
-
-	public static final int SHADOW = 6;
-	public static final int TEXT = 7;
-	protected Text text;
-	protected BaseRenderer.Font font;
+@WFocusedMouseListener
+public class WStaticText extends WAbstractWidget {
+	protected Text text = new LiteralText("");
+	protected double scale = 1.0;
+	protected TextRenderer.Font font = TextRenderer.Font.DEFAULT;
 	protected Integer maxWidth = null;
-
-	public WStaticText(WPosition position, WInterface linkedInterface, Text text) {
-		this(position, linkedInterface, text, BaseRenderer.Font.DEFAULT);
-	}
-
-	public WStaticText(WPosition position, WInterface linkedInterface, Text text, BaseRenderer.Font font) {
-		setInterface(linkedInterface);
-
-		setPosition(position);
-
-		setText(text);
-
-		setTheme("light");
-
-		this.font = font;
-	}
-
-	public static WWidget.Theme of(Map<String, String> rawTheme) {
-		WWidget.Theme theme = new WWidget.Theme();
-		theme.put(SHADOW, WColor.of(rawTheme.get("shadow")));
-		theme.put(TEXT, WColor.of(rawTheme.get("text")));
-		return theme;
-	}
 
 	public Integer getMaxWidth() {
 		return maxWidth;
 	}
 
-	public void setMaxWidth(Integer maxWidth) {
+	public <W extends WStaticText> W setMaxWidth(Integer maxWidth) {
 		this.maxWidth = maxWidth;
+		return (W) this;
 	}
 
-	public BaseRenderer.Font getFont() {
+	public TextRenderer.Font getFont() {
 		return font;
 	}
 
-	public void setFont(BaseRenderer.Font font) {
+	public <W extends WStaticText> W setFont(TextRenderer.Font font) {
 		this.font = font;
+		return (W) this;
 	}
 
-	@Override
-	public int getWidth() {
-		return BaseRenderer.getTextRenderer(font).getStringWidth(text.asString());
+	public double getScale() {
+		return scale;
 	}
 
-	@Override
-	public int getHeight() {
-		return BaseRenderer.getTextRenderer(font).fontHeight;
+	public WStaticText setScale(double scale) {
+		this.scale = scale;
+		return this;
 	}
 
 	@Override
@@ -73,25 +50,34 @@ public class WStaticText extends WWidget implements WClient, WFocusedMouseListen
 
 		int x = getX();
 		int y = getY();
+		int z = getZ();
 
-		if (isLabelShadowed()) {
-			BaseRenderer.drawTextTrimmed(getText().asFormattedString(), x + 1, y + 1, maxWidth, getResourceAsColor(SHADOW).RGB, font);
-		}
-		BaseRenderer.drawTextTrimmed(getText().asFormattedString(), x, y, maxWidth, getResourceAsColor(TEXT).RGB, font);
+		TextRenderer.pass().text(getText()).font(font).at(x, y, z).scale(scale).maxWidth(maxWidth)
+				.shadow(getStyle().asBoolean("shadow")).shadowColor(getStyle().asColor("shadowColor"))
+				.color(getStyle().asColor("text")).render();
+	}
+
+	@Override
+	public int getHeight() {
+		return TextRenderer.height(font);
+	}
+
+	@Override
+	public int getWidth() {
+		return TextRenderer.width(text);
 	}
 
 	public Text getText() {
 		return text;
 	}
 
-	public void setText(Text text) {
+	public <W extends WStaticText> W setText(Text text) {
 		this.text = text;
+		return (W) this;
 	}
 
-	@Override
-	public void setTheme(String theme) {
-		if (getInterface().isClient()) {
-			super.setTheme(theme);
-		}
+	public <W extends WStaticText> W setText(String text) {
+		this.text = new LiteralText(text);
+		return (W) this;
 	}
 }

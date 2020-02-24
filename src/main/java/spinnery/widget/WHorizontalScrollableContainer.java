@@ -1,298 +1,262 @@
 package spinnery.widget;
 
+import com.google.common.collect.ImmutableSet;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.text.Text;
 import org.lwjgl.opengl.GL11;
+import spinnery.widget.api.Position;
+import spinnery.widget.api.Size;
+import spinnery.widget.api.WDelegatedEventListener;
+import spinnery.widget.api.WDrawableCollection;
+import spinnery.widget.api.WEventListener;
+import spinnery.widget.api.WHorizontalScrollable;
+import spinnery.widget.api.WLayoutElement;
+import spinnery.widget.api.WModifiableCollection;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-public class WHorizontalScrollableContainer extends WWidget implements WClient, WModifiableCollection, WHorizontalScrollable {
-    public List<List<WWidget>> listWidgets = new ArrayList<>();
+@SuppressWarnings("unchecked")
+public class WHorizontalScrollableContainer extends WAbstractWidget implements WDrawableCollection, WModifiableCollection, WHorizontalScrollable, WDelegatedEventListener {
+	protected Set<WAbstractWidget> widgets = new HashSet<>();
+	protected List<WLayoutElement> orderedWidgets = new ArrayList<>();
 
-    protected WHorizontalScrollbar wScrollbar;
+	protected WHorizontalScrollbar scrollbar;
 
-    protected float scrollKineticDelta = 0;
+	protected int xOffset = 0;
+	protected float scrollKineticDelta = 0;
+	protected int rightSpace = 0;
 
-    public WHorizontalScrollableContainer(WPosition position, WSize size, WInterface linkedInterface) {
-        setInterface(linkedInterface);
-        setPosition(position);
-        setSize(size);
+	public WHorizontalScrollableContainer() {
+		scrollbar = WWidgetFactory.buildDetached(WHorizontalScrollbar.class).scrollable(this).setParent(this);
+	}
 
-        wScrollbar = new WHorizontalScrollbar(linkedInterface, this);
-        wScrollbar.setHidden(true);
-        linkedInterface.add(wScrollbar);
-        updateScrollbar();
-    }
+	public int getRightSpace() {
+		return rightSpace;
+	}
 
-    public void updateScrollbar() {
-        int scrollBarWidth = getVisibleWidth();
-        int scrollBarHeight = 6;
-        int scrollBarX = getX();
-        int scrollBarY = getY() + getHeight() - scrollBarHeight;
-        wScrollbar.setPosition(WPosition.of(WType.FREE, scrollBarX, scrollBarY, getZ() + 1));
-        wScrollbar.setSize(WSize.of(scrollBarWidth, scrollBarHeight));
-    }
+	public <W extends WHorizontalScrollableContainer> W setRightSpace(int rightSpace) {
+		this.rightSpace = rightSpace;
+		return (W) this;
+	}
 
-    @Override
-    public void onMouseScrolled(int mouseX, int mouseY, double deltaY) {
-        if (isWithinBounds(mouseX, mouseY)) {
-            scrollKineticDelta += deltaY;
-            scroll(deltaY * 5, 0);
-            super.onMouseScrolled(mouseX, mouseY, deltaY);
-        }
-    }
+	@Override
+	public void scroll(double deltaX, double deltaY) {
+		if (getWidgets().size() == 0) {
+			return;
+		}
 
-    @Override
-    public void scroll(double deltaX, double deltaY) {
-        if (getListWidgets().size() == 0) {
-            return;
-        }
+		if (getUnderlyingWidth() <= getVisibleWidth()) {
+			scrollToStart();
+			return;
+		}
 
-        boolean hitLeft = getListWidgets().get(0).stream().anyMatch(widget ->
-                widget.getX() + deltaX > getStartAnchorX()
-        );
+		boolean hitLeft = xOffset - deltaX < 0;
+		boolean hitRight = xOffset - deltaX > getMaxOffsetX();
 
-        boolean hitRight = getListWidgets().get(getListWidgets().size() - 1).stream().anyMatch(widget ->
-                widget.getX() + widget.getWidth() + deltaX <= getStartAnchorX() + getVisibleWidth()
-        );
+		if (hitRight || hitLeft) {
+			scrollKineticDelta = 0;
+		}
 
-        if (hitRight && scrollKineticDelta < -2.5) {
-            scrollKineticDelta = -scrollKineticDelta;
-        }
+		if (deltaX > 0 && hitLeft) {
+			scrollToStart();
+		} else if (deltaX < 0 && hitRight) {
+			scrollToEnd();
+		} else {
+			xOffset -= deltaX;
+		}
 
-        if (hitLeft && scrollKineticDelta > 2.5) {
-            scrollKineticDelta = -scrollKineticDelta;
-        }
+		updateChildren();
+	}
 
+	@Override
+	public Collection<? extends WEventListener> getEventDelegates() {
+		Set<WAbstractWidget> delegates = new HashSet<>(widgets);
+		delegates.add(scrollbar);
+		return ImmutableSet.copyOf(delegates);
+	}
 
-        if (deltaX > 0 && hitLeft) {
-            scrollToStart();
-        } else if (deltaX < 0 && hitRight) {
-            scrollToEnd();
-        } else {
-            for (WWidget widget : getWidgets()) {
-                widget.setX(widget.getX() + (int) deltaX);
-            }
-        }
+	public boolean getScrollbarVisible() {
+		return !scrollbar.isHidden();
+	}
 
-        updateHidden();
-    }
+	public <W extends WHorizontalScrollableContainer> W setScrollbarVisible(boolean visible) {
+		scrollbar.setHidden(!visible);
+		return (W) this;
+	}
 
-    public List<List<WWidget>> getListWidgets() {
-        return listWidgets;
-    }
+	protected int getMaxX() {
+		int max = widgets.stream().mapToInt(w -> w.getPosition().getRelativeX() + w.getWidth()).max().orElse(0);
+		if (max == 0) return getStartAnchorX();
+		return getStartAnchorX() + max - getVisibleWidth() + rightSpace;
+	}
 
-    @Override
-    public List<WWidget> getWidgets() {
-        List<WWidget> widgets = new ArrayList<>();
-        for (List<WWidget> widgetA : getListWidgets()) {
-            widgets.addAll(widgetA);
-        }
-        return widgets;
-    }
+	@Override
+	public Size getUnderlyingSize() {
+		Set<WAbstractWidget> widgets = getWidgets();
 
-    @Override
-    public void setLabel(Text label) {
-        super.setLabel(label);
-        scrollToStart();
-        updateHidden();
-        updateScrollbar();
-    }
+		int leftmostX = getStartAnchorX();
+		int rightmostX = leftmostX;
+		for (WAbstractWidget widget : widgets) {
+			if (widget.getX() < leftmostX) {
+				leftmostX = widget.getX();
+			}
+			if (widget.getX() + widget.getWidth() > rightmostX) {
+				rightmostX = widget.getX() + widget.getWidth();
+			}
+		}
 
-    public boolean hasScrollbar() {
-        return !wScrollbar.isHidden();
-    }
+		return Size.of(rightmostX - leftmostX, getVisibleHeight());
+	}
 
-    public void setScrollbarVisible(boolean visible) {
-        wScrollbar.setHidden(!visible);
-    }
+	@Override
+	public Set<WAbstractWidget> getWidgets() {
+		return widgets;
+	}
 
-    @Override
-    public int getStartAnchorX() {
-        return getX();
-    }
+	@Override
+	public boolean contains(WAbstractWidget... widgetArray) {
+		return widgets.containsAll(Arrays.asList(widgetArray));
+	}
 
-    @Override
-    public int getEndAnchorX() {
-        if (getWidth() > getInnerWidth()) return getStartAnchorX();
-        return getStartAnchorX() - (getInnerWidth() - getVisibleWidth());
-    }
+	@Override
+	public Size getVisibleSize() {
+		return Size.of(getWidth(), getHeight() - (!scrollbar.isHidden() ? scrollbar.getHeight() : 0));
+	}
 
-    @Override
-    public WSize getVisibleSize() {
-        return WSize.of(getWidth(), getHeight() - (!wScrollbar.isHidden() ? wScrollbar.getHeight() : 0));
-    }
+	@Override
+	public int getStartAnchorX() {
+		return getX();
+	}
 
-    @Override
-    public WSize getInnerSize() {
-        List<List<WWidget>> widgetLists = getListWidgets();
+	public int getMaxOffsetX() {
+		return getMaxX() - getStartAnchorX();
+	}	@Override
+	public int getEndAnchorX() {
+		if (getWidth() > getUnderlyingWidth()) return getStartAnchorX();
+		return getStartAnchorX() - (getUnderlyingWidth() - getVisibleWidth());
+	}
 
-        // Leftmost widget (lower X)
-        int leftmostX = getStartAnchorX();
-        for (WWidget widget : widgetLists.get(0)) {
-            if (widget.getX() < leftmostX) {
-                leftmostX = widget.getX();
-            }
-        }
+	public void scrollToEnd() {
+		xOffset = getMaxOffsetX();
+		updateChildren();
+	}
 
-        // Bottommost widget (higher Y)
-        int rightmostX = leftmostX;
-        for (WWidget widget : widgetLists.get(widgetLists.size() - 1)) {
-            if (widget.getX() + widget.getWidth() > rightmostX) {
-                rightmostX = widget.getX() + widget.getWidth();
-            }
-        }
+	@Override
+	public void add(WAbstractWidget... widgetArray) {
+		widgets.addAll(Arrays.asList(widgetArray));
+		onLayoutChange();
+	}
 
-        return WSize.of(rightmostX - leftmostX, getVisibleHeight());
-    }
+	@Override
+	public void onLayoutChange() {
+		super.onLayoutChange();
+		scrollToStart();
+		updateScrollbar();
+		recalculateCache();
+	}
 
-    @Override
-    public int getStartOffsetX() {
-        int leftX = getStartAnchorX();
-        int leftmostX = leftX;
-        for (WWidget widget : getListWidgets().get(0)) {
-            if (widget.getX() < leftmostX) {
-                leftmostX = widget.getX();
-            }
-        }
-        return leftX - leftmostX;
-    }
+	@Override
+	public int getStartOffsetX() {
+		return xOffset;
+	}
 
-    @Override
-    public void align() {
-        super.align();
-        scrollToStart();
-    }
+	public void scrollToStart() {
+		xOffset = 0;
+		updateChildren();
+	}
 
-    @Override
-    public boolean updateFocus(int mouseX, int mouseY) {
-        setFocus(isWithinBounds(mouseX, mouseY) && getWidgets().stream().noneMatch((WWidget::getFocus)));
-        return getFocus();
-    }
+	public void updateScrollbar() {
+		int scrollBarWidth = getVisibleWidth();
+		int scrollBarHeight = 6;
+		int scrollBarOffsetX = 0;
+		int scrollBarOffsetY = getHeight() - scrollBarHeight;
+		scrollbar.setPosition(Position.of(this, scrollBarOffsetX, scrollBarOffsetY, scrollbar.getPosition().getRelativeZ()));
+		scrollbar.setSize(Size.of(scrollBarWidth, scrollBarHeight));
+	}
 
-    @Override
-    public void center() {
-        int oldX = getX();
-        int oldY = getY();
+	@Override
+	public void recalculateCache() {
+		orderedWidgets = new ArrayList<>(getWidgets());
+		Collections.sort(orderedWidgets);
+		Collections.reverse(orderedWidgets);
+	}
 
-        super.center();
+	public void updateChildren() {
+		for (WAbstractWidget w : getWidgets()) {
+			w.getPosition().setOffsetX(-xOffset);
+			boolean startContained = isWithinBounds(w.getX(), w.getY(), 1)
+					|| isWithinBounds(w.getX() + w.getWidth(), w.getY() + w.getHeight(), 1);
+			w.setHidden(!startContained);
+		}
+	}
 
-        int newX = getX();
-        int newY = getY();
+	@Override
+	public List<WLayoutElement> getOrderedWidgets() {
+		return orderedWidgets;
+	}
 
-        int offsetX = newX - oldX;
-        int offsetY = newY - oldY;
+	@Override
+	public void remove(WAbstractWidget... widgetArray) {
+		widgets.removeAll(Arrays.asList(widgetArray));
+		onLayoutChange();
+		onLayoutChange();
+	}
 
-        for (WWidget widget : getWidgets()) {
-            widget.setX(widget.getX() + offsetX);
-            widget.setY(widget.getY() + offsetY);
-        }
-    }
+	@Override
+	public void tick() {
+		if (scrollKineticDelta > 0.05 || scrollKineticDelta < -0.05) {
+			scrollKineticDelta = (float) (scrollKineticDelta / 1.10);
+			scroll(scrollKineticDelta, 0);
+		} else {
+			scrollKineticDelta = 0;
+		}
+	}
 
-    @Override
-    public void draw() {
-        if (isHidden()) {
-            return;
-        }
+	@Override
+	public void draw() {
+		if (isHidden()) {
+			return;
+		}
 
-        int x = getX();
-        int y = getY();
+		int x = getX();
+		int y = getY();
 
-        int sX = getWidth();
-        int sY = getHeight();
+		int sX = getWidth();
+		int sY = getHeight();
 
-        int rawHeight = MinecraftClient.getInstance().getWindow().getHeight();
-        double scale = MinecraftClient.getInstance().getWindow().getScaleFactor();
+		int rawHeight = MinecraftClient.getInstance().getWindow().getHeight();
+		double scale = MinecraftClient.getInstance().getWindow().getScaleFactor();
 
-        GL11.glEnable(GL11.GL_SCISSOR_TEST);
+		GL11.glEnable(GL11.GL_SCISSOR_TEST);
 
-        GL11.glScissor((int) (x * scale), (int) (rawHeight - (y * scale + sY * scale)), (int) (sX * scale), (int) (sY * scale));
+		GL11.glScissor((int) (x * scale), (int) (rawHeight - (y * scale + sY * scale)), (int) (sX * scale), (int) (sY * scale));
 
-        for (List<WWidget> widgetB : getListWidgets()) {
-            for (WWidget widgetC : widgetB) {
-                widgetC.draw();
-            }
-        }
+		for (WLayoutElement widget : getOrderedWidgets()) {
+			widget.draw();
+		}
 
-        GL11.glDisable(GL11.GL_SCISSOR_TEST);
+		GL11.glDisable(GL11.GL_SCISSOR_TEST);
 
-        wScrollbar.draw();
+		scrollbar.draw();
+	}
 
-        //BaseRenderer.drawRectangle(getX() + 4, getStartAnchorY() - getStartOffset(), 100, getInnerWidth(), getInnerHeight(), WColor.of("0x4000ff00"));
-        //BaseRenderer.drawRectangle(getX() + 4, getStartAnchorY(), 101, getVisibleWidth(), getVisibleHeight(), WColor.of("0x80ff0000"));
-    }
+	@Override
+	public boolean updateFocus(int mouseX, int mouseY) {
+		setFocus(isWithinBounds(mouseX, mouseY) && getWidgets().stream().noneMatch((WAbstractWidget::isFocused)));
+		return isFocused();
+	}
 
-    public void scrollToStart() {
-        int x = getStartAnchorX();
-
-        for (List<WWidget> widgetA : getListWidgets()) {
-            int y = getY();
-            for (WWidget widgetB : widgetA) {
-                widgetB.setX(x);
-                widgetB.setY(y);
-                y += widgetB.getHeight() + 2;
-            }
-            x += widgetA.get(0).getWidth() + 2;
-        }
-    }
-
-    public void scrollToEnd() {
-        int x = getEndAnchorX();
-
-        for (List<WWidget> widgetA : getListWidgets()) {
-            int y = getY();
-            for (WWidget widgetB : widgetA) {
-                widgetB.setX(x);
-                widgetB.setY(y);
-                y += widgetB.getHeight() + 2;
-            }
-            x += widgetA.get(0).getWidth() + 2;
-        }
-    }
-
-    public void updateHidden() {
-        for (List<WWidget> widgetList : getListWidgets()) {
-            for (WWidget w : widgetList) {
-                boolean startContained = isWithinBounds(w.getX(), w.getY(), 1)
-                        || isWithinBounds(w.getX() + w.getWidth(), w.getY() + w.getHeight(), 1);
-                w.setHidden(!startContained);
-            }
-        }
-    }
-
-    @Override
-    public void add(WWidget... widgetArray) {
-        getListWidgets().add(Arrays.asList(widgetArray));
-        scrollToStart();
-        updateHidden();
-    }
-
-    @Override
-    public void remove(WWidget... widgetArray) {
-        getListWidgets().remove(Arrays.asList(widgetArray));
-        scrollToStart();
-        updateHidden();
-    }
-
-    @Override
-    public boolean contains(WWidget... widgetArray) {
-        for (List<WWidget> widgetList : getListWidgets()) {
-            if (widgetList.containsAll(Arrays.asList(widgetArray))) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    @Override
-    public void tick() {
-        if (scrollKineticDelta > 0.05 || scrollKineticDelta < -0.05) {
-            scrollKineticDelta = (float) (scrollKineticDelta / 1.10);
-            scroll(scrollKineticDelta, 0);
-        } else {
-            scrollKineticDelta = 0;
-        }
-    }
+	@Override
+	public void onMouseScrolled(int mouseX, int mouseY, double deltaY) {
+		if (isWithinBounds(mouseX, mouseY)) {
+			scrollKineticDelta += deltaY;
+			scroll(deltaY * 5, 0);
+			super.onMouseScrolled(mouseX, mouseY, deltaY);
+		}
+	}
 }

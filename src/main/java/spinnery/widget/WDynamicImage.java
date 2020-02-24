@@ -4,21 +4,18 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.util.Identifier;
 import spinnery.client.BaseRenderer;
+import spinnery.widget.api.WFocusedMouseListener;
 
 @Environment(EnvType.CLIENT)
-public class WDynamicImage extends WWidget implements WClient, WFocusedMouseListener {
+@WFocusedMouseListener
+public class WDynamicImage extends WAbstractWidget {
 	protected Identifier[] textures;
 
 	protected int currentImage = 0;
 
-	public WDynamicImage(WPosition position, WSize size, WInterface linkedInterface, Identifier... textures) {
-		setInterface(linkedInterface);
-
-		setPosition(position);
-
-		setSize(size);
-
+	public WDynamicImage textures(Identifier... textures) {
 		setTextures(textures);
+		return this;
 	}
 
 	public int next() {
@@ -34,16 +31,18 @@ public class WDynamicImage extends WWidget implements WClient, WFocusedMouseList
 		return currentImage;
 	}
 
-	public void setCurrentImage(int currentImage) {
+	public <W extends WDynamicImage> W setCurrentImage(int currentImage) {
 		this.currentImage = currentImage;
+		return (W) this;
 	}
 
 	public Identifier[] getTextures() {
 		return textures;
 	}
 
-	public void setTextures(Identifier... textures) {
+	public <W extends WDynamicImage> W setTextures(Identifier... textures) {
 		this.textures = textures;
+		return (W) this;
 	}
 
 	public int previous() {

@@ -4,68 +4,27 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
-import net.minecraft.text.Text;
 import spinnery.client.BaseRenderer;
+import spinnery.client.TextRenderer;
+import spinnery.widget.api.WFocusedMouseListener;
 
-import java.util.Map;
-
+@SuppressWarnings("unchecked")
 @Environment(EnvType.CLIENT)
-public class WTabToggle extends WToggle {
-	public static final int SHADOW_ON = 0;
-	public static final int BACKGROUND_ON = 1;
-	public static final int HIGHLIGHT_ON = 2;
-	public static final int OUTLINE_ON = 3;
-	public static final int SHADOW_OFF = 4;
-	public static final int BACKGROUND_OFF = 5;
-	public static final int HIGHLIGHT_OFF = 6;
-	public static final int OUTLINE_OFF = 7;
-	public static final int LABEL = 8;
-	Item symbol;
-	Text name;
-
-	public WTabToggle(WPosition position, WSize size, WInterface linkedInterface, Item symbol, Text name) {
-		super(position, size, linkedInterface);
-
-		setInterface(linkedInterface);
-
-		setPosition(position);
-
-		setSize(size);
-
-		setSymbol(symbol);
-
-		setName(name);
-
-		setTheme("light");
-	}
-
-	public static WWidget.Theme of(Map<String, String> rawTheme) {
-		WWidget.Theme theme = new WWidget.Theme();
-		theme.put(SHADOW_ON, WColor.of(rawTheme.get("shadow_on")));
-		theme.put(BACKGROUND_ON, WColor.of(rawTheme.get("background_on")));
-		theme.put(HIGHLIGHT_ON, WColor.of(rawTheme.get("highlight_on")));
-		theme.put(OUTLINE_ON, WColor.of(rawTheme.get("outline_on")));
-		theme.put(SHADOW_OFF, WColor.of(rawTheme.get("shadow_off")));
-		theme.put(BACKGROUND_OFF, WColor.of(rawTheme.get("background_off")));
-		theme.put(HIGHLIGHT_OFF, WColor.of(rawTheme.get("highlight_off")));
-		theme.put(OUTLINE_OFF, WColor.of(rawTheme.get("outline_off")));
-		theme.put(LABEL, WColor.of(rawTheme.get("label")));
-		return theme;
-	}
-
-	public Text getName() {
-		return name;
-	}
-
-	public void setName(Text name) {
-		this.name = name;
-	}
+@WFocusedMouseListener
+public class WTabToggle extends WAbstractToggle {
+	protected ItemConvertible symbol;
 
 	@Override
 	public void onMouseClicked(int mouseX, int mouseY, int mouseButton) {
-		if (!getToggleState()) {
-			super.onMouseClicked(mouseX, mouseY, mouseButton);
+		super.onMouseClicked(mouseX, mouseY, mouseButton);
+		setToggleState(true);
+		if (parent instanceof WTabHolder.WTab) {
+			WTabHolder.WTab tab = (WTabHolder.WTab) parent;
+			if (tab.getParent() instanceof WTabHolder) {
+				((WTabHolder) tab.getParent()).selectTab(tab.getNumber());
+			}
 		}
 	}
 
@@ -83,22 +42,24 @@ public class WTabToggle extends WToggle {
 		int sY = getHeight() + 4;
 
 		if (!getToggleState()) {
-			BaseRenderer.drawPanel(x, y, z - 1, sX, sY, getResourceAsColor(SHADOW_OFF), getResourceAsColor(BACKGROUND_OFF), getResourceAsColor(HIGHLIGHT_OFF), getResourceAsColor(OUTLINE_OFF));
+			BaseRenderer.drawPanel(x, y, z - 1, sX, sY, getStyle().asColor("shadow.off"), getStyle().asColor("background.off"), getStyle().asColor("highlight.off"), getStyle().asColor("outline.off"));
 		} else {
-			BaseRenderer.drawPanel(x, y, z - 1, sX, sY, getResourceAsColor(SHADOW_ON), getResourceAsColor(BACKGROUND_ON), getResourceAsColor(HIGHLIGHT_ON), getResourceAsColor(OUTLINE_ON));
+			BaseRenderer.drawPanel(x, y, z - 1, sX, sY, getStyle().asColor("shadow.on"), getStyle().asColor("background.on"), getStyle().asColor("highlight.on"), getStyle().asColor("outline.on"));
 		}
 
 		RenderSystem.enableLighting();
 		BaseRenderer.getItemRenderer().renderGuiItemIcon(new ItemStack(getSymbol(), 1), x + 4, y + 4);
 		RenderSystem.disableLighting();
-		BaseRenderer.drawText(isLabelShadowed(), name.asFormattedString(), x + 24, (int) (y + sY / 2 - 4.5), getResourceAsColor(LABEL).RGB);
+		TextRenderer.pass().shadow(isLabelShadowed()).text(getLabel()).at(x + 24, y + sY / 2 - 4.5, z)
+				.color(getStyle().asColor("label.color")).shadowColor(getStyle().asColor("label.shadow_color")).render();
 	}
 
 	public Item getSymbol() {
-		return symbol;
+		return symbol.asItem();
 	}
 
-	public void setSymbol(Item symbol) {
+	public <W extends WTabToggle> W setSymbol(ItemConvertible symbol) {
 		this.symbol = symbol;
+		return (W) this;
 	}
 }

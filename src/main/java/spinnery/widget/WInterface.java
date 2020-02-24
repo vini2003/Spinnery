@@ -1,198 +1,288 @@
 package spinnery.widget;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.util.Window;
+import net.minecraft.util.Identifier;
 import spinnery.client.BaseRenderer;
 import spinnery.common.BaseContainer;
+import spinnery.registry.NetworkRegistry;
+import spinnery.util.EventUtilities;
+import spinnery.widget.api.Color;
+import spinnery.widget.api.WDrawableCollection;
+import spinnery.widget.api.WLayoutElement;
+import spinnery.widget.api.WModifiableCollection;
+import spinnery.widget.api.WNetworked;
+import spinnery.widget.api.WThemable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-public class WInterface extends WWidget implements WModifiableCollection {
-	public static final int SHADOW = 0;
-	public static final int BACKGROUND = 1;
-	public static final int HIGHLIGHT = 2;
-	public static final int OUTLINE = 3;
-	public static final int LABEL = 4;
-	public static final boolean INSTANCE_CLIENT = false;
-	public static final boolean INSTANCE_SERVER = true;
+public class WInterface implements WDrawableCollection, WModifiableCollection, WLayoutElement, WThemable {
 	protected BaseContainer linkedContainer;
-	protected List<WWidget> heldWidgets = new ArrayList<>();
+	protected Set<WAbstractWidget> widgets = new LinkedHashSet<>();
+	protected List<WLayoutElement> orderedWidgets = new ArrayList<>();
+	protected Map<Class<? extends WAbstractWidget>, WAbstractWidget> cachedWidgets = new HashMap<>();
 	protected boolean isClientside;
-	protected boolean instanceType;
+	protected Identifier theme;
+	protected boolean isBlurred = false;
+
+	public WInterface() {
+		setClientside(true);
+	}
+
+	public <W extends WInterface> W setClientside(Boolean clientside) {
+		isClientside = clientside;
+		return (W) this;
+	}
 
 	public WInterface(BaseContainer linkedContainer) {
 		setContainer(linkedContainer);
-	}
-
-	public WInterface(WPosition position) {
-		setPosition(position);
-
-		setSize(WSize.of(0, 0));
-
-		setClientside(true);
-
-		setInstanceType(INSTANCE_CLIENT);
-
-		setTheme("light");
-	}
-
-	public void setClientside(Boolean clientside) {
-		isClientside = clientside;
-	}
-
-	public boolean isClient() {
-		return instanceType == INSTANCE_CLIENT;
-	}
-
-	public WInterface(WPosition position, WSize size) {
-		setPosition(position);
-
-		setSize(size);
-
-		setClientside(true);
-
-		setInstanceType(INSTANCE_CLIENT);
-
-		setTheme("light");
-	}
-
-	public WInterface(WPosition position, WSize size, BaseContainer linkedContainer) {
-		setPosition(position);
-
-		setSize(size);
-
-		setContainer(linkedContainer);
-
-		setClientside(false);
-
-		if (getContainer().getLinkedWorld().isClient()) {
-			setInstanceType(INSTANCE_CLIENT);
-		} else {
-			setInstanceType(INSTANCE_SERVER);
+		if (getContainer().getWorld().isClient()) {
+			setClientside(true);
 		}
-
-		setTheme("light");
 	}
 
 	public BaseContainer getContainer() {
 		return linkedContainer;
 	}
 
-	public void setContainer(BaseContainer linkedContainer) {
+	public <W extends WInterface> W setContainer(BaseContainer linkedContainer) {
 		this.linkedContainer = linkedContainer;
+		return (W) this;
 	}
 
-	public WInterface(WPosition position, BaseContainer linkedContainer) {
-		setPosition(position);
-
-		setSize(WSize.of(0, 0));
-
-		setContainer(linkedContainer);
-
-		setClientside(false);
-
-		if (getContainer().getLinkedWorld().isClient()) {
-			setInstanceType(INSTANCE_CLIENT);
-		} else {
-			setInstanceType(INSTANCE_SERVER);
-		}
-
-		setTheme("light");
+	public boolean isClient() {
+		return isClientside;
 	}
 
-	public static WWidget.Theme of(Map<String, String> rawTheme) {
-		WWidget.Theme theme = new WWidget.Theme();
-		theme.put(SHADOW, WColor.of(rawTheme.get("shadow")));
-		theme.put(BACKGROUND, WColor.of(rawTheme.get("background")));
-		theme.put(HIGHLIGHT, WColor.of(rawTheme.get("highlight")));
-		theme.put(OUTLINE, WColor.of(rawTheme.get("outline")));
-		theme.put(LABEL, WColor.of(rawTheme.get("label")));
+	public Map<Class<? extends WAbstractWidget>, WAbstractWidget> getCachedWidgets() {
+		return cachedWidgets;
+	}
+
+	@Override
+	public Identifier getTheme() {
 		return theme;
 	}
 
-	public boolean getInstanceType() {
-		return instanceType;
+	public <W extends WInterface> W setTheme(Identifier theme) {
+		this.theme = theme;
+		return (W) this;
 	}
 
-	public void setInstanceType(boolean instanceType) {
-		this.instanceType = instanceType;
+	public <W extends WInterface> W setTheme(String theme) {
+		return setTheme(new Identifier(theme));
 	}
 
 	public boolean isServer() {
-		return instanceType == INSTANCE_SERVER;
+		return !isClientside;
 	}
 
 	@Override
-	public List<WWidget> getWidgets() {
-		return heldWidgets;
+	public void add(WAbstractWidget... widgets) {
+		this.widgets.addAll(Arrays.asList(widgets));
+		onLayoutChange();
 	}
 
 	@Override
-	public List<WWidget> getAllWidgets() {
-		return heldWidgets;
+	public void recalculateCache() {
+		orderedWidgets = new ArrayList<>(getWidgets());
+		Collections.sort(orderedWidgets);
+		Collections.reverse(orderedWidgets);
 	}
 
 	@Override
-	public void add(WWidget... widgets) {
-		for (WWidget widget : widgets) {
-			if (widget instanceof WServer && isClientside()) {
-				throw new RuntimeException("Cannot add server-side WWidget to non-server-side WIntertface!");
+	public Set<WAbstractWidget> getWidgets() {
+		return widgets;
+	}
+
+	@Override
+	public boolean contains(WAbstractWidget... widgets) {
+		return this.widgets.containsAll(Arrays.asList(widgets));
+	}
+
+	@Override
+	public List<WLayoutElement> getOrderedWidgets() {
+		return orderedWidgets;
+	}
+
+	@Override
+	public void remove(WAbstractWidget... widgets) {
+		this.widgets.removeAll(Arrays.asList(widgets));
+		onLayoutChange();
+	}
+
+	public void onMouseClicked(int mouseX, int mouseY, int mouseButton) {
+		for (WAbstractWidget widget : getWidgets()) {
+			if (!EventUtilities.canReceiveMouse(widget)) continue;
+			widget.onMouseClicked(mouseX, mouseY, mouseButton);
+			if (widget instanceof WNetworked) {
+				ClientSidePacketRegistry.INSTANCE.sendToServer(NetworkRegistry.SYNCED_WIDGET_PACKET,
+						NetworkRegistry.createMouseClickPacket(((WNetworked) widget), mouseX, mouseY, mouseButton));
 			}
 		}
-
-		heldWidgets.addAll(Arrays.asList(widgets));
 	}
 
-	@Override
-	public void remove(WWidget... widgets) {
-		heldWidgets.removeAll(Arrays.asList(widgets));
+	public boolean onMouseReleased(int mouseX, int mouseY, int mouseButton) {
+		for (WAbstractWidget widget : getWidgets()) {
+			if (!EventUtilities.canReceiveMouse(widget)) continue;
+			widget.onMouseReleased(mouseX, mouseY, mouseButton);
+			if (widget instanceof WNetworked) {
+				ClientSidePacketRegistry.INSTANCE.sendToServer(NetworkRegistry.SYNCED_WIDGET_PACKET,
+						NetworkRegistry.createMouseReleasePacket(((WNetworked) widget), mouseX, mouseY, mouseButton));
+			}
+		}
+		return false;
 	}
 
-	@Override
-	public boolean contains(WWidget... widgets) {
-		return heldWidgets.containsAll(Arrays.asList(widgets));
+	public boolean onMouseDragged(int mouseX, int mouseY, int mouseButton, int deltaX, int deltaY) {
+		for (WAbstractWidget widget : getWidgets()) {
+			if (!EventUtilities.canReceiveMouse(widget)) continue;
+			widget.onMouseDragged(mouseX, mouseY, mouseButton, deltaX, deltaY);
+			if (widget instanceof WNetworked) {
+				ClientSidePacketRegistry.INSTANCE.sendToServer(NetworkRegistry.SYNCED_WIDGET_PACKET,
+						NetworkRegistry.createMouseDragPacket(((WNetworked) widget), mouseX, mouseY, mouseButton, deltaX, deltaY));
+			}
+		}
+		return false;
 	}
 
-	public Boolean isClientside() {
-		return isClientside;
+	public void onMouseScrolled(int mouseX, int mouseY, double deltaY) {
+		for (WAbstractWidget widget : getWidgets()) {
+			if (!EventUtilities.canReceiveMouse(widget)) continue;
+			widget.onMouseScrolled(mouseX, mouseY, deltaY);
+			if (widget instanceof WNetworked) {
+				ClientSidePacketRegistry.INSTANCE.sendToServer(NetworkRegistry.SYNCED_WIDGET_PACKET,
+						NetworkRegistry.createMouseScrollPacket(((WNetworked) widget), mouseX, mouseY, deltaY));
+			}
+		}
+	}
+
+	public void onMouseMoved(int mouseX, int mouseY) {
+		for (WAbstractWidget widget : getWidgets()) {
+			widget.updateFocus(mouseX, mouseY);
+			if (!EventUtilities.canReceiveMouse(widget)) continue;
+			widget.onMouseMoved(mouseX, mouseY);
+			if (widget instanceof WNetworked) {
+				ClientSidePacketRegistry.INSTANCE.sendToServer(NetworkRegistry.SYNCED_WIDGET_PACKET,
+						NetworkRegistry.createFocusPacket(((WNetworked) widget), widget.isFocused()));
+			}
+		}
+	}
+
+	public void onKeyReleased(int keyCode, int character, int keyModifier) {
+		for (WAbstractWidget widget : getWidgets()) {
+			if (!EventUtilities.canReceiveKeyboard(widget)) continue;
+			widget.onKeyReleased(keyCode, character, keyModifier);
+			if (widget instanceof WNetworked) {
+				ClientSidePacketRegistry.INSTANCE.sendToServer(NetworkRegistry.SYNCED_WIDGET_PACKET,
+						NetworkRegistry.createKeyReleasePacket(((WNetworked) widget), character, keyCode, keyModifier));
+			}
+		}
+	}
+
+	public void onKeyPressed(int keyCode, int character, int keyModifier) {
+		for (WAbstractWidget widget : getWidgets()) {
+			if (!EventUtilities.canReceiveKeyboard(widget)) continue;
+			widget.onKeyPressed(keyCode, character, keyModifier);
+			if (widget instanceof WNetworked) {
+				ClientSidePacketRegistry.INSTANCE.sendToServer(NetworkRegistry.SYNCED_WIDGET_PACKET,
+						NetworkRegistry.createKeyPressPacket(((WNetworked) widget), character, keyCode, keyModifier));
+			}
+		}
+	}
+
+	public void onCharTyped(char character, int keyCode) {
+		for (WAbstractWidget widget : getWidgets()) {
+			if (!EventUtilities.canReceiveKeyboard(widget)) continue;
+			widget.onCharTyped(character, keyCode);
+			if (widget instanceof WNetworked) {
+				ClientSidePacketRegistry.INSTANCE.sendToServer(NetworkRegistry.SYNCED_WIDGET_PACKET,
+						NetworkRegistry.createCharTypePacket(((WNetworked) widget), character, keyCode));
+			}
+		}
+	}
+
+	public void onDrawMouseoverTooltip(int mouseX, int mouseY) {
+		for (WAbstractWidget widget : getWidgets()) {
+			widget.onDrawTooltip(mouseX, mouseY);
+		}
+	}
+
+	public void onAlign() {
+		for (WAbstractWidget widget : getWidgets()) {
+			widget.align();
+			widget.onAlign();
+		}
+	}
+
+	public void tick() {
+		for (WAbstractWidget widget : getAllWidgets()) {
+			widget.tick();
+		}
 	}
 
 	@Override
 	public void draw() {
-		if (isHidden()) {
-			return;
+		if (isBlurred()) {
+			Window window = MinecraftClient.getInstance().getWindow();
+			BaseRenderer.drawRectangle(0, 0, 0, window.getWidth(), window.getHeight(), Color.of(0x90000000));
 		}
 
-		if (isDrawable()) {
-			int x = getX();
-			int y = getY();
-			int z = getZ();
-
-			int sX = getWidth();
-			int sY = getHeight();
-
-			BaseRenderer.drawPanel(x, y, z, sX, sY, getResourceAsColor(SHADOW), getResourceAsColor(BACKGROUND), getResourceAsColor(HIGHLIGHT), getResourceAsColor(OUTLINE));
-
-			if (hasLabel()) {
-				BaseRenderer.drawText(isLabelShadowed(), getLabel().asFormattedString(), x + sX / 2 - BaseRenderer.getTextRenderer().getStringWidth(getLabel().asFormattedString()) / 2, y + 6, getResourceAsColor(LABEL).RGB);
-				BaseRenderer.drawRectangle(x, y + 16, z, sX, 1, getResourceAsColor(OUTLINE));
-				BaseRenderer.drawRectangle(x + 1, y + 17, z, sX - 2, 0.75, getResourceAsColor(SHADOW));
-			}
-		}
-
-		List<WWidget> sorted = new ArrayList<>(getWidgets());
-		Collections.sort(getWidgets());
-		for (WWidget widget : sorted) {
+		for (WLayoutElement widget : getOrderedWidgets()) {
 			widget.draw();
 		}
 	}
 
-	public boolean isDrawable() {
-		return size.getX() != 0 && size.getY() != 0;
+	public boolean isBlurred() {
+		return isBlurred;
+	}
+
+	public <W extends WInterface> W setBlurred(boolean isBlurred) {
+		this.isBlurred = isBlurred;
+		return (W) this;
 	}
 
 	@Override
-	public void setTheme(String theme) {
-		if (isClient()) {
-			super.setTheme(theme);
-		}
+	public void onLayoutChange() {
+		recalculateCache();
+	}
+
+	@Override
+	@Environment(EnvType.CLIENT)
+	public int getX() {
+		return 0;
+	}
+
+	@Override
+	@Environment(EnvType.CLIENT)
+	public int getY() {
+		return 0;
+	}
+
+	@Override
+	@Environment(EnvType.CLIENT)
+	public int getZ() {
+		return 0;
+	}
+
+	@Override
+	@Environment(EnvType.CLIENT)
+	public int getWidth() {
+		return MinecraftClient.getInstance().getWindow().getScaledWidth();
+	}
+
+	@Override
+	@Environment(EnvType.CLIENT)
+	public int getHeight() {
+		return MinecraftClient.getInstance().getWindow().getScaledHeight();
 	}
 }

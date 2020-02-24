@@ -1,48 +1,133 @@
 package spinnery.common;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.keybinding.FabricKeyBinding;
+import net.fabricmc.fabric.api.client.keybinding.KeyBindingRegistry;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.ContainerScreen;
+import net.minecraft.client.options.GameOptions;
+import net.minecraft.client.options.KeyBinding;
+import net.minecraft.client.util.InputUtil;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import org.lwjgl.glfw.GLFW;
-import spinnery.widget.WCollection;
-import spinnery.widget.WInterfaceHolder;
+import spinnery.client.BaseRenderer;
+import spinnery.widget.WAbstractWidget;
+import spinnery.widget.WInterface;
 import spinnery.widget.WSlot;
-import spinnery.widget.WWidget;
+import spinnery.widget.api.WCollection;
+import spinnery.widget.api.WContextLock;
+import spinnery.widget.api.WInterfaceProvider;
 
-public class BaseContainerScreen<T extends BaseContainer> extends ContainerScreen<T> {
-	int tooltipX = 0;
-	int tooltipY = 0;
-	WSlot drawSlot;
-
-	WInterfaceHolder clientHolder = new WInterfaceHolder();
+public class BaseContainerScreen<T extends BaseContainer> extends ContainerScreen<T> implements WInterfaceProvider {
+	protected final WInterface clientInterface;
+	protected int tooltipX = 0;
+	protected int tooltipY = 0;
+	protected WSlot drawSlot;
 
 	@Environment(EnvType.CLIENT)
 	public BaseContainerScreen(Text name, T linkedContainer, PlayerEntity player) {
 		super(linkedContainer, player.inventory, name);
+		clientInterface = new WInterface(linkedContainer);
 	}
 
 	@Override
 	@Environment(EnvType.CLIENT)
 	public void render(int mouseX, int mouseY, float tick) {
-		getHolder().draw();
+		clientInterface.draw();
 
-		drawTooltip();
-
-		super.render(mouseX, mouseY, tick);
-	}
-
-	@Environment(EnvType.CLIENT)
-	public WInterfaceHolder getHolder() {
-		return clientHolder;
-	}
-
-	@Environment(EnvType.CLIENT)
-	public void drawTooltip() {
-		if (getDrawSlot() != null && getLinkedContainer().getLinkedPlayerInventory().getCursorStack().isEmpty() && !getDrawSlot().getStack().isEmpty()) {
+		if (getDrawSlot() != null && getLinkedContainer().getPlayerInventory().getCursorStack().isEmpty() && !getDrawSlot().getStack().isEmpty()) {
 			this.renderTooltip(getDrawSlot().getStack(), getTooltipX(), getTooltipY());
 		}
+
+		ItemStack stackA;
+
+		if (getContainer().getPreviewCursorStack().isEmpty()
+				&& getContainer().getDragSlots(GLFW.GLFW_MOUSE_BUTTON_1).isEmpty()
+				&& getContainer().getDragSlots(GLFW.GLFW_MOUSE_BUTTON_2).isEmpty()) {
+			stackA = getContainer().getPlayerInventory().getCursorStack();
+		} else {
+			stackA = getContainer().getPreviewCursorStack();
+		}
+
+		RenderSystem.pushMatrix();
+		RenderSystem.translatef(0, 0, 200);
+		BaseRenderer.getItemRenderer().renderGuiItem(stackA, mouseX - 8, mouseY - 8);
+		BaseRenderer.getItemRenderer().renderGuiItemOverlay(BaseRenderer.getTextRenderer(), stackA, mouseX - 8, mouseY - 8);
+		RenderSystem.popMatrix();
+	}
+
+	@Override
+	@Environment(EnvType.CLIENT)
+	protected void drawMouseoverTooltip(int mouseX, int mouseY) {
+		clientInterface.onDrawMouseoverTooltip(mouseX, mouseY);
+
+		super.drawMouseoverTooltip(mouseX, mouseY);
+	}
+
+	@Override
+	@Environment(EnvType.CLIENT)
+	protected void drawBackground(float tick, int mouseX, int mouseY) {
+	}
+
+	@Override
+	@Environment(EnvType.CLIENT)
+	public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
+		getInterface().onMouseClicked((int) mouseX, (int) mouseY, mouseButton);
+
+		return false;
+	}
+
+	@Override
+	@Environment(EnvType.CLIENT)
+	protected boolean isClickOutsideBounds(double mouseX, double mouseY, int int_1, int int_2, int int_3) {
+		return false;
+	}
+
+	@Override
+	@Environment(EnvType.CLIENT)
+	public boolean mouseDragged(double mouseX, double mouseY, int mouseButton, double deltaX, double deltaY) {
+		getInterface().onMouseDragged((int) mouseX, (int) mouseY, mouseButton, (int) deltaX, (int) deltaY);
+
+		return false;
+	}
+
+	@Override
+	@Environment(EnvType.CLIENT)
+	public boolean mouseReleased(double mouseX, double mouseY, int mouseButton) {
+		getInterface().onMouseReleased((int) mouseX, (int) mouseY, mouseButton);
+
+		return false;
+	}
+
+	@Override
+	@Environment(EnvType.CLIENT)
+	public boolean keyPressed(int keyCode, int character, int keyModifier) {
+		clientInterface.onKeyPressed(keyCode, character, keyModifier);
+
+		if (keyCode == GLFW.GLFW_KEY_ESCAPE || MinecraftClient.getInstance().options.keyInventory.matchesKey(keyCode, character)) {
+			if (clientInterface.getAllWidgets().stream().noneMatch(widget -> widget instanceof WContextLock && ((WContextLock) widget).isActive())) {
+				minecraft.player.closeContainer();
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	@Override
+	@Environment(EnvType.CLIENT)
+	public boolean isPauseScreen() {
+		return false;
+	}
+
+	@Override
+	public void tick() {
+		getInterface().tick();
+		super.tick();
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -61,8 +146,9 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 	}
 
 	@Environment(EnvType.CLIENT)
-	public void setTooltipX(int tooltipX) {
+	public <S extends BaseContainerScreen> S setTooltipX(int tooltipX) {
 		this.tooltipX = tooltipX;
+		return (S) this;
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -71,87 +157,33 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 	}
 
 	@Environment(EnvType.CLIENT)
-	public void setTooltipY(int tooltipY) {
+	public <S extends BaseContainerScreen> S setTooltipY(int tooltipY) {
 		this.tooltipY = tooltipY;
+		return (S) this;
 	}
 
 	@Environment(EnvType.CLIENT)
-	public void setDrawSlot(WSlot drawSlot) {
+	public <S extends BaseContainerScreen> S setDrawSlot(WSlot drawSlot) {
 		this.drawSlot = drawSlot;
+		return (S) this;
+	}
+
+	@Override
+	public void resize(MinecraftClient client, int width, int height) {
+		getInterface().onAlign();
+		super.resize(client, width, height);
 	}
 
 	@Override
 	@Environment(EnvType.CLIENT)
-	protected void drawMouseoverTooltip(int mouseX, int mouseY) {
-		getHolder().drawMouseoverTooltip(mouseX, mouseY);
-
-		super.drawMouseoverTooltip(mouseX, mouseY);
-	}
-
-	@Override
-	@Environment(EnvType.CLIENT)
-	protected void drawBackground(float tick, int mouseX, int mouseY) {
-	}
-
-	@Override
-	@Environment(EnvType.CLIENT)
-	public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
-		getHolder().onMouseClicked((int) mouseX, (int) mouseY, mouseButton);
-
-		return false;
-	}
-
-	@Override
-	@Environment(EnvType.CLIENT)
-	protected boolean isClickOutsideBounds(double mouseX, double mouseY, int int_1, int int_2, int int_3) {
-		return false;
-	}
-
-	@Override
-	@Environment(EnvType.CLIENT)
-	public boolean mouseDragged(double mouseX, double mouseY, int mouseButton, double deltaX, double deltaY) {
-		getHolder().onMouseDragged((int) mouseX, (int) mouseY, mouseButton, (int) deltaX, (int) deltaY);
-
-		return false;
-	}
-
-	@Override
-	@Environment(EnvType.CLIENT)
-	public boolean mouseReleased(double mouseX, double mouseY, int mouseButton) {
-		getHolder().onMouseReleased((int) mouseX, (int) mouseY, mouseButton);
-
-		return false;
-	}
-
-	@Override
-	@Environment(EnvType.CLIENT)
-	public boolean keyPressed(int character, int keyCode, int keyModifier) {
-		getHolder().keyPressed(character, keyCode, keyModifier);
-
-		if (character == GLFW.GLFW_KEY_ESCAPE) {
-			minecraft.player.closeContainer();
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	@Override
-	@Environment(EnvType.CLIENT)
-	public boolean isPauseScreen() {
-		return false;
-	}
-
-	@Override
-	public void tick() {
-		getHolder().tick();
-		super.tick();
+	public WInterface getInterface() {
+		return clientInterface;
 	}
 
 	@Override
 	@Environment(EnvType.CLIENT)
 	public boolean mouseScrolled(double mouseX, double mouseY, double deltaY) {
-		getHolder().onMouseScrolled((int) mouseX, (int) mouseY, deltaY);
+		getInterface().onMouseScrolled((int) mouseX, (int) mouseY, deltaY);
 
 		return false;
 	}
@@ -159,7 +191,7 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 	@Override
 	@Environment(EnvType.CLIENT)
 	public boolean keyReleased(int character, int keyCode, int keyModifier) {
-		getHolder().onKeyReleased(character, keyCode, keyModifier);
+		getInterface().onKeyReleased(character, keyCode, keyModifier);
 
 		return false;
 	}
@@ -167,7 +199,7 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 	@Override
 	@Environment(EnvType.CLIENT)
 	public boolean charTyped(char character, int keyCode) {
-		getHolder().onCharTyped(character, keyCode);
+		getInterface().onCharTyped(character, keyCode);
 
 		return super.charTyped(character, keyCode);
 	}
@@ -175,7 +207,7 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 	@Override
 	@Environment(EnvType.CLIENT)
 	public void mouseMoved(double mouseX, double mouseY) {
-		getHolder().mouseMoved((int) mouseX, (int) mouseY);
+		clientInterface.onMouseMoved((int) mouseX, (int) mouseY);
 
 		updateTooltip((int) mouseX, (int) mouseY);
 	}
@@ -183,13 +215,13 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 	@Environment(EnvType.CLIENT)
 	public void updateTooltip(int mouseX, int mouseY) {
 		setDrawSlot(null);
-		for (WWidget widgetA : getHolder().getWidgets()) {
-			if (widgetA.getFocus() && widgetA instanceof WSlot) {
+		for (WAbstractWidget widgetA : getInterface().getWidgets()) {
+			if (widgetA.isFocused() && widgetA instanceof WSlot) {
 				setDrawSlot((WSlot) widgetA);
 				setTooltipX(mouseX);
 				setTooltipY(mouseY);
 			} else if (widgetA instanceof WCollection) {
-				for (WWidget widgetB : ((WCollection) widgetA).getWidgets()) {
+				for (WAbstractWidget widgetB : ((WCollection) widgetA).getWidgets()) {
 					if (widgetB.updateFocus(mouseX, mouseY) && widgetB instanceof WSlot) {
 						setDrawSlot((WSlot) widgetB);
 						setTooltipX(mouseX);

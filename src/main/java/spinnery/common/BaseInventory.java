@@ -69,6 +69,7 @@ public class BaseInventory implements Inventory, RecipeInputProvider {
 			return ItemStack.EMPTY;
 		} else {
 			this.stacks.set(slot, ItemStack.EMPTY);
+			this.markDirty();
 			return itemStack;
 		}
 	}

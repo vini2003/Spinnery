@@ -5,11 +5,10 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.LiteralText;
 import org.lwjgl.glfw.GLFW;
 import spinnery.widget.WInterface;
-import spinnery.widget.WInterfaceHolder;
-import spinnery.widget.WWidget;
+import spinnery.widget.api.WInterfaceProvider;
 
-public class BaseScreen extends Screen {
-	WInterfaceHolder interfaceHolder = new WInterfaceHolder();
+public class BaseScreen extends Screen implements WInterfaceProvider {
+	protected final WInterface screenInterface = new WInterface();
 
 	private boolean isPauseScreen = false;
 
@@ -17,25 +16,22 @@ public class BaseScreen extends Screen {
 		super(new LiteralText(""));
 	}
 
-	public WInterfaceHolder getInterfaceHolder() {
-		return interfaceHolder;
-	}
-
-	public void setIsPauseScreen(boolean isPauseScreen) {
-		this.isPauseScreen = isPauseScreen;
-	}
-
 	@Override
 	public void render(int mouseX, int mouseY, float tick) {
-		getInterfaceHolder().draw();
+		getInterface().draw();
 	}
 
 	@Override
-	public boolean keyPressed(int character, int keyCode, int keyModifier) {
-		getInterfaceHolder().keyPressed(character, keyCode, keyModifier);
+	public WInterface getInterface() {
+		return screenInterface;
+	}
 
-		if (character == GLFW.GLFW_KEY_ESCAPE) {
-			minecraft.player.closeScreen();
+	@Override
+	public boolean keyPressed(int keyCode, int character, int keyModifier) {
+		screenInterface.onKeyPressed(keyCode, character, keyModifier);
+
+		if (keyCode == GLFW.GLFW_KEY_ESCAPE && shouldCloseOnEsc()) {
+			onClose();
 			return true;
 		} else {
 			return false;
@@ -44,7 +40,7 @@ public class BaseScreen extends Screen {
 
 	@Override
 	public void tick() {
-		getInterfaceHolder().tick();
+		getInterface().tick();
 	}
 
 	@Override
@@ -54,61 +50,53 @@ public class BaseScreen extends Screen {
 
 	@Override
 	public void resize(MinecraftClient client, int width, int height) {
-		for (WInterface wInterface : interfaceHolder.getInterfaces()) {
-			wInterface.align();
-			wInterface.onAlign();
-			for (WWidget widgetA : wInterface.getWidgets()) {
-				widgetA.align();
-				widgetA.onAlign();
-			}
-		}
+		screenInterface.onAlign();
 		super.resize(client, width, height);
+	}
+
+	public <S extends BaseScreen> S setIsPauseScreen(boolean isPauseScreen) {
+		this.isPauseScreen = isPauseScreen;
+		return (S) this;
 	}
 
 	@Override
 	public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
-		getInterfaceHolder().onMouseClicked((int) mouseX, (int) mouseY, mouseButton);
-
+		screenInterface.onMouseClicked((int) mouseX, (int) mouseY, mouseButton);
 		return false;
 	}
 
 	@Override
 	public boolean mouseReleased(double mouseX, double mouseY, int mouseButton) {
-		getInterfaceHolder().onMouseReleased((int) mouseX, (int) mouseY, mouseButton);
-
+		screenInterface.onMouseReleased((int) mouseX, (int) mouseY, mouseButton);
 		return false;
 	}
 
 	@Override
 	public boolean mouseDragged(double mouseX, double mouseY, int mouseButton, double deltaX, double deltaY) {
-		getInterfaceHolder().onMouseDragged((int) mouseX, (int) mouseY, mouseButton, (int) deltaX, (int) deltaY);
-
+		screenInterface.onMouseDragged((int) mouseX, (int) mouseY, mouseButton, (int) deltaX, (int) deltaY);
 		return false;
 	}
 
 	@Override
 	public boolean mouseScrolled(double mouseX, double mouseY, double deltaY) {
-		getInterfaceHolder().onMouseScrolled((int) mouseX, (int) mouseY, deltaY);
-
+		screenInterface.onMouseScrolled((int) mouseX, (int) mouseY, deltaY);
 		return false;
 	}
 
 	@Override
 	public boolean keyReleased(int character, int keyCode, int keyModifier) {
-		getInterfaceHolder().onKeyReleased(character, keyCode, keyModifier);
-
+		screenInterface.onKeyReleased(character, keyCode, keyModifier);
 		return false;
 	}
 
 	@Override
 	public boolean charTyped(char character, int keyCode) {
-		getInterfaceHolder().onCharTyped(character, keyCode);
-
+		screenInterface.onCharTyped(character, keyCode);
 		return super.charTyped(character, keyCode);
 	}
 
 	@Override
 	public void mouseMoved(double mouseX, double mouseY) {
-		getInterfaceHolder().mouseMoved((int) mouseX, (int) mouseY);
+		screenInterface.onMouseMoved((int) mouseX, (int) mouseY);
 	}
 }

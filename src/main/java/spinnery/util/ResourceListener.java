@@ -7,19 +7,14 @@ import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
 import spinnery.registry.ResourceRegistry;
 
-import java.io.IOException;
-
 @Environment(EnvType.CLIENT)
 public class ResourceListener implements SimpleSynchronousResourceReloadListener {
 	private static final Identifier ID = new Identifier("spinnery", "reload_listener");
 
 	@Override
 	public void apply(ResourceManager resourceManager) {
-		try {
-			ResourceRegistry.reload(resourceManager.getResource(new Identifier("spinnery", "light.json")).getInputStream(), resourceManager.getResource(new Identifier("spinnery", "dark.json")).getInputStream());
-		} catch (IOException exception) {
-			exception.printStackTrace();
-		}
+		ResourceRegistry.clear();
+		ResourceRegistry.load(resourceManager);
 	}
 
 	@Override
