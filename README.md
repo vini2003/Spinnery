@@ -1,6 +1,6 @@
 # Spinnery, ahoy!
 
-[ ![Download](https://api.bintray.com/packages/vini2003/Spinnery/spinnery/images/download.svg) ](https://bintray.com/vini2003/Spinnery/spinnery/_latestVersion)
+[ ![Download](https://api.bintray.com/packages/spinnery/Spinnery/spinnery/images/download.svg) ](https://bintray.com/spinnery/Spinnery/spinnery/_latestVersion)
 
 ![Spinnery](https://i.imgur.com/Mu1EqaK.png)
 
