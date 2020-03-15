@@ -125,6 +125,9 @@ public class WSlot extends WAbstractWidget {
 	}
 
 	public boolean accepts(ItemStack... stacks) {
+		if (!(Arrays.stream(stacks).allMatch(stack -> getLinkedInventory().isValidInvStack(slotNumber, stack)))) {
+			return false;
+		}
 		if (isWhitelist) {
 			return Arrays.stream(stacks).allMatch(stack ->
 					(acceptItems.contains(stack.getItem()) || acceptTags.stream().anyMatch(tag -> tag.contains(stack.getItem()))));
