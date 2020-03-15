@@ -21,7 +21,7 @@ public class Size implements WSized, JanksonSerializable {
 		return new Size(width, height);
 	}
 
-	public Size of(int side) {
+	public static Size of(int side) {
 		return new Size(side, side);
 	}
 
