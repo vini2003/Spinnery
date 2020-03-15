@@ -21,10 +21,7 @@ import spinnery.widget.api.Position;
 import spinnery.widget.api.Size;
 import spinnery.widget.api.WModifiableCollection;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 import static net.fabricmc.fabric.api.network.ClientSidePacketRegistry.INSTANCE;
 import static spinnery.registry.NetworkRegistry.SLOT_CLICK_PACKET;
@@ -57,37 +54,41 @@ public class WSlot extends WAbstractWidget {
 	protected List<Tag<Item>> denyTags = new ArrayList<>();
 
 	@Environment(EnvType.CLIENT)
-	public static void addPlayerInventory(Position position, Size size, WModifiableCollection parent) {
-		addArray(position, size, parent, 9, BaseContainer.PLAYER_INVENTORY, 9, 3);
-		addArray(position.add(0, size.getHeight() * 3 + 3, 0), size, parent, 0, BaseContainer.PLAYER_INVENTORY, 9, 1);
+	public static HashSet<WSlot> addPlayerInventory(Position position, Size size, WModifiableCollection parent) {
+		HashSet<WSlot> set = addArray(position, size, parent, 9, BaseContainer.PLAYER_INVENTORY, 9, 3);
+		set.addAll(addArray(position.add(0, size.getHeight() * 3 + 3, 0), size, parent, 0, BaseContainer.PLAYER_INVENTORY, 9, 1));
+		return set;
 	}
 
 	@Environment(EnvType.CLIENT)
-	public static void addArray(Position position, Size size, WModifiableCollection parent, int slotNumber, int inventoryNumber, int arrayWidth, int arrayHeight) {
+	public static HashSet<WSlot> addArray(Position position, Size size, WModifiableCollection parent, int slotNumber, int inventoryNumber, int arrayWidth, int arrayHeight) {
+		HashSet<WSlot> set = new HashSet<>();
 		for (int y = 0; y < arrayHeight; ++y) {
 			for (int x = 0; x < arrayWidth; ++x) {
-				parent.createChild(WSlot::new, position.add(size.getWidth() * x, size.getHeight() * y, 0), size)
+				set.add(parent.createChild(WSlot::new, position.add(size.getWidth() * x, size.getHeight() * y, 0), size)
 						.setSlotNumber(slotNumber + y * arrayWidth + x)
-						.setInventoryNumber(inventoryNumber);
+						.setInventoryNumber(inventoryNumber));
 			}
 		}
+		return set;
 	}
 
-	public static void addHeadlessPlayerInventory(WInterface linkedInterface) {
-		int temporarySlotNumber = 0;
-		addHeadlessArray(linkedInterface, temporarySlotNumber, BaseContainer.PLAYER_INVENTORY, 9, 1);
-		temporarySlotNumber = 9;
-		addHeadlessArray(linkedInterface, temporarySlotNumber, BaseContainer.PLAYER_INVENTORY, 9, 3);
+	public static HashSet<WSlot> addHeadlessPlayerInventory(WInterface linkedInterface) {
+		HashSet<WSlot> set = addHeadlessArray(linkedInterface, 0, BaseContainer.PLAYER_INVENTORY, 9, 1);
+		set.addAll(addHeadlessArray(linkedInterface, 9, BaseContainer.PLAYER_INVENTORY, 9, 3));
+		return set;
 	}
 
-	public static void addHeadlessArray(WModifiableCollection parent, int slotNumber, int inventoryNumber, int arrayWidth, int arrayHeight) {
+	public static HashSet<WSlot> addHeadlessArray(WModifiableCollection parent, int slotNumber, int inventoryNumber, int arrayWidth, int arrayHeight) {
+		HashSet<WSlot> set = new HashSet<>();
 		for (int y = 0; y < arrayHeight; ++y) {
 			for (int x = 0; x < arrayWidth; ++x) {
-				parent.createChild(WSlot::new)
-						.setSlotNumber(slotNumber + y * arrayWidth + x)
-						.setInventoryNumber(inventoryNumber);
+				set.add(parent.createChild(WSlot::new)
+							.setSlotNumber(slotNumber + y * arrayWidth + x)
+							.setInventoryNumber(inventoryNumber));
 			}
 		}
+		return set;
 	}
 
 	public boolean isWhitelist() {
