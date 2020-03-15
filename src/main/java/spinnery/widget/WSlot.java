@@ -14,7 +14,7 @@ import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.Level;
 import spinnery.Spinnery;
 import spinnery.client.BaseRenderer;
-import spinnery.common.BaseScreenHandler;
+import spinnery.common.BaseContainer;
 import spinnery.widget.api.Action;
 import spinnery.widget.api.Position;
 import spinnery.widget.api.Size;
@@ -54,8 +54,8 @@ public class WSlot extends WAbstractWidget {
 
 	@Environment(EnvType.CLIENT)
 	public static Collection<WSlot> addPlayerInventory(Position position, Size size, WModifiableCollection parent) {
-		Collection<WSlot> set = addArray(position, size, parent, 9, BaseScreenHandler.PLAYER_INVENTORY, 9, 3);
-		set.addAll(addArray(position.add(0, size.getHeight() * 3 + 3, 0), size, parent, 0, BaseScreenHandler.PLAYER_INVENTORY, 9, 1));
+		Collection<WSlot> set = addArray(position, size, parent, 9, BaseContainer.PLAYER_INVENTORY, 9, 3);
+		set.addAll(addArray(position.add(0, size.getHeight() * 3 + 3, 0), size, parent, 0, BaseContainer.PLAYER_INVENTORY, 9, 1));
 		return set;
 	}
 
@@ -73,8 +73,8 @@ public class WSlot extends WAbstractWidget {
 	}
 
 	public static Collection<WSlot> addHeadlessPlayerInventory(WInterface linkedInterface) {
-		Collection<WSlot> set = addHeadlessArray(linkedInterface, 0, BaseScreenHandler.PLAYER_INVENTORY, 9, 1);
-		set.addAll(addHeadlessArray(linkedInterface, 9, BaseScreenHandler.PLAYER_INVENTORY, 9, 3));
+		Collection<WSlot> set = addHeadlessArray(linkedInterface, 0, BaseContainer.PLAYER_INVENTORY, 9, 1);
+		set.addAll(addHeadlessArray(linkedInterface, 9, BaseContainer.PLAYER_INVENTORY, 9, 3));
 		return set;
 	}
 
@@ -187,7 +187,7 @@ public class WSlot extends WAbstractWidget {
 		if (button == MIDDLE || isLocked()) return;
 
 		PlayerEntity player = getInterface().getContainer().getPlayerInventory().player;
-		BaseScreenHandler container = getInterface().getContainer();
+		BaseContainer container = getInterface().getContainer();
 
 		int[] slotNumbers = container.getDragSlots(button).stream().mapToInt(WSlot::getSlotNumber).toArray();
 		int[] inventoryNumbers = container.getDragSlots(button).stream().mapToInt(WSlot::getInventoryNumber).toArray();
@@ -220,7 +220,7 @@ public class WSlot extends WAbstractWidget {
 		if (!isFocused() || isLocked()) return;
 
 		PlayerEntity player = getInterface().getContainer().getPlayerInventory().player;
-		BaseScreenHandler container = getInterface().getContainer();
+		BaseContainer container = getInterface().getContainer();
 
 		boolean isCursorEmpty = player.inventory.getCursorStack().isEmpty();
 
@@ -258,7 +258,7 @@ public class WSlot extends WAbstractWidget {
 		if (!isFocused() || button == MIDDLE || isLocked()) return;
 
 		PlayerEntity player = getInterface().getContainer().getPlayerInventory().player;
-		BaseScreenHandler container = getInterface().getContainer();
+		BaseContainer container = getInterface().getContainer();
 
 		boolean isCached = getInterface().getCachedWidgets().get(getClass()) == this;
 

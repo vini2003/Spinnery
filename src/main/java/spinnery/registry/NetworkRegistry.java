@@ -9,7 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.PacketByteBuf;
-import spinnery.common.BaseScreenHandler;
+import spinnery.common.BaseContainer;
 import spinnery.util.StackUtilities;
 import spinnery.widget.WAbstractWidget;
 import spinnery.widget.WSlot;
@@ -178,8 +178,8 @@ public class NetworkRegistry {
 			Action action = packetByteBuffer.readEnumConstant(Action.class);
 
 			packetContext.getTaskQueue().execute(() -> {
-				if (packetContext.getPlayer().currentScreenHandler instanceof BaseScreenHandler && packetContext.getPlayer().currentScreenHandler.syncId == syncId) {
-					((BaseScreenHandler) packetContext.getPlayer().currentScreenHandler).onSlotAction(slotNumber, inventoryNumber, button, action, packetContext.getPlayer());
+				if (packetContext.getPlayer().container instanceof BaseContainer && packetContext.getPlayer().container.syncId == syncId) {
+					((BaseContainer) packetContext.getPlayer().container).onSlotAction(slotNumber, inventoryNumber, button, action, packetContext.getPlayer());
 				}
 			});
 		});
@@ -191,8 +191,8 @@ public class NetworkRegistry {
 			Action action = packetByteBuffer.readEnumConstant(Action.class);
 
 			packetContext.getTaskQueue().execute(() -> {
-				if (packetContext.getPlayer().currentScreenHandler instanceof BaseScreenHandler && packetContext.getPlayer().currentScreenHandler.syncId == syncId) {
-					((BaseScreenHandler) packetContext.getPlayer().currentScreenHandler).onSlotDrag(slotNumbers, inventoryNumbers, action);
+				if (packetContext.getPlayer().container instanceof BaseContainer && packetContext.getPlayer().container.syncId == syncId) {
+					((BaseContainer) packetContext.getPlayer().container).onSlotDrag(slotNumbers, inventoryNumbers, action);
 				}
 			});
 		}));
@@ -202,8 +202,8 @@ public class NetworkRegistry {
 			WNetworked.Event event = packetByteBuf.readEnumConstant(WNetworked.Event.class);
 			CompoundTag payload = packetByteBuf.readCompoundTag();
 			packetContext.getTaskQueue().execute(() -> {
-				if (packetContext.getPlayer().currentScreenHandler instanceof BaseScreenHandler) {
-					((BaseScreenHandler) packetContext.getPlayer().currentScreenHandler).onInterfaceEvent(widgetSyncId, event, payload);
+				if (packetContext.getPlayer().container instanceof BaseContainer) {
+					((BaseContainer) packetContext.getPlayer().container).onInterfaceEvent(widgetSyncId, event, payload);
 				}
 			});
 		});
@@ -219,8 +219,8 @@ public class NetworkRegistry {
 					ItemStack stack = StackUtilities.read(tag);
 
 					packetContext.getTaskQueue().execute(() -> {
-						if (packetContext.getPlayer().currentScreenHandler instanceof BaseScreenHandler && packetContext.getPlayer().currentScreenHandler.syncId == syncId) {
-							BaseScreenHandler container = (BaseScreenHandler) packetContext.getPlayer().currentScreenHandler;
+						if (packetContext.getPlayer().container instanceof BaseContainer && packetContext.getPlayer().container.syncId == syncId) {
+							BaseContainer container = (BaseContainer) packetContext.getPlayer().container;
 
 							container.getInventory(inventoryNumber).setInvStack(slotNumber, stack);
 

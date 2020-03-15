@@ -100,13 +100,13 @@ var activeTableTab = "activeTableTab";
 <li>java.lang.Object</li>
 <li>
 <ul class="inheritance">
-<li>net.minecraft.currentScreenHandler.Container</li>
+<li>net.minecraft.container.Container</li>
 <li>
 <ul class="inheritance">
-<li>net.minecraft.currentScreenHandler.CraftingContainer&lt;net.minecraft.inventory.Inventory&gt;</li>
+<li>net.minecraft.container.CraftingContainer&lt;net.minecraft.inventory.Inventory&gt;</li>
 <li>
 <ul class="inheritance">
-<li>spinnery.common.BaseScreenHandler</li>
+<li>spinnery.common.BaseContainer</li>
 </ul>
 </li>
 </ul>
@@ -128,7 +128,7 @@ var activeTableTab = "activeTableTab";
 <hr>
 <br>
 <pre>public class <span class="typeNameLabel">BaseContainer</span>
-extends net.minecraft.currentScreenHandler.CraftingContainer&lt;net.minecraft.inventory.Inventory&gt;
+extends net.minecraft.container.CraftingContainer&lt;net.minecraft.inventory.Inventory&gt;
 implements net.minecraft.util.Tickable</pre>
 </li>
 </ul>
@@ -174,10 +174,10 @@ implements net.minecraft.util.Tickable</pre>
 </tr>
 </table>
 <ul class="blockList">
-<li class="blockList"><a name="fields.inherited.from.class.net.minecraft.currentScreenHandler.Container">
+<li class="blockList"><a name="fields.inherited.from.class.net.minecraft.container.Container">
 <!--   -->
 </a>
-<h3>Fields inherited from class&nbsp;net.minecraft.currentScreenHandler.Container</h3>
+<h3>Fields inherited from class&nbsp;net.minecraft.container.Container</h3>
 <code>slotList, syncId</code></li>
 </ul>
 </li>
@@ -213,8 +213,8 @@ implements net.minecraft.util.Tickable</pre>
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code>net.minecraft.currentScreenHandler.Slot</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../spinnery/common/BaseContainer.html#addSlot-net.minecraft.currentScreenHandler.Slot-">addSlot</a></span>(net.minecraft.currentScreenHandler.Slot&nbsp;slot)</code>
+<td class="colFirst"><code>net.minecraft.container.Slot</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../spinnery/common/BaseContainer.html#addSlot-net.minecraft.container.Slot-">addSlot</a></span>(net.minecraft.container.Slot&nbsp;slot)</code>
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;</div>
 </td>
 </tr>
@@ -295,19 +295,19 @@ implements net.minecraft.util.Tickable</pre>
 </tr>
 <tr id="i16" class="altColor">
 <td class="colFirst"><code>net.minecraft.item.ItemStack</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../spinnery/common/BaseContainer.html#onSlotClick-int-int-net.minecraft.currentScreenHandler.SlotActionType-net.minecraft.entity.player.PlayerEntity-">onSlotClick</a></span>(int&nbsp;identifier,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../spinnery/common/BaseContainer.html#onSlotClick-int-int-net.minecraft.container.SlotActionType-net.minecraft.entity.player.PlayerEntity-">onSlotClick</a></span>(int&nbsp;identifier,
            int&nbsp;button,
-           net.minecraft.currentScreenHandler.SlotActionType&nbsp;action,
+           net.minecraft.container.SlotActionType&nbsp;action,
            net.minecraft.entity.player.PlayerEntity&nbsp;player)</code>
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;</div>
 </td>
 </tr>
 <tr id="i17" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../spinnery/common/BaseContainer.html#onSlotClicked-int-int-int-net.minecraft.currentScreenHandler.SlotActionType-net.minecraft.entity.player.PlayerEntity-">onSlotClicked</a></span>(int&nbsp;slotNumber,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../spinnery/common/BaseContainer.html#onSlotClicked-int-int-int-net.minecraft.container.SlotActionType-net.minecraft.entity.player.PlayerEntity-">onSlotClicked</a></span>(int&nbsp;slotNumber,
              int&nbsp;inventoryNumber,
              int&nbsp;button,
-             net.minecraft.currentScreenHandler.SlotActionType&nbsp;action,
+             net.minecraft.container.SlotActionType&nbsp;action,
              net.minecraft.entity.player.PlayerEntity&nbsp;player)</code>&nbsp;</td>
 </tr>
 <tr id="i18" class="altColor">
@@ -334,17 +334,17 @@ implements net.minecraft.util.Tickable</pre>
 </tr>
 </table>
 <ul class="blockList">
-<li class="blockList"><a name="methods.inherited.from.class.net.minecraft.currentScreenHandler.CraftingContainer">
+<li class="blockList"><a name="methods.inherited.from.class.net.minecraft.container.CraftingContainer">
 <!--   -->
 </a>
-<h3>Methods inherited from class&nbsp;net.minecraft.currentScreenHandler.CraftingContainer</h3>
+<h3>Methods inherited from class&nbsp;net.minecraft.container.CraftingContainer</h3>
 <code>fillInputSlots</code></li>
 </ul>
 <ul class="blockList">
-<li class="blockList"><a name="methods.inherited.from.class.net.minecraft.currentScreenHandler.Container">
+<li class="blockList"><a name="methods.inherited.from.class.net.minecraft.container.Container">
 <!--   -->
 </a>
-<h3>Methods inherited from class&nbsp;net.minecraft.currentScreenHandler.Container</h3>
+<h3>Methods inherited from class&nbsp;net.minecraft.container.Container</h3>
 <code>addListener, addProperties, addProperty, calculateComparatorOutput, calculateComparatorOutput, calculateStackSize, canInsertIntoSlot, canInsertIntoSlot, canInsertItemIntoSlot, canStacksCombine, canUse, checkContainerDataCount, checkContainerSize, close, dropInventory, endQuickCraft, getNextActionId, getSlot, getStacks, getType, insertItem, isRestricted, onButtonClick, onContentChanged, packClickData, removeListener, sendContentUpdates, setPlayerRestriction, setProperties, setStackInSlot, shouldQuickCraftContinue, transferSlot, unpackButtonId, unpackQuickCraftStage, updateSlotStacks</code></li>
 </ul>
 <ul class="blockList">
@@ -377,7 +377,7 @@ implements net.minecraft.util.Tickable</pre>
 <pre>public static final&nbsp;int PLAYER_INVENTORY</pre>
 <dl>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../constant-values.html#spinnery.common.BaseScreenHandler.PLAYER_INVENTORY">Constant Field Values</a></dd>
+<dd><a href="../../constant-values.html#spinnery.common.BaseContainer.PLAYER_INVENTORY">Constant Field Values</a></dd>
 </dl>
 </li>
 </ul>
@@ -461,22 +461,22 @@ implements net.minecraft.util.Tickable</pre>
 <pre>public&nbsp;<a href="../../spinnery/widget/WInterfaceHolder.html" title="class in spinnery.widget">WInterfaceHolder</a>&nbsp;getInterfaces()</pre>
 </li>
 </ul>
-<a name="addSlot-net.minecraft.currentScreenHandler.Slot-">
+<a name="addSlot-net.minecraft.container.Slot-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>addSlot</h4>
 <pre>@Deprecated
-public&nbsp;net.minecraft.currentScreenHandler.Slot&nbsp;addSlot(net.minecraft.currentScreenHandler.Slot&nbsp;slot)</pre>
+public&nbsp;net.minecraft.container.Slot&nbsp;addSlot(net.minecraft.container.Slot&nbsp;slot)</pre>
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
-<dd><code>addSlot</code>&nbsp;in class&nbsp;<code>net.minecraft.currentScreenHandler.Container</code></dd>
+<dd><code>addSlot</code>&nbsp;in class&nbsp;<code>net.minecraft.container.Container</code></dd>
 </dl>
 </li>
 </ul>
-<a name="onSlotClick-int-int-net.minecraft.currentScreenHandler.SlotActionType-net.minecraft.entity.player.PlayerEntity-">
+<a name="onSlotClick-int-int-net.minecraft.container.SlotActionType-net.minecraft.entity.player.PlayerEntity-">
 <!--   -->
 </a>
 <ul class="blockList">
@@ -485,12 +485,12 @@ public&nbsp;net.minecraft.currentScreenHandler.Slot&nbsp;addSlot(net.minecraft.c
 <pre>@Deprecated
 public&nbsp;net.minecraft.item.ItemStack&nbsp;onSlotClick(int&nbsp;identifier,
                                                              int&nbsp;button,
-                                                             net.minecraft.currentScreenHandler.SlotActionType&nbsp;action,
+                                                             net.minecraft.container.SlotActionType&nbsp;action,
                                                              net.minecraft.entity.player.PlayerEntity&nbsp;player)</pre>
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
-<dd><code>onSlotClick</code>&nbsp;in class&nbsp;<code>net.minecraft.currentScreenHandler.Container</code></dd>
+<dd><code>onSlotClick</code>&nbsp;in class&nbsp;<code>net.minecraft.container.Container</code></dd>
 </dl>
 </li>
 </ul>
@@ -505,7 +505,7 @@ public&nbsp;boolean&nbsp;canUse(net.minecraft.entity.player.PlayerEntity&nbsp;en
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code>canUse</code>&nbsp;in class&nbsp;<code>net.minecraft.currentScreenHandler.Container</code></dd>
+<dd><code>canUse</code>&nbsp;in class&nbsp;<code>net.minecraft.container.Container</code></dd>
 </dl>
 </li>
 </ul>
@@ -519,7 +519,7 @@ public&nbsp;boolean&nbsp;canUse(net.minecraft.entity.player.PlayerEntity&nbsp;en
                         net.minecraft.item.ItemStack&nbsp;stackB)</pre>
 </li>
 </ul>
-<a name="onSlotClicked-int-int-int-net.minecraft.currentScreenHandler.SlotActionType-net.minecraft.entity.player.PlayerEntity-">
+<a name="onSlotClicked-int-int-int-net.minecraft.container.SlotActionType-net.minecraft.entity.player.PlayerEntity-">
 <!--   -->
 </a>
 <ul class="blockList">
@@ -528,7 +528,7 @@ public&nbsp;boolean&nbsp;canUse(net.minecraft.entity.player.PlayerEntity&nbsp;en
 <pre>public&nbsp;void&nbsp;onSlotClicked(int&nbsp;slotNumber,
                           int&nbsp;inventoryNumber,
                           int&nbsp;button,
-                          net.minecraft.currentScreenHandler.SlotActionType&nbsp;action,
+                          net.minecraft.container.SlotActionType&nbsp;action,
                           net.minecraft.entity.player.PlayerEntity&nbsp;player)</pre>
 </li>
 </ul>
@@ -624,7 +624,7 @@ public&nbsp;void&nbsp;populateRecipeFinder(net.minecraft.recipe.RecipeFinder&nbs
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code>populateRecipeFinder</code>&nbsp;in class&nbsp;<code>net.minecraft.currentScreenHandler.CraftingContainer&lt;net.minecraft.inventory.Inventory&gt;</code></dd>
+<dd><code>populateRecipeFinder</code>&nbsp;in class&nbsp;<code>net.minecraft.container.CraftingContainer&lt;net.minecraft.inventory.Inventory&gt;</code></dd>
 </dl>
 </li>
 </ul>
@@ -639,7 +639,7 @@ public&nbsp;void&nbsp;clearCraftingSlots()</pre>
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code>clearCraftingSlots</code>&nbsp;in class&nbsp;<code>net.minecraft.currentScreenHandler.CraftingContainer&lt;net.minecraft.inventory.Inventory&gt;</code></dd>
+<dd><code>clearCraftingSlots</code>&nbsp;in class&nbsp;<code>net.minecraft.container.CraftingContainer&lt;net.minecraft.inventory.Inventory&gt;</code></dd>
 </dl>
 </li>
 </ul>
@@ -654,7 +654,7 @@ public&nbsp;boolean&nbsp;matches(net.minecraft.recipe.Recipe&lt;? super net.mine
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code>matches</code>&nbsp;in class&nbsp;<code>net.minecraft.currentScreenHandler.CraftingContainer&lt;net.minecraft.inventory.Inventory&gt;</code></dd>
+<dd><code>matches</code>&nbsp;in class&nbsp;<code>net.minecraft.container.CraftingContainer&lt;net.minecraft.inventory.Inventory&gt;</code></dd>
 </dl>
 </li>
 </ul>
@@ -669,7 +669,7 @@ public&nbsp;int&nbsp;getCraftingResultSlotIndex()</pre>
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code>getCraftingResultSlotIndex</code>&nbsp;in class&nbsp;<code>net.minecraft.currentScreenHandler.CraftingContainer&lt;net.minecraft.inventory.Inventory&gt;</code></dd>
+<dd><code>getCraftingResultSlotIndex</code>&nbsp;in class&nbsp;<code>net.minecraft.container.CraftingContainer&lt;net.minecraft.inventory.Inventory&gt;</code></dd>
 </dl>
 </li>
 </ul>
@@ -684,7 +684,7 @@ public&nbsp;int&nbsp;getCraftingWidth()</pre>
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code>getCraftingWidth</code>&nbsp;in class&nbsp;<code>net.minecraft.currentScreenHandler.CraftingContainer&lt;net.minecraft.inventory.Inventory&gt;</code></dd>
+<dd><code>getCraftingWidth</code>&nbsp;in class&nbsp;<code>net.minecraft.container.CraftingContainer&lt;net.minecraft.inventory.Inventory&gt;</code></dd>
 </dl>
 </li>
 </ul>
@@ -699,7 +699,7 @@ public&nbsp;int&nbsp;getCraftingHeight()</pre>
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code>getCraftingHeight</code>&nbsp;in class&nbsp;<code>net.minecraft.currentScreenHandler.CraftingContainer&lt;net.minecraft.inventory.Inventory&gt;</code></dd>
+<dd><code>getCraftingHeight</code>&nbsp;in class&nbsp;<code>net.minecraft.container.CraftingContainer&lt;net.minecraft.inventory.Inventory&gt;</code></dd>
 </dl>
 </li>
 </ul>
@@ -714,7 +714,7 @@ public&nbsp;int&nbsp;getCraftingSlotCount()</pre>
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code>getCraftingSlotCount</code>&nbsp;in class&nbsp;<code>net.minecraft.currentScreenHandler.CraftingContainer&lt;net.minecraft.inventory.Inventory&gt;</code></dd>
+<dd><code>getCraftingSlotCount</code>&nbsp;in class&nbsp;<code>net.minecraft.container.CraftingContainer&lt;net.minecraft.inventory.Inventory&gt;</code></dd>
 </dl>
 </li>
 </ul>

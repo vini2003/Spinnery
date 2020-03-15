@@ -3,15 +3,16 @@ package spinnery.common;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
-import net.minecraft.screen.ScreenHandler;
+import net.minecraft.container.Container;
 
+import net.minecraft.container.Slot;
+import net.minecraft.container.SlotActionType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.screen.slot.Slot;
-import net.minecraft.screen.slot.SlotActionType;
+
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.world.World;
 import org.lwjgl.glfw.GLFW;
@@ -30,7 +31,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-public class BaseScreenHandler extends ScreenHandler {
+public class BaseContainer extends Container {
 	public static final int PLAYER_INVENTORY = 0;
 	protected final WInterface serverInterface;
 	public Map<Integer, Inventory> linkedInventories = new HashMap<>();
@@ -41,7 +42,7 @@ public class BaseScreenHandler extends ScreenHandler {
 	protected ItemStack previewCursorStack = ItemStack.EMPTY;
 	protected World world;
 
-	public BaseScreenHandler(int synchronizationID, PlayerInventory linkedPlayerInventory) {
+	public BaseContainer(int synchronizationID, PlayerInventory linkedPlayerInventory) {
 		super(null, synchronizationID);
 		getInventories().put(PLAYER_INVENTORY, linkedPlayerInventory);
 		setWorld(linkedPlayerInventory.player.world);
@@ -52,7 +53,7 @@ public class BaseScreenHandler extends ScreenHandler {
 		return linkedInventories;
 	}
 
-	public <C extends BaseScreenHandler> C setWorld(World world) {
+	public <C extends BaseContainer> C setWorld(World world) {
 		this.world = world;
 		return (C) this;
 	}
@@ -63,7 +64,7 @@ public class BaseScreenHandler extends ScreenHandler {
 	}
 
 	@Environment(EnvType.CLIENT)
-	public <C extends BaseScreenHandler> C setPreviewCursorStack(ItemStack previewCursorStack) {
+	public <C extends BaseContainer> C setPreviewCursorStack(ItemStack previewCursorStack) {
 		this.previewCursorStack = previewCursorStack;
 		return (C) this;
 	}
