@@ -5,10 +5,8 @@ import net.fabricmc.api.Environment;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import spinnery.client.TextRenderer;
-import spinnery.widget.api.WFocusedMouseListener;
 
 @Environment(EnvType.CLIENT)
-@WFocusedMouseListener
 public class WStaticText extends WAbstractWidget {
 	protected Text text = new LiteralText("");
 	protected double scale = 1.0;
@@ -79,5 +77,10 @@ public class WStaticText extends WAbstractWidget {
 	public <W extends WStaticText> W setText(String text) {
 		this.text = new LiteralText(text);
 		return (W) this;
+	}
+
+	@Override
+	public boolean isFocusedMouseListener() {
+		return true;
 	}
 }

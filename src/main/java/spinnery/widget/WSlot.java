@@ -66,7 +66,7 @@ public class WSlot extends WAbstractWidget {
 	public static void addArray(Position position, Size size, WModifiableCollection parent, int slotNumber, int inventoryNumber, int arrayWidth, int arrayHeight) {
 		for (int y = 0; y < arrayHeight; ++y) {
 			for (int x = 0; x < arrayWidth; ++x) {
-				parent.createChild(WSlot.class, position.add(size.getWidth() * x, size.getHeight() * y, 0), size)
+				parent.createChild(WSlot::new, position.add(size.getWidth() * x, size.getHeight() * y, 0), size)
 						.setSlotNumber(slotNumber + y * arrayWidth + x)
 						.setInventoryNumber(inventoryNumber);
 			}
@@ -83,7 +83,7 @@ public class WSlot extends WAbstractWidget {
 	public static void addHeadlessArray(WModifiableCollection parent, int slotNumber, int inventoryNumber, int arrayWidth, int arrayHeight) {
 		for (int y = 0; y < arrayHeight; ++y) {
 			for (int x = 0; x < arrayWidth; ++x) {
-				parent.createChild(WSlot.class)
+				parent.createChild(WSlot::new)
 						.setSlotNumber(slotNumber + y * arrayWidth + x)
 						.setInventoryNumber(inventoryNumber);
 			}

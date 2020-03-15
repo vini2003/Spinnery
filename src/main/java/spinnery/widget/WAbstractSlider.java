@@ -102,6 +102,16 @@ public abstract class WAbstractSlider extends WAbstractWidget implements WPadded
 	public abstract Size getKnobSize();
 
 	@Override
+	public boolean isFocusedMouseListener() {
+		return true;
+	}
+
+	@Override
+	public boolean isFocusedKeyboardListener() {
+		return true;
+	}
+
+	@Override
 	public void onKeyPressed(int keyPressed, int character, int keyModifier) {
 		if (keyPressed == GLFW.GLFW_KEY_KP_ADD || keyPressed == GLFW.GLFW_KEY_EQUAL) {
 			progress = Math.min(progress + step, max);

@@ -248,6 +248,11 @@ public abstract class WAbstractTextEditor extends WAbstractWidget implements WPa
 	}
 
 	@Override
+	public boolean isFocusedKeyboardListener() {
+		return true;
+	}
+
+	@Override
 	public boolean isFocused() {
 		return super.isFocused() || active;
 	}

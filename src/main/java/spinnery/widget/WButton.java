@@ -4,10 +4,8 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import spinnery.client.BaseRenderer;
 import spinnery.client.TextRenderer;
-import spinnery.widget.api.WFocusedMouseListener;
 
 @Environment(EnvType.CLIENT)
-@WFocusedMouseListener
 public class WButton extends WAbstractButton {
 	@Override
 	public void draw() {
@@ -27,5 +25,10 @@ public class WButton extends WAbstractButton {
 					.shadow(getStyle().asBoolean("label.shadow")).shadowColor(getStyle().asColor("label.shadow_color"))
 					.color(getStyle().asColor("label.color")).render();
 		}
+	}
+
+	@Override
+	public boolean isFocusedMouseListener() {
+		return true;
 	}
 }

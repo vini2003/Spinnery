@@ -5,13 +5,11 @@ import net.fabricmc.api.Environment;
 import org.lwjgl.glfw.GLFW;
 import spinnery.client.BaseRenderer;
 import spinnery.client.TextRenderer;
-import spinnery.widget.api.WFocusedKeyboardListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Environment(EnvType.CLIENT)
-@WFocusedKeyboardListener
 public class WTextArea extends WAbstractTextEditor {
 	// Keep track of which lines are "wrapped" and which are hard newlines
 	protected final List<Boolean> newLine = new ArrayList<>();

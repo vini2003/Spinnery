@@ -1,7 +1,10 @@
 package spinnery.widget.api;
 
 import spinnery.widget.WAbstractWidget;
+import spinnery.widget.WInterface;
 import spinnery.widget.WWidgetFactory;
+
+import java.util.function.Supplier;
 
 /**
  * Generic interface representing a collection of widgets that may be modified by adding or removing widgets.
@@ -30,9 +33,21 @@ public interface WModifiableCollection extends WCollection {
 	 *
 	 * @param wClass widget class
 	 * @return created widget
+	 * @deprecated Reflective APIs for adding widgets are deprecated. Use {@link #createChild(Supplier)} instead.
 	 */
+	@Deprecated
 	default <W extends WAbstractWidget> W createChild(Class<W> wClass) {
 		return createChild(wClass, null, null);
+	}
+
+	/**
+	 * Convenience method for short-circuiting <tt>factory.get()</tt>.
+	 *
+	 * @param factory widget factory
+	 * @return created widget
+	 */
+	default <W extends WAbstractWidget> W createChild(Supplier<W> factory) {
+		return createChild(factory, null, null);
 	}
 
 	/**
@@ -43,11 +58,39 @@ public interface WModifiableCollection extends WCollection {
 	 * @param position initial widget position
 	 * @param size     initial widget size
 	 * @return created widget
+	 * @deprecated Reflective APIs for adding widgets are deprecated. Use {@link #createChild(Supplier, Position, Size)} instead.
 	 */
+	@Deprecated
 	default <W extends WAbstractWidget> W createChild(Class<W> wClass, Position position, Size size) {
-		W widget = getFactory().build(wClass);
+		return createChild(() -> getFactory().build(wClass), position, size);
+	}
+
+	/**
+	 * Convenience method for short-circuiting <tt>factory.get()</tt> and setting the widget's
+	 * position and size.
+	 *
+	 * @param factory  widget factory
+	 * @param position initial widget position
+	 * @param size     initial widget size
+	 * @return created widget
+	 */
+	default <W extends WAbstractWidget> W createChild(Supplier<? extends W> factory, Position position, Size size) {
+		W widget = factory.get();
 		if (position != null) widget.setPosition(position);
 		if (size != null) widget.setSize(size);
+
+		if (this instanceof WAbstractWidget) {
+			widget.setInterface(((WAbstractWidget) this).getInterface());
+		} else if (this instanceof WInterface) {
+			widget.setInterface((WInterface) this);
+		}
+
+		if (this instanceof WLayoutElement) {
+			widget.setParent((WLayoutElement) this);
+		}
+
+		add(widget);
+
 		return widget;
 	}
 
@@ -55,7 +98,9 @@ public interface WModifiableCollection extends WCollection {
 	 * Gets the widget factory for creating children of this modifiable collection.
 	 *
 	 * @return widget factory instance
+	 * @deprecated Reflective APIs for adding widgets are deprecated.
 	 */
+	@Deprecated
 	default WWidgetFactory getFactory() {
 		return new WWidgetFactory(this);
 	}
@@ -67,8 +112,22 @@ public interface WModifiableCollection extends WCollection {
 	 * @param wClass   widget class
 	 * @param position initial widget position
 	 * @return created widget
+	 * @deprecated Reflective APIs for adding widgets are deprecated. Use {@link #createChild(Supplier, Position)} instead.
 	 */
+	@Deprecated
 	default <W extends WAbstractWidget> W createChild(Class<W> wClass, Position position) {
 		return createChild(wClass, position, null);
+	}
+
+	/**
+	 * Convenience method for short-circuiting {@code factory.get()} and setting the widget's
+	 * position.
+	 *
+	 * @param factory  widget factory
+	 * @param position initial widget position
+	 * @return created widget
+	 */
+	default <W extends WAbstractWidget> W createChild(Supplier<W> factory, Position position) {
+		return createChild(factory, position, null);
 	}
 }

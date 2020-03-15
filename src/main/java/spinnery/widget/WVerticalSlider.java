@@ -6,12 +6,8 @@ import spinnery.client.BaseRenderer;
 import spinnery.client.TextRenderer;
 import spinnery.widget.api.Position;
 import spinnery.widget.api.Size;
-import spinnery.widget.api.WFocusedKeyboardListener;
-import spinnery.widget.api.WFocusedMouseListener;
 
 @Environment(EnvType.CLIENT)
-@WFocusedKeyboardListener
-@WFocusedMouseListener
 public class WVerticalSlider extends WAbstractSlider {
 	@Override
 	public void draw() {

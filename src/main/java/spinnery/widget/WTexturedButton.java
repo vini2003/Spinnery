@@ -4,10 +4,8 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.util.Identifier;
 import spinnery.client.BaseRenderer;
-import spinnery.widget.api.WFocusedMouseListener;
 
 @Environment(EnvType.CLIENT)
-@WFocusedMouseListener
 public class WTexturedButton extends WAbstractWidget {
 	protected Identifier inactive;
 	protected Identifier active;
@@ -80,5 +78,10 @@ public class WTexturedButton extends WAbstractWidget {
 	public void onMouseClicked(int mouseX, int mouseY, int mouseButton) {
 		if (isDisabled) return;
 		super.onMouseClicked(mouseX, mouseY, mouseButton);
+	}
+
+	@Override
+	public boolean isFocusedMouseListener() {
+		return true;
 	}
 }

@@ -9,7 +9,10 @@ import spinnery.widget.api.WModifiableCollection;
  * This class represents the mechanism for creating widgets given a widget type. Instances of this class must
  * have a non-null {@link WModifiableCollection} <tt>parent</tt>, which widgets created via {@link #build(Class)}
  * are automatically added to.
+ *
+ * @deprecated Reflective APIs for adding widgets are deprecated.
  */
+@Deprecated
 public class WWidgetFactory {
 	protected WModifiableCollection parent;
 

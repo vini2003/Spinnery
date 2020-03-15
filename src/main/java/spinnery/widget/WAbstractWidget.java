@@ -257,6 +257,26 @@ public abstract class WAbstractWidget implements Tickable,
 		return (W) this;
 	}
 
+	/**
+	 * Returns true if this widget only listens for keyboard events when focused, that is, when
+	 * {@link #isFocused()} returns <tt>true</tt>.
+	 *
+	 * @return true if this widget is a focused keyboard listener
+	 */
+	public boolean isFocusedKeyboardListener() {
+		return false;
+	}
+
+	/**
+	 * Returns true if this widget only listens for mouse events when focused, that is, when
+	 * {@link #isFocused()} returns <tt>true</tt>.
+	 *
+	 * @return true if this widget is a focused mouse listener
+	 */
+	public boolean isFocusedMouseListener() {
+		return false;
+	}
+
 	@Environment(EnvType.CLIENT)
 	@Override
 	public void onKeyPressed(int keyPressed, int character, int keyModifier) {

@@ -4,10 +4,8 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.util.Identifier;
 import spinnery.client.BaseRenderer;
-import spinnery.widget.api.WFocusedMouseListener;
 
 @Environment(EnvType.CLIENT)
-@WFocusedMouseListener
 public class WStaticImage extends WAbstractWidget {
 	protected Identifier texture;
 
@@ -34,5 +32,10 @@ public class WStaticImage extends WAbstractWidget {
 	public <W extends WStaticImage> W setTexture(Identifier texture) {
 		this.texture = texture;
 		return (W) this;
+	}
+
+	@Override
+	public boolean isFocusedMouseListener() {
+		return true;
 	}
 }

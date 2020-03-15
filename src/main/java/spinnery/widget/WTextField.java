@@ -3,10 +3,8 @@ package spinnery.widget;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import spinnery.client.BaseRenderer;
-import spinnery.widget.api.WFocusedKeyboardListener;
 
 @Environment(EnvType.CLIENT)
-@WFocusedKeyboardListener
 public class WTextField extends WAbstractTextEditor {
 	protected Integer fixedLength;
 

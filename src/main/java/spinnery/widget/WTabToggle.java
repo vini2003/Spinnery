@@ -8,11 +8,9 @@ import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
 import spinnery.client.BaseRenderer;
 import spinnery.client.TextRenderer;
-import spinnery.widget.api.WFocusedMouseListener;
 
 @SuppressWarnings("unchecked")
 @Environment(EnvType.CLIENT)
-@WFocusedMouseListener
 public class WTabToggle extends WAbstractToggle {
 	protected ItemConvertible symbol;
 
@@ -61,5 +59,10 @@ public class WTabToggle extends WAbstractToggle {
 	public <W extends WTabToggle> W setSymbol(ItemConvertible symbol) {
 		this.symbol = symbol;
 		return (W) this;
+	}
+
+	@Override
+	public boolean isFocusedMouseListener() {
+		return true;
 	}
 }
