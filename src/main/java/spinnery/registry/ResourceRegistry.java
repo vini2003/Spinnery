@@ -54,6 +54,12 @@ public class ResourceRegistry {
 			Spinnery.LOGGER.log(Level.ERROR, "Could not read theme file", e);
 		} catch (SyntaxError syntaxError) {
 			Spinnery.LOGGER.log(Level.ERROR, "Syntax error in theme file", syntaxError);
+		} finally {
+			try {
+				inputStream.close();
+			} catch (IOException e) {
+				Spinnery.LOGGER.log(Level.ERROR, "Could not close input stream", e);
+			}
 		}
 	}
 }
