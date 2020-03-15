@@ -47,6 +47,7 @@ public class WidgetRegistry {
 		register(new Identifier("spinnery", "textured_button"), WTexturedButton.class);
 		register(new Identifier("spinnery", "text_area"), WTextArea.class);
 		register(new Identifier("spinnery", "text_field"), WTextField.class);
+		register(new Identifier("spinnery", "item"), WItem.class);
 	}
 
 	public static void register(Identifier id, Class<? extends WAbstractWidget> wClass) {
