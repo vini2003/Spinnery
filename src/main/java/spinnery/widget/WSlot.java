@@ -54,15 +54,15 @@ public class WSlot extends WAbstractWidget {
 	protected List<Tag<Item>> denyTags = new ArrayList<>();
 
 	@Environment(EnvType.CLIENT)
-	public static HashSet<WSlot> addPlayerInventory(Position position, Size size, WModifiableCollection parent) {
-		HashSet<WSlot> set = addArray(position, size, parent, 9, BaseContainer.PLAYER_INVENTORY, 9, 3);
+	public static Collection<WSlot> addPlayerInventory(Position position, Size size, WModifiableCollection parent) {
+		Collection<WSlot> set = addArray(position, size, parent, 9, BaseContainer.PLAYER_INVENTORY, 9, 3);
 		set.addAll(addArray(position.add(0, size.getHeight() * 3 + 3, 0), size, parent, 0, BaseContainer.PLAYER_INVENTORY, 9, 1));
 		return set;
 	}
 
 	@Environment(EnvType.CLIENT)
-	public static HashSet<WSlot> addArray(Position position, Size size, WModifiableCollection parent, int slotNumber, int inventoryNumber, int arrayWidth, int arrayHeight) {
-		HashSet<WSlot> set = new HashSet<>();
+	public static Collection<WSlot> addArray(Position position, Size size, WModifiableCollection parent, int slotNumber, int inventoryNumber, int arrayWidth, int arrayHeight) {
+		Collection<WSlot> set = new HashSet<>();
 		for (int y = 0; y < arrayHeight; ++y) {
 			for (int x = 0; x < arrayWidth; ++x) {
 				set.add(parent.createChild(WSlot::new, position.add(size.getWidth() * x, size.getHeight() * y, 0), size)
@@ -73,14 +73,14 @@ public class WSlot extends WAbstractWidget {
 		return set;
 	}
 
-	public static HashSet<WSlot> addHeadlessPlayerInventory(WInterface linkedInterface) {
-		HashSet<WSlot> set = addHeadlessArray(linkedInterface, 0, BaseContainer.PLAYER_INVENTORY, 9, 1);
+	public static Collection<WSlot> addHeadlessPlayerInventory(WInterface linkedInterface) {
+		Collection<WSlot> set = addHeadlessArray(linkedInterface, 0, BaseContainer.PLAYER_INVENTORY, 9, 1);
 		set.addAll(addHeadlessArray(linkedInterface, 9, BaseContainer.PLAYER_INVENTORY, 9, 3));
 		return set;
 	}
 
-	public static HashSet<WSlot> addHeadlessArray(WModifiableCollection parent, int slotNumber, int inventoryNumber, int arrayWidth, int arrayHeight) {
-		HashSet<WSlot> set = new HashSet<>();
+	public static Collection<WSlot> addHeadlessArray(WModifiableCollection parent, int slotNumber, int inventoryNumber, int arrayWidth, int arrayHeight) {
+		Collection<WSlot> set = new HashSet<>();
 		for (int y = 0; y < arrayHeight; ++y) {
 			for (int x = 0; x < arrayWidth; ++x) {
 				set.add(parent.createChild(WSlot::new)
