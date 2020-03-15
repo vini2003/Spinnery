@@ -2,6 +2,11 @@ package spinnery.widget;
 
 import spinnery.widget.api.Position;
 import spinnery.widget.api.Size;
+import spinnery.widget.api.WDelegatedEventListener;
+import spinnery.widget.api.WEventListener;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 public class WTooltipItem extends WItem {
     WTooltip tooltip;
@@ -21,6 +26,15 @@ public class WTooltipItem extends WItem {
 
     @Override
     public void onMouseMoved(int mouseX, int mouseY) {
+        updateWidgets();
+        updateText();
+        updatePositions(mouseX, mouseY);
+        updateSizes();
+    }
+
+    @Override
+    public void onMouseScrolled(int mouseX, int mouseY, double deltaY) {
+        super.onMouseScrolled(mouseX, mouseY, deltaY);
         updateWidgets();
         updateText();
         updatePositions(mouseX, mouseY);
@@ -57,6 +71,7 @@ public class WTooltipItem extends WItem {
 
     @Override
     public void draw() {
+        if (tooltip == null || tooltipText == null) return;
         super.draw();
         tooltip.draw();
         tooltipText.draw();

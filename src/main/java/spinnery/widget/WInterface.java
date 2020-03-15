@@ -7,7 +7,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.Window;
 import net.minecraft.util.Identifier;
 import spinnery.client.BaseRenderer;
-import spinnery.common.BaseContainer;
+import spinnery.common.BaseScreenHandler;
 import spinnery.registry.NetworkRegistry;
 import spinnery.util.EventUtilities;
 import spinnery.widget.api.Color;
@@ -27,7 +27,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class WInterface implements WDrawableCollection, WModifiableCollection, WLayoutElement, WThemable {
-	protected BaseContainer linkedContainer;
+	protected BaseScreenHandler linkedContainer;
 	protected Set<WAbstractWidget> widgets = new LinkedHashSet<>();
 	protected List<WLayoutElement> orderedWidgets = new ArrayList<>();
 	protected Map<Class<? extends WAbstractWidget>, WAbstractWidget> cachedWidgets = new HashMap<>();
@@ -44,18 +44,18 @@ public class WInterface implements WDrawableCollection, WModifiableCollection, W
 		return (W) this;
 	}
 
-	public WInterface(BaseContainer linkedContainer) {
+	public WInterface(BaseScreenHandler linkedContainer) {
 		setContainer(linkedContainer);
 		if (getContainer().getWorld().isClient()) {
 			setClientside(true);
 		}
 	}
 
-	public BaseContainer getContainer() {
+	public BaseScreenHandler getContainer() {
 		return linkedContainer;
 	}
 
-	public <W extends WInterface> W setContainer(BaseContainer linkedContainer) {
+	public <W extends WInterface> W setContainer(BaseScreenHandler linkedContainer) {
 		this.linkedContainer = linkedContainer;
 		return (W) this;
 	}

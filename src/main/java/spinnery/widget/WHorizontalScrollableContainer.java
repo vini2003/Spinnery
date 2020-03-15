@@ -31,6 +31,9 @@ public class WHorizontalScrollableContainer extends WAbstractWidget implements W
 	protected float scrollKineticDelta = 0;
 	protected int rightSpace = 0;
 
+	protected int lastScrollX = 0;
+	protected int lastScrollY = 0;
+
 	public WHorizontalScrollableContainer() {
 		scrollbar = WWidgetFactory.buildDetached(WHorizontalScrollbar.class).scrollable(this).setParent(this);
 	}
@@ -195,6 +198,16 @@ public class WHorizontalScrollableContainer extends WAbstractWidget implements W
 		}
 	}
 
+	public void updateChildrenFocus() {
+		for (WAbstractWidget widget : getAllWidgets()) {
+			if (widget.isWithinBounds(lastScrollX, lastScrollY)) {
+				widget.onFocusGained();
+			} else {
+				widget.onFocusReleased();
+			}
+		}
+	}
+
 	@Override
 	public List<WLayoutElement> getOrderedWidgets() {
 		return orderedWidgets;
@@ -212,8 +225,11 @@ public class WHorizontalScrollableContainer extends WAbstractWidget implements W
 		if (scrollKineticDelta > 0.05 || scrollKineticDelta < -0.05) {
 			scrollKineticDelta = (float) (scrollKineticDelta / 1.10);
 			scroll(scrollKineticDelta, 0);
+			updateChildrenFocus();
 		} else {
 			scrollKineticDelta = 0;
+			lastScrollX = 0;
+			lastScrollY = 0;
 		}
 	}
 
@@ -256,7 +272,9 @@ public class WHorizontalScrollableContainer extends WAbstractWidget implements W
 		if (isWithinBounds(mouseX, mouseY)) {
 			scrollKineticDelta += deltaY;
 			scroll(deltaY * 5, 0);
-			super.onMouseScrolled(mouseX, mouseY, deltaY);
 		}
+		lastScrollX = mouseX;
+		lastScrollY = mouseY;
+		super.onMouseScrolled(mouseX, mouseY, deltaY);
 	}
 }

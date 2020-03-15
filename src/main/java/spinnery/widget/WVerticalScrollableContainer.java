@@ -1,8 +1,10 @@
 package spinnery.widget;
 
 import com.google.common.collect.ImmutableSet;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import net.minecraft.client.MinecraftClient;
 import org.lwjgl.opengl.GL11;
+import spinnery.util.MutablePair;
 import spinnery.widget.api.Position;
 import spinnery.widget.api.Size;
 import spinnery.widget.api.WDelegatedEventListener;
@@ -12,13 +14,7 @@ import spinnery.widget.api.WLayoutElement;
 import spinnery.widget.api.WModifiableCollection;
 import spinnery.widget.api.WVerticalScrollable;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @SuppressWarnings({"UnusedReturnValue", "unchecked"})
 public class WVerticalScrollableContainer extends WAbstractWidget implements WDrawableCollection, WModifiableCollection, WVerticalScrollable, WDelegatedEventListener {
@@ -30,6 +26,9 @@ public class WVerticalScrollableContainer extends WAbstractWidget implements WDr
 	protected int yOffset = 0;
 	protected float scrollKineticDelta = 0;
 	protected int bottomSpace = 0;
+
+	protected int lastScrollX = 0;
+	protected int lastScrollY = 0;
 
 	public WVerticalScrollableContainer() {
 		scrollbar = WWidgetFactory.buildDetached(WVerticalScrollbar.class).scrollable(this).setParent(this);
@@ -197,6 +196,16 @@ public class WVerticalScrollableContainer extends WAbstractWidget implements WDr
 		}
 	}
 
+	public void updateChildrenFocus() {
+		for (WAbstractWidget widget : getAllWidgets()) {
+			if (widget.isWithinBounds(lastScrollX, lastScrollY)) {
+				widget.onFocusGained();
+			} else {
+				widget.onFocusReleased();
+			}
+		}
+	}
+
 	@Override
 	public List<WLayoutElement> getOrderedWidgets() {
 		return orderedWidgets;
@@ -213,8 +222,11 @@ public class WVerticalScrollableContainer extends WAbstractWidget implements WDr
 		if (scrollKineticDelta > 0.05 || scrollKineticDelta < -0.05) {
 			scrollKineticDelta = (float) (scrollKineticDelta / 1.25);
 			scroll(0, scrollKineticDelta);
+			updateChildrenFocus();
 		} else {
 			scrollKineticDelta = 0;
+			lastScrollX = 0;
+			lastScrollY = 0;
 		}
 	}
 
@@ -258,6 +270,8 @@ public class WVerticalScrollableContainer extends WAbstractWidget implements WDr
 			scrollKineticDelta += deltaY;
 			scroll(0, deltaY);
 		}
+		lastScrollX = mouseX;
+		lastScrollY = mouseY;
 		super.onMouseScrolled(mouseX, mouseY, deltaY);
 	}
 }

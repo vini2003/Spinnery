@@ -3,13 +3,8 @@ package spinnery.common;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.keybinding.FabricKeyBinding;
-import net.fabricmc.fabric.api.client.keybinding.KeyBindingRegistry;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.ingame.ContainerScreen;
-import net.minecraft.client.options.GameOptions;
-import net.minecraft.client.options.KeyBinding;
-import net.minecraft.client.util.InputUtil;
+import net.minecraft.client.gui.screen.ingame.AbstractInventoryScreen;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
@@ -22,14 +17,14 @@ import spinnery.widget.api.WCollection;
 import spinnery.widget.api.WContextLock;
 import spinnery.widget.api.WInterfaceProvider;
 
-public class BaseContainerScreen<T extends BaseContainer> extends ContainerScreen<T> implements WInterfaceProvider {
+public class BaseHandledScreen<T extends BaseScreenHandler> extends AbstractInventoryScreen<T> implements WInterfaceProvider {
 	protected final WInterface clientInterface;
 	protected int tooltipX = 0;
 	protected int tooltipY = 0;
 	protected WSlot drawSlot;
 
 	@Environment(EnvType.CLIENT)
-	public BaseContainerScreen(Text name, T linkedContainer, PlayerEntity player) {
+	public BaseHandledScreen(Text name, T linkedContainer, PlayerEntity player) {
 		super(linkedContainer, player.inventory, name);
 		clientInterface = new WInterface(linkedContainer);
 	}
@@ -39,18 +34,18 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 	public void render(int mouseX, int mouseY, float tick) {
 		clientInterface.draw();
 
-		if (getDrawSlot() != null && getLinkedContainer().getPlayerInventory().getCursorStack().isEmpty() && !getDrawSlot().getStack().isEmpty()) {
+		if (getDrawSlot() != null && getHandler().getPlayerInventory().getCursorStack().isEmpty() && !getDrawSlot().getStack().isEmpty()) {
 			this.renderTooltip(getDrawSlot().getStack(), getTooltipX(), getTooltipY());
 		}
 
 		ItemStack stackA;
 
-		if (getContainer().getPreviewCursorStack().isEmpty()
-				&& getContainer().getDragSlots(GLFW.GLFW_MOUSE_BUTTON_1).isEmpty()
-				&& getContainer().getDragSlots(GLFW.GLFW_MOUSE_BUTTON_2).isEmpty()) {
-			stackA = getContainer().getPlayerInventory().getCursorStack();
+		if (getHandler().getPreviewCursorStack().isEmpty()
+				&& getHandler().getDragSlots(GLFW.GLFW_MOUSE_BUTTON_1).isEmpty()
+				&& getHandler().getDragSlots(GLFW.GLFW_MOUSE_BUTTON_2).isEmpty()) {
+			stackA = getHandler().getPlayerInventory().getCursorStack();
 		} else {
-			stackA = getContainer().getPreviewCursorStack();
+			stackA = getHandler().getPreviewCursorStack();
 		}
 
 		RenderSystem.pushMatrix();
@@ -110,7 +105,7 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 
 		if (keyCode == GLFW.GLFW_KEY_ESCAPE || MinecraftClient.getInstance().options.keyInventory.matchesKey(keyCode, character)) {
 			if (clientInterface.getAllWidgets().stream().noneMatch(widget -> widget instanceof WContextLock && ((WContextLock) widget).isActive())) {
-				minecraft.player.closeContainer();
+				MinecraftClient.getInstance().player.closeHandledScreen();
 				return true;
 			}
 		}
@@ -136,8 +131,8 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 	}
 
 	@Environment(EnvType.CLIENT)
-	public T getLinkedContainer() {
-		return super.container;
+	public T getHandler() {
+		return super.handler;
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -146,7 +141,7 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 	}
 
 	@Environment(EnvType.CLIENT)
-	public <S extends BaseContainerScreen> S setTooltipX(int tooltipX) {
+	public <S extends BaseHandledScreen> S setTooltipX(int tooltipX) {
 		this.tooltipX = tooltipX;
 		return (S) this;
 	}
@@ -157,13 +152,13 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 	}
 
 	@Environment(EnvType.CLIENT)
-	public <S extends BaseContainerScreen> S setTooltipY(int tooltipY) {
+	public <S extends BaseHandledScreen> S setTooltipY(int tooltipY) {
 		this.tooltipY = tooltipY;
 		return (S) this;
 	}
 
 	@Environment(EnvType.CLIENT)
-	public <S extends BaseContainerScreen> S setDrawSlot(WSlot drawSlot) {
+	public <S extends BaseHandledScreen> S setDrawSlot(WSlot drawSlot) {
 		this.drawSlot = drawSlot;
 		return (S) this;
 	}

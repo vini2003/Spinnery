@@ -324,7 +324,9 @@ public abstract class WAbstractWidget implements Tickable,
 	public void onFocusGained() {
 		if (this instanceof WDelegatedEventListener) {
 			for (WEventListener widget : ((WDelegatedEventListener) this).getEventDelegates()) {
-				widget.onFocusGained();
+				if (EventUtilities.canReceiveMouse(widget) && ((WAbstractWidget) widget).isFocused()) {
+					widget.onFocusGained();
+				}
 			}
 		}
 		if (runnableOnFocusGained != null && isFocused()) {
@@ -337,7 +339,9 @@ public abstract class WAbstractWidget implements Tickable,
 	public void onFocusReleased() {
 		if (this instanceof WDelegatedEventListener) {
 			for (WEventListener widget : ((WDelegatedEventListener) this).getEventDelegates()) {
-				widget.onFocusReleased();
+				if (EventUtilities.canReceiveMouse(widget) && !((WAbstractWidget) widget).isFocused()) {
+					widget.onFocusReleased();
+				}
 			}
 		}
 		if (runnableOnFocusReleased != null && !isFocused()) {
@@ -501,8 +505,9 @@ public abstract class WAbstractWidget implements Tickable,
 	public void onMouseScrolled(int mouseX, int mouseY, double deltaY) {
 		if (this instanceof WDelegatedEventListener) {
 			for (WEventListener widget : ((WDelegatedEventListener) this).getEventDelegates()) {
-				if (EventUtilities.canReceiveMouse(widget))
+				if (EventUtilities.canReceiveMouse(widget)) {
 					widget.onMouseScrolled(mouseX, mouseY, deltaY);
+				}
 			}
 		}
 		if (runnableOnMouseScrolled != null) {
