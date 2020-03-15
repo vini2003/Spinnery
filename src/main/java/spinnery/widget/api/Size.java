@@ -21,6 +21,10 @@ public class Size implements WSized, JanksonSerializable {
 		return new Size(width, height);
 	}
 
+	public Size of(int side) {
+		return new Size(side, side);
+	}
+
 	/**
 	 * Creates a copy of this Size object, incrementing its width and height by the supplied parameters.
 	 *
