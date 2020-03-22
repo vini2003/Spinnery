@@ -18,8 +18,8 @@ version = "${project.ext.mod_version}+${project.ext.version_meta}"
 group = project.maven_group
 
 bintray {
-	user = "vini2003"
-	key = "f0922443e1c8c3bd4d0d9f07a1f09df932f47e08"
+	user = System.getenv("BINTRAY_USER")
+	key = System.getenv("BINTRAY_KEY")
 	publications = ['SpinneryPublication']
 	pkg {
 		repo = 'Spinnery'
