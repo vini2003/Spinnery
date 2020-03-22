@@ -90,7 +90,7 @@ public class StackUtilities {
 		Item itemA = stackA.getItem();
 		Item itemB = stackB.getItem();
 
-		if (equal(stackA, stackB)) {
+		if (equalItemAndTag(stackA, stackB)) {
 			int countA = stackA.getCount();
 			int countB = stackB.getCount();
 
@@ -124,7 +124,7 @@ public class StackUtilities {
 		return MutablePair.of(stackA, stackB);
 	}
 
-	public static boolean equal(ItemStack stackA, ItemStack stackB) {
-		return ItemStack.areItemsEqual(stackA, stackB);
+	public static boolean equalItemAndTag(ItemStack stackA, ItemStack stackB) {
+		return ItemStack.areItemsEqual(stackA, stackB) && stackA.getTag() == stackB.getTag();
 	}
 }

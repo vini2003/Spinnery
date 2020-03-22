@@ -3,6 +3,7 @@ package spinnery.common;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.container.Container;
 
 import net.minecraft.container.Slot;
@@ -202,7 +203,7 @@ public class BaseContainer extends Container {
 
 		switch (action) {
 			case PICKUP: {
-				if (!StackUtilities.equal(stackA, stackB)) {
+				if (!StackUtilities.equalItemAndTag(stackA, stackB)) {
 					if (button == 0) { // Interact with existing // LMB
 						if (slotA.isOverrideMaximumCount()) {
 							if (stackA.isEmpty()) {
@@ -250,7 +251,7 @@ public class BaseContainer extends Container {
 
 						if (slotB.refuses(stackA)) continue;
 
-						if ((!slotA.getStack().isEmpty() && stackC.isEmpty()) || (StackUtilities.equal(stackA, stackC) && stackC.getCount() < (slotB.getInventoryNumber() == PLAYER_INVENTORY ? stackA.getMaxCount() : slotB.getMaxCount()))) {
+						if ((!slotA.getStack().isEmpty() && stackC.isEmpty()) || (StackUtilities.equalItemAndTag(stackA, stackC) && stackC.getCount() < (slotB.getInventoryNumber() == PLAYER_INVENTORY ? stackA.getMaxCount() : slotB.getMaxCount()))) {
 							int maxB = stackC.isEmpty() || slotB.getInventoryNumber() == PLAYER_INVENTORY ? stackA.getMaxCount() : slotB.getMaxCount();
 							StackUtilities.merge(slotA::getStack, slotB::getStack, slotA::getMaxCount, () -> maxB).apply(slotA::setStack, slotB::setStack);
 							break;
@@ -261,7 +262,7 @@ public class BaseContainer extends Container {
 			}
 			case PICKUP_ALL: {
 				for (WAbstractWidget widget : getInterface().getAllWidgets()) {
-					if (widget instanceof WSlot && StackUtilities.equal(((WSlot) widget).getStack(), stackB)) {
+					if (widget instanceof WSlot && StackUtilities.equalItemAndTag(((WSlot) widget).getStack(), stackB)) {
 						WSlot slotB = (WSlot) widget;
 
 						if (slotB.isLocked()) continue;
@@ -295,7 +296,7 @@ public class BaseContainer extends Container {
 
 	@Override
 	public void sendContentUpdates() {
-		if (!(this.getPlayerInventory().player instanceof ServerPlayerEntity)) return;
+		if (!(this.getPlayerInventory().player instanceof ServerPlayerEntity) || FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) return;
 
 		for (WAbstractWidget widget : serverInterface.getAllWidgets()) {
 			if (widget instanceof WSlot) {
