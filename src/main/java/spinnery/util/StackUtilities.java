@@ -90,7 +90,7 @@ public class StackUtilities {
 		Item itemA = stackA.getItem();
 		Item itemB = stackB.getItem();
 
-		if (stackA.isItemEqual(stackB)) {
+		if (equal(stackA, stackB)) {
 			int countA = stackA.getCount();
 			int countB = stackB.getCount();
 

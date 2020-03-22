@@ -3,6 +3,8 @@ package spinnery;
 import net.fabricmc.api.ModInitializer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import spinnery.debug.BlockRegistry;
+import spinnery.debug.ContainerRegistry;
 import spinnery.registry.NetworkRegistry;
 
 public class Spinnery implements ModInitializer {
@@ -12,6 +14,8 @@ public class Spinnery implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
+		BlockRegistry.initialize();
+		ContainerRegistry.initialize();
 		NetworkRegistry.initialize();
 	}
 }

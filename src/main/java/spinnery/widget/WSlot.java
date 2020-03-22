@@ -5,6 +5,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.container.Slot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.Item;
@@ -160,9 +161,8 @@ public class WSlot extends WAbstractWidget {
 		int sY = getHeight();
 
 		BaseRenderer.drawBeveledPanel(x, y, z, sX, sY, getStyle().asColor("top_left"), getStyle().asColor("background.unfocused"), getStyle().asColor("bottom_right"));
-
 		if (isFocused()) {
-			BaseRenderer.drawRectangle(x + 1, y + 1, z, sX - 2, sY - 2, getStyle().asColor("background.focused"));
+			//BaseRenderer.drawRectangle(x + 1, y + 1, z, sX - 2, sY - 2, getStyle().asColor("background.focused"));
 		}
 
 		if (hasPreviewTexture()) {
@@ -171,14 +171,18 @@ public class WSlot extends WAbstractWidget {
 
 		ItemStack stackA = getPreviewStack().isEmpty() ? getStack() : getPreviewStack();
 
+		RenderSystem.translatef(0, 0, +250);
+		RenderSystem.translatef(0, 0, -150);
 		RenderSystem.enableLighting();
-		BaseRenderer.getItemRenderer().renderGuiItem(stackA, 1 + x + (sX - 18) / 2, 1 + y + (sY - 18) / 2);
-		BaseRenderer.getItemRenderer().renderGuiItemOverlay(MinecraftClient.getInstance().textRenderer, stackA, 1 + x + (sX - 18) / 2, 1 + y + (sY - 18) / 2, stackA.getCount() == 1 ? "" : withSuffix(stackA.getCount()));
+		BaseRenderer.getItemRenderer().renderGuiItemIcon(stackA, 1 + x + (sX - 18) / 2, 1 + y + (sY - 18) / 2);
+        BaseRenderer.getItemRenderer().renderGuiItemOverlay(MinecraftClient.getInstance().textRenderer, stackA, 1 + x + (sX - 18) / 2, 1 + y + (sY - 18) / 2, stackA.getCount() == 1 ? "" : withSuffix(stackA.getCount()));
 		RenderSystem.disableLighting();
+		RenderSystem.translatef(0, 0, +150);
 
 		if (isFocused()) {
-			BaseRenderer.drawRectangle(x + 1, y + 1, z + 300, sX - 2, sY - 2, getStyle().asColor("overlay"));
+			BaseRenderer.drawRectangle(x + 1, y + 1, z + 1, sX - 2, sY - 2, getStyle().asColor("overlay"));
 		}
+		RenderSystem.translatef(0, 0, -250);
 	}
 
 	@Override
