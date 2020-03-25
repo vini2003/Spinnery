@@ -52,6 +52,7 @@ public class WSlot extends WAbstractWidget {
 	protected List<Item> denyItems = new ArrayList<>();
 	protected List<Tag<Item>> acceptTags = new ArrayList<>();
 	protected List<Tag<Item>> denyTags = new ArrayList<>();
+
 	protected List<BiConsumer<Action, Action.Subtype>> consumers = new ArrayList<>(); // Integer corresponds to position in BaseContainer#onSlotAction
 
 	public void consume(Action action, Action.Subtype subtype) {

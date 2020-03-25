@@ -17,11 +17,14 @@ import spinnery.widget.api.Size;
 import spinnery.widget.api.WContextLock;
 import spinnery.widget.api.WPadded;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
+
+/**
+ * 7:13PM, 3/25/2020
+ * Engineer, you shall pay dearly
+ * for not commenting this.
+ */
 @SuppressWarnings("unchecked")
 @Environment(EnvType.CLIENT)
 public abstract class WAbstractTextEditor extends WAbstractWidget implements WPadded, WContextLock {
