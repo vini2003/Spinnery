@@ -5,7 +5,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.container.Slot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.Item;
@@ -22,6 +21,7 @@ import spinnery.widget.api.Size;
 import spinnery.widget.api.WModifiableCollection;
 
 import java.util.*;
+import java.util.function.BiConsumer;
 
 import static net.fabricmc.fabric.api.network.ClientSidePacketRegistry.INSTANCE;
 import static spinnery.registry.NetworkRegistry.SLOT_CLICK_PACKET;
@@ -52,6 +52,21 @@ public class WSlot extends WAbstractWidget {
 	protected List<Item> denyItems = new ArrayList<>();
 	protected List<Tag<Item>> acceptTags = new ArrayList<>();
 	protected List<Tag<Item>> denyTags = new ArrayList<>();
+	protected List<BiConsumer<Action, Action.Subtype>> consumers; // Integer corresponds to position in BaseContainer#onSlotAction
+
+	public void consume(Action action, Action.Subtype subtype) {
+		consumers.forEach(actionConsumer -> actionConsumer.accept(action, subtype));
+	}
+
+	public <W extends WSlot> W addConsumer(BiConsumer<Action, Action.Subtype> consumer) {
+		consumers.add(consumer);
+		return (W) this;
+	}
+
+	public <W extends WSlot> W removeConsumer(BiConsumer<Action, Action.Subtype> consumer) {
+		consumers.remove(consumer);
+		return (W) this;
+	}
 
 	@Environment(EnvType.CLIENT)
 	public static Collection<WSlot> addPlayerInventory(Position position, Size size, WModifiableCollection parent) {
@@ -161,9 +176,6 @@ public class WSlot extends WAbstractWidget {
 		int sY = getHeight();
 
 		BaseRenderer.drawBeveledPanel(x, y, z, sX, sY, getStyle().asColor("top_left"), getStyle().asColor("background.unfocused"), getStyle().asColor("bottom_right"));
-		if (isFocused()) {
-			//BaseRenderer.drawRectangle(x + 1, y + 1, z, sX - 2, sY - 2, getStyle().asColor("background.focused"));
-		}
 
 		if (hasPreviewTexture()) {
 			BaseRenderer.drawImage(x + 1, y + 1, z, sX - 2, sY - 2, getPreviewTexture());
