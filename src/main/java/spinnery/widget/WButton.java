@@ -4,6 +4,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import spinnery.client.BaseRenderer;
 import spinnery.client.TextRenderer;
+import spinnery.widget.api.Color;
 
 @Environment(EnvType.CLIENT)
 public class WButton extends WAbstractButton {

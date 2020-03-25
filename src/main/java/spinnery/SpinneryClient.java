@@ -17,6 +17,6 @@ public class SpinneryClient implements ClientModInitializer {
 	public void onInitializeClient() {
 		NetworkRegistry.initializeClient();
 		WidgetRegistry.initialize();
-		ResourceRegistry.initialize();
+        ResourceRegistry.initialize();
 	}
 }

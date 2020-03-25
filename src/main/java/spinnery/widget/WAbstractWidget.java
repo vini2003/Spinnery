@@ -17,31 +17,24 @@ import spinnery.widget.api.WEventListener;
 import spinnery.widget.api.WLayoutElement;
 import spinnery.widget.api.WStyleProvider;
 import spinnery.widget.api.WThemable;
-import spinnery.widget.api.listener.WAlignListener;
-import spinnery.widget.api.listener.WCharTypeListener;
-import spinnery.widget.api.listener.WFocusGainListener;
-import spinnery.widget.api.listener.WFocusLossListener;
-import spinnery.widget.api.listener.WKeyPressListener;
-import spinnery.widget.api.listener.WKeyReleaseListener;
-import spinnery.widget.api.listener.WMouseClickListener;
-import spinnery.widget.api.listener.WMouseDragListener;
-import spinnery.widget.api.listener.WMouseMoveListener;
-import spinnery.widget.api.listener.WMouseReleaseListener;
-import spinnery.widget.api.listener.WMouseScrollListener;
-import spinnery.widget.api.listener.WTooltipDrawListener;
+import spinnery.widget.api.listener.*;
 
 import static spinnery.registry.ThemeRegistry.DEFAULT_THEME;
 
 @SuppressWarnings({"unchecked", "rawtypes"})
-public abstract class WAbstractWidget implements Tickable,
-		WLayoutElement, WThemable, WStyleProvider, WEventListener {
+public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThemable, WStyleProvider, WEventListener {
 	protected WInterface linkedInterface;
 	protected WLayoutElement parent;
 
 	protected Position position = Position.origin();
+
 	protected Size size = Size.of(0, 0);
+	protected Size baseAutoSize = Size.of(0, 0);
+	protected Size minimumAutoSize = Size.of(0, 0);
+	protected Size maximumAutoSize = Size.of(Integer.MAX_VALUE, Integer.MAX_VALUE);
 
 	protected Text label = new LiteralText("");
+
 	protected boolean isHidden = false;
 	protected boolean hasFocus = false;
 
@@ -246,6 +239,21 @@ public abstract class WAbstractWidget implements Tickable,
 		return size;
 	}
 
+	@Environment(EnvType.CLIENT)
+	public Size getBaseAutoSize() {
+		return baseAutoSize;
+	}
+
+	@Environment(EnvType.CLIENT)
+	public Size getMinimumAutoSize() {
+		return minimumAutoSize;
+	}
+
+	@Environment(EnvType.CLIENT)
+	public Size getMaximumAutoSize() {
+		return maximumAutoSize;
+	}
+
 	// WPositioned
 
 	@Environment(EnvType.CLIENT)
@@ -253,6 +261,31 @@ public abstract class WAbstractWidget implements Tickable,
 		if (!this.size.equals(size)) {
 			this.size = size;
 			onLayoutChange();
+		}
+		return (W) this;
+	}
+
+	@Environment(EnvType.CLIENT)
+	public <W extends WAbstractWidget> W setMinimumAutoSize(Size minimumAutoSize) {
+		if (!this.minimumAutoSize.equals(minimumAutoSize)) {
+			this.minimumAutoSize = minimumAutoSize;
+		}
+		return (W) this;
+	}
+
+	@Environment(EnvType.CLIENT)
+	public <W extends WAbstractWidget> W setMaximumAutoSize(Size maximumAutoSize) {
+		if (!this.maximumAutoSize.equals(maximumAutoSize)) {
+			this.maximumAutoSize = maximumAutoSize;
+		}
+		return (W) this;
+	}
+
+	@Environment(EnvType.CLIENT)
+	public <W extends WAbstractWidget> W setBaseAutoSize(Size baseAutoSize) {
+		if (!this.baseAutoSize.equals(baseAutoSize)) {
+			this.baseAutoSize = baseAutoSize;
+
 		}
 		return (W) this;
 	}

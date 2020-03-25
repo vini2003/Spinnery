@@ -234,6 +234,15 @@
 			$extend: [
 				"$text_editor"
 			]
+		},
+		"spinnery:horizontal_box_container": {
+			border: 0xff000000
+		},
+		"spinnery:vertical_box_container": {
+			border: 0xff000000
+		},
+		"spinnery:form_container": {
+			border: 0xff000000
 		}
 	}
 }

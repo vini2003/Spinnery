@@ -131,7 +131,7 @@ public class WInterface implements WDrawableCollection, WModifiableCollection, W
 		}
 	}
 
-	public boolean onMouseReleased(int mouseX, int mouseY, int mouseButton) {
+	public void onMouseReleased(int mouseX, int mouseY, int mouseButton) {
 		for (WAbstractWidget widget : getWidgets()) {
 			if (!EventUtilities.canReceiveMouse(widget)) continue;
 			widget.onMouseReleased(mouseX, mouseY, mouseButton);
@@ -140,8 +140,7 @@ public class WInterface implements WDrawableCollection, WModifiableCollection, W
 						NetworkRegistry.createMouseReleasePacket(((WNetworked) widget), mouseX, mouseY, mouseButton));
 			}
 		}
-		return false;
-	}
+    }
 
 	public boolean onMouseDragged(int mouseX, int mouseY, int mouseButton, int deltaX, int deltaY) {
 		for (WAbstractWidget widget : getWidgets()) {

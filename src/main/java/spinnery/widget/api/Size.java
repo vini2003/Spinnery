@@ -62,6 +62,46 @@ public class Size implements WSized, JanksonSerializable {
 		return this;
 	}
 
+	public boolean isLargerInWidthAndHeight(Size size) {
+		return this.width > size.width && this.height > size.height;
+	}
+
+	public boolean isLargerInWidthOrHeight(Size size) {
+		return this.width > size.width || this.height > size.height;
+	}
+	
+	public boolean isLargerInWidth(Size size) {
+		return this.width > size.width;
+	}
+	
+	public boolean isLargerInHeight(Size size) {
+		return this.height > size.height;
+	}
+
+	public boolean isLargerInArea(Size size) {
+		return this.width * this.height > size.width * size.height;
+	}
+
+	public boolean isSmallerInWidthAndHeight(Size size) {
+		return this.width < size.width && this.height < size.height;
+	}
+
+	public boolean isSmallerInWidthOrHeight(Size size) {
+		return this.width < size.width || this.height < size.height;
+	}
+
+	public boolean isSmallerInWidth(Size size) {
+		return this.width < size.width;
+	}
+
+	public boolean isSmallerInHeight(Size size) {
+		return this.height < size.height;
+	}
+
+	public boolean isSmallerInArea(Size size) {
+		return this.width * this.height < size.width * size.height;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
