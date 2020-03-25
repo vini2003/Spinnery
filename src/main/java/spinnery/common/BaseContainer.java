@@ -203,32 +203,40 @@ public class BaseContainer extends Container {
 
 		switch (action) {
 			case PICKUP: {
+
 				if (!StackUtilities.equalItemAndTag(stackA, stackB)) {
 					if (button == 0) { // Interact with existing // LMB
 						if (slotA.isOverrideMaximumCount()) {
 							if (stackA.isEmpty()) {
 								if (slotA.refuses(stackB)) return;
 
+								slotA.consume(action, Action.Subtype.FROM_CURSOR_TO_SLOT_CUSTOM_FULL_STACK);
 								StackUtilities.merge(stackB, stackA, stackB.getMaxCount(), slotA.getMaxCount()).apply(inventory::setCursorStack, slotA::acceptStack);
 							} else if (stackB.isEmpty()) {
 								if (slotA.refuses(stackB)) return;
 
+								slotA.consume(action, Action.Subtype.FROM_SLOT_TO_CURSOR_CUSTOM_FULL_STACK);
 								StackUtilities.merge(stackA, stackB, slotA.getInventoryNumber() == PLAYER_INVENTORY ? stackB.getMaxCount() : slotA.getMaxCount(), stackB.getMaxCount()).apply(slotA::acceptStack, inventory::setCursorStack);
 							}
 						} else {
 							if (!stackB.isEmpty() && slotA.refuses(stackB)) return;
 
+							slotA.consume(action, Action.Subtype.FROM_CURSOR_TO_SLOT_DEFAULT_FULL_STACK);
 							StackUtilities.merge(stackA, stackB, stackA.isEmpty() || slotA.getInventoryNumber() == PLAYER_INVENTORY ? stackB.getMaxCount() : slotA.getMaxCount(), stackB.getMaxCount()).apply(slotA::acceptStack, inventory::setCursorStack);
 						}
 					} else if (button == 1 && !stackB.isEmpty()) { // Interact with existing // RMB
+						slotA.consume(action, Action.Subtype.FROM_CURSOR_TO_SLOT_CUSTOM_SINGLE_ITEM);
 						StackUtilities.merge(inventory::getCursorStack, slotA::getStack, inventory.getCursorStack()::getMaxCount, () -> (slotA.getStack().getCount() == slotA.getMaxCount() ? 0 : slotA.getStack().getCount() + 1)).apply(inventory::setCursorStack, slotA::setStack);
 					} else if (button == 1) { // Split existing // RMB
+						slotA.consume(action, Action.Subtype.FROM_SLOT_TO_CURSOR_DEFAULT_HALF_STACK);
 						StackUtilities.merge(slotA::getStack, inventory::getCursorStack, inventory.getCursorStack()::getMaxCount, () -> Math.max(1, Math.min(slotA.getStack().getMaxCount() / 2, slotA.getStack().getCount() / 2))).apply(slotA::setStack, inventory::setCursorStack);
 					}
 				} else {
 					if (button == 0) {
+						slotA.consume(action, Action.Subtype.FROM_CURSOR_TO_SLOT_CUSTOM_FULL_STACK);
 						StackUtilities.merge(inventory::getCursorStack, slotA::getStack, stackB::getMaxCount, slotA::getMaxCount).apply(inventory::setCursorStack, slotA::setStack); // Add to existing // LMB
 					} else {
+						slotA.consume(action, Action.Subtype.FROM_CURSOR_TO_SLOT_CUSTOM_SINGLE_ITEM);
 						StackUtilities.merge(inventory::getCursorStack, slotA::getStack, inventory.getCursorStack()::getMaxCount, () -> (slotA.getStack().getCount() == slotA.getMaxCount() ? 0 : slotA.getStack().getCount() + 1)).apply(inventory::setCursorStack, slotA::setStack); // Add to existing // RMB
 					}
 				}
@@ -253,6 +261,7 @@ public class BaseContainer extends Container {
 
 						if ((!slotA.getStack().isEmpty() && stackC.isEmpty()) || (StackUtilities.equalItemAndTag(stackA, stackC) && stackC.getCount() < (slotB.getInventoryNumber() == PLAYER_INVENTORY ? stackA.getMaxCount() : slotB.getMaxCount()))) {
 							int maxB = stackC.isEmpty() || slotB.getInventoryNumber() == PLAYER_INVENTORY ? stackA.getMaxCount() : slotB.getMaxCount();
+							slotA.consume(action, Action.Subtype.FROM_SLOT_TO_SLOT_CUSTOM_FULL_STACK);
 							StackUtilities.merge(slotA::getStack, slotB::getStack, slotA::getMaxCount, () -> maxB).apply(slotA::setStack, slotB::setStack);
 							break;
 						}
@@ -267,6 +276,7 @@ public class BaseContainer extends Container {
 
 						if (slotB.isLocked()) continue;
 
+						slotB.consume(action, Action.Subtype.FROM_SLOT_TO_CURSOR_CUSTOM_FULL_STACK);
 						StackUtilities.merge(slotB::getStack, inventory::getCursorStack, slotB::getMaxCount, stackB::getMaxCount).apply(slotB::setStack, inventory::setCursorStack);
 					}
 				}
