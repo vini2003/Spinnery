@@ -18,6 +18,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
 
+/**
+ * Registers all the resource-related
+ * assortments Spinnery makes use of,
+ * including our theme parser and
+ * reload listeners.
+ */
 @Environment(EnvType.CLIENT)
 public class ResourceRegistry {
 	public static final ResourceListener RESOURCE_LISTENER = new ResourceListener();
