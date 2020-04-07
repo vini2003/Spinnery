@@ -32,10 +32,23 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+/**
+ * A BaseContainer is a class responsible for
+ * handling the data needed for the backend of
+ * a BaseContainerScreen. It holds data that
+ * needs to be synchronized with the server,
+ * and is necessary for any widgets that
+ * implement WNetworked to be added to it
+ * and the BaseContainerScreen.
+ *
+ * Note, however, that the widget added to
+ * the BaseContainer should NOT contain
+ * a Position, or a Size.
+ */
 public class BaseContainer extends Container {
 	public static final int PLAYER_INVENTORY = 0;
 	protected final WInterface serverInterface;
-	public Map<Integer, Inventory> linkedInventories = new HashMap<>();
+	public Map<Integer, Inventory> inventories = new HashMap<>();
 	public Map<Integer, Map<Integer, ItemStack>> cachedInventories = new HashMap<>();
 	protected Set<WSlot> splitSlots = new HashSet<>();
 	protected Set<WSlot> singleSlots = new HashSet<>();
@@ -43,6 +56,11 @@ public class BaseContainer extends Container {
 	protected ItemStack previewCursorStack = ItemStack.EMPTY;
 	protected World world;
 
+	/**
+	 * Instantiates a BaseContainer.
+	 * @param synchronizationID		ID to be used for synchronization of this container.
+	 * @param linkedPlayerInventory PlayerInventory of Player associated with this container.
+	 */
 	public BaseContainer(int synchronizationID, PlayerInventory linkedPlayerInventory) {
 		super(null, synchronizationID);
 		getInventories().put(PLAYER_INVENTORY, linkedPlayerInventory);
@@ -50,26 +68,45 @@ public class BaseContainer extends Container {
 		serverInterface = new WInterface(this);
 	}
 
+	/**
+	 * Retrieves map of inventories associated with this container.
+	 * @return All inventories associated with this container, whose key is the inventory number.
+	 */
 	public Map<Integer, Inventory> getInventories() {
-		return linkedInventories;
+		return inventories;
 	}
 
+	/**
+	 * Sets the World of this container.
+	 * @param world World to be associated with this container.
+	 */
 	public <C extends BaseContainer> C setWorld(World world) {
 		this.world = world;
 		return (C) this;
 	}
 
+	/**
+	 * Gets the preview ItemStack to be rendered instead of the default cursor ItemStack.
+	 * @return previewCursorStack ItemStack to be rendered instead of the default cursor ItemStack.
+	 */
 	@Environment(EnvType.CLIENT)
 	public ItemStack getPreviewCursorStack() {
 		return previewCursorStack;
 	}
 
+	/**
+	 * Sets the preview ItemStack to be rendered instead of the default cursor ItemStack.
+	 * @param previewCursorStack ItemStack to be rendered instead of the default cursor ItemStack.
+	 */
 	@Environment(EnvType.CLIENT)
 	public <C extends BaseContainer> C setPreviewCursorStack(ItemStack previewCursorStack) {
 		this.previewCursorStack = previewCursorStack;
 		return (C) this;
 	}
 
+	/**
+	 * Flushes all WSlot drag information.
+	 */
 	@Environment(EnvType.CLIENT)
 	public void flush() {
 		getInterface().getContainer().getDragSlots(GLFW.GLFW_MOUSE_BUTTON_1).clear();
@@ -78,6 +115,11 @@ public class BaseContainer extends Container {
 		getInterface().getContainer().setPreviewCursorStack(ItemStack.EMPTY);
 	}
 
+	/**
+	 * Retrieves the set of WSlots on which the mouse has been dragged, given a mouse button.
+	 * @param mouseButton Mouse button used for dragging.
+	 * @return			  Set of WSlots on which the mouse has been dragged, given the mouse button.
+	 */
 	@Environment(EnvType.CLIENT)
 	public Set<WSlot> getDragSlots(int mouseButton) {
 		switch (mouseButton) {
@@ -90,20 +132,39 @@ public class BaseContainer extends Container {
 		}
 	}
 
+	/**
+	 * Retrieves the WInterface attached with this container.
+	 * @return The WInterface attached with this container.
+	 */
 	public WInterface getInterface() {
 		return serverInterface;
 	}
 
+	/**
+	 * Retrieves the preview ItemStacks associated with all WSlots inventory numbers and numbers.
+	 * @return ItemStacks of all WSlots, whose key is the inventory number, and value key is the number.
+	 */
 	@Environment(EnvType.CLIENT)
 	public Map<Integer, Map<Integer, ItemStack>> getPreviewStacks() {
 		return previewStacks;
 	}
 
+	/**
+	 * Verifies if the mouse is currently being dragged through WSlots.
+	 * @return Whether the mouse is currently being dragged through WSlots.
+	 */
 	@Environment(EnvType.CLIENT)
 	public boolean isDragging() {
 		return getDragSlots(GLFW.GLFW_MOUSE_BUTTON_1).isEmpty() || getDragSlots(GLFW.GLFW_MOUSE_BUTTON_2).isEmpty();
 	}
 
+	/**
+	 * Method called on the server when a WNetworked widget
+	 * WNetworked.Event happens.
+	 * @param widgetSyncId Synchronization ID of the WNetworked widget; must match between client and server.
+	 * @param event		   WNetworked.Event which was sent.
+	 * @param payload	   CompoundTag payload sent alongside the event.
+	 */
 	public void onInterfaceEvent(int widgetSyncId, WNetworked.Event event, CompoundTag payload) {
 		Set<WAbstractWidget> checkWidgets = serverInterface.getAllWidgets();
 		for (WAbstractWidget widget : checkWidgets) {
@@ -115,6 +176,12 @@ public class BaseContainer extends Container {
 		}
 	}
 
+	/**
+	 * Method called when a drag Action is performed on a WSlot, both on the client and server.
+	 * @param slotNumber		Number of WSlot in which the Action happened.
+	 * @param inventoryNumber	Inventory number of WSlot in which the Action happened.
+	 * @param action			Action which was performed.
+	 */
 	public void onSlotDrag(int[] slotNumber, int[] inventoryNumber, Action action) {
 		HashMap<Integer, WSlot> slots = new HashMap<>();
 
@@ -177,10 +244,17 @@ public class BaseContainer extends Container {
 		}
 	}
 
-	public PlayerInventory getPlayerInventory() {
-		return (PlayerInventory) linkedInventories.get(PLAYER_INVENTORY);
-	}
-
+	/**
+	 * Method called when an Action is performed on a WSlot, both on the client and server.
+	 * @param slotNumber		Number of WSlot in which the Action happened.
+	 * @param inventoryNumber	Inventory number of WSlot in which the Action happened.
+	 * @param button			Button with which the action was performed.
+	 * @param action			Action which was performed.
+	 * @param player			Player whom performed the action.
+	 *
+	 * As a warning, it just works. Any modifications are likely to cause
+	 * severe brain damage to the poor individual attempting to change this.
+	 */
 	public void onSlotAction(int slotNumber, int inventoryNumber, int button, Action action, PlayerEntity player) {
 		WSlot slotT = null;
 
@@ -284,26 +358,45 @@ public class BaseContainer extends Container {
 		}
 	}
 
+	/**
+	 * Retrieves the World associated with this container.
+	 * @return World associated with this container.
+	 */
 	public World getWorld() {
 		return world;
 	}
 
+	/**
+	 * Retrieves the PlayerInventory of the Player associated with this container.
+	 * @return PlayerInventory of player associated with this container.
+	 */
+	public PlayerInventory getPlayerInventory() {
+		return (PlayerInventory) inventories.get(PLAYER_INVENTORY);
+	}
+
+	/**
+	 * Retrieves an inventory from the BaseContainer.
+	 * @param inventoryNumber Inventory number associated with the inventory.
+	 * @return				  Inventory associated with the inventory number.
+	 */
 	public Inventory getInventory(int inventoryNumber) {
-		return linkedInventories.get(inventoryNumber);
+		return inventories.get(inventoryNumber);
 	}
 
-	@Deprecated
-	@Override
-	public Slot addSlot(Slot slot) {
-		return super.addSlot(slot);
+	/**
+	 * Adds an inventory to the BaseContainer.
+	 * @param inventoryNumber Inventory number associated with the inventory.
+	 * @param inventory		  Inventory associated with the inventory number.
+	 */
+	public <C extends BaseContainer> C addInventory(int inventoryNumber, BaseInventory inventory) {
+		this.inventories.put(inventoryNumber, inventory);
+		return (C) this;
 	}
 
-	@Deprecated
-	@Override
-	public ItemStack onSlotClick(int identifier, int button, SlotActionType action, PlayerEntity player) {
-		return ItemStack.EMPTY;
-	}
-
+	/**
+	 * Dispatches packets for WSlots whose contents
+	 * have changed since the last call.
+	 */
 	@Override
 	public void sendContentUpdates() {
 		if (!(this.getPlayerInventory().player instanceof ServerPlayerEntity) || FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) return;
@@ -338,12 +431,27 @@ public class BaseContainer extends Container {
 		}
 	}
 
+	/**
+	 * Function deprecated and unsupported by Spinnery.
+	 */
+	@Deprecated
 	@Override
-	public void onContentChanged(Inventory inventory) {
-		super.onContentChanged(inventory);
+	public Slot addSlot(Slot slot) {
+		throw new UnsupportedOperationException(Slot.class.getName() + " cannot be added to a Spinnery " + BaseContainer.class.getName() + "!");
 	}
 
+	/**
+	 * Function deprecated and unsupported by Spinnery.
+	 */
 	@Deprecated
+	@Override
+	public ItemStack onSlotClick(int identifier, int button, SlotActionType action, PlayerEntity player) {
+		throw new UnsupportedOperationException(Container.class.getName() + "::onSlotClick cannot happen in a Spinnery " + BaseContainer.class.getName() + "!");
+	}
+
+	/**
+	 * Return true by default for simplicity of use.
+	 */
 	@Override
 	public boolean canUse(PlayerEntity entity) {
 		return true;
