@@ -5,6 +5,9 @@ import com.google.common.collect.HashBiMap;
 import net.minecraft.util.Identifier;
 import spinnery.widget.*;
 
+/**
+ * Registers all of Spinnery's widgets with Spinnery.
+ */
 public class WidgetRegistry {
 	private static BiMap<Identifier, Class<? extends WAbstractWidget>> widgetMap = HashBiMap.create();
 
