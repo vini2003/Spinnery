@@ -14,6 +14,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * A BaseInventory is a class responsible for
+ * effectively handling what a BasicInventory
+ * does, however, allowing stack sizes
+ * higher than the default of 64.
+ */
 public class BaseInventory implements Inventory, RecipeInputProvider {
 	protected int size;
 	protected DefaultedList<ItemStack> stacks;
@@ -105,6 +111,5 @@ public class BaseInventory implements Inventory, RecipeInputProvider {
 
 	@Override
 	public void provideRecipeInputs(RecipeFinder recipeFinder) {
-
 	}
 }
