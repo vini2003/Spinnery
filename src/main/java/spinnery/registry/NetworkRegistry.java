@@ -16,6 +16,10 @@ import spinnery.widget.WSlot;
 import spinnery.widget.api.Action;
 import spinnery.widget.api.WNetworked;
 
+/**
+ * Registers all the network-related
+ * assortments Spinnery makes use of.
+ */
 public class NetworkRegistry {
 	public static final Identifier SLOT_CLICK_PACKET = new Identifier("spinnery", "slot_click");
 	public static final Identifier SLOT_UPDATE_PACKET = new Identifier("spinnery", "slot_update");
