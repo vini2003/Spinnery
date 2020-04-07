@@ -9,6 +9,12 @@ import spinnery.widget.api.Theme;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Registers all the theme-related
+ * assortments Spinnery makes use of,
+ * implementing our parser and
+ * Style manipulation.
+ */
 @Environment(EnvType.CLIENT)
 public class ThemeRegistry {
 	public static final Identifier DEFAULT_THEME = new Identifier("spinnery", "default");
