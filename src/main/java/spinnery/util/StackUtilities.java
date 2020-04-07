@@ -2,54 +2,116 @@ package spinnery.util;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+import org.apache.logging.log4j.Level;
+import spinnery.Spinnery;
 import spinnery.common.BaseContainer;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class StackUtilities {
+	public static final Identifier ITEM_EMPTY = new Identifier("air");
+	public static final CompoundTag TAG_EMPTY = new CompoundTag();
+
 	/**
 	 * Write item stack to compound NBT with support for counts greater than 64.
 	 *
-	 * @param stack ItemStack CompoundTag will be written from
-	 * @return ItemStack from tag
+	 * @param stack ItemStack CompoundTag will be written from.
+	 * @return ItemStack from tag.
 	 */
 	public static CompoundTag write(ItemStack stack) {
 		Identifier identifier = Registry.ITEM.getId(stack.getItem());
 
-		CompoundTag tag = new CompoundTag();
+		if (identifier.equals(ITEM_EMPTY) || stack.getItem() == Items.AIR) {
+			Spinnery.LOGGER.log(Level.WARN, "[Spinnery] ItemStack item for writing is empty, skipping!");
+			return TAG_EMPTY;
+		} else {
+			if (stack.getCount() <= 0) {
+				Spinnery.LOGGER.log(Level.ERROR, "[Spinnery] ItemStack failed to be written: count was smaller or equal to zero!");
+				return TAG_EMPTY;
+			} else {
+				CompoundTag tag = new CompoundTag();
 
-		tag.putString("id", identifier == null ? "minecraft:air" : identifier.toString());
-		tag.putInt("Count", stack.getCount());
-		if (stack.getTag() != null) {
-			tag.put("tag", stack.getTag().copy());
+				tag.putString("id", identifier.toString());
+				tag.putInt("count", stack.getCount());
+
+				if (stack.hasTag()) {
+					tag.put("tag", stack.getTag());
+				}
+
+				return tag;
+			}
 		}
-
-		return tag;
 	}
 
 	/**
-	 * Read item stack from compound NBT with support for counts greater than 64.
+	 * Read item stack from CompoundTag with support for counts greater than 64.
 	 *
-	 * @param tag CompoundTag ItemStack will be read from
-	 * @return ItemStack from tag
+	 * @param stackTag CompoundTag ItemStack will be read from.
+	 * @return ItemStack from tag.
 	 */
-	public static ItemStack read(CompoundTag tag) {
-		Item item = Registry.ITEM.get(new Identifier(tag.getString("id")));
-		int count = tag.getInt("Count");
-
-		ItemStack stack = new ItemStack(item, count);
-
-		if (tag.contains("tag", 10)) {
-			stack.setTag(tag.getCompound("tag"));
-			stack.getItem().postProcessTag(tag);
+	public static ItemStack read(CompoundTag stackTag) {
+		// Backwards compatibility.
+		if (stackTag.contains("Count")) {
+			stackTag.put("count", stackTag.get("Count"));
 		}
 
-		if (item.isDamageable()) {
-			stack.setDamage(stack.getDamage());
+		ItemStack stack;
+
+		if (!stackTag.contains("id")) {
+			Spinnery.LOGGER.log(Level.ERROR, "[Spinnery] ItemStack failed to be read: " + CompoundTag.class.getName() + " does not contain 'id' value!");
+			return ItemStack.EMPTY;
+		} else {
+			String identifierString = stackTag.getString("id");
+
+			if (!Identifier.isValid(identifierString)) {
+				Spinnery.LOGGER.log(Level.ERROR, "[Spinnery] ItemStack failed to be read: " + CompoundTag.class.getName() + "'s 'id' value is not a valid " + Identifier.class.getName() + "!");
+				return ItemStack.EMPTY;
+			} else {
+				Identifier identifier = Identifier.tryParse(identifierString);
+
+				if (!stackTag.contains("Count")) {
+					Spinnery.LOGGER.log(Level.ERROR, "[Spinnery] ItemStack failed to be read: " + CompoundTag.class.getName() + " does not contain 'Count' value!");
+					return ItemStack.EMPTY;
+				} else {
+					int count = stackTag.getInt("Count");
+
+					if (count <= 0) {
+						Spinnery.LOGGER.log(Level.ERROR, "[Spinnery] ItemStack failed to be read: count was smaller or equal to zero!");
+						return ItemStack.EMPTY;
+					} else {
+						if (!Registry.ITEM.containsId(identifier) || identifier.equals(ITEM_EMPTY)) {
+							Spinnery.LOGGER.log(Level.ERROR, "[Spinnery] ItemStack failed to be read: item registry did not contain a valid item identifier!");
+							return ItemStack.EMPTY;
+						} else {
+							Item item = Registry.ITEM.get(identifier);
+
+							stack = new ItemStack(item, count);
+
+							if (stackTag.contains("tag", 10)) {
+								Tag rawTag = stackTag.get("tag");
+
+								if (!(rawTag instanceof CompoundTag)) {
+									Spinnery.LOGGER.log(Level.WARN, "[Spinnery] ItemStack did not fail to be read, but had a non-standard tag which was discarded!");
+								} else {
+									CompoundTag tagTag = (CompoundTag) rawTag;
+
+									stack.setTag(tagTag);
+								}
+							}
+
+							if (item.isDamageable()) {
+								stack.setDamage(stack.getDamage());
+							}
+						}
+					}
+				}
+			}
 		}
 
 		return stack;
