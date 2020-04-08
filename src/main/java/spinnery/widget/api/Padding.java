@@ -1,7 +1,7 @@
 package spinnery.widget.api;
 
 import blue.endless.jankson.JsonElement;
-import spinnery.util.JanksonUtils;
+import spinnery.util.JanksonUtilities;
 
 import java.util.Objects;
 
@@ -78,6 +78,6 @@ public class Padding implements JanksonSerializable {
 
 	@Override
 	public JsonElement toJson() {
-		return JanksonUtils.arrayOfPrimitives(top, right, bottom, left);
+		return JanksonUtilities.arrayOfPrimitives(top, right, bottom, left);
 	}
 }

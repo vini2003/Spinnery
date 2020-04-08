@@ -1,7 +1,7 @@
 package spinnery.widget.api;
 
 import blue.endless.jankson.JsonElement;
-import spinnery.util.JanksonUtils;
+import spinnery.util.JanksonUtilities;
 
 import java.util.Objects;
 
@@ -301,6 +301,6 @@ public class Position implements WPositioned, JanksonSerializable {
 
 	@Override
 	public JsonElement toJson() {
-		return JanksonUtils.arrayOfPrimitives(x, y, z);
+		return JanksonUtilities.arrayOfPrimitives(x, y, z);
 	}
 }

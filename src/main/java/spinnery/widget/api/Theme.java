@@ -9,11 +9,15 @@ import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.Level;
 import spinnery.Spinnery;
 import spinnery.registry.ThemeRegistry;
-import spinnery.util.JanksonUtils;
+import spinnery.util.JanksonUtilities;
 
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * A class that holds the data used by Spinnery for widget themes.
+ * Most importantly, this contains Styles for all widgets in the theme.
+ */
 public class Theme {
 	protected final Identifier id;
 	protected final Identifier parent;
@@ -35,7 +39,8 @@ public class Theme {
 	private static void processRefs(Map<String, JsonElement> style, Map<String, JsonElement> refs) {
 		for (String property : style.keySet()) {
 			JsonElement el = style.get(property);
-			String strValue = JanksonUtils.asString(el).orElse("");
+			String strValue = JanksonUtilities.asString(el).orElse("");
+
 			// Look up variables
 			if (strValue.startsWith("$") && !strValue.startsWith("$$")) {
 				style.put(property, refs.get(strValue));
@@ -65,7 +70,7 @@ public class Theme {
 	public static Theme of(Identifier themeId, JsonObject themeDef) {
 		// Add parent logic
 		JsonElement parentProp = themeDef.get("parent");
-		Identifier parent = JanksonUtils.asString(parentProp).map(Identifier::new).orElse(null);
+		Identifier parent = JanksonUtilities.asString(parentProp).map(Identifier::new).orElse(null);
 
 		// Generic validation
 		JsonObject themeProps = themeDef.getObject("theme");
@@ -111,7 +116,7 @@ public class Theme {
 			JsonElement protoArray = widgetProps.remove("$extend");
 			if (protoArray instanceof JsonArray) {
 				for (JsonElement el : (JsonArray) protoArray) {
-					String protoName = JanksonUtils.asString(el).orElse("");
+					String protoName = JanksonUtilities.asString(el).orElse("");
 					JsonObject protoObj = prototypes.get(protoName);
 					if (!protoName.isEmpty() && protoObj != null) {
 						properties.putAll(protoObj);
@@ -127,10 +132,19 @@ public class Theme {
 		return new Theme(themeId, parent, styles);
 	}
 
+	/**
+	 * Retrieves the Identifier of this theme.
+	 * @return The Identifier of this theme.
+	 */
 	public Identifier getId() {
 		return id;
 	}
 
+	/**
+	 * Retrieves the Style for a give widget.
+	 * @param widgetId Identifier of the widget, which must have been registered via WidgetRegistry.
+	 * @return		   Style of the given widget.
+	 */
 	public Style getStyle(Identifier widgetId) {
 		Style style = styles.get(widgetId);
 		if (parent != null) {

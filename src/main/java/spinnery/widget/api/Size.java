@@ -1,7 +1,7 @@
 package spinnery.widget.api;
 
 import blue.endless.jankson.JsonElement;
-import spinnery.util.JanksonUtils;
+import spinnery.util.JanksonUtilities;
 
 import java.util.Objects;
 
@@ -118,6 +118,6 @@ public class Size implements WSized, JanksonSerializable {
 
 	@Override
 	public JsonElement toJson() {
-		return JanksonUtils.arrayOfPrimitives(width, height);
+		return JanksonUtilities.arrayOfPrimitives(width, height);
 	}
 }

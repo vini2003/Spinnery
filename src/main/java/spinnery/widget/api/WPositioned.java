@@ -9,14 +9,26 @@ package spinnery.widget.api;
  * provides more convenience methods and standard logic.
  */
 public interface WPositioned {
+	/**
+	 * Retrieves the X position of this object.
+	 * @return The X position of this object.
+	 */
 	default int getX() {
 		return 0;
 	}
 
+	/**
+	 * Retrieves the Y position of this object.
+	 * @return The Y position of this object.
+	 */
 	default int getY() {
 		return 0;
 	}
 
+	/**
+	 * Retrieves the Z position of this object.
+	 * @return The Z position of this object.
+	 */
 	default int getZ() {
 		return 0;
 	}
