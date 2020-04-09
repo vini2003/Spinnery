@@ -24,6 +24,10 @@ import java.util.*;
  * 7:13PM, 3/25/2020
  * Engineer, you shall pay dearly
  * for not commenting this.
+ *
+ * 10:52PM, 4/8/2020
+ * I will not be commenting this in the name
+ * of my sanity.
  */
 @SuppressWarnings("unchecked")
 @Environment(EnvType.CLIENT)
@@ -171,14 +175,14 @@ public abstract class WAbstractTextEditor extends WAbstractWidget implements WPa
 	}
 
 	@Override
-	public void onKeyPressed(int keyPressed, int character, int keyModifier) {
+	public void onKeyPressed(int keyCode, int character, int keyModifier) {
 		if (!active) return;
-		processKeyActions(keyPressed, character, keyModifier);
+		processKeyActions(keyCode, character, keyModifier);
 		if (selection.getLeft().equals(selection.getRight())) {
 			clearSelection();
 		}
 		cursorTick = 20;
-		super.onKeyPressed(keyPressed, character, keyModifier);
+		super.onKeyPressed(keyCode, character, keyModifier);
 	}
 
 	@Override

@@ -11,11 +11,6 @@ public class WDynamicImage extends WAbstractWidget {
 
 	protected int currentImage = 0;
 
-	public WDynamicImage textures(Identifier... textures) {
-		setTextures(textures);
-		return this;
-	}
-
 	public int next() {
 		if (getCurrentImage() < getTextures().length - 1) {
 			setCurrentImage(getCurrentImage() + 1);

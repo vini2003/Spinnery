@@ -53,7 +53,7 @@ public class WSlot extends WAbstractWidget {
 	protected List<Tag<Item>> acceptTags = new ArrayList<>();
 	protected List<Tag<Item>> denyTags = new ArrayList<>();
 
-	protected List<BiConsumer<Action, Action.Subtype>> consumers = new ArrayList<>(); // Integer corresponds to position in BaseContainer#onSlotAction
+	protected List<BiConsumer<Action, Action.Subtype>> consumers = new ArrayList<>();
 
 	public void consume(Action action, Action.Subtype subtype) {
 		consumers.forEach(actionConsumer -> actionConsumer.accept(action, subtype));

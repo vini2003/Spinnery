@@ -312,29 +312,29 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 
 	@Environment(EnvType.CLIENT)
 	@Override
-	public void onKeyPressed(int keyPressed, int character, int keyModifier) {
+	public void onKeyPressed(int keyCode, int character, int keyModifier) {
 		if (this instanceof WDelegatedEventListener) {
 			for (WEventListener widget : ((WDelegatedEventListener) this).getEventDelegates()) {
 				if (EventUtilities.canReceiveKeyboard(widget))
-					widget.onKeyPressed(keyPressed, character, keyModifier);
+					widget.onKeyPressed(keyCode, character, keyModifier);
 			}
 		}
 		if (runnableOnKeyPressed != null) {
-			runnableOnKeyPressed.event(this, keyPressed, character, keyModifier);
+			runnableOnKeyPressed.event(this, keyCode, character, keyModifier);
 		}
 	}
 
 	@Environment(EnvType.CLIENT)
 	@Override
-	public void onKeyReleased(int keyReleased, int character, int keyModifier) {
+	public void onKeyReleased(int keyCode, int character, int keyModifier) {
 		if (this instanceof WDelegatedEventListener) {
 			for (WEventListener widget : ((WDelegatedEventListener) this).getEventDelegates()) {
 				if (EventUtilities.canReceiveKeyboard(widget))
-					widget.onKeyReleased(keyReleased, character, keyModifier);
+					widget.onKeyReleased(keyCode, character, keyModifier);
 			}
 		}
 		if (runnableOnKeyReleased != null) {
-			runnableOnKeyReleased.event(this, keyReleased, character, keyModifier);
+			runnableOnKeyReleased.event(this, keyCode, character, keyModifier);
 		}
 	}
 
