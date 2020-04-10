@@ -7,6 +7,9 @@ package spinnery.widget.api;
  * Every widget must implement this interface
  */
 public interface WLayoutElement extends WPositioned, WSized, Comparable<WLayoutElement> {
+	/**
+	 * Method called on every frame, where widget rendering happens.
+	 */
 	void draw();
 
 	/**

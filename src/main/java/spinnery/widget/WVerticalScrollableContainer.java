@@ -249,8 +249,8 @@ public class WVerticalScrollableContainer extends WAbstractWidget implements WDr
 	}
 
 	@Override
-	public boolean updateFocus(int mouseX, int mouseY) {
-		setFocus(isWithinBounds(mouseX, mouseY) && getWidgets().stream().noneMatch((WAbstractWidget::isFocused)));
+	public boolean updateFocus(int positionX, int positionY) {
+		setFocus(isWithinBounds(positionX, positionY) && getWidgets().stream().noneMatch((WAbstractWidget::isFocused)));
 		return isFocused();
 	}
 

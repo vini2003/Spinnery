@@ -186,6 +186,12 @@ public class StackUtilities {
 		return MutablePair.of(stackA, stackB);
 	}
 
+	/**
+	 * Asserts whether two ItemStacks are equal in Item and Tag.
+	 * @param stackA Stack one.
+	 * @param stackB Stack two.
+	 * @return True if one and two match in Item and Tag; False if not.
+	 */
 	public static boolean equalItemAndTag(ItemStack stackA, ItemStack stackB) {
 		return ItemStack.areItemsEqual(stackA, stackB) && stackA.getTag() == stackB.getTag();
 	}

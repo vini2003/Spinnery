@@ -63,10 +63,10 @@ public class WDropdown extends WAbstractWidget implements WDrawableCollection, W
 	}
 
 	@Override
-	public boolean updateFocus(int mouseX, int mouseY) {
-		super.updateFocus(mouseX, mouseY);
+	public boolean updateFocus(int positionX, int positionY) {
+		super.updateFocus(positionX, positionY);
 
-		setFocus(isWithinBounds(mouseX, mouseY) && getAllWidgets().stream().noneMatch((WAbstractWidget::isFocused)));
+		setFocus(isWithinBounds(positionX, positionY) && getAllWidgets().stream().noneMatch((WAbstractWidget::isFocused)));
 
 		return isFocused();
 	}

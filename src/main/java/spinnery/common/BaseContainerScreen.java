@@ -154,7 +154,7 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 	}
 
 	/**
-	 * Method called when the mouse will is scrolled.
+	 * Method called when the mouse wheel is scrolled.
 	 * @param mouseX Horizontal position of the mouse cursor.
 	 * @param mouseY Vertical position of the mouse cursor.
 	 * @param deltaY Vertical delta of mouse scroll.

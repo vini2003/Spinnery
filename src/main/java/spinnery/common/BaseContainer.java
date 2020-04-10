@@ -59,12 +59,12 @@ public class BaseContainer extends Container {
 	/**
 	 * Instantiates a BaseContainer.
 	 * @param synchronizationID		ID to be used for synchronization of this container.
-	 * @param linkedPlayerInventory PlayerInventory of Player associated with this container.
+	 * @param playerInventory 		PlayerInventory of Player associated with this container.
 	 */
-	public BaseContainer(int synchronizationID, PlayerInventory linkedPlayerInventory) {
+	public BaseContainer(int synchronizationID, PlayerInventory playerInventory) {
 		super(null, synchronizationID);
-		getInventories().put(PLAYER_INVENTORY, linkedPlayerInventory);
-		setWorld(linkedPlayerInventory.player.world);
+		addInventory(PLAYER_INVENTORY, playerInventory);
+		setWorld(playerInventory.player.world);
 		serverInterface = new WInterface(this);
 	}
 
@@ -388,7 +388,7 @@ public class BaseContainer extends Container {
 	 * @param inventoryNumber Inventory number associated with the inventory.
 	 * @param inventory		  Inventory associated with the inventory number.
 	 */
-	public <C extends BaseContainer> C addInventory(int inventoryNumber, BaseInventory inventory) {
+	public <C extends BaseContainer> C addInventory(int inventoryNumber, Inventory inventory) {
 		this.inventories.put(inventoryNumber, inventory);
 		return (C) this;
 	}
@@ -432,7 +432,7 @@ public class BaseContainer extends Container {
 	}
 
 	/**
-	 * Function deprecated and unsupported by Spinnery.
+	 * Method deprecated and unsupported by Spinnery.
 	 */
 	@Deprecated
 	@Override
@@ -441,7 +441,7 @@ public class BaseContainer extends Container {
 	}
 
 	/**
-	 * Function deprecated and unsupported by Spinnery.
+	 * Method deprecated and unsupported by Spinnery.
 	 */
 	@Deprecated
 	@Override

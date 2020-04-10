@@ -221,7 +221,7 @@ public class Style {
 	/**
 	 * Overrides a property with a given value.
 	 * @param property Property to be overriden.
-	 * @param value	   
+	 * @param value	   Value for property to be associated with.
 	 */
 	public <T> Style override(String property, T value) {
 		Function<T, JsonElement> ser = getSerializer(value);
@@ -234,6 +234,11 @@ public class Style {
 		return this;
 	}
 
+	/**
+	 * Retrieves a serializer for a given value.
+	 * @param value Value to look find a serializer for.
+	 * @return Serializer for the value; defaulting to null if search fails.
+	 */
 	@SuppressWarnings("unchecked")
 	protected static <T> Function<T, JsonElement> getSerializer(T value) {
 		for (Class<?> serClass : jsonSerializers.keySet()) {
@@ -244,6 +249,11 @@ public class Style {
 		return null;
 	}
 
+	/**
+	 * Method called to merge properties of two styles.
+	 * @param other Style to merge into this style.
+	 * @return		Style containing both styles.
+	 */
 	public Style mergeFrom(Style other) {
 		this.properties.putAll(other.properties);
 		return this;
