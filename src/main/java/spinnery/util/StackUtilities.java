@@ -119,7 +119,7 @@ public class StackUtilities {
 
 	/**
 	 * Support merging stacks with customized maximum count.
-	 * You may be wondering why use Supplier<T>. I ask you,
+	 * You may be wondering why use Suppliers. I ask you,
 	 * instead, why not?
 	 * In fact, it is the best idea I have had up to this
 	 * very day.
