@@ -13,22 +13,22 @@ public abstract class WAbstractBar extends WAbstractWidget {
 	protected Mutable<Number> progress;
 
 	/**
-	 * Retrieves the limit of this bar as a Mutable<Number>
+	 * Retrieves the limit of this bar as a Mutable of a Number.
 	 * such that one does not need to constantly update it,
-	 * as that is done by the Mutable<Number> itself.
+	 * as that is done by the Mutable of a Number itself.
 	 *
-	 * @return The limit of this bar as a Mutable<Number>.
+	 * @return The limit of this bar as a Mutable of a Number.
 	 */
 	public Mutable<Number> getLimit() {
 		return limit;
 	}
 
 	/**
-	 * Sets the limit of this bar as a Mutable<Number>
+	 * Sets the limit of this bar as a Mutable of a Number,
 	 * such that one does not need to constantly update it,
-	 * as that is done by the Mutable<Number> itself.
+	 * as that is done by the Mutable of a Number itself.
 	 *
-	 * @param limit Mutable<Number> to be used as limit.
+	 * @param limit Mutable of a Number to be used as limit.
 	 */
 	public <W extends WAbstractBar> W setLimit(Mutable<Number> limit) {
 		this.limit = limit;
@@ -36,22 +36,22 @@ public abstract class WAbstractBar extends WAbstractWidget {
 	}
 
 	/**
-	 * Retrieves the progress of this bar as a Mutable<Number>
+	 * Retrieves the progress of this bar as a Mutable of Number
 	 * such that one does not need to constantly update it,
-	 * as that is done by the Mutable<Number> itself.
+	 * as that is done by the Mutable of a Number itself.
 	 *
-	 * @return The progress of this bar as a Mutable<Number>.
+	 * @return The progress of this bar as a Mutable of Number.
 	 */
 	public Mutable<Number> getProgress() {
 		return progress;
 	}
 
 	/**
-	 * Sets the progress of this bar as a Mutable<Number>
+	 * Sets the progress of this bar as a Mutable of a Number
 	 * such that one does not need to constantly update it,
-	 * as that is done by the Mutable<Number> itself.
+	 * as that is done by the Mutable of a Number itself.
 	 *
-	 * @param progress Mutable<Number> to be used as progress.
+	 * @param progress Mutable of a Number to be used as progress.
 	 */
 	public <W extends WAbstractBar> W setProgress(Mutable<Number> progress) {
 		this.progress = progress;
