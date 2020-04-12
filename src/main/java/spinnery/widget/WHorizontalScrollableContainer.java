@@ -1,25 +1,10 @@
 package spinnery.widget;
 
 import com.google.common.collect.ImmutableSet;
-import net.minecraft.client.MinecraftClient;
-import org.lwjgl.opengl.GL11;
 import spinnery.client.BaseRenderer;
-import spinnery.widget.api.Position;
-import spinnery.widget.api.Size;
-import spinnery.widget.api.WDelegatedEventListener;
-import spinnery.widget.api.WDrawableCollection;
-import spinnery.widget.api.WEventListener;
-import spinnery.widget.api.WHorizontalScrollable;
-import spinnery.widget.api.WLayoutElement;
-import spinnery.widget.api.WModifiableCollection;
+import spinnery.widget.api.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @SuppressWarnings("unchecked")
 public class WHorizontalScrollableContainer extends WAbstractWidget implements WDrawableCollection, WModifiableCollection, WHorizontalScrollable, WDelegatedEventListener {
@@ -139,7 +124,9 @@ public class WHorizontalScrollableContainer extends WAbstractWidget implements W
 
 	public int getMaxOffsetX() {
 		return getMaxX() - getStartAnchorX();
-	}	@Override
+	}
+
+	@Override
 	public int getEndAnchorX() {
 		if (getWidth() > getUnderlyingWidth()) return getStartAnchorX();
 		return getStartAnchorX() - (getUnderlyingWidth() - getVisibleWidth());

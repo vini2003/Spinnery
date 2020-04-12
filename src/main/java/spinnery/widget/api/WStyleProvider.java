@@ -6,6 +6,7 @@ package spinnery.widget.api;
 public interface WStyleProvider {
 	/**
 	 * Retrieves the Style of this object.
+	 *
 	 * @return The Style of this object.
 	 */
 	Style getStyle();

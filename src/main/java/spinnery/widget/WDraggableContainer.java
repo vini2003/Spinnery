@@ -2,23 +2,11 @@ package spinnery.widget;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
-import org.lwjgl.opengl.GL11;
 import spinnery.client.BaseRenderer;
 import spinnery.util.MutablePair;
-import spinnery.widget.api.Size;
-import spinnery.widget.api.WDrawableCollection;
-import spinnery.widget.api.WHorizontalScrollable;
-import spinnery.widget.api.WLayoutElement;
-import spinnery.widget.api.WModifiableCollection;
-import spinnery.widget.api.WVerticalScrollable;
+import spinnery.widget.api.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Environment(EnvType.CLIENT)
 public class WDraggableContainer extends WAbstractWidget implements WDrawableCollection, WModifiableCollection, WVerticalScrollable, WHorizontalScrollable {
@@ -54,7 +42,9 @@ public class WDraggableContainer extends WAbstractWidget implements WDrawableCol
 			}
 		}
 		return Size.of(rightmostX - leftmostX, bottommostY - topmostY);
-	}	@Override
+	}
+
+	@Override
 	public int getStartAnchorX() {
 		return getX();
 	}
@@ -62,7 +52,9 @@ public class WDraggableContainer extends WAbstractWidget implements WDrawableCol
 	@Override
 	public Size getVisibleSize() {
 		return getSize();
-	}	@Override
+	}
+
+	@Override
 	public int getStartAnchorY() {
 		return getY();
 	}

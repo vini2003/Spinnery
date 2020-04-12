@@ -130,10 +130,11 @@ public class StackUtilities {
 	 * case, a method to set something's ItemStack.
 	 * I hope you thoroughly enjoy this addition. If any
 	 * WSlot code breaks, it's either my fault, or my fault.
+	 *
 	 * @param supplierA Source ItemStack supplier
 	 * @param supplierB Destination ItemStack supplier
-	 * @param sA Max. count of stackA supplier
-	 * @param sB Max. count of stackB supplier
+	 * @param sA        Max. count of stackA supplier
+	 * @param sB        Max. count of stackB supplier
 	 * @return Resulting ItemStacks
 	 */
 	public static MutablePair<ItemStack, ItemStack> merge(Supplier<ItemStack> supplierA, Supplier<ItemStack> supplierB, Supplier<Integer> sA, Supplier<Integer> sB) {
@@ -142,6 +143,7 @@ public class StackUtilities {
 
 	/**
 	 * Support merging stacks with customized maximum count.
+	 *
 	 * @param stackA Source ItemStack
 	 * @param stackB Destination ItemStack
 	 * @param maxA   Max. count of stackA
@@ -188,6 +190,7 @@ public class StackUtilities {
 
 	/**
 	 * Asserts whether two ItemStacks are equal in Item and Tag.
+	 *
 	 * @param stackA Stack one.
 	 * @param stackB Stack two.
 	 * @return True if one and two match in Item and Tag; False if not.

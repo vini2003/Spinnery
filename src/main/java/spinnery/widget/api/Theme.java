@@ -134,6 +134,7 @@ public class Theme {
 
 	/**
 	 * Retrieves the Identifier of this theme.
+	 *
 	 * @return The Identifier of this theme.
 	 */
 	public Identifier getId() {
@@ -142,8 +143,9 @@ public class Theme {
 
 	/**
 	 * Retrieves the Style for a give widget.
+	 *
 	 * @param widgetId Identifier of the widget, which must have been registered via WidgetRegistry.
-	 * @return		   Style of the given widget.
+	 * @return Style of the given widget.
 	 */
 	public Style getStyle(Identifier widgetId) {
 		Style style = styles.get(widgetId);

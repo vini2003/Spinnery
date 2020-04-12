@@ -7,6 +7,7 @@ public class MouseUtilities {
 
 	/**
 	 * Retrieve the interval in nanoseconds since the last update.
+	 *
 	 * @return Interval in nanoseconds since the last update.
 	 */
 	public static long nanoInterval() {
@@ -15,6 +16,7 @@ public class MouseUtilities {
 
 	/**
 	 * Retrieve the last time, in nanoseconds, when update was called.
+	 *
 	 * @return The last time, in nanoseconds, when update was called.
 	 */
 	public static long lastNanos() {
@@ -23,6 +25,7 @@ public class MouseUtilities {
 
 	/**
 	 * Retrieve the delay, in nanoseconds, used for calculations.
+	 *
 	 * @return The delay, in nanoseconds.
 	 */
 	public static long nanoDelay() {

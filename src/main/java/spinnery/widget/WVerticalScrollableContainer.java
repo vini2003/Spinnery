@@ -1,19 +1,8 @@
 package spinnery.widget;
 
 import com.google.common.collect.ImmutableSet;
-import com.sun.org.apache.xpath.internal.operations.Bool;
-import net.minecraft.client.MinecraftClient;
-import org.lwjgl.opengl.GL11;
 import spinnery.client.BaseRenderer;
-import spinnery.util.MutablePair;
-import spinnery.widget.api.Position;
-import spinnery.widget.api.Size;
-import spinnery.widget.api.WDelegatedEventListener;
-import spinnery.widget.api.WDrawableCollection;
-import spinnery.widget.api.WEventListener;
-import spinnery.widget.api.WLayoutElement;
-import spinnery.widget.api.WModifiableCollection;
-import spinnery.widget.api.WVerticalScrollable;
+import spinnery.widget.api.*;
 
 import java.util.*;
 

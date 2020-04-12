@@ -8,6 +8,7 @@ import net.minecraft.util.Identifier;
 public interface WThemable {
 	/**
 	 * Retrieves the Theme Identifier of this object.
+	 *
 	 * @return The Theme Identifier of this object.
 	 */
 	Identifier getTheme();

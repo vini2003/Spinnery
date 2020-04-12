@@ -69,11 +69,11 @@ public class Size implements WSized, JanksonSerializable {
 	public boolean isLargerInWidthOrHeight(Size size) {
 		return this.width > size.width || this.height > size.height;
 	}
-	
+
 	public boolean isLargerInWidth(Size size) {
 		return this.width > size.width;
 	}
-	
+
 	public boolean isLargerInHeight(Size size) {
 		return this.height > size.height;
 	}

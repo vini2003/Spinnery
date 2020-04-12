@@ -25,9 +25,10 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 
 	/**
 	 * Instantiates a BaseContainerScreen.
-	 * @param name				Name to be used for Narrator.
-	 * @param linkedContainer	Container associated with screen.
-	 * @param player			Player associated with screen.
+	 *
+	 * @param name            Name to be used for Narrator.
+	 * @param linkedContainer Container associated with screen.
+	 * @param player          Player associated with screen.
 	 */
 	@Environment(EnvType.CLIENT)
 	public BaseContainerScreen(Text name, T linkedContainer, PlayerEntity player) {
@@ -85,6 +86,7 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 
 	/**
 	 * Method called when a tooltip should be drawn over something, however, currently not implemented.
+	 *
 	 * @param mouseX Horizontal position of mouse cursor.
 	 * @param mouseY Vertical position of mouse cursor.
 	 */
@@ -98,8 +100,9 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 
 	/**
 	 * Method called when the mouse is clicked.
-	 * @param mouseX 	  Horizontal position of mouse cursor.
-	 * @param mouseY 	  Vertical position of mouse cursor.
+	 *
+	 * @param mouseX      Horizontal position of mouse cursor.
+	 * @param mouseY      Vertical position of mouse cursor.
 	 * @param mouseButton Mouse button clicked.
 	 */
 	@Override
@@ -112,8 +115,9 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 
 	/**
 	 * Method called when the mouse is released.
-	 * @param mouseX 	  Horizontal position of mouse cursor.
-	 * @param mouseY 	  Vertical position of mouse cursor.
+	 *
+	 * @param mouseX      Horizontal position of mouse cursor.
+	 * @param mouseY      Vertical position of mouse cursor.
 	 * @param mouseButton Mouse button released.
 	 */
 	@Override
@@ -126,6 +130,7 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 
 	/**
 	 * Method called when the mouse is moved.
+	 *
 	 * @param mouseX Horizontal position of mouse cursor.
 	 * @param mouseY Vertical position of mouse cursor.
 	 */
@@ -139,11 +144,12 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 
 	/**
 	 * Method called when the mouse is dragged.
-	 * @param mouseX 	  Horizontal position of mouse cursor.
-	 * @param mouseY 	  Vertical position of mouse cursor.
+	 *
+	 * @param mouseX      Horizontal position of mouse cursor.
+	 * @param mouseY      Vertical position of mouse cursor.
 	 * @param mouseButton Mouse button dragged.
-	 * @param deltaX	  Horizontal delta of mouse drag.
-	 * @param deltaY	  Vertical delta of mouse drag.
+	 * @param deltaX      Horizontal delta of mouse drag.
+	 * @param deltaY      Vertical delta of mouse drag.
 	 */
 	@Override
 	@Environment(EnvType.CLIENT)
@@ -155,6 +161,7 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 
 	/**
 	 * Method called when the mouse wheel is scrolled.
+	 *
 	 * @param mouseX Horizontal position of the mouse cursor.
 	 * @param mouseY Vertical position of the mouse cursor.
 	 * @param deltaY Vertical delta of mouse scroll.
@@ -169,8 +176,9 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 
 	/**
 	 * Method called when a keyboard key is pressed.
-	 * @param keyCode	  Keycode associated with pressed key.
-	 * @param character	  Character associated with pressed key.
+	 *
+	 * @param keyCode     Keycode associated with pressed key.
+	 * @param character   Character associated with pressed key.
 	 * @param keyModifier Modifier(s) associated with pressed key.
 	 */
 	@Override
@@ -190,8 +198,9 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 
 	/**
 	 * Method called when a keyboard key is released.
-	 * @param keyCode	  Keycode associated with released key.
-	 * @param character	  Character associated with released key.
+	 *
+	 * @param keyCode     Keycode associated with released key.
+	 * @param character   Character associated with released key.
 	 * @param keyModifier Modifier(s) associated with released key.
 	 */
 	@Override
@@ -204,6 +213,7 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 
 	/**
 	 * Method called when a key with a valid associated character is called.
+	 *
 	 * @param character Character associated with key pressed.
 	 * @param keyCode   Keycode associated with key pressed.
 	 */
@@ -236,6 +246,7 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 
 	/**
 	 * Retrieves the container associated with this screen.
+	 *
 	 * @return Container associated with this screen.
 	 */
 	@Environment(EnvType.CLIENT)
@@ -245,6 +256,7 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 
 	/**
 	 * Retrieves the interface associated with this screen.
+	 *
 	 * @return Interface associated with this screen.
 	 */
 	@Override
@@ -255,6 +267,7 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 
 	/**
 	 * Retrieves WSlot of which the tooltip will be rendered.
+	 *
 	 * @return WSlot of which the tooltip will be rendered.
 	 */
 	@Environment(EnvType.CLIENT)
@@ -264,6 +277,7 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 
 	/**
 	 * Sets the WSlot of which the tooltip will be rendered.
+	 *
 	 * @param drawSlot WSlot of which the tooltip will be rendered.
 	 */
 	@Environment(EnvType.CLIENT)
@@ -274,6 +288,7 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 
 	/**
 	 * Retrieves the horizontal position at which the tooltip will be drawn.
+	 *
 	 * @return Horizontal position at which the tooltip will be drawn.
 	 */
 	@Environment(EnvType.CLIENT)
@@ -283,6 +298,7 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 
 	/**
 	 * Retrieves the vertical position at which the tooltip will be drawn.
+	 *
 	 * @return Vertical position at which the tooltip will be drawn.
 	 */
 	@Environment(EnvType.CLIENT)
@@ -292,6 +308,7 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 
 	/**
 	 * Sets the horizontal position at which the tooltip will be drawn.
+	 *
 	 * @param tooltipX Horizontal position at which the tooltip will be drawn.
 	 */
 	@Environment(EnvType.CLIENT)
@@ -302,6 +319,7 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 
 	/**
 	 * Sets the vertical position at which the tooltip will be drawn.
+	 *
 	 * @param tooltipY Vertical position at which the tooltip will be drawn.
 	 */
 	@Environment(EnvType.CLIENT)
@@ -312,6 +330,7 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 
 	/**
 	 * Method called when the Minecraft window is resized.
+	 *
 	 * @param client MinecraftClient whose window was resized.
 	 * @param width  Width of window after resizing.
 	 * @param height Height of window after resizing.
@@ -326,6 +345,7 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 	 * Method called whenever the mouse is moved,
 	 * which updates information of the tooltip
 	 * to be rendered.
+	 *
 	 * @param mouseX Horizontal position of mouse cursor.
 	 * @param mouseY Vertical position of mouse cursor.
 	 */

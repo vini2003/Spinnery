@@ -24,17 +24,9 @@ import java.util.*;
 import java.util.function.BiConsumer;
 
 import static net.fabricmc.fabric.api.network.ClientSidePacketRegistry.INSTANCE;
-import static spinnery.registry.NetworkRegistry.SLOT_CLICK_PACKET;
-import static spinnery.registry.NetworkRegistry.SLOT_DRAG_PACKET;
-import static spinnery.registry.NetworkRegistry.createSlotClickPacket;
-import static spinnery.registry.NetworkRegistry.createSlotDragPacket;
-import static spinnery.util.MouseUtilities.nanoDelay;
-import static spinnery.util.MouseUtilities.nanoInterval;
-import static spinnery.util.MouseUtilities.nanoUpdate;
-import static spinnery.widget.api.Action.CLONE;
-import static spinnery.widget.api.Action.PICKUP;
-import static spinnery.widget.api.Action.PICKUP_ALL;
-import static spinnery.widget.api.Action.QUICK_MOVE;
+import static spinnery.registry.NetworkRegistry.*;
+import static spinnery.util.MouseUtilities.*;
+import static spinnery.widget.api.Action.*;
 
 public class WSlot extends WAbstractWidget {
 	public static final int LEFT = 0;
@@ -100,8 +92,8 @@ public class WSlot extends WAbstractWidget {
 		for (int y = 0; y < arrayHeight; ++y) {
 			for (int x = 0; x < arrayWidth; ++x) {
 				set.add(parent.createChild(WSlot::new)
-							.setSlotNumber(slotNumber + y * arrayWidth + x)
-							.setInventoryNumber(inventoryNumber));
+						.setSlotNumber(slotNumber + y * arrayWidth + x)
+						.setInventoryNumber(inventoryNumber));
 			}
 		}
 		return set;
@@ -188,7 +180,7 @@ public class WSlot extends WAbstractWidget {
 		RenderSystem.translatef(0, 0, -150);
 		RenderSystem.enableLighting();
 		BaseRenderer.getItemRenderer().renderGuiItemIcon(stackA, 1 + x + (sX - 18) / 2, 1 + y + (sY - 18) / 2);
-        BaseRenderer.getItemRenderer().renderGuiItemOverlay(MinecraftClient.getInstance().textRenderer, stackA, 1 + x + (sX - 18) / 2, 1 + y + (sY - 18) / 2, stackA.getCount() == 1 ? "" : withSuffix(stackA.getCount()));
+		BaseRenderer.getItemRenderer().renderGuiItemOverlay(MinecraftClient.getInstance().textRenderer, stackA, 1 + x + (sX - 18) / 2, 1 + y + (sY - 18) / 2, stackA.getCount() == 1 ? "" : withSuffix(stackA.getCount()));
 		RenderSystem.disableLighting();
 		RenderSystem.translatef(0, 0, +150);
 
@@ -355,7 +347,8 @@ public class WSlot extends WAbstractWidget {
 
 	public ItemStack getStack() {
 		try {
-			ItemStack stackA = getLinkedInventory().getInvStack(getSlotNumber());;
+			ItemStack stackA = getLinkedInventory().getInvStack(getSlotNumber());
+			;
 			if (!isOverrideMaximumCount()) {
 				setMaximumCount(stackA.getMaxCount());
 			}

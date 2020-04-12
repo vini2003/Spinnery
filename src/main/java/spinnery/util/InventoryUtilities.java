@@ -1,6 +1,5 @@
 package spinnery.util;
 
-import javafx.scene.control.Spinner;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
@@ -12,6 +11,7 @@ import spinnery.common.BaseInventory;
 public class InventoryUtilities {
 	/**
 	 * Write inventory contents to a CompoundTag with support for ItemStacks greater than 64 in size.
+	 *
 	 * @param inventory Inventory CompoundTag will be written from.
 	 * @return Tag from inventory.
 	 */
@@ -26,6 +26,7 @@ public class InventoryUtilities {
 
 	/**
 	 * Read inventory contents from a CompoundTag with support for ItemStacks greater than 64 in size.
+	 *
 	 * @param tag Tag Inventory will be read from.
 	 * @return Inventory from tag.
 	 */
@@ -104,7 +105,8 @@ public class InventoryUtilities {
 				} else {
 					int size = compoundTag.getInt("size");
 
-					if (size == 0) Spinnery.LOGGER.log(Level.WARN, "[Spinnery] Inventory contents size successfully read, but with size of zero. This may indicate a non-integer 'size' value!");
+					if (size == 0)
+						Spinnery.LOGGER.log(Level.WARN, "[Spinnery] Inventory contents size successfully read, but with size of zero. This may indicate a non-integer 'size' value!");
 
 					if (!compoundTag.contains("stacks")) {
 						Spinnery.LOGGER.log(Level.ERROR, "[Spinnery] Inventory contents failed to be read: " + CompoundTag.class.getName() + " does not contain 'stacks' subtag!");

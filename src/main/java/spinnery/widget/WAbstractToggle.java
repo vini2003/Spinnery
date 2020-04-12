@@ -15,6 +15,7 @@ public abstract class WAbstractToggle extends WAbstractWidget {
 
 	/**
 	 * Asserts whether this toggle is on or not.
+	 *
 	 * @return True if on; false if off.
 	 */
 	public boolean getToggleState() {
@@ -23,6 +24,7 @@ public abstract class WAbstractToggle extends WAbstractWidget {
 
 	/**
 	 * Sets the toggle's toggled state.
+	 *
 	 * @param toggleState Boolean representing on (true) or off (false).
 	 */
 	public <W extends WAbstractToggle> W setToggleState(boolean toggleState) {

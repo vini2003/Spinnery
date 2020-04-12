@@ -6,12 +6,7 @@ import spinnery.widget.api.WDrawableCollection;
 import spinnery.widget.api.WLayoutElement;
 import spinnery.widget.api.WModifiableCollection;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class WTooltip extends WAbstractWidget implements WDrawableCollection, WModifiableCollection {
 	protected Set<WAbstractWidget> widgets = new LinkedHashSet<>();

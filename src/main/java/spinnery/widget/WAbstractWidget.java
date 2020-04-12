@@ -9,14 +9,7 @@ import net.minecraft.util.Tickable;
 import spinnery.registry.ThemeRegistry;
 import spinnery.registry.WidgetRegistry;
 import spinnery.util.EventUtilities;
-import spinnery.widget.api.Position;
-import spinnery.widget.api.Size;
-import spinnery.widget.api.Style;
-import spinnery.widget.api.WDelegatedEventListener;
-import spinnery.widget.api.WEventListener;
-import spinnery.widget.api.WLayoutElement;
-import spinnery.widget.api.WStyleProvider;
-import spinnery.widget.api.WThemable;
+import spinnery.widget.api.*;
 import spinnery.widget.api.listener.*;
 
 import static spinnery.registry.ThemeRegistry.DEFAULT_THEME;
@@ -65,6 +58,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 
 	/**
 	 * Retrieves the interface attached to this widget.
+	 *
 	 * @return The interface attached to this widget.
 	 */
 	public WInterface getInterface() {
@@ -73,6 +67,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 
 	/**
 	 * Sets the interface attached to this widget.
+	 *
 	 * @param linkedInterface Interface to be attached to this widget.
 	 */
 	public <W extends WAbstractWidget> W setInterface(WInterface linkedInterface) {
@@ -86,6 +81,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 
 	/**
 	 * Asserts whether this widget has a label or not.
+	 *
 	 * @return True if labeled; False if not.
 	 */
 	@Environment(EnvType.CLIENT)
@@ -95,6 +91,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 
 	/**
 	 * Retrieves this widget's label.
+	 *
 	 * @return This widget's label.
 	 */
 	@Environment(EnvType.CLIENT)
@@ -104,6 +101,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 
 	/**
 	 * Sets this widget's label as a Text (any type).
+	 *
 	 * @param label Label to be used by this widget.
 	 */
 	@Environment(EnvType.CLIENT)
@@ -115,6 +113,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 
 	/**
 	 * Sets this widget's label as a String (formatted into LiteralText).
+	 *
 	 * @param label Label to be used by this widget.
 	 */
 	@Environment(EnvType.CLIENT)
@@ -126,6 +125,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 
 	/**
 	 * Asserts whether this widget's label is shadowed or not.
+	 *
 	 * @return True if shadowed; False if not.
 	 */
 	@Environment(EnvType.CLIENT)
@@ -160,6 +160,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 
 	/**
 	 * Sets the theme associated with this widget as an Identifier.
+	 *
 	 * @param theme Theme to be used by this widget.
 	 */
 	@Environment(EnvType.CLIENT)
@@ -170,6 +171,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 
 	/**
 	 * Sets the theme associated with this widget  as a String (formatted into Identifier).
+	 *
 	 * @param theme Theme to be used by this widget.
 	 */
 	@Environment(EnvType.CLIENT)
@@ -196,6 +198,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 
 	/**
 	 * Retrieves this widget's position.
+	 *
 	 * @return This widget's position.
 	 */
 	@Environment(EnvType.CLIENT)
@@ -205,6 +208,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 
 	/**
 	 * Retrieves this widget's parent.
+	 *
 	 * @return This widget's parent.
 	 */
 	@Environment(EnvType.CLIENT)
@@ -222,6 +226,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 
 	/**
 	 * Sets this widget's parent element.
+	 *
 	 * @param parent Element to be used as parent.
 	 */
 	public <W extends WAbstractWidget> W setParent(WLayoutElement parent) {
@@ -241,6 +246,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 
 	/**
 	 * Sets this widget's height.
+	 *
 	 * @param height Value to be used as height.
 	 */
 	@Environment(EnvType.CLIENT)
@@ -250,6 +256,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 
 	/**
 	 * Sets this widget's width.
+	 *
 	 * @param width Value to be used as width.
 	 */
 	@Environment(EnvType.CLIENT)
@@ -259,6 +266,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 
 	/**
 	 * Sets this widget's position.
+	 *
 	 * @param position Value to be used as position.
 	 */
 	@Environment(EnvType.CLIENT)
@@ -290,8 +298,9 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 
 	/**
 	 * Overrides a property of this widget's style with a given value.
+	 *
 	 * @param property Property to be overriden.
-	 * @param value	   Value for property to be associated with.
+	 * @param value    Value for property to be associated with.
 	 */
 	@Environment(EnvType.CLIENT)
 	public <W extends WAbstractWidget> W overrideStyle(String property, Object value) {
@@ -308,6 +317,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 
 	/**
 	 * Retrieves this widget's size.
+	 *
 	 * @return This widget's size.
 	 */
 	@Environment(EnvType.CLIENT)
@@ -317,6 +327,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 
 	/**
 	 * Retrieves this widget's automatic resizing size, used by self-resizing containers.
+	 *
 	 * @return This widget's automatic resizing size.
 	 */
 	@Environment(EnvType.CLIENT)
@@ -326,6 +337,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 
 	/**
 	 * Retrieves this widget's minimum automatic resizing size, used by self-resizing containers.
+	 *
 	 * @return This widget's minimum automatic resizing size.
 	 */
 	@Environment(EnvType.CLIENT)
@@ -335,6 +347,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 
 	/**
 	 * Retrieves this widget's maximum automatic resizing size, used by self-resizing containers.
+	 *
 	 * @return This widget's maximum automatic resizing size.
 	 */
 	@Environment(EnvType.CLIENT)
@@ -344,6 +357,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 
 	/**
 	 * Sets the size of this widget.
+	 *
 	 * @param size Size this widget should assume.
 	 */
 	@Environment(EnvType.CLIENT)
@@ -357,6 +371,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 
 	/**
 	 * Sets this widget's minimum automatic resizing size, used by self-resizing containers.
+	 *
 	 * @param minimumAutoSize Minimum automatic resizing size this widget should assume.
 	 */
 	@Environment(EnvType.CLIENT)
@@ -369,6 +384,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 
 	/**
 	 * Sets this widget's maximum automatic resizing size, used by self-resizing containers.
+	 *
 	 * @param maximumAutoSize Maximum automatic resizing size this widget should assume.
 	 */
 	@Environment(EnvType.CLIENT)
@@ -381,6 +397,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 
 	/**
 	 * Sets this widget's base/default automatic resizing size, used by self-resizing containers.
+	 *
 	 * @param baseAutoSize Base/Default automatic resizing size this widget should assume.
 	 */
 	@Environment(EnvType.CLIENT)
@@ -395,6 +412,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 	/**
 	 * Asserts whether this widget only listens to keyboard events when focused; that is,
 	 * when {@link #isFocused()} return true.
+	 *
 	 * @return True if focused listener; False if not.
 	 */
 	public boolean isFocusedKeyboardListener() {
@@ -404,6 +422,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 	/**
 	 * Asserts whether this widget only listens to mouse events when focused; that is,
 	 * when {@link #isFocused()} return true.
+	 *
 	 * @return True if focused listener; False if not.
 	 */
 	public boolean isFocusedMouseListener() {
@@ -413,8 +432,9 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 	/**
 	 * Dispatches {@link #runnableOnKeyPressed}, and calls this method
 	 * for any children widget event listeners.
-	 * @param keyCode	  Keycode associated with pressed key.
-	 * @param character	  Character associated with pressed key.
+	 *
+	 * @param keyCode     Keycode associated with pressed key.
+	 * @param character   Character associated with pressed key.
 	 * @param keyModifier Modifier(s) associated with pressed key.
 	 */
 	@Environment(EnvType.CLIENT)
@@ -434,8 +454,9 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 	/**
 	 * Dispatches {@link #runnableOnKeyReleased}, and calls this method
 	 * for any children widget event listeners.
-	 * @param keyCode	  Keycode associated with pressed key.
-	 * @param character	  Character associated with pressed key.
+	 *
+	 * @param keyCode     Keycode associated with pressed key.
+	 * @param character   Character associated with pressed key.
 	 * @param keyModifier Modifier(s) associated with pressed key.
 	 */
 	@Environment(EnvType.CLIENT)
@@ -455,6 +476,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 	/**
 	 * Dispatches {@link #runnableOnCharTyped}, and calls this method
 	 * for any children widget event listeners.
+	 *
 	 * @param character Character associated with key pressed.
 	 * @param keyCode   Keycode associated with key pressed.
 	 */
@@ -595,6 +617,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 
 	/**
 	 * Method called to update this widget's focus status.
+	 *
 	 * @param positionX The horizontal (X) position based on which to calculate focus.
 	 * @param positionY The vertical (Y) position based on which to calculate focus.
 	 * @return True if focused; False if not.
@@ -611,6 +634,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 
 	/**
 	 * Asserts whether this widget is hidden or not.
+	 *
 	 * @return True if hidden; False if not.
 	 */
 	@Environment(EnvType.CLIENT)
@@ -620,6 +644,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 
 	/**
 	 * Sets the widget's hidden state.
+	 *
 	 * @param isHidden Boolean representing true (hidden) or false (visible).
 	 */
 	@Environment(EnvType.CLIENT)
@@ -631,6 +656,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 
 	/**
 	 * Sets the widget's focus state.
+	 *
 	 * @param hasFocus Boolean representing true (focused) or false (unfocused).
 	 */
 	@Environment(EnvType.CLIENT)
@@ -645,6 +671,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 
 	/**
 	 * Asserts whether this widget is focused or not.
+	 *
 	 * @return True if focused; false if not.
 	 */
 	@Environment(EnvType.CLIENT)
@@ -654,6 +681,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 
 	/**
 	 * Asserts whether this widget is within boundaries of specified parameters or not.
+	 *
 	 * @param positionX The horizontal (X) position based on which to calculate boundaries.
 	 * @param positionY The vertical (Y) position based on which to calculate boundaries.
 	 * @return True if within boundaries; False if not.
@@ -666,6 +694,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 	/**
 	 * Asserts whether this widget is within boundaries of specified parameters or not,
 	 * given a vertical and horizontal tolerance.
+	 *
 	 * @param positionX The horizontal (X) position based on which to calculate boundaries.
 	 * @param positionY The vertical (Y) position based on which to calculate boundaries.
 	 * @param tolerance The horizontal (X) and vertical (Y) tolerance based on which to calculate boundaries.
@@ -696,6 +725,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 
 	/**
 	 * Sets this widget's depth (Z) position.
+	 *
 	 * @param z Value to be used as depth (Z) position.
 	 */
 	@Environment(EnvType.CLIENT)
@@ -705,6 +735,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 
 	/**
 	 * Sets this widget's vertical (Y) position.
+	 *
 	 * @param y Value to be used as vertical (Y) position.
 	 */
 	@Environment(EnvType.CLIENT)
@@ -714,6 +745,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 
 	/**
 	 * Sets this widget's horizontal (X) position.
+	 *
 	 * @param x Value to be used as horizontal (X) position.
 	 */
 	@Environment(EnvType.CLIENT)
@@ -786,6 +818,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 
 	/**
 	 * Sets this widget's event called when {@link #onFocusGained()} is called.
+	 *
 	 * @param linkedRunnable Event to be associated with this widget.
 	 */
 	@Environment(EnvType.CLIENT)
@@ -804,6 +837,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 
 	/**
 	 * Sets this widget's event called when {@link #onFocusReleased()} is called.
+	 *
 	 * @param linkedRunnable Event to be associated with this widget.
 	 */
 	@Environment(EnvType.CLIENT)
@@ -822,6 +856,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 
 	/**
 	 * Sets this widget's event called when {@link #onKeyPressed(int, int, int)} is called.
+	 *
 	 * @param linkedRunnable Event to be associated with this widget.
 	 */
 	@Environment(EnvType.CLIENT)
@@ -840,6 +875,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 
 	/**
 	 * Sets this widget's event called when {@link #onCharTyped(char, int)} is called.
+	 *
 	 * @param linkedRunnable Event to be associated with this widget.
 	 */
 	@Environment(EnvType.CLIENT)
@@ -858,6 +894,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 
 	/**
 	 * Sets this widget's event called when {@link #onKeyReleased(int, int, int)} is called.
+	 *
 	 * @param linkedRunnable Event to be associated with this widget.
 	 */
 	@Environment(EnvType.CLIENT)
@@ -876,6 +913,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 
 	/**
 	 * Sets this widget's event called when {@link #onMouseClicked(int, int, int)} is called.
+	 *
 	 * @param linkedRunnable Event to be associated with this widget.
 	 */
 	@Environment(EnvType.CLIENT)
@@ -894,6 +932,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 
 	/**
 	 * Sets this widget's event called when {@link #onMouseDragged(int, int, int, double, double)} is called.
+	 *
 	 * @param linkedRunnable Event to be associated with this widget.
 	 */
 	@Environment(EnvType.CLIENT)
@@ -912,6 +951,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 
 	/**
 	 * Sets this widget's event called when {@link #onMouseMoved(int, int)} is called.
+	 *
 	 * @param linkedRunnable Event to be associated with this widget.
 	 */
 	@Environment(EnvType.CLIENT)
@@ -930,6 +970,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 
 	/**
 	 * Sets this widget's event called when {@link #onMouseScrolled(int, int, double)} is called.
+	 *
 	 * @param linkedRunnable Event to be associated with this widget.
 	 */
 	@Environment(EnvType.CLIENT)
@@ -948,6 +989,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 
 	/**
 	 * Sets this widget's event called when {@link #onMouseReleased(int, int, int)} is called.
+	 *
 	 * @param linkedRunnable Event to be associated with this widget.
 	 */
 	@Environment(EnvType.CLIENT)
@@ -966,6 +1008,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 
 	/**
 	 * Sets this widget's event called when {@link #onDrawTooltip(int, int)} is called.
+	 *
 	 * @param linkedRunnable Event to be associated with this widget.
 	 */
 	@Environment(EnvType.CLIENT)
@@ -984,6 +1027,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 
 	/**
 	 * Sets this widget's event called when {@link #onAlign()} is called.
+	 *
 	 * @param linkedRunnable Event to be associated with this widget.
 	 */
 	@Environment(EnvType.CLIENT)

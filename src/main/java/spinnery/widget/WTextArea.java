@@ -42,7 +42,8 @@ public class WTextArea extends WAbstractTextEditor {
 
 		if (lineWrap && xOffset != 0) xOffset = 0;
 		renderField();
-	}	// Essentially this function checks if a given line is a true "new" line, or if it's wrapped.
+	}    // Essentially this function checks if a given line is a true "new" line, or if it's wrapped.
+
 	// This is useful e.g. for line numbering
 	protected boolean hasNewline(int index) {
 		return lineWrap ? newLine.get(index) : true;

@@ -1,7 +1,5 @@
 package spinnery.util;
 
-import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
 public class MutablePair<L, R> {
@@ -10,6 +8,7 @@ public class MutablePair<L, R> {
 
 	/**
 	 * Builds a MutablePair of the given elements.
+	 *
 	 * @return Mutable pair of the given elements.
 	 */
 	public static <A, B> MutablePair<A, B> of(A first, B second) {
@@ -21,6 +20,7 @@ public class MutablePair<L, R> {
 
 	/**
 	 * Retrieves the first member of this pair.
+	 *
 	 * @return The first member of this pair.
 	 */
 	public L getFirst() {
@@ -29,6 +29,7 @@ public class MutablePair<L, R> {
 
 	/**
 	 * Sets the first member of this pair.
+	 *
 	 * @param first Object to be set as first member.
 	 */
 	public MutablePair setFirst(L first) {
@@ -38,6 +39,7 @@ public class MutablePair<L, R> {
 
 	/**
 	 * Retrieves the second member of this pair.
+	 *
 	 * @return The second member of this pair.
 	 */
 	public R getSecond() {
@@ -46,6 +48,7 @@ public class MutablePair<L, R> {
 
 	/**
 	 * Sets the second member of this pair.
+	 *
 	 * @param second Object to be set as second member.
 	 */
 	public MutablePair setSecond(R second) {
@@ -55,6 +58,7 @@ public class MutablePair<L, R> {
 
 	/**
 	 * Applies one consumer for each member of this pair.
+	 *
 	 * @param l Consumer to apply to first member.
 	 * @param r Consumer to apply to second value.
 	 */

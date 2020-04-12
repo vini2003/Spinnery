@@ -7,12 +7,14 @@ package spinnery.widget.api;
 public interface WViewport {
 	/**
 	 * Retrieves the underlying size of this object.
+	 *
 	 * @return The underlying size of this object.
 	 */
 	Size getUnderlyingSize();
 
 	/**
 	 * Retrieves the underlying height of this object.
+	 *
 	 * @return The underlying height of this object.
 	 */
 	default int getUnderlyingHeight() {
@@ -21,6 +23,7 @@ public interface WViewport {
 
 	/**
 	 * Retrieves the underlying width of this object.
+	 *
 	 * @return The underlying width of this object.
 	 */
 	default int getUnderlyingWidth() {
@@ -29,12 +32,14 @@ public interface WViewport {
 
 	/**
 	 * Retrieves the visible size of this object.
+	 *
 	 * @return The visible size of this object.
 	 */
 	Size getVisibleSize();
 
 	/**
 	 * Retrieves the visible height of this object.
+	 *
 	 * @return The visible height of this object.
 	 */
 	default int getVisibleHeight() {
@@ -43,6 +48,7 @@ public interface WViewport {
 
 	/**
 	 * Retrieves the visible height of this object.
+	 *
 	 * @return The visible height of this object.
 	 */
 	default int getVisibleWidth() {

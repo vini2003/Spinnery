@@ -11,20 +11,19 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 import spinnery.client.BaseRenderer;
 import spinnery.client.TextRenderer;
-import spinnery.widget.api.Padding;
-import spinnery.widget.api.Position;
-import spinnery.widget.api.Size;
-import spinnery.widget.api.WContextLock;
-import spinnery.widget.api.WPadded;
+import spinnery.widget.api.*;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 
 
 /**
  * 7:13PM, 3/25/2020
  * Engineer, you shall pay dearly
  * for not commenting this.
- *
+ * <p>
  * 10:52PM, 4/8/2020
  * I will not be commenting this in the name
  * of my sanity.

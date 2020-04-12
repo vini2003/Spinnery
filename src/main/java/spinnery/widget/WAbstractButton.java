@@ -30,6 +30,7 @@ public abstract class WAbstractButton extends WAbstractWidget {
 
 	/**
 	 * Retrieves the delay, in ticks, during which this button stays lowered.
+	 *
 	 * @return The delay, in ticks, during which this button stays lowered.
 	 */
 	public int getDelay() {
@@ -38,6 +39,7 @@ public abstract class WAbstractButton extends WAbstractWidget {
 
 	/**
 	 * Sets the delay, in ticks, during which this button stays lowered.
+	 *
 	 * @param delayTicks Ticks to be used as delay.
 	 */
 	public <W extends WAbstractButton> W setDelay(int delayTicks) {
@@ -47,6 +49,7 @@ public abstract class WAbstractButton extends WAbstractWidget {
 
 	/**
 	 * Asserts whether the button is lowered or not.
+	 *
 	 * @return True if lowered; false if not.
 	 */
 	public boolean isLowered() {
@@ -55,6 +58,7 @@ public abstract class WAbstractButton extends WAbstractWidget {
 
 	/**
 	 * Sets the button's lowered state.
+	 *
 	 * @param toggleState Boolean representing lowered (true) or not lowered (false).
 	 */
 	public <W extends WAbstractButton> W setLowered(boolean toggleState) {

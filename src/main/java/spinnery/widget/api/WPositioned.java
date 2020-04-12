@@ -11,6 +11,7 @@ package spinnery.widget.api;
 public interface WPositioned {
 	/**
 	 * Retrieves the X position of this object.
+	 *
 	 * @return The X position of this object.
 	 */
 	default int getX() {
@@ -19,6 +20,7 @@ public interface WPositioned {
 
 	/**
 	 * Retrieves the Y position of this object.
+	 *
 	 * @return The Y position of this object.
 	 */
 	default int getY() {
@@ -27,6 +29,7 @@ public interface WPositioned {
 
 	/**
 	 * Retrieves the Z position of this object.
+	 *
 	 * @return The Z position of this object.
 	 */
 	default int getZ() {

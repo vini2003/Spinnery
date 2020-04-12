@@ -5,7 +5,6 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.container.Container;
-
 import net.minecraft.container.Slot;
 import net.minecraft.container.SlotActionType;
 import net.minecraft.entity.player.PlayerEntity;
@@ -13,7 +12,6 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
-
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.world.World;
 import org.lwjgl.glfw.GLFW;
@@ -26,11 +24,7 @@ import spinnery.widget.WSlot;
 import spinnery.widget.api.Action;
 import spinnery.widget.api.WNetworked;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 /**
  * A BaseContainer is a class responsible for
@@ -40,7 +34,7 @@ import java.util.Set;
  * and is necessary for any widgets that
  * implement WNetworked to be added to it
  * and the BaseContainerScreen.
- *
+ * <p>
  * Note, however, that the widget added to
  * the BaseContainer should NOT contain
  * a Position, or a Size.
@@ -58,8 +52,9 @@ public class BaseContainer extends Container {
 
 	/**
 	 * Instantiates a BaseContainer.
-	 * @param synchronizationID		ID to be used for synchronization of this container.
-	 * @param playerInventory 		PlayerInventory of Player associated with this container.
+	 *
+	 * @param synchronizationID ID to be used for synchronization of this container.
+	 * @param playerInventory   PlayerInventory of Player associated with this container.
 	 */
 	public BaseContainer(int synchronizationID, PlayerInventory playerInventory) {
 		super(null, synchronizationID);
@@ -70,6 +65,7 @@ public class BaseContainer extends Container {
 
 	/**
 	 * Retrieves map of inventories associated with this container.
+	 *
 	 * @return All inventories associated with this container, whose key is the inventory number.
 	 */
 	public Map<Integer, Inventory> getInventories() {
@@ -78,6 +74,7 @@ public class BaseContainer extends Container {
 
 	/**
 	 * Sets the World of this container.
+	 *
 	 * @param world World to be associated with this container.
 	 */
 	public <C extends BaseContainer> C setWorld(World world) {
@@ -87,6 +84,7 @@ public class BaseContainer extends Container {
 
 	/**
 	 * Gets the preview ItemStack to be rendered instead of the default cursor ItemStack.
+	 *
 	 * @return previewCursorStack ItemStack to be rendered instead of the default cursor ItemStack.
 	 */
 	@Environment(EnvType.CLIENT)
@@ -96,6 +94,7 @@ public class BaseContainer extends Container {
 
 	/**
 	 * Sets the preview ItemStack to be rendered instead of the default cursor ItemStack.
+	 *
 	 * @param previewCursorStack ItemStack to be rendered instead of the default cursor ItemStack.
 	 */
 	@Environment(EnvType.CLIENT)
@@ -117,8 +116,9 @@ public class BaseContainer extends Container {
 
 	/**
 	 * Retrieves the set of WSlots on which the mouse has been dragged, given a mouse button.
+	 *
 	 * @param mouseButton Mouse button used for dragging.
-	 * @return			  Set of WSlots on which the mouse has been dragged, given the mouse button.
+	 * @return Set of WSlots on which the mouse has been dragged, given the mouse button.
 	 */
 	@Environment(EnvType.CLIENT)
 	public Set<WSlot> getDragSlots(int mouseButton) {
@@ -134,6 +134,7 @@ public class BaseContainer extends Container {
 
 	/**
 	 * Retrieves the WInterface attached with this container.
+	 *
 	 * @return The WInterface attached with this container.
 	 */
 	public WInterface getInterface() {
@@ -142,6 +143,7 @@ public class BaseContainer extends Container {
 
 	/**
 	 * Retrieves the preview ItemStacks associated with all WSlots inventory numbers and numbers.
+	 *
 	 * @return ItemStacks of all WSlots, whose key is the inventory number, and value key is the number.
 	 */
 	@Environment(EnvType.CLIENT)
@@ -151,6 +153,7 @@ public class BaseContainer extends Container {
 
 	/**
 	 * Verifies if the mouse is currently being dragged through WSlots.
+	 *
 	 * @return Whether the mouse is currently being dragged through WSlots.
 	 */
 	@Environment(EnvType.CLIENT)
@@ -161,9 +164,10 @@ public class BaseContainer extends Container {
 	/**
 	 * Method called on the server when a WNetworked widget
 	 * WNetworked.Event happens.
+	 *
 	 * @param widgetSyncId Synchronization ID of the WNetworked widget; must match between client and server.
-	 * @param event		   WNetworked.Event which was sent.
-	 * @param payload	   CompoundTag payload sent alongside the event.
+	 * @param event        WNetworked.Event which was sent.
+	 * @param payload      CompoundTag payload sent alongside the event.
 	 */
 	public void onInterfaceEvent(int widgetSyncId, WNetworked.Event event, CompoundTag payload) {
 		Set<WAbstractWidget> checkWidgets = serverInterface.getAllWidgets();
@@ -178,9 +182,10 @@ public class BaseContainer extends Container {
 
 	/**
 	 * Method called when a drag Action is performed on a WSlot, both on the client and server.
-	 * @param slotNumber		Number of WSlot in which the Action happened.
-	 * @param inventoryNumber	Inventory number of WSlot in which the Action happened.
-	 * @param action			Action which was performed.
+	 *
+	 * @param slotNumber      Number of WSlot in which the Action happened.
+	 * @param inventoryNumber Inventory number of WSlot in which the Action happened.
+	 * @param action          Action which was performed.
 	 */
 	public void onSlotDrag(int[] slotNumber, int[] inventoryNumber, Action action) {
 		HashMap<Integer, WSlot> slots = new HashMap<>();
@@ -246,14 +251,15 @@ public class BaseContainer extends Container {
 
 	/**
 	 * Method called when an Action is performed on a WSlot, both on the client and server.
-	 * @param slotNumber		Number of WSlot in which the Action happened.
-	 * @param inventoryNumber	Inventory number of WSlot in which the Action happened.
-	 * @param button			Button with which the action was performed.
-	 * @param action			Action which was performed.
-	 * @param player			Player whom performed the action.
 	 *
-	 * As a warning, it just works. Any modifications are likely to cause
-	 * severe brain damage to the poor individual attempting to change this.
+	 * @param slotNumber      Number of WSlot in which the Action happened.
+	 * @param inventoryNumber Inventory number of WSlot in which the Action happened.
+	 * @param button          Button with which the action was performed.
+	 * @param action          Action which was performed.
+	 * @param player          Player whom performed the action.
+	 *                        <p>
+	 *                        As a warning, it just works. Any modifications are likely to cause
+	 *                        severe brain damage to the poor individual attempting to change this.
 	 */
 	public void onSlotAction(int slotNumber, int inventoryNumber, int button, Action action, PlayerEntity player) {
 		WSlot slotT = null;
@@ -360,6 +366,7 @@ public class BaseContainer extends Container {
 
 	/**
 	 * Retrieves the World associated with this container.
+	 *
 	 * @return World associated with this container.
 	 */
 	public World getWorld() {
@@ -368,6 +375,7 @@ public class BaseContainer extends Container {
 
 	/**
 	 * Retrieves the PlayerInventory of the Player associated with this container.
+	 *
 	 * @return PlayerInventory of player associated with this container.
 	 */
 	public PlayerInventory getPlayerInventory() {
@@ -376,8 +384,9 @@ public class BaseContainer extends Container {
 
 	/**
 	 * Retrieves an inventory from the BaseContainer.
+	 *
 	 * @param inventoryNumber Inventory number associated with the inventory.
-	 * @return				  Inventory associated with the inventory number.
+	 * @return Inventory associated with the inventory number.
 	 */
 	public Inventory getInventory(int inventoryNumber) {
 		return inventories.get(inventoryNumber);
@@ -385,8 +394,9 @@ public class BaseContainer extends Container {
 
 	/**
 	 * Adds an inventory to the BaseContainer.
+	 *
 	 * @param inventoryNumber Inventory number associated with the inventory.
-	 * @param inventory		  Inventory associated with the inventory number.
+	 * @param inventory       Inventory associated with the inventory number.
 	 */
 	public <C extends BaseContainer> C addInventory(int inventoryNumber, Inventory inventory) {
 		this.inventories.put(inventoryNumber, inventory);
@@ -399,7 +409,8 @@ public class BaseContainer extends Container {
 	 */
 	@Override
 	public void sendContentUpdates() {
-		if (!(this.getPlayerInventory().player instanceof ServerPlayerEntity) || FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) return;
+		if (!(this.getPlayerInventory().player instanceof ServerPlayerEntity) || FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT)
+			return;
 
 		for (WAbstractWidget widget : serverInterface.getAllWidgets()) {
 			if (widget instanceof WSlot) {

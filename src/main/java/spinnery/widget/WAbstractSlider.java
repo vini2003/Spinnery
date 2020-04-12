@@ -27,6 +27,7 @@ public abstract class WAbstractSlider extends WAbstractWidget implements WPadded
 
 	/**
 	 * Retrieves the minimum value for this slider.
+	 *
 	 * @return The minimum value for this slider.
 	 */
 	public double getMin() {
@@ -35,6 +36,7 @@ public abstract class WAbstractSlider extends WAbstractWidget implements WPadded
 
 	/**
 	 * Sets the minimum value for this slider.
+	 *
 	 * @param min The value to be set as the minimum value for this slider.
 	 */
 	public <W extends WAbstractSlider> W setMin(double min) {
@@ -47,6 +49,7 @@ public abstract class WAbstractSlider extends WAbstractWidget implements WPadded
 
 	/**
 	 * Retrieves the maximum value for this slider.
+	 *
 	 * @return The maximum value for this slider.
 	 */
 	public double getMax() {
@@ -55,6 +58,7 @@ public abstract class WAbstractSlider extends WAbstractWidget implements WPadded
 
 	/**
 	 * Sets the maximum value for this slider.
+	 *
 	 * @param max The value to be set as the maximum value for this slider.
 	 */
 	public <W extends WAbstractSlider> W setMax(double max) {
@@ -67,6 +71,7 @@ public abstract class WAbstractSlider extends WAbstractWidget implements WPadded
 
 	/**
 	 * Retrieves the step value for this slider, used for selecting a value with arrow keys.
+	 *
 	 * @return The step value for this slider.
 	 */
 	public double getStep() {
@@ -75,6 +80,7 @@ public abstract class WAbstractSlider extends WAbstractWidget implements WPadded
 
 	/**
 	 * Sets the step value for this slider, used for selecting a value with arrow keys.
+	 *
 	 * @param step The value to be used as the step value for this slider.
 	 */
 	public <W extends WAbstractSlider> W setStep(double step) {
@@ -84,6 +90,7 @@ public abstract class WAbstractSlider extends WAbstractWidget implements WPadded
 
 	/**
 	 * Retrieves the progress value of this slider.
+	 *
 	 * @return The progress value of this slider.
 	 */
 	public double getProgress() {
@@ -92,6 +99,7 @@ public abstract class WAbstractSlider extends WAbstractWidget implements WPadded
 
 	/**
 	 * Sets the progress value of this slider.
+	 *
 	 * @param progress The value to be used as the progress value for this slider.
 	 */
 	public <W extends WAbstractSlider> W setProgress(double progress) {
@@ -105,6 +113,7 @@ public abstract class WAbstractSlider extends WAbstractWidget implements WPadded
 
 	/**
 	 * Asserts whether the progress is visible or not.
+	 *
 	 * @return True if visible; false if not.
 	 */
 	public boolean isProgressVisible() {
@@ -113,6 +122,7 @@ public abstract class WAbstractSlider extends WAbstractWidget implements WPadded
 
 	/**
 	 * Sets whether the progress is visible or not.
+	 *
 	 * @param progressVisible Boolean representing visible (true) or not visible (false).
 	 */
 	public <W extends WAbstractSlider> W setProgressVisible(boolean progressVisible) {
@@ -122,6 +132,7 @@ public abstract class WAbstractSlider extends WAbstractWidget implements WPadded
 
 	/**
 	 * Retrieves the progress value as a String.
+	 *
 	 * @return The progress value as a String.
 	 */
 	public String getFormattedProgress() {
@@ -130,12 +141,14 @@ public abstract class WAbstractSlider extends WAbstractWidget implements WPadded
 
 	/**
 	 * Retrieves the position at which the progress text should be rendered.
+	 *
 	 * @return The position at which the progress text should be rendered.
 	 */
 	abstract public Position getProgressTextAnchor();
 
 	/**
 	 * Retrieves the percentage completion of the progress value in relation to the minimum and maximum values.
+	 *
 	 * @return The percentage completion of the progress value in relation to the minimum and maximum values.
 	 */
 	public double getPercentComplete() {
@@ -144,6 +157,7 @@ public abstract class WAbstractSlider extends WAbstractWidget implements WPadded
 
 	/**
 	 * Retrieves the event dispatched when the progress value changes.
+	 *
 	 * @return The event dispatched when the progress value changes.
 	 */
 	public Consumer<WAbstractSlider> getOnProgressChange() {
@@ -152,6 +166,7 @@ public abstract class WAbstractSlider extends WAbstractWidget implements WPadded
 
 	/**
 	 * Sets the event dispatched when the progress value changes.
+	 *
 	 * @param runnableOnProgressChange The event to be dispatched when the progress value changes.
 	 */
 	public <W extends WAbstractSlider> W setOnProgressChange(Consumer<WAbstractSlider> runnableOnProgressChange) {
@@ -161,6 +176,7 @@ public abstract class WAbstractSlider extends WAbstractWidget implements WPadded
 
 	/**
 	 * Retrieves the size of this slider's progress indicator knob.
+	 *
 	 * @return The size of this slider's progress indicator knob.
 	 */
 	public abstract Size getKnobSize();

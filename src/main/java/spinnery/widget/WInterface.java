@@ -10,21 +10,9 @@ import spinnery.client.BaseRenderer;
 import spinnery.common.BaseContainer;
 import spinnery.registry.NetworkRegistry;
 import spinnery.util.EventUtilities;
-import spinnery.widget.api.Color;
-import spinnery.widget.api.WDrawableCollection;
-import spinnery.widget.api.WLayoutElement;
-import spinnery.widget.api.WModifiableCollection;
-import spinnery.widget.api.WNetworked;
-import spinnery.widget.api.WThemable;
+import spinnery.widget.api.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class WInterface implements WDrawableCollection, WModifiableCollection, WLayoutElement, WThemable {
 	protected BaseContainer linkedContainer;
@@ -140,7 +128,7 @@ public class WInterface implements WDrawableCollection, WModifiableCollection, W
 						NetworkRegistry.createMouseReleasePacket(((WNetworked) widget), mouseX, mouseY, mouseButton));
 			}
 		}
-    }
+	}
 
 	public boolean onMouseDragged(int mouseX, int mouseY, int mouseButton, int deltaX, int deltaY) {
 		for (WAbstractWidget widget : getWidgets()) {

@@ -16,6 +16,7 @@ public abstract class WAbstractBar extends WAbstractWidget {
 	 * Retrieves the limit of this bar as a Mutable<Number>
 	 * such that one does not need to constantly update it,
 	 * as that is done by the Mutable<Number> itself.
+	 *
 	 * @return The limit of this bar as a Mutable<Number>.
 	 */
 	public Mutable<Number> getLimit() {
@@ -26,6 +27,7 @@ public abstract class WAbstractBar extends WAbstractWidget {
 	 * Sets the limit of this bar as a Mutable<Number>
 	 * such that one does not need to constantly update it,
 	 * as that is done by the Mutable<Number> itself.
+	 *
 	 * @param limit Mutable<Number> to be used as limit.
 	 */
 	public <W extends WAbstractBar> W setLimit(Mutable<Number> limit) {
@@ -37,6 +39,7 @@ public abstract class WAbstractBar extends WAbstractWidget {
 	 * Retrieves the progress of this bar as a Mutable<Number>
 	 * such that one does not need to constantly update it,
 	 * as that is done by the Mutable<Number> itself.
+	 *
 	 * @return The progress of this bar as a Mutable<Number>.
 	 */
 	public Mutable<Number> getProgress() {
@@ -47,6 +50,7 @@ public abstract class WAbstractBar extends WAbstractWidget {
 	 * Sets the progress of this bar as a Mutable<Number>
 	 * such that one does not need to constantly update it,
 	 * as that is done by the Mutable<Number> itself.
+	 *
 	 * @param progress Mutable<Number> to be used as progress.
 	 */
 	public <W extends WAbstractBar> W setProgress(Mutable<Number> progress) {
@@ -56,6 +60,7 @@ public abstract class WAbstractBar extends WAbstractWidget {
 
 	/**
 	 * Retrieves the Identifier of the background texture of this bar.
+	 *
 	 * @return The Identifier of the background texture of this bar.
 	 */
 	public Identifier getBackgroundTexture() {
@@ -64,6 +69,7 @@ public abstract class WAbstractBar extends WAbstractWidget {
 
 	/**
 	 * Sets the Identifier of the background texture of this bar.
+	 *
 	 * @param backgroundTexture Identifier to be used as background texture.
 	 */
 	public <W extends WAbstractBar> W setBackgroundTexture(Identifier backgroundTexture) {
@@ -73,6 +79,7 @@ public abstract class WAbstractBar extends WAbstractWidget {
 
 	/**
 	 * Retrieves the Identifier of the foreground texture of this bar.
+	 *
 	 * @return The Identifier of the foreground texture of this bar.
 	 */
 	public Identifier getForegroundTexture() {
@@ -81,6 +88,7 @@ public abstract class WAbstractBar extends WAbstractWidget {
 
 	/**
 	 * Sets the Identifier of the foreground texture of this bar.
+	 *
 	 * @param foregroundTexture Identifier to be used as foreground texture.
 	 */
 	public <W extends WAbstractBar> W setForegroundTexture(Identifier foregroundTexture) {

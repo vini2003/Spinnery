@@ -7,5 +7,5 @@ import spinnery.widget.WInterface;
  * various implementations of screens.
  */
 public interface WInterfaceProvider {
-    WInterface getInterface();
+	WInterface getInterface();
 }
