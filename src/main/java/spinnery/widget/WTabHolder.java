@@ -6,7 +6,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
-import spinnery.client.BaseRenderer;
+
 import spinnery.widget.api.*;
 
 import java.util.*;
@@ -17,12 +17,7 @@ public class WTabHolder extends WAbstractWidget implements WCollection, WDelegat
 
 	public void selectTab(int tabNumber) {
 		for (WTab tab : tabs) {
-			if (tab.getNumber() != tabNumber) {
-				tab.getToggle().setToggleState(false);
-			}
-			for (WAbstractWidget widget : tab.getWidgets()) {
-				widget.setHidden(tab.getNumber() != tabNumber);
-			}
+			tab.setActive(tab.getNumber() == tabNumber);
 		}
 	}
 
@@ -35,6 +30,7 @@ public class WTabHolder extends WAbstractWidget implements WCollection, WDelegat
 		WTab tab = new WTab()
 				.setSymbol(symbol).setName(name).setNumber(tabNumber)
 				.setParent(this).setInterface(getInterface());
+		tab.setActive(tabNumber == 1);
 		tabs.add(tab);
 		updateTabs();
 		return tab;
@@ -94,18 +90,9 @@ public class WTabHolder extends WAbstractWidget implements WCollection, WDelegat
 			return;
 		}
 
-		int x = getX();
-		int y = getY();
-		int z = getZ();
-
-		int sX = getWidth();
-		int sY = getHeight();
-
 		for (WTab tab : tabs) {
 			tab.getToggle().draw();
 		}
-
-		BaseRenderer.drawPanel(x, y + 24, z, sX, sY - 24, getStyle().asColor("shadow"), getStyle().asColor("background"), getStyle().asColor("highlight"), getStyle().asColor("outline"));
 
 		for (WTab tab : tabs) {
 			tab.draw();
@@ -115,8 +102,7 @@ public class WTabHolder extends WAbstractWidget implements WCollection, WDelegat
 	public class WTab extends WAbstractWidget implements WDrawableCollection, WModifiableCollection, WDelegatedEventListener {
 		protected int number;
 		protected WTabToggle toggle;
-		protected Set<WAbstractWidget> widgets = new LinkedHashSet<>();
-		protected List<WLayoutElement> orderedWidgets = new ArrayList<>();
+		protected WPanel body = new WPanel();
 
 		public WTab() {
 			toggle = WWidgetFactory.buildDetached(WTabToggle.class)
@@ -124,68 +110,53 @@ public class WTabHolder extends WAbstractWidget implements WCollection, WDelegat
 					.setSize(Size.of(36, 24))
 					.setParent(this)
 					.setInterface(WTabHolder.this.getInterface());
+
+			body.setParent(this).getPosition().setAnchor(WTabHolder.this).setOffsetY(24);
 		}
 
 		@Override
 		public Collection<? extends WEventListener> getEventDelegates() {
-			Set<WAbstractWidget> delegates = new HashSet<>(widgets);
-			delegates.add(toggle);
-			return delegates;
+			Collection<? extends WEventListener> bodyDelegates = body.getEventDelegates();
+			Collection<WEventListener> returnList = new ArrayList<WEventListener>(bodyDelegates);
+			returnList.add(toggle);
+			return returnList;
 		}
 
 		@Override
 		public void add(WAbstractWidget... widgets) {
-			for (WAbstractWidget newWidget : widgets) {
-				newWidget.setInterface(WTabHolder.this.getInterface());
-				newWidget.setParent(this);
-				this.widgets.add(newWidget);
-			}
-			for (WAbstractWidget widget : getWidgets()) {
-				if (!(widget instanceof WTabToggle)) {
-					widget.setHidden(true);
-				}
-			}
+			body.add(widgets);
 			onLayoutChange();
 		}
 
-		public Set<WAbstractWidget> getWidgets() {
-			return widgets;
-		}
+		public Set<WAbstractWidget> getWidgets() { return body.getWidgets(); }
 
 		@Override
 		public void onLayoutChange() {
 			super.onLayoutChange();
+			body.setSize(WTabHolder.this.getSize().add(0, -24));
 			recalculateCache();
 		}
 
 		@Override
 		public void recalculateCache() {
-			orderedWidgets = new ArrayList<>(getWidgets());
-			Collections.sort(orderedWidgets);
-			Collections.reverse(orderedWidgets);
+			body.recalculateCache();
 		}
 
 		@Override
-		public List<WLayoutElement> getOrderedWidgets() {
-			return orderedWidgets;
-		}
+		public List<WLayoutElement> getOrderedWidgets() { return body.getOrderedWidgets(); }
 
 		@Override
-		public boolean contains(WAbstractWidget... widgets) {
-			return this.widgets.containsAll(Arrays.asList(widgets));
-		}
+		public boolean contains(WAbstractWidget... widgets) { return body.contains(widgets); }
 
 		@Override
 		public void remove(WAbstractWidget... widgets) {
-			this.widgets.removeAll(Arrays.asList(widgets));
+			body.remove(widgets);
 			onLayoutChange();
 		}
 
 		@Override
 		public void draw() {
-			for (WLayoutElement widget : getOrderedWidgets()) {
-				widget.draw();
-			}
+			body.draw();
 		}
 
 		public int getNumber() {
@@ -210,5 +181,12 @@ public class WTabHolder extends WAbstractWidget implements WCollection, WDelegat
 			getToggle().setLabel(name);
 			return this;
 		}
+
+		public void setActive(boolean isActive) {
+			getToggle().setToggleState(isActive);
+			body.setHidden(!isActive);
+		}
+
+		public WPanel getBody() { return body; }
 	}
 }
