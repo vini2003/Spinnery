@@ -270,7 +270,7 @@ public class BaseContainer extends Container {
 			}
 		}
 
-		if (slotT == null) {
+		if (slotT == null || slotT.isLocked()) {
 			return;
 		}
 
@@ -338,6 +338,7 @@ public class BaseContainer extends Container {
 						stackA = slotA.getStack();
 
 						if (slotB.refuses(stackA)) continue;
+						if (slotB.isLocked()) continue;
 
 						if ((!slotA.getStack().isEmpty() && stackC.isEmpty()) || (StackUtilities.equalItemAndTag(stackA, stackC) && stackC.getCount() < (slotB.getInventoryNumber() == PLAYER_INVENTORY ? stackA.getMaxCount() : slotB.getMaxCount()))) {
 							int maxB = stackC.isEmpty() || slotB.getInventoryNumber() == PLAYER_INVENTORY ? stackA.getMaxCount() : slotB.getMaxCount();
