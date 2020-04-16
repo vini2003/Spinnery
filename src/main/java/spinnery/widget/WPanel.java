@@ -15,6 +15,8 @@ public class WPanel extends WAbstractWidget implements WModifiableCollection, WD
 
 	@Override
 	public void draw() {
+		if(isHidden()) { return; }
+		
 		int x = getX();
 		int y = getY();
 		int z = getZ();
