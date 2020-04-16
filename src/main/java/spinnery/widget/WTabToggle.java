@@ -45,15 +45,23 @@ public class WTabToggle extends WAbstractToggle {
 			BaseRenderer.drawPanel(x, y, z - 1, sX, sY, getStyle().asColor("shadow.on"), getStyle().asColor("background.on"), getStyle().asColor("highlight.on"), getStyle().asColor("outline.on"));
 		}
 
-		RenderSystem.enableLighting();
-		BaseRenderer.getItemRenderer().renderGuiItemIcon(new ItemStack(getSymbol(), 1), x + 4, y + 4);
+		Item symbol = getSymbol();
+
+		if(symbol != null) {
+			RenderSystem.enableLighting();
+			BaseRenderer.getItemRenderer().renderGuiItemIcon(new ItemStack(symbol, 1), x + 4, y + 4);
+		}
 		RenderSystem.disableLighting();
-		TextRenderer.pass().shadow(isLabelShadowed()).text(getLabel()).at(x + 24, y + sY / 2 - 4.5, z)
+		TextRenderer.pass().shadow(isLabelShadowed()).text(getLabel()).at(x + 8 + (symbol != null ? 16 : 0), y + sY / 2 - 4.5, z)
 				.color(getStyle().asColor("label.color")).shadowColor(getStyle().asColor("label.shadow_color")).render();
 	}
 
 	public Item getSymbol() {
-		return symbol.asItem();
+		if(symbol != null) {
+			return symbol.asItem();
+		} else {
+			return null;
+		}
 	}
 
 	public <W extends WTabToggle> W setSymbol(ItemConvertible symbol) {
