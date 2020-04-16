@@ -77,7 +77,7 @@ public class WDropdown extends WAbstractWidget implements WDrawableCollection, W
 
 		if (hasLabel()) {
 			TextRenderer.pass().shadow(isLabelShadowed())
-					.text(getLabel()).at(x + sX / 2 - TextRenderer.width(getLabel()) / 2, y + 6, z)
+					.text(getLabel()).at(x + 8, y + 6, z)
 					.color(getStyle().asColor("label.color")).shadowColor(getStyle().asColor("label.shadow_color")).render();
 
 			if (getState()) {

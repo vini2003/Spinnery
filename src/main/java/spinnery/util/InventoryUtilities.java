@@ -66,10 +66,14 @@ public class InventoryUtilities {
 
 		for (int position = 0; position < inventory.getInvSize(); ++position) {
 			if (inventory.getInvStack(position) != null && inventory.getInvStack(position) != ItemStack.EMPTY) {
-				CompoundTag stackTag = StackUtilities.write(inventory.getInvStack(position));
+				ItemStack stack = inventory.getInvStack(position);
 
-				if (stackTag != StackUtilities.TAG_EMPTY) {
-					stacksTag.put(String.valueOf(position), stackTag);
+				if (stack != null && !stack.isEmpty()) {
+					CompoundTag stackTag = StackUtilities.write(inventory.getInvStack(position));
+
+					if (stackTag != StackUtilities.TAG_EMPTY) {
+						stacksTag.put(String.valueOf(position), stackTag);
+					}
 				}
 			}
 		}

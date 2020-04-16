@@ -26,10 +26,8 @@ public class WPanel extends WAbstractWidget implements WModifiableCollection, WD
 
 		if (hasLabel()) {
 			TextRenderer.pass().shadow(isLabelShadowed())
-					.text(getLabel()).at(x + sX / 2 - TextRenderer.width(getLabel()) / 2, y + 6, z)
+					.text(getLabel()).at(x + 8, y + 6, z)
 					.color(getStyle().asColor("label.color")).shadowColor(getStyle().asColor("label.shadow_color")).render();
-			BaseRenderer.drawRectangle(x, y + 16, z, sX, 1, getStyle().asColor("outline"));
-			BaseRenderer.drawRectangle(x + 1, y + 17, z, sX - 2, 0.75, getStyle().asColor("shadow"));
 		}
 
 		for (WLayoutElement widget : getOrderedWidgets()) {

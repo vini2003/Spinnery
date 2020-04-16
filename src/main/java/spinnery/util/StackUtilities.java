@@ -15,7 +15,6 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class StackUtilities {
-	public static final Identifier ITEM_EMPTY = new Identifier("air");
 	public static final CompoundTag TAG_EMPTY = new CompoundTag();
 
 	/**
@@ -27,25 +26,20 @@ public class StackUtilities {
 	public static CompoundTag write(ItemStack stack) {
 		Identifier identifier = Registry.ITEM.getId(stack.getItem());
 
-		if (identifier.equals(ITEM_EMPTY) || stack.getItem() == Items.AIR) {
-			Spinnery.LOGGER.log(Level.WARN, "[Spinnery] ItemStack item for writing is empty, skipping!");
+		if (stack.getCount() < 0) {
+			Spinnery.LOGGER.log(Level.ERROR, "[Spinnery] ItemStack failed to be written: count was smaller than zero!");
 			return TAG_EMPTY;
 		} else {
-			if (stack.getCount() <= 0) {
-				Spinnery.LOGGER.log(Level.ERROR, "[Spinnery] ItemStack failed to be written: count was smaller or equal to zero!");
-				return TAG_EMPTY;
-			} else {
-				CompoundTag tag = new CompoundTag();
+			CompoundTag tag = new CompoundTag();
 
-				tag.putString("id", identifier.toString());
-				tag.putInt("count", stack.getCount());
+			tag.putString("id", identifier.toString());
+			tag.putInt("count", stack.getCount());
 
-				if (stack.hasTag()) {
-					tag.put("tag", stack.getTag());
-				}
-
-				return tag;
+			if (stack.hasTag()) {
+				tag.put("tag", stack.getTag());
 			}
+
+			return tag;
 		}
 	}
 
@@ -75,17 +69,17 @@ public class StackUtilities {
 			} else {
 				Identifier identifier = Identifier.tryParse(identifierString);
 
-				if (!stackTag.contains("Count")) {
-					Spinnery.LOGGER.log(Level.ERROR, "[Spinnery] ItemStack failed to be read: " + CompoundTag.class.getName() + " does not contain 'Count' value!");
+				if (!stackTag.contains("count")) {
+					Spinnery.LOGGER.log(Level.ERROR, "[Spinnery] ItemStack failed to be read: " + CompoundTag.class.getName() + " does not contain 'count' value!");
 					return ItemStack.EMPTY;
 				} else {
-					int count = stackTag.getInt("Count");
+					int count = stackTag.getInt("count");
 
-					if (count <= 0) {
-						Spinnery.LOGGER.log(Level.ERROR, "[Spinnery] ItemStack failed to be read: count was smaller or equal to zero!");
+					if (count < 0) {
+						Spinnery.LOGGER.log(Level.ERROR, "[Spinnery] ItemStack failed to be read: count was smaller than zero!");
 						return ItemStack.EMPTY;
 					} else {
-						if (!Registry.ITEM.containsId(identifier) || identifier.equals(ITEM_EMPTY)) {
+						if (!Registry.ITEM.containsId(identifier)) {
 							Spinnery.LOGGER.log(Level.ERROR, "[Spinnery] ItemStack failed to be read: item registry did not contain a valid item identifier!");
 							return ItemStack.EMPTY;
 						} else {

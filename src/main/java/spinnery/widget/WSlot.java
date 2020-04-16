@@ -64,7 +64,7 @@ public class WSlot extends WAbstractWidget {
 	@Environment(EnvType.CLIENT)
 	public static Collection<WSlot> addPlayerInventory(Position position, Size size, WModifiableCollection parent) {
 		Collection<WSlot> set = addArray(position, size, parent, 9, BaseContainer.PLAYER_INVENTORY, 9, 3);
-		set.addAll(addArray(position.add(0, size.getHeight() * 3 + 3, 0), size, parent, 0, BaseContainer.PLAYER_INVENTORY, 9, 1));
+		set.addAll(addArray(position.add(0, size.getHeight() * 3 + 4, 0), size, parent, 0, BaseContainer.PLAYER_INVENTORY, 9, 1));
 		return set;
 	}
 

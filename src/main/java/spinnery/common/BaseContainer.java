@@ -409,7 +409,7 @@ public class BaseContainer extends Container {
 	 */
 	@Override
 	public void sendContentUpdates() {
-		if (!(this.getPlayerInventory().player instanceof ServerPlayerEntity) || FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT)
+		if (!(this.getPlayerInventory().player instanceof ServerPlayerEntity))
 			return;
 
 		for (WAbstractWidget widget : serverInterface.getAllWidgets()) {
@@ -421,7 +421,7 @@ public class BaseContainer extends Container {
 					ItemStack stackA = slotA.getStack();
 					ItemStack stackB = cachedInventories.get(slotA.getInventoryNumber()).get(slotA.getSlotNumber());
 
-					if ((stackA.getTag() != stackB.getTag() || stackA.getItem() != stackB.getItem() || (!stackA.isEmpty() && !stackB.isEmpty() && stackA.getCount() != stackB.getCount()))) {
+					if (stackA.getItem() != stackB.getItem() || stackA.getCount() != stackB.getCount() || (stackA.hasTag() && !stackA.getTag().equals(stackB.getOrCreateTag()))) {
 						ServerSidePacketRegistry.INSTANCE.sendToPlayer(this.getPlayerInventory().player, NetworkRegistry.SLOT_UPDATE_PACKET, NetworkRegistry.createSlotUpdatePacket(syncId, slotA.getSlotNumber(), slotA.getInventoryNumber(), slotA.getStack()));
 					}
 
@@ -432,7 +432,7 @@ public class BaseContainer extends Container {
 					ItemStack stackA = slotA.getStack();
 					ItemStack stackB = Optional.ofNullable(cachedInventories.get(slotA.getInventoryNumber()).get(slotA.getSlotNumber())).orElse(ItemStack.EMPTY);
 
-					if ((stackA.getTag() != stackB.getTag() || stackA.getItem() != stackB.getItem() || (!stackA.isEmpty() && !stackB.isEmpty() && stackA.getCount() != stackB.getCount()))) {
+					if (stackA.getItem() != stackB.getItem() || stackA.getCount() != stackB.getCount() || (stackA.hasTag() && !stackA.getTag().equals(stackB.getOrCreateTag()))) {
 						ServerSidePacketRegistry.INSTANCE.sendToPlayer(this.getPlayerInventory().player, NetworkRegistry.SLOT_UPDATE_PACKET, NetworkRegistry.createSlotUpdatePacket(syncId, slotA.getSlotNumber(), slotA.getInventoryNumber(), slotA.getStack()));
 					}
 
