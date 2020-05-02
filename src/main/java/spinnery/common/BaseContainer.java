@@ -319,9 +319,13 @@ public class BaseContainer extends Container {
 					}
 				} else {
 					if (button == 0) {
+						if (slotA.refuses(stackB)) return;
+
 						slotA.consume(action, Action.Subtype.FROM_CURSOR_TO_SLOT_CUSTOM_FULL_STACK);
 						StackUtilities.merge(inventory::getCursorStack, slotA::getStack, stackB::getMaxCount, slotA::getMaxCount).apply(inventory::setCursorStack, slotA::setStack); // Add to existing // LMB
 					} else {
+						if (slotA.refuses(stackB)) return;
+
 						slotA.consume(action, Action.Subtype.FROM_CURSOR_TO_SLOT_CUSTOM_SINGLE_ITEM);
 						StackUtilities.merge(inventory::getCursorStack, slotA::getStack, inventory.getCursorStack()::getMaxCount, () -> (slotA.getStack().getCount() == slotA.getMaxCount() ? 0 : slotA.getStack().getCount() + 1)).apply(inventory::setCursorStack, slotA::setStack); // Add to existing // RMB
 					}
