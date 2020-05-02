@@ -6,7 +6,7 @@ import spinnery.util.JanksonUtilities;
 import java.util.Objects;
 
 /**
- * Data class representing a position offset relative to an anchor. By default, the anchor is <tt>ORIGIN</tt>,
+ * Data class representing a position offset relative to an anchor. By default, the anchor is ORIGIN,
  * a position with all 0 coordinates.
  */
 public class Position implements WPositioned, JanksonSerializable {
@@ -70,7 +70,7 @@ public class Position implements WPositioned, JanksonSerializable {
 	}
 
 	/**
-	 * Creates a position with the given coordinates relative to <tt>anchor</tt>.
+	 * Creates a position with the given coordinates relative to anchor.
 	 *
 	 * @param anchor anchor
 	 * @param x      relative x
@@ -82,7 +82,7 @@ public class Position implements WPositioned, JanksonSerializable {
 	}
 
 	/**
-	 * Creates a position with the given coordinates relative to <tt>anchor</tt> and 0 Z offset.
+	 * Creates a position with the given coordinates relative to anchor and 0 Z offset.
 	 *
 	 * @param anchor anchor
 	 * @param x      relative x

@@ -7,7 +7,7 @@ import spinnery.widget.api.WModifiableCollection;
 
 /**
  * This class represents the mechanism for creating widgets given a widget type. Instances of this class must
- * have a non-null {@link WModifiableCollection} <tt>parent</tt>, which widgets created via {@link #build(Class)}
+ * have a non-null {@link WModifiableCollection} parent, which widgets created via {@link #build(Class)}
  * are automatically added to.
  *
  * @deprecated Reflective APIs for adding widgets are deprecated.
@@ -23,7 +23,7 @@ public class WWidgetFactory {
 
 	/**
 	 * Builds a widget given the class. Formally, this creates a widget using {@link #buildDetached(Class)} and
-	 * assigns certain properties to the widget to make it a fully valid child of the factory's <tt>parent</tt>.
+	 * assigns certain properties to the widget to make it a fully valid child of the factory's parent.
 	 * These assignments include setting the widget's interface to the factory parent's (or the factory parent
 	 * itself, if it is a WInterface), setting the widget's parent to the factory's parent, and adding the widget
 	 * to the parent {@link WModifiableCollection}.
@@ -47,7 +47,7 @@ public class WWidgetFactory {
 
 	/**
 	 * Builds a detached widget given the class. This is a type-safe operation that instantiates the
-	 * widget using the default no-args constructor, returning <tt>null</tt> and logging an error if
+	 * widget using the default no-args constructor, returning null and logging an error if
 	 * the instantiation call failed.
 	 *
 	 * @param tClass widget class

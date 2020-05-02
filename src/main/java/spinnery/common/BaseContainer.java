@@ -302,7 +302,13 @@ public class BaseContainer extends Container {
 							if (!stackB.isEmpty() && slotA.refuses(stackB)) return;
 
 							slotA.consume(action, Action.Subtype.FROM_CURSOR_TO_SLOT_DEFAULT_FULL_STACK);
-							StackUtilities.merge(stackA, stackB, stackA.isEmpty() || slotA.getInventoryNumber() == PLAYER_INVENTORY ? stackB.getMaxCount() : slotA.getMaxCount(), stackB.getMaxCount()).apply(slotA::acceptStack, inventory::setCursorStack);
+
+							if (!StackUtilities.equalItemAndTag(stackA, stackB)) {
+								slotA.setStack(stackB);
+								player.inventory.setCursorStack(stackA);
+							} else {
+								StackUtilities.merge(stackA, stackB, stackA.isEmpty() || slotA.getInventoryNumber() == PLAYER_INVENTORY ? stackB.getMaxCount() : slotA.getMaxCount(), stackB.getMaxCount()).apply(slotA::acceptStack, inventory::setCursorStack);
+							}
 						}
 					} else if (button == 1 && !stackB.isEmpty()) { // Interact with existing // RMB
 						slotA.consume(action, Action.Subtype.FROM_CURSOR_TO_SLOT_CUSTOM_SINGLE_ITEM);

@@ -29,7 +29,7 @@ public interface WModifiableCollection extends WCollection {
 	void remove(WAbstractWidget... widgets);
 
 	/**
-	 * Convenience method for short-circuiting <tt>getFactory().build(Class)</tt>.
+	 * Convenience method for short-circuiting getFactory().build(Class).
 	 *
 	 * @param wClass widget class
 	 * @return created widget
@@ -41,7 +41,7 @@ public interface WModifiableCollection extends WCollection {
 	}
 
 	/**
-	 * Convenience method for short-circuiting <tt>factory.get()</tt>.
+	 * Convenience method for short-circuiting factory.get().
 	 *
 	 * @param factory widget factory
 	 * @return created widget
@@ -51,7 +51,7 @@ public interface WModifiableCollection extends WCollection {
 	}
 
 	/**
-	 * Convenience method for short-circuiting <tt>getFactory().build(Class)</tt> and setting the widget's
+	 * Convenience method for short-circuiting getFactory().build(Class) and setting the widget's
 	 * position and size.
 	 *
 	 * @param wClass   widget class
@@ -66,7 +66,7 @@ public interface WModifiableCollection extends WCollection {
 	}
 
 	/**
-	 * Convenience method for short-circuiting <tt>factory.get()</tt> and setting the widget's
+	 * Convenience method for short-circuiting factory.get() and setting the widget's
 	 * position and size.
 	 *
 	 * @param factory  widget factory
@@ -106,7 +106,7 @@ public interface WModifiableCollection extends WCollection {
 	}
 
 	/**
-	 * Convenience method for short-circuiting <tt>getFactory().build(Class)</tt> and setting the widget's
+	 * Convenience method for short-circuiting getFactory().build(Class) and setting the widget's
 	 * position.
 	 *
 	 * @param wClass   widget class

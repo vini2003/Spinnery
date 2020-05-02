@@ -8,7 +8,7 @@ import spinnery.widget.api.WFocusedMouseListener;
 public class EventUtilities {
 	/**
 	 * Returns whether a widget is eligible to receive a mouse event. If the widget is a focused mouse listener,
-	 * returns <tt>true</tt> only if it is focused; otherwise, always returns true.
+	 * returns true only if it is focused; otherwise, always returns true.
 	 *
 	 * @return true if mouse event should go through.
 	 */
@@ -23,7 +23,7 @@ public class EventUtilities {
 
 	/**
 	 * Returns whether a widget is eligible to receive a keyboard event. If the widget is a focused keyboard listener,
-	 * returns <tt>true</tt> only if it is focused; otherwise, always returns true.
+	 * returns true only if it is focused; otherwise, always returns true.
 	 *
 	 * @return true if mouse event should go through.
 	 */
