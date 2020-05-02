@@ -18,7 +18,7 @@ public class InventoryUtilities {
 	@Deprecated
 	public static <T extends Inventory> CompoundTag writeUnsafe(T inventory, CompoundTag tag) {
 		for (int i = 0; i < inventory.getInvSize(); ++i) {
-			tag.put(String.valueOf(i), StackUtilities.write(inventory.getInvStack(i)));
+			tag.put(String.valueOf(i), inventory.getInvStack(i).toTag(new CompoundTag()));
 		}
 
 		return tag;
@@ -33,7 +33,7 @@ public class InventoryUtilities {
 	public static <T extends Inventory> T readUnsafe(T inventory, CompoundTag tag) {
 		for (int i = 0; i < inventory.getInvSize(); ++i) {
 			try {
-				inventory.setInvStack(i, StackUtilities.read((CompoundTag) tag.get(String.valueOf(i))));
+				inventory.setInvStack(i, ItemStack.fromTag((CompoundTag) tag.get(String.valueOf(i))));
 			} catch (IndexOutOfBoundsException exception) {
 				Spinnery.LOGGER.log(Level.ERROR, "[Spinnery] Inventory contents failed to be written: inventory size smaller than necessary!");
 				return inventory;
@@ -69,7 +69,7 @@ public class InventoryUtilities {
 				ItemStack stack = inventory.getInvStack(position);
 
 				if (stack != null && !stack.isEmpty()) {
-					CompoundTag stackTag = StackUtilities.write(inventory.getInvStack(position));
+					CompoundTag stackTag = inventory.getInvStack(position).toTag(new CompoundTag());
 
 					if (stackTag != StackUtilities.TAG_EMPTY) {
 						stacksTag.put(String.valueOf(position), stackTag);
@@ -136,7 +136,7 @@ public class InventoryUtilities {
 									} else {
 										CompoundTag stackTag = (CompoundTag) rawStackTag;
 
-										ItemStack stack = StackUtilities.read(stackTag);
+										ItemStack stack = ItemStack.fromTag(stackTag);
 
 										if (stack == ItemStack.EMPTY) {
 											Spinnery.LOGGER.log(Level.WARN, "[Spinnery] Inventory stack skipped: stack was empty!");

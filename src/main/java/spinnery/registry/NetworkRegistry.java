@@ -50,7 +50,7 @@ public class NetworkRegistry {
 		buffer.writeInt(syncId);
 		buffer.writeInt(slotNumber);
 		buffer.writeInt(inventoryNumber);
-		buffer.writeCompoundTag(StackUtilities.write(stack));
+		buffer.writeCompoundTag(stack.toTag(new CompoundTag()));
 		return buffer;
 	}
 
@@ -220,7 +220,7 @@ public class NetworkRegistry {
 					int slotNumber = packetByteBuffer.readInt();
 					int inventoryNumber = packetByteBuffer.readInt();
 					CompoundTag tag = packetByteBuffer.readCompoundTag();
-					ItemStack stack = StackUtilities.read(tag);
+					ItemStack stack = ItemStack.fromTag(tag);
 
 					packetContext.getTaskQueue().execute(() -> {
 						if (packetContext.getPlayer().container instanceof BaseContainer && packetContext.getPlayer().container.syncId == syncId) {

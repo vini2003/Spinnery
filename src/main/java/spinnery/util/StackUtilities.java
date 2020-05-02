@@ -18,100 +18,6 @@ public class StackUtilities {
 	public static final CompoundTag TAG_EMPTY = new CompoundTag();
 
 	/**
-	 * Write item stack to compound NBT with support for counts greater than 64.
-	 *
-	 * @param stack ItemStack CompoundTag will be written from.
-	 * @return ItemStack from tag.
-	 */
-	public static CompoundTag write(ItemStack stack) {
-		Identifier identifier = Registry.ITEM.getId(stack.getItem());
-
-		if (stack.getCount() < 0) {
-			Spinnery.LOGGER.log(Level.ERROR, "[Spinnery] ItemStack failed to be written: count was smaller than zero!");
-			return TAG_EMPTY;
-		} else {
-			CompoundTag tag = new CompoundTag();
-
-			tag.putString("id", identifier.toString());
-			tag.putInt("count", stack.getCount());
-
-			if (stack.hasTag()) {
-				tag.put("tag", stack.getTag());
-			}
-
-			return tag;
-		}
-	}
-
-	/**
-	 * Read item stack from CompoundTag with support for counts greater than 64.
-	 *
-	 * @param stackTag CompoundTag ItemStack will be read from.
-	 * @return ItemStack from tag.
-	 */
-	public static ItemStack read(CompoundTag stackTag) {
-		// Backwards compatibility.
-		if (stackTag.contains("Count")) {
-			stackTag.put("count", stackTag.get("Count"));
-		}
-
-		ItemStack stack;
-
-		if (!stackTag.contains("id")) {
-			Spinnery.LOGGER.log(Level.ERROR, "[Spinnery] ItemStack failed to be read: " + CompoundTag.class.getName() + " does not contain 'id' value!");
-			return ItemStack.EMPTY;
-		} else {
-			String identifierString = stackTag.getString("id");
-
-			if (!Identifier.isValid(identifierString)) {
-				Spinnery.LOGGER.log(Level.ERROR, "[Spinnery] ItemStack failed to be read: " + CompoundTag.class.getName() + "'s 'id' value is not a valid " + Identifier.class.getName() + "!");
-				return ItemStack.EMPTY;
-			} else {
-				Identifier identifier = Identifier.tryParse(identifierString);
-
-				if (!stackTag.contains("count")) {
-					Spinnery.LOGGER.log(Level.ERROR, "[Spinnery] ItemStack failed to be read: " + CompoundTag.class.getName() + " does not contain 'count' value!");
-					return ItemStack.EMPTY;
-				} else {
-					int count = stackTag.getInt("count");
-
-					if (count < 0) {
-						Spinnery.LOGGER.log(Level.ERROR, "[Spinnery] ItemStack failed to be read: count was smaller than zero!");
-						return ItemStack.EMPTY;
-					} else {
-						if (!Registry.ITEM.containsId(identifier)) {
-							Spinnery.LOGGER.log(Level.ERROR, "[Spinnery] ItemStack failed to be read: item registry did not contain a valid item identifier!");
-							return ItemStack.EMPTY;
-						} else {
-							Item item = Registry.ITEM.get(identifier);
-
-							stack = new ItemStack(item, count);
-
-							if (stackTag.contains("tag", 10)) {
-								Tag rawTag = stackTag.get("tag");
-
-								if (!(rawTag instanceof CompoundTag)) {
-									Spinnery.LOGGER.log(Level.WARN, "[Spinnery] ItemStack did not fail to be read, but had a non-standard tag which was discarded!");
-								} else {
-									CompoundTag tagTag = (CompoundTag) rawTag;
-
-									stack.setTag(tagTag);
-								}
-							}
-
-							if (item.isDamageable()) {
-								stack.setDamage(stack.getDamage());
-							}
-						}
-					}
-				}
-			}
-		}
-
-		return stack;
-	}
-
-	/**
 	 * Support merging stacks with customized maximum count.
 	 * You may be wondering why use Suppliers. I ask you,
 	 * instead, why not?
@@ -190,6 +96,6 @@ public class StackUtilities {
 	 * @return True if one and two match in Item and Tag; False if not.
 	 */
 	public static boolean equalItemAndTag(ItemStack stackA, ItemStack stackB) {
-		return ItemStack.areItemsEqual(stackA, stackB) && stackA.getTag() == stackB.getTag();
+		return ItemStack.areItemsEqual(stackA, stackB) && stackA.getTag().equals(stackB.getTag());
 	}
 }

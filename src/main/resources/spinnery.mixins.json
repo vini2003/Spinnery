@@ -3,6 +3,7 @@
   "package": "spinnery.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "ItemStackMixin"
   ],
   "client": [
     "InGameHudMixin"
