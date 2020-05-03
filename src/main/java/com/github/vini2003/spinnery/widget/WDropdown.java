@@ -1,0 +1,220 @@
+package com.github.vini2003.spinnery.widget;
+
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import org.lwjgl.glfw.GLFW;
+import com.github.vini2003.spinnery.client.BaseRenderer;
+import com.github.vini2003.spinnery.client.TextRenderer;
+import com.github.vini2003.spinnery.widget.api.*;
+
+import java.util.*;
+
+@SuppressWarnings("unchecked")
+@OnlyIn(Dist.CLIENT)
+public class WDropdown extends WAbstractWidget implements WDrawableCollection, WModifiableCollection, WDelegatedEventListener {
+	protected Set<WAbstractWidget> widgets = new HashSet<>();
+	protected List<WLayoutElement> orderedWidgets = new ArrayList<>();
+	protected boolean state = false;
+	protected Size dropdownSize;
+	protected WVirtualArea toggle;
+	protected HideBehavior hideBehavior = HideBehavior.TOGGLE;
+
+	@Override
+	public Collection<? extends WEventListener> getEventDelegates() {
+		return getWidgets();
+	}
+
+	@Override
+	public Set<WAbstractWidget> getWidgets() {
+		return widgets;
+	}
+
+	@Override
+	public boolean contains(WAbstractWidget... widgetArray) {
+		return widgets.containsAll(Arrays.asList(widgetArray));
+	}
+
+	public HideBehavior getHideBehavior() {
+		return hideBehavior;
+	}
+
+	public <W extends WDropdown> W setHideBehavior(HideBehavior hideBehavior) {
+		this.hideBehavior = hideBehavior;
+		return (W) this;
+	}
+
+	@Override
+	public void align() {
+		super.align();
+		updateChildren();
+	}
+
+	@Override
+	public boolean updateFocus(int positionX, int positionY) {
+		super.updateFocus(positionX, positionY);
+
+		setFocus(isWithinBounds(positionX, positionY) && getAllWidgets().stream().noneMatch((WAbstractWidget::isFocused)));
+
+		return isFocused();
+	}
+
+	@Override
+	public void draw() {
+		if (isHidden()) {
+			return;
+		}
+
+		int x = getX();
+		int y = getY();
+		int z = getZ();
+
+		int sX = getWidth();
+		int sY = getHeight();
+
+		BaseRenderer.drawPanel(x, y, z, sX, sY + 1.75,
+				getStyle().asColor("shadow"), getStyle().asColor("background"),
+				getStyle().asColor("highlight"), getStyle().asColor("outline"));
+
+		if (hasLabel()) {
+			TextRenderer.pass().shadow(isLabelShadowed())
+					.text(getLabel()).at(x + 8, y + 6, z)
+					.color(getStyle().asColor("label.color")).shadowColor(getStyle().asColor("label.shadow_color")).render();
+
+			if (getState()) {
+				BaseRenderer.drawRectangle(x, y + 16, z, sX, 1, getStyle().asColor("outline"));
+				BaseRenderer.drawRectangle(x + 1, y + 17, z, sX - 2, 0.75, getStyle().asColor("shadow"));
+			}
+		}
+
+		if (getState()) {
+			for (WLayoutElement widgetC : getOrderedWidgets()) {
+				widgetC.draw();
+			}
+		}
+	}
+
+	@Override
+	public int getHeight() {
+		return getToggleHeight() + (state ? dropdownSize.getHeight() : 0);
+	}
+
+	@Override
+	public int getWidth() {
+		return Math.max(getToggleWidth(), state ? dropdownSize.getWidth() : 0);
+	}
+
+	@Override
+	public void onMouseClicked(int mouseX, int mouseY, int mouseButton) {
+		boolean shouldOpen = isWithinBounds(mouseX, mouseY);
+		boolean shouldClose = false;
+
+		super.onMouseClicked(mouseX, mouseY, mouseButton);
+		if (getState()) {
+			switch (hideBehavior) {
+				case TOGGLE:
+					shouldClose = toggle.isWithinBounds(mouseX, mouseY);
+					break;
+				case ANYWHERE:
+					shouldClose = true;
+					break;
+				case INSIDE:
+					shouldClose = isWithinBounds(mouseX, mouseY);
+					break;
+				case ONLY_CHILD:
+					shouldClose = (isWithinBounds(mouseX, mouseY) && !isFocused());
+					break;
+				case ANYWHERE_EXCEPT_CHILD:
+					shouldClose = (!isWithinBounds(mouseX, mouseY) || isFocused());
+					break;
+				case INSIDE_EXCEPT_CHILD:
+					shouldClose = (isWithinBounds(mouseX, mouseY) && isFocused());
+					break;
+			}
+		}
+
+		boolean shouldToggle = !getState() ? shouldOpen : shouldClose;
+
+		if (shouldToggle && mouseButton == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+			setState(!getState());
+			updateChildren();
+		}
+	}
+
+	public boolean getState() {
+		return state;
+	}
+
+	protected void updateChildren() {
+		for (WAbstractWidget widget : widgets) {
+			widget.getPosition().setOffset(0, getToggleHeight() + 2, 0);
+			widget.setHidden(!getState());
+		}
+	}
+
+	public int getToggleHeight() {
+		return super.getHeight();
+	}
+
+	@SuppressWarnings("UnusedReturnValue")
+	public <W extends WDropdown> W setState(boolean state) {
+		this.state = state;
+		updateChildren();
+		return (W) this;
+	}
+
+	public int getToggleWidth() {
+		return super.getWidth();
+	}
+
+	public Size getDropdownSize() {
+		return dropdownSize;
+	}
+
+	public <W extends WDropdown> W setDropdownSize(Size dropdownSize) {
+		this.dropdownSize = dropdownSize;
+		return (W) this;
+	}
+
+	@Override
+	public void add(WAbstractWidget... widgetArray) {
+		widgets.addAll(Arrays.asList(widgetArray));
+		updateChildren();
+		onLayoutChange();
+	}
+
+	@Override
+	public void onLayoutChange() {
+		super.onLayoutChange();
+		toggle = new WVirtualArea(Position.of(this), Size.of(getToggleWidth(), getToggleHeight()));
+		updateChildren();
+		recalculateCache();
+	}
+
+	@Override
+	public void recalculateCache() {
+		orderedWidgets = new ArrayList<>(getWidgets());
+		Collections.sort(orderedWidgets);
+		Collections.reverse(orderedWidgets);
+	}
+
+	@Override
+	public List<WLayoutElement> getOrderedWidgets() {
+		return orderedWidgets;
+	}
+
+	@Override
+	public void remove(WAbstractWidget... widgetArray) {
+		widgets.removeAll(Arrays.asList(widgetArray));
+		updateChildren();
+		onLayoutChange();
+	}
+
+	public enum HideBehavior {
+		TOGGLE,
+		ANYWHERE,
+		ANYWHERE_EXCEPT_CHILD,
+		ONLY_CHILD,
+		INSIDE,
+		INSIDE_EXCEPT_CHILD
+	}
+}
