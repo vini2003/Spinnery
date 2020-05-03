@@ -51,9 +51,6 @@ public class StackUtilities {
 	 * @return Resulting ItemStacks
 	 */
 	public static MutablePair<ItemStack, ItemStack> merge(ItemStack stackA, ItemStack stackB, int maxA, int maxB) {
-		Item itemA = stackA.getItem();
-		Item itemB = stackB.getItem();
-
 		if (equalItemAndTag(stackA, stackB)) {
 			int countA = stackA.getCount();
 			int countB = stackB.getCount();
@@ -70,7 +67,9 @@ public class StackUtilities {
 
 				int countB = stackB.getCount();
 
-				stackA = new ItemStack(itemB, Math.min(countB, availableA));
+				stackA = stackB.copy();
+				stackA.setCount(Math.min(countB, availableA));
+
 				stackA.setTag(stackB.getTag());
 				stackB.decrement(Math.min(countB, availableA));
 			} else if (stackB.isEmpty() && !stackA.isEmpty()) {
@@ -79,7 +78,8 @@ public class StackUtilities {
 
 				int countA = stackA.getCount();
 
-				stackB = new ItemStack(itemA, Math.min(countA, availableB));
+				stackB = stackA.copy();
+				stackB.setCount(Math.min(countA, availableB));
 				stackB.setTag(stackA.getTag());
 				stackA.decrement(Math.min(countA, availableB));
 			}
@@ -96,6 +96,6 @@ public class StackUtilities {
 	 * @return True if one and two match in Item and Tag; False if not.
 	 */
 	public static boolean equalItemAndTag(ItemStack stackA, ItemStack stackB) {
-		return ItemStack.areItemsEqual(stackA, stackB) && stackA.getTag().equals(stackB.getTag());
+		return ItemStack.areItemsEqual(stackA, stackB) && stackA.getTag() == stackB.getTag();
 	}
 }
