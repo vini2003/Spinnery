@@ -114,6 +114,20 @@ jar {
     }
 }
 
+shadowJar {
+    manifest {
+        inheritFrom project.jar.manifest
+    }
+
+    dependencies {
+        include(dependency("blue.endless:jankson:1.1.0"))
+    }
+
+    baseName = "${modid}"
+    classifier = group
+    version = version
+}
+
 jar.finalizedBy('reobfJar')
 
 apply plugin: "org.spongepowered.mixin"
@@ -126,11 +140,23 @@ publishing {
     publications {
         mavenJava(MavenPublication) {
             artifact jar
+            artifact shadowJar
         }
     }
     repositories {
         maven {
             url "file:///${project.projectDir}/mcmodsrepo"
         }
+    }
+}
+
+reobf {
+    shadowJar {}
+}
+tasks.reobfShadowJar.mustRunAfter shadowJar
+
+tasks {
+    build {
+        dependsOn(shadowJar)
     }
 }
