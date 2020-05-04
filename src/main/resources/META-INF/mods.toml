@@ -10,7 +10,7 @@
 
     [[mods]]
       modId="spinnery"
-      version="2.0.32"
+      version="2.0.34"
       displayName="Spinnery"
       displayURL="https://github.com/vini2003/Spinnery"
       logoFile="icon.png"

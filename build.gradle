@@ -124,6 +124,36 @@ reobf {
 tasks.reobfShadowJar.mustRunAfter shadowJar
 tasks.build.dependsOn shadowJar
 
+task deobfJar(type: Jar, dependsOn: 'jar') {
+    from "build/source/main"
+    classifier "dev"
+}
+
+artifacts {
+    archives deobfJar
+}
+
+task sourceJar(type: Jar, dependsOn: 'classes') {
+    from "build/sources/java"
+    from "build/resources/main/java"
+    classifier "sources"
+}
+
+artifacts {
+    archives sourceJar
+}
+
+task javadocJar(type: Jar, dependsOn: 'javadoc') {
+    from "build/docs/javadoc"
+    classifier "javadoc"
+}
+
+artifacts {
+    archives javadocJar
+}
+
+jar.finalizedBy('reobfJar')
+
 publishing {
     tasks.publish.dependsOn 'build'
 
@@ -131,9 +161,12 @@ publishing {
         mavenJava(MavenPublication) {
             artifactId 'spinnery'
             groupId 'com.github.vini2003'
-            version '2.0.32+forge-1.15.2'
+            version '2.0.34+forge-1.15.2'
 
             artifact shadowJar
+            artifact deobfJar
+            artifact sourceJar
+            artifact javadocJar
         }
     }
     repositories {
