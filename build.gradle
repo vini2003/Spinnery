@@ -26,7 +26,6 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 apply plugin: 'com.github.johnrengelman.shadow'
-apply plugin: "org.spongepowered.mixin"
 
 version = "${mod_version}"
 group = 'com.vini2003.spinnery'
@@ -118,10 +117,6 @@ shadowJar {
     classifier = ''
 }
 
-mixin {
-    add sourceSets.main, "${modid}.refmap.json"
-}
-
 reobf {
     shadowJar {}
 }
@@ -136,7 +131,7 @@ publishing {
         mavenJava(MavenPublication) {
             artifactId 'spinnery'
             groupId 'com.github.vini2003'
-            version '2.0.31+forge-1.15.2'
+            version '2.0.32+forge-1.15.2'
 
             artifact shadowJar
         }
@@ -164,4 +159,10 @@ bintray {
             vcsTag = project.version
         }
     }
+}
+
+apply plugin: "org.spongepowered.mixin"
+
+mixin {
+    add sourceSets.main, "${modid}.refmap.json"
 }
