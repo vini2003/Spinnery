@@ -126,7 +126,6 @@ shadowJar {
     baseName = 'spinnery'
     appendix = ''
     classifier = 'all'
-    version = version
 }
 
 jar.finalizedBy('reobfJar')
