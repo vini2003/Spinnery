@@ -1,5 +1,6 @@
 package com.github.vini2003.spinnery.debug;
 
+import com.github.vini2003.spinnery.common.BaseInventory;
 import net.minecraft.entity.player.PlayerInventory;
 import com.github.vini2003.spinnery.common.BaseContainerScreen;
 import com.github.vini2003.spinnery.widget.*;
@@ -13,7 +14,7 @@ public class TestContainerScreen extends BaseContainerScreen<TestContainer> {
 
 		WInterface mainInterface = getInterface();
 
-		WPanel panel = mainInterface.createChild(WPanel::new, Position.of(0, 0, 0), Size.of(176, 128));
+		WPanel panel = mainInterface.createChild(WPanel::new, Position.of(0, 0, 0), Size.of(230, 128));
 		panel.centerX(); // Center it on the screen in the X (horizontal) axis.
 		panel.centerY(); // Center it on the screen in the Y (vertical) axis.
 		panel.center(); // Center it on the screen in both axis.
@@ -21,7 +22,12 @@ public class TestContainerScreen extends BaseContainerScreen<TestContainer> {
 
 		panel.setLabel("Furnace");
 
-		WSlot.addPlayerInventory(Position.of(panel, 7, 36, 0), Size.of(18, 18), panel);
+		WSlot.addArray(Position.of(panel, 7, 7, 0), Size.of(18, 18), panel, 0, 1, 3, 9).forEach(slot -> {
+			slot.setOverrideMaximumCount(true);
+			slot.setMaximumCount(256);
+		});
+
+		WSlot.addPlayerInventory(Position.of(panel, 7, 84, 0), Size.of(18, 18), panel);
 
 		getInterface().setTheme("default");
 

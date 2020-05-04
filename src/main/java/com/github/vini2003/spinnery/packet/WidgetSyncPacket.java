@@ -10,7 +10,7 @@ import net.minecraftforge.fml.network.NetworkEvent;
 import java.util.function.Supplier;
 
 public class WidgetSyncPacket {
-	public static final int ID = 3;
+	public static final int ID = 4;
 
 	int widgetSyncId;
 	WNetworked.Event event;
@@ -41,6 +41,8 @@ public class WidgetSyncPacket {
 			if (player != null && player.openContainer instanceof BaseContainer) {
 				((BaseContainer) player.openContainer).onInterfaceEvent(widgetSyncId, event, payload);
 			}
+
+			context.get().setPacketHandled(true);
 		});
 	}
 

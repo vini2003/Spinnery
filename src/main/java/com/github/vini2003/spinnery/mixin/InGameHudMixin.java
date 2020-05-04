@@ -17,12 +17,12 @@ import com.github.vini2003.spinnery.widget.WInterface;
 public class InGameHudMixin implements InGameHudScreen.Accessor {
 	WInterface hudInterface = new WInterface();
 
-	@Inject(method = "<init>", at = @At("RETURN"))
+	@Inject(method = "<init>", at = @At("RETURN"), remap = false)
 	public void onInitialize(Minecraft client, CallbackInfo ci) {
 		InGameHudScreen.onInitialize(getIngameGui());
 	}
 
-	@Inject(method = "renderGameOverlay", at = @At("RETURN"))
+	@Inject(method = "renderGameOverlay", at = @At("RETURN"), remap = false)
 	public void renderInterfaces(float tickDelta, CallbackInfo ci) {
 		hudInterface.draw();
 	}

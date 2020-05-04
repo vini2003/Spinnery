@@ -11,7 +11,7 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class BlockRegistry {
-	//public static final Block TEST_BLOCK = register(new ResourceLocation("test_block"), new TestBlock(Block.Properties.create(Blocks.COBBLESTONE_WALL.getDefaultState().getMaterial())), new Item.Properties().group(ItemGroup.MISC));
+	public static final Block TEST_BLOCK = register(new ResourceLocation("test_block"), new TestBlock(Block.Properties.create(Blocks.COBBLESTONE_WALL.getDefaultState().getMaterial())), new Item.Properties().group(ItemGroup.MISC));
 
 	public BlockRegistry() {
 		// NO-OP
@@ -22,7 +22,7 @@ public class BlockRegistry {
 	}
 
 	public static void register(RegistryEvent.Register<Block> blockRegister) {
-		//blockRegister.getRegistry().register(TEST_BLOCK);
+		blockRegister.getRegistry().register(TEST_BLOCK);
 	}
 
 	public static <B extends Block> B register(ResourceLocation ID, B block, Item.Properties properties) {

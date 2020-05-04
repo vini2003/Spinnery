@@ -123,8 +123,9 @@ shadowJar {
         include(dependency("blue.endless:jankson:1.1.0"))
     }
 
-    baseName = "${modid}"
-    classifier = group
+    baseName = 'spinnery'
+    appendix = ''
+    classifier = 'all'
     version = version
 }
 
@@ -139,6 +140,10 @@ mixin {
 publishing {
     publications {
         mavenJava(MavenPublication) {
+            artifactId 'spinnery'
+            groupId 'com.github.vini2003'
+            version '2.0.29+forge-1.15.2'
+
             artifact jar
             artifact shadowJar
         }

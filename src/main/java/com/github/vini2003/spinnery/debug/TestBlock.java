@@ -38,8 +38,8 @@ public class TestBlock extends Block {
 
 				@Nullable
 				@Override
-				public Container createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity player) {
-					return new TestContainer(syncId, playerInventory);
+				public Container createMenu(int windowId, PlayerInventory playerInventory, PlayerEntity player) {
+					return new TestContainer(windowId, playerInventory);
 				}
 			});
 		}

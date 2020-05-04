@@ -3,6 +3,7 @@ package com.github.vini2003.spinnery.packet;
 import com.github.vini2003.spinnery.common.BaseContainer;
 import com.github.vini2003.spinnery.widget.WAbstractWidget;
 import com.github.vini2003.spinnery.widget.WSlot;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -12,7 +13,7 @@ import net.minecraftforge.fml.network.NetworkEvent;
 import java.util.function.Supplier;
 
 public class SlotUpdatePacket {
-	public static final int ID =3;
+	public static final int ID = 2;
 
 	int syncId;
 	int slotNumber;
@@ -42,9 +43,9 @@ public class SlotUpdatePacket {
 
 	public static void handle(SlotUpdatePacket packet, Supplier<NetworkEvent.Context> context) {
 		context.get().enqueueWork(() -> {
-			PlayerEntity player = context.get().getSender();
+			PlayerEntity player = Minecraft.getInstance().player;
 
-			if (player.openContainer instanceof BaseContainer && player.openContainer.windowId == packet.syncId) {
+			if (player.openContainer instanceof BaseContainer) {
 				BaseContainer container = (BaseContainer) player.openContainer;
 
 				container.getInventory(packet.inventoryNumber).setInventorySlotContents(packet.slotNumber, packet.stack);
@@ -55,6 +56,8 @@ public class SlotUpdatePacket {
 					}
 				}
 			}
+
+			context.get().setPacketHandled(true);
 		});
 	}
 }

@@ -1,5 +1,7 @@
 package com.github.vini2003.spinnery.debug;
 
+import com.github.vini2003.spinnery.widget.api.Position;
+import com.github.vini2003.spinnery.widget.api.Size;
 import net.minecraft.entity.player.PlayerInventory;
 import com.github.vini2003.spinnery.common.BaseContainer;
 import com.github.vini2003.spinnery.common.BaseInventory;
@@ -26,7 +28,11 @@ public class TestContainer extends BaseContainer {
 
 		addInventory(1, inv);
 
+		WSlot.addHeadlessArray(getInterface(), 0, 1, 3, 9).forEach(slot -> {
+			slot.setOverrideMaximumCount(true);
+			slot.setMaximumCount(256);
+		});
+
 		WSlot.addHeadlessPlayerInventory(getInterface());
-		WSlot.addHeadlessArray(getInterface(), 0, 1, 32, 32);
 	}
 }

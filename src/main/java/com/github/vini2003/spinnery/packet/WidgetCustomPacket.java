@@ -11,7 +11,7 @@ import net.minecraftforge.fml.network.NetworkEvent;
 import java.util.function.Supplier;
 
 public class WidgetCustomPacket {
-	public static final int ID = 2;
+	public static final int ID = 3;
 
 	public int syncId;
 	public WNetworked.Event event;
@@ -40,6 +40,8 @@ public class WidgetCustomPacket {
 			if (context.get().getSender().openContainer instanceof BaseContainer) {
 				((BaseContainer) context.get().getSender().openContainer).onInterfaceEvent(packet.syncId, packet.event, packet.payload);
 			}
+
+			context.get().setPacketHandled(true);
 		});
 	}
 }

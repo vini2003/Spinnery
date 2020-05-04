@@ -10,12 +10,12 @@
 
     [[mods]]
       modId="spinnery"
-      version="2.0.28"
+      version="2.0.29"
       displayName="Spinnery"
       displayURL="https://github.com/vini2003/Spinnery"
       logoFile="icon.png"
       credits="The Spinnery contributors on GitHub for making this possible!"
-      authors="Author"
+      authors="vini2003, EngiN33R, and all the GitHub contributors"
       description='''
         A powerful, simple, and elegant interface library. 
       '''

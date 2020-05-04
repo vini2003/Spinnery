@@ -41,9 +41,11 @@ public class SlotDragPacket {
 		context.get().enqueueWork(() -> {
 			PlayerEntity player = context.get().getSender();
 
-			if (player.openContainer instanceof BaseContainer && player.container.windowId == packet.syncId) {
+			if (player.openContainer instanceof BaseContainer) {
 				((BaseContainer) player.openContainer).onSlotDrag(packet.slotNumbers, packet.inventoryNumbers, packet.action);
 			}
+
+			context.get().setPacketHandled(true);
 		});
 	}
 }

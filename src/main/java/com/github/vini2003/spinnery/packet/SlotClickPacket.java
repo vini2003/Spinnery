@@ -45,9 +45,11 @@ public class SlotClickPacket {
 		context.get().enqueueWork(() -> {
 			PlayerEntity player = context.get().getSender();
 
-			if (player.openContainer instanceof BaseContainer && player.container.windowId == packet.syncId) {
+			if (player.openContainer instanceof BaseContainer) {
 				((BaseContainer) player.openContainer).onSlotAction(packet.slotNumber, packet.inventoryNumber, packet.button, packet.action, player);
 			}
+
+			context.get().setPacketHandled(true);
 		});
 	}
 }
