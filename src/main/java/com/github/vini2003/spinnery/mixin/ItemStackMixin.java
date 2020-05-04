@@ -17,17 +17,17 @@ public abstract class ItemStackMixin {
 	@Shadow
 	private int count;
 
-	@Inject(at = @At("TAIL"), method = "<init>(Lnet/minecraft/nbt/CompoundNBT;)V", remap = false)
+	@Inject(at = @At("TAIL"), method = "<init>(Lnet/minecraft/nbt/CompoundNBT;)V")
 	void onDeserialization(CompoundNBT tag, CallbackInfo callbackInformation) {
-		if (tag.contains("iCount")) {
-			setCount(tag.getInt("iCount"));
+		if (tag.contains("countInteger")) {
+			setCount(tag.getInt("countInteger"));
 		}
 	}
 
-	@Inject(at = @At("HEAD"), method = "write(Lnet/minecraft/nbt/CompoundNBT;)Lnet/minecraft/nbt/CompoundNBT;", remap = false)
+	@Inject(at = @At("HEAD"), method = "write(Lnet/minecraft/nbt/CompoundNBT;)Lnet/minecraft/nbt/CompoundNBT;")
 	void onSerialization(CompoundNBT tag, CallbackInfoReturnable<CompoundNBT> callbackInformationReturnable) {
 		if (this.count > Byte.MAX_VALUE) {
-			tag.putInt("iCount", this.count);
+			tag.putInt("countInteger", this.count);
 		}
 	}
 }

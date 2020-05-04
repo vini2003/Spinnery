@@ -17,70 +17,22 @@ buildscript {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
         classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
         classpath 'com.github.jengelman.gradle.plugins:shadow:4.0.4'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.+'
     }
 }
+
+apply plugin: 'com.jfrog.bintray'
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 apply plugin: 'com.github.johnrengelman.shadow'
+apply plugin: "org.spongepowered.mixin"
 
 version = "${mod_version}"
 group = 'com.vini2003.spinnery'
 archivesBaseName = "${modid}"
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
-
-minecraft {
-    mappings channel: 'snapshot', version: '20200503-1.15.1'
-
-    runs {
-        client {
-            workingDirectory project.file('run')
-
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-            arg "-mixin.config="+archivesBaseName+".mixins.json"
-
-            property 'forge.logging.console.level', 'debug'
-
-            mods {
-                examplemod {
-                    source sourceSets.main
-                }
-            }
-        }
-
-        server {
-            workingDirectory project.file('run')
-
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-            arg "-mixin.config="+archivesBaseName+".mixins.json"
-
-            property 'forge.logging.console.level', 'debug'
-
-            mods {
-                examplemod {
-                    source sourceSets.main
-                }
-            }
-        }
-
-        data {
-            workingDirectory project.file('run')
-
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-
-            property 'forge.logging.console.level', 'debug'
-
-            args '--mod', 'examplemod', '--all', '--output', file('src/generated/resources/')
-
-            mods {
-                examplemod {
-                    source sourceSets.main
-                }
-            }
-        }
-    }
-}
 
 repositories {
     maven {
@@ -97,6 +49,44 @@ dependencies {
     implementation "org.spongepowered:mixin:0.8"
 
     implementation "blue.endless:jankson:1.1.0"
+}
+
+minecraft {
+    mappings channel: 'snapshot', version: '20200503-1.15.1'
+
+    runs {
+        client {
+            workingDirectory project.file('run')
+
+            mods {
+                examplemod {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        server {
+            workingDirectory project.file('run')
+
+            mods {
+                examplemod {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        data {
+            workingDirectory project.file('run')
+
+            args '--mod', 'examplemod', '--all', '--output', file('src/generated/resources/')
+
+            mods {
+                examplemod {
+                    source sourceSets.main
+                }
+            }
+        }
+    }
 }
 
 jar {
@@ -125,25 +115,29 @@ shadowJar {
 
     baseName = 'spinnery'
     appendix = ''
-    classifier = 'all'
+    classifier = ''
 }
-
-jar.finalizedBy('reobfJar')
-
-apply plugin: "org.spongepowered.mixin"
 
 mixin {
     add sourceSets.main, "${modid}.refmap.json"
 }
 
+reobf {
+    shadowJar {}
+}
+
+tasks.reobfShadowJar.mustRunAfter shadowJar
+tasks.build.dependsOn shadowJar
+
 publishing {
+    tasks.publish.dependsOn 'build'
+
     publications {
         mavenJava(MavenPublication) {
             artifactId 'spinnery'
             groupId 'com.github.vini2003'
-            version '2.0.29+forge-1.15.2'
+            version '2.0.31+forge-1.15.2'
 
-            artifact jar
             artifact shadowJar
         }
     }
@@ -154,13 +148,20 @@ publishing {
     }
 }
 
-reobf {
-    shadowJar {}
-}
-tasks.reobfShadowJar.mustRunAfter shadowJar
-
-tasks {
-    build {
-        dependsOn(shadowJar)
+bintray {
+    user = System.getenv("BINTRAY_USER")
+    key = System.getenv("BINTRAY_KEY")
+    publications = ['mavenJava']
+    pkg {
+        repo = 'Spinnery'
+        name = 'spinnery'
+        userOrg = 'spinnery'
+        licenses = ['LGPL-3.0']
+        vcsUrl = 'https://github.com/vini2003/Spinnery.git'
+        version {
+            name = project.version
+            released  = new Date()
+            vcsTag = project.version
+        }
     }
 }

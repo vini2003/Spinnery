@@ -21,13 +21,19 @@ public class Spinnery {
 	public Spinnery() {
 		IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
-		eventBus.addListener(this::registerResources);
 		eventBus.addListener(this::initializeCommon);
+		eventBus.addListener(this::initializeClient);
+
+		eventBus.addListener(this::registerResources);
 		eventBus.addListener(this::registerWidgets);
 	}
 
+	public void initializeClient(FMLClientSetupEvent event) {
+		NetworkRegistry.initializeClient();
+	}
+
 	public void initializeCommon(FMLCommonSetupEvent event) {
-		NetworkRegistry.initialize();
+		NetworkRegistry.initializeServer();
 	}
 
 	public void registerResources(FMLClientSetupEvent resourceRegister) {

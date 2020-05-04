@@ -127,11 +127,14 @@ public class NetworkRegistry {
 		INSTANCE.sendToServer(NetworkRegistry.createCustomInterfaceEventPacket(widget, payload));
 	}
 
-	public static void initialize() {
+	public static void initializeServer() {
 		INSTANCE.registerMessage(SlotClickPacket.ID, SlotClickPacket.class, SlotClickPacket::encode, SlotClickPacket::new, SlotClickPacket::handle);
 		INSTANCE.registerMessage(SlotDragPacket.ID, SlotDragPacket.class, SlotDragPacket::encode, SlotDragPacket::new, SlotDragPacket::handle);
-		INSTANCE.registerMessage(SlotUpdatePacket.ID, SlotUpdatePacket.class, SlotUpdatePacket::encode, SlotUpdatePacket::new, SlotUpdatePacket::handle);
 		INSTANCE.registerMessage(WidgetSyncPacket.ID, WidgetSyncPacket.class, WidgetSyncPacket::encode, WidgetSyncPacket::new, WidgetSyncPacket::handle);
 		INSTANCE.registerMessage(WidgetCustomPacket.ID, WidgetCustomPacket.class, WidgetCustomPacket::encode, WidgetCustomPacket::new, WidgetCustomPacket::handle);
+	}
+
+	public static void initializeClient() {
+		INSTANCE.registerMessage(SlotUpdatePacket.ID, SlotUpdatePacket.class, SlotUpdatePacket::encode, SlotUpdatePacket::new, SlotUpdatePacket::handle);
 	}
 }
