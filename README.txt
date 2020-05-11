@@ -1,53 +1,34 @@
--------------------------------------------
-Source installation information for modders
--------------------------------------------
-This code follows the Minecraft Forge installation methodology. It will apply
-some small patches to the vanilla MCP source code, giving you and it access 
-to some of the data and functions you need to build a successful mod.
+# Spinnery, ahoy!
 
-Note also that the patches are built against "unrenamed" MCP source code (aka
-srgnames) - this means that you will not be able to read them directly against
-normal code.
+[ ![Download](https://api.bintray.com/packages/spinnery/Spinnery/spinnery/images/download.svg) ](https://bintray.com/spinnery/Spinnery/spinnery/_latestVersion)
 
-Source pack installation information:
+![Spinnery](https://i.imgur.com/Mu1EqaK.png)
 
-Standalone source installation
-==============================
+Spinnery is a modern, feature-complete GUI library for Minecraft 1.15 and 1.16, with a focus on making the GUI design and user experience significantly smoother and less nonsensic.
 
-See the Forge Documentation online for more detailed instructions:
-http://mcforge.readthedocs.io/en/latest/gettingstarted/
+# Setup
 
-Step 1: Open your command-line and browse to the folder where you extracted the zip file.
+Firstly, add Spinnery's Bintray to your `build.gradle`'s `repositories`:
 
-Step 2: You're left with a choice.
-If you prefer to use Eclipse:
-1. Run the following command: "gradlew genEclipseRuns" (./gradlew genEclipseRuns if you are on Mac/Linux)
-2. Open Eclipse, Import > Existing Gradle Project > Select Folder 
-   or run "gradlew eclipse" to generate the project.
-(Current Issue)
-4. Open Project > Run/Debug Settings > Edit runClient and runServer > OnlyIn
-5. Edit MOD_CLASSES to show [modid]%%[Path]; 2 times rather then the generated 4.
+```gradle
+	maven {
+		name = "Spinnery"
+		url  "https://dl.bintray.com/spinnery/Spinnery"
+	}
+```
 
-If you prefer to use IntelliJ:
-1. Open IDEA, and import project.
-2. Select your build.gradle file and have it import.
-3. Run the following command: "gradlew genIntellijRuns" (./gradlew genIntellijRuns if you are on Mac/Linux)
-4. Refresh the Gradle Project in IDEA if required.
+Afterwards, add it to your project:
 
-If at any point you are missing libraries in your IDE, or you've run into problems you can run "gradlew --refresh-dependencies" to refresh the local cache. "gradlew clean" to reset everything {this does not affect your code} and then start the processs again.
+```gradle
+	// Spinnery
+	implementation "com.github.vini2003:spinnery:${project.spinnery_version}"
+```
+  
+ As you may realize, that's using a variable defined in `gradle.properties` for the version:
+ 
+ ```gradle
+ # Mod Properties
+  spinnery_version = VERSION
+```
 
-Should it still not work, 
-Refer to #ForgeGradle on EsperNet for more information about the gradle environment.
-or the Forge Project Discord discord.gg/UvedJ9m
-
-Forge source installation
-=========================
-MinecraftForge ships with this code and installs it as part of the forge
-installation process, no further action is required on your part.
-
-LexManos' Install Video
-=======================
-https://www.youtube.com/watch?v=8VEdtQLuLO0&feature=youtu.be
-
-For more details update more often refer to the Forge Forums:
-http://www.minecraftforge.net/forum/index.php/topic,14048.0.html
+Once that's done, you're set!
