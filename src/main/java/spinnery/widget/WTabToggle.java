@@ -47,13 +47,16 @@ public class WTabToggle extends WAbstractToggle {
 
 		Item symbol = getSymbol();
 
-		if(symbol != null) {
+		if (symbol != null) {
 			RenderSystem.enableLighting();
 			BaseRenderer.getItemRenderer().renderGuiItemIcon(new ItemStack(symbol, 1), x + 4, y + 4);
 		}
 		RenderSystem.disableLighting();
-		TextRenderer.pass().shadow(isLabelShadowed()).text(getLabel()).at(x + 8 + (symbol != null ? 16 : 0), y + sY / 2 - 4.5, z)
-				.color(getStyle().asColor("label.color")).shadowColor(getStyle().asColor("label.shadow_color")).render();
+
+		if (label != null) {
+			TextRenderer.pass().shadow(isLabelShadowed()).text(getLabel()).at(x + 8 + (symbol != null ? 16 : 0), y + sY / 2 - 4.5, z)
+					.color(getStyle().asColor("label.color")).shadowColor(getStyle().asColor("label.shadow_color")).render();
+		}
 	}
 
 	public Item getSymbol() {

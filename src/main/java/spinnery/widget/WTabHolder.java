@@ -7,13 +7,21 @@ import net.minecraft.item.ItemConvertible;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 
+import spinnery.client.TextRenderer;
 import spinnery.widget.api.*;
 
 import java.util.*;
 
 @Environment(EnvType.CLIENT)
 public class WTabHolder extends WAbstractWidget implements WCollection, WDelegatedEventListener {
+	public enum Mode {
+		OCCUPY_ALL,
+		OCCUPY_PARTIAL
+	}
+
 	protected List<WTab> tabs = new ArrayList<>();
+
+	protected Mode mode = Mode.OCCUPY_ALL;
 
 	public void selectTab(int tabNumber) {
 		for (WTab tab : tabs) {
@@ -21,8 +29,12 @@ public class WTabHolder extends WAbstractWidget implements WCollection, WDelegat
 		}
 	}
 
-	public WTab addTab(Item symbol, String name) {
-		return addTab(symbol, new LiteralText(name));
+	public WTab addTab(Text name) {
+		return addTab(null, name);
+	}
+
+	public WTab addTab(Item symbol) {
+		return addTab(symbol, null);
 	}
 
 	public WTab addTab(Item symbol, Text name) {
@@ -40,11 +52,34 @@ public class WTabHolder extends WAbstractWidget implements WCollection, WDelegat
 		return tabs.remove(tabNumber);
 	}
 
+	public <W extends WTabHolder> W setMode(Mode mode) {
+		this.mode = mode;
+		return (W) this;
+	}
+
+	public Mode getMode() {
+		return mode;
+	}
+
 	protected void updateTabs() {
 		if (tabs.size() == 0) return;
-		int tabSize = getWidth() / tabs.size();
+		int baseTabSize = getWidth() / tabs.size();
+		int tabSize = baseTabSize;
 		int tabOffset = 0;
 		for (WTab tab : tabs) {
+			if (mode == Mode.OCCUPY_PARTIAL) {
+				tabSize = 0;
+				tabSize += tab.getToggle().symbol != null ? 18 : 0;
+				tabSize += tab.getToggle().label != null ? TextRenderer.width(tab.getToggle().label) : 0;
+
+				if (tab.getToggle().getLabel() != null && tab.getToggle().getSymbol() != null) {
+					tabSize += 11;
+				} else if (tab.getToggle().getLabel() != null) {
+					tabSize += 15;
+				} else {
+					tabSize += 6;
+				}
+			}
 			tab.setWidth(tabSize);
 			tab.setPosition(Position.of(this, tabOffset, 0, 0));
 			WTabToggle toggle = tab.getToggle();
@@ -105,7 +140,7 @@ public class WTabHolder extends WAbstractWidget implements WCollection, WDelegat
 		protected WPanel body = new WPanel();
 
 		public WTab() {
-			toggle = WWidgetFactory.buildDetached(WTabToggle.class)
+			toggle = new WTabToggle()
 					.setPosition(Position.of(WTabHolder.this, 0, 0, 0))
 					.setSize(Size.of(36, 24))
 					.setParent(this)
@@ -117,7 +152,7 @@ public class WTabHolder extends WAbstractWidget implements WCollection, WDelegat
 		@Override
 		public Collection<? extends WEventListener> getEventDelegates() {
 			Collection<? extends WEventListener> bodyDelegates = body.getEventDelegates();
-			Collection<WEventListener> returnList = new ArrayList<WEventListener>(bodyDelegates);
+			Collection<WEventListener> returnList = new ArrayList<>(bodyDelegates);
 			returnList.add(toggle);
 			return returnList;
 		}

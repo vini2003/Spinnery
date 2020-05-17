@@ -48,7 +48,9 @@ public class WSlot extends WAbstractWidget {
 	protected List<BiConsumer<Action, Action.Subtype>> consumers = new ArrayList<>();
 
 	public void consume(Action action, Action.Subtype subtype) {
-		consumers.forEach(actionConsumer -> actionConsumer.accept(action, subtype));
+		for (BiConsumer<Action, Action.Subtype> consumer : consumers) {
+			consumer.accept(action, subtype);
+		}
 	}
 
 	public <W extends WSlot> W addConsumer(BiConsumer<Action, Action.Subtype> consumer) {
