@@ -4,6 +4,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.LiteralText;
 import org.lwjgl.glfw.GLFW;
+import spinnery.util.MouseUtilities;
 import spinnery.widget.WInterface;
 import spinnery.widget.api.WInterfaceProvider;
 
@@ -98,5 +99,8 @@ public class BaseScreen extends Screen implements WInterfaceProvider {
 	@Override
 	public void mouseMoved(double mouseX, double mouseY) {
 		screenInterface.onMouseMoved((int) mouseX, (int) mouseY);
+
+		MouseUtilities.mouseX = (int) mouseX;
+		MouseUtilities.mouseY = (int) mouseY;
 	}
 }

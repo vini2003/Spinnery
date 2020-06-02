@@ -703,9 +703,9 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 	@Environment(EnvType.CLIENT)
 	public boolean isWithinBounds(int positionX, int positionY, int tolerance) {
 		return positionX + tolerance > getX()
-				&& positionX - tolerance < getX() + getWidth()
+				&& positionX - tolerance < getWideX()
 				&& positionY + tolerance > getY()
-				&& positionY - tolerance < getY() + getHeight();
+				&& positionY - tolerance < getHighY();
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -714,8 +714,18 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 	}
 
 	@Environment(EnvType.CLIENT)
+	public int getWideX() {
+		return getX() + getWidth();
+	}
+
+	@Environment(EnvType.CLIENT)
 	public int getY() {
 		return position.getY();
+	}
+
+	@Environment(EnvType.CLIENT)
+	public int getHighY() {
+		return getY() + getHeight();
 	}
 
 	@Environment(EnvType.CLIENT)

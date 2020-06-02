@@ -175,9 +175,9 @@ public class WDraggableContainer extends WAbstractWidget implements WDrawableCol
 		for (WAbstractWidget w : getWidgets()) {
 			w.getPosition().setOffset(-xOffset, -yOffset, 0);
 			boolean hidden = (w.getX() + w.getWidth() < getX())
-					|| (w.getX() > getX() + getWidth())
+					|| (w.getX() > getWideX())
 					|| (w.getY() + w.getHeight() < getY())
-					|| (w.getY() > getY() + getHeight());
+					|| (w.getY() > getHighY());
 			w.setHidden(hidden);
 		}
 	}

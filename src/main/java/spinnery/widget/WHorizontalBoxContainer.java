@@ -185,8 +185,8 @@ public class WHorizontalBoxContainer extends WAbstractWidget implements WDrawabl
 		if (hasBorder()) {
 			BaseRenderer.drawRectangle(getX(), getY(), getZ(), getWidth(), outerBorderWidth, getStyle().asColor("border"));
 			BaseRenderer.drawRectangle(getX(), getY(), getZ(), outerBorderWidth, getHeight(), getStyle().asColor("border"));
-			BaseRenderer.drawRectangle(getX(), getY() + getHeight() - 1, getZ(), getWidth(), outerBorderWidth, getStyle().asColor("border"));
-			BaseRenderer.drawRectangle(getX() + getWidth() - 1, getY(), getZ(), outerBorderWidth, getHeight(), getStyle().asColor("border"));
+			BaseRenderer.drawRectangle(getX(), getHighY() - 1, getZ(), getWidth(), outerBorderWidth, getStyle().asColor("border"));
+			BaseRenderer.drawRectangle(getWideX() - 1, getY(), getZ(), outerBorderWidth, getHeight(), getStyle().asColor("border"));
 		}
 
 		BaseRenderer.disableCropping();

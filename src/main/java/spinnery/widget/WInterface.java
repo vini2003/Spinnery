@@ -238,6 +238,16 @@ public class WInterface implements WDrawableCollection, WModifiableCollection, W
 		return (W) this;
 	}
 
+	public <W extends WSlot> W getSlot(int inventoryNumber, int slotNumber) {
+		Optional<WAbstractWidget> slot = getAllWidgets().stream().filter(widget -> widget instanceof WSlot && ((WSlot) widget).inventoryNumber == inventoryNumber && ((WSlot) widget).slotNumber == slotNumber).findFirst();
+
+		if (slot.isPresent()) {
+			return (W) slot.get();
+		} else {
+			return null;
+		}
+	}
+
 	@Override
 	public void onLayoutChange() {
 		recalculateCache();

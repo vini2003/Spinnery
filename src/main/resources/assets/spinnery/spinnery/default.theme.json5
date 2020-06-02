@@ -71,17 +71,19 @@
         "$panel_label"
       ]
     },
-    "spinnery:vertical_list": {
+    "spinnery:vertical_scrollable_container": {
       $extend: [
         "$panel",
         "$panel_label"
-      ]
+      ],
+      fade: 0xff333333
     },
-    "spinnery:horizontal_list": {
+    "spinnery:horizontal_scrollable_container": {
       $extend: [
         "$panel",
         "$panel_label"
-      ]
+      ],
+      fade: 0xff333333
     },
     "spinnery:draggable_area": {
       $extend: [
@@ -205,24 +207,24 @@
       scroller: {
         top_left: "$bevel_light",
         bottom_right: "$bevel_dark",
-        background: "$bg_panel",
+        background: "$bg_panel"
       },
       scroll_line: {
         top_left: "$bevel_dark",
         bottom_right: "$bevel_light",
-        background: "$bg_interactable",
+        background: "$bg_interactable"
       },
     },
     "spinnery:horizontal_scrollbar": {
       scroller: {
         top_left: "$bevel_light",
         bottom_right: "$bevel_dark",
-        background: "$bg_panel",
+        background: 0xff626262
       },
       scroll_line: {
         top_left: "$bevel_dark",
         bottom_right: "$bevel_light",
-        background: "$bg_interactable",
+        background: 0xff626262
       }
     },
     "spinnery:text_area": {

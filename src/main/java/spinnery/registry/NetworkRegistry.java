@@ -228,10 +228,10 @@ public class NetworkRegistry {
 
 							container.getInventory(inventoryNumber).setInvStack(slotNumber, stack);
 
-							for (WAbstractWidget widget : container.getInterface().getAllWidgets()) {
-								if (widget instanceof WSlot && ((WSlot) widget).getInventoryNumber() == inventoryNumber && ((WSlot) widget).getSlotNumber() == slotNumber) {
-									((WSlot) widget).setStack(container.getInventory(inventoryNumber).getInvStack(slotNumber));
-								}
+							WSlot slot = container.getInterface().getSlot(inventoryNumber, slotNumber);
+
+							if (slot != null) {
+								slot.setStack(container.getInventory(inventoryNumber).getInvStack(slotNumber));
 							}
 						}
 					});

@@ -191,10 +191,10 @@ public class BaseContainer extends Container {
 		HashMap<Integer, WSlot> slots = new HashMap<>();
 
 		for (int i = 0; i < slotNumber.length; ++i) {
-			for (WAbstractWidget widget : serverInterface.getAllWidgets()) {
-				if (widget instanceof WSlot && ((WSlot) widget).getSlotNumber() == slotNumber[i] && ((WSlot) widget).getInventoryNumber() == inventoryNumber[i]) {
-					slots.put(i, (WSlot) widget);
-				}
+			WSlot slot = getInterface().getSlot(inventoryNumber[0], slotNumber[0]);
+
+			if (slot != null) {
+				slots.put(i, slot);
 			}
 		}
 
@@ -262,19 +262,11 @@ public class BaseContainer extends Container {
 	 *                        severe brain damage to the poor individual attempting to change this.
 	 */
 	public void onSlotAction(int slotNumber, int inventoryNumber, int button, Action action, PlayerEntity player) {
-		WSlot slotT = null;
+		WSlot slotA = getInterface().getSlot(inventoryNumber, slotNumber);
 
-		for (WAbstractWidget widget : serverInterface.getAllWidgets()) {
-			if (widget instanceof WSlot && ((WSlot) widget).getSlotNumber() == slotNumber && ((WSlot) widget).getInventoryNumber() == inventoryNumber) {
-				slotT = (WSlot) widget;
-			}
-		}
-
-		if (slotT == null || slotT.isLocked()) {
+		if (slotA == null || slotA.isLocked()) {
 			return;
 		}
-
-		WSlot slotA = slotT;
 
 		ItemStack stackA = slotA.getStack().copy();
 		ItemStack stackB = player.inventory.getCursorStack().copy();

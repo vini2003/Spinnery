@@ -10,6 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import org.lwjgl.glfw.GLFW;
 import spinnery.client.BaseRenderer;
+import spinnery.util.MouseUtilities;
 import spinnery.widget.WAbstractWidget;
 import spinnery.widget.WInterface;
 import spinnery.widget.WSlot;
@@ -140,6 +141,9 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 		clientInterface.onMouseMoved((int) mouseX, (int) mouseY);
 
 		updateTooltip((int) mouseX, (int) mouseY);
+
+		MouseUtilities.mouseX = (int) mouseX;
+		MouseUtilities.mouseY = (int) mouseY;
 	}
 
 	/**
@@ -352,19 +356,12 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 	@Environment(EnvType.CLIENT)
 	public void updateTooltip(int mouseX, int mouseY) {
 		setDrawSlot(null);
-		for (WAbstractWidget widgetA : getInterface().getWidgets()) {
+		for (WAbstractWidget widgetA : getInterface().getAllWidgets()) {
 			if (widgetA.isFocused() && widgetA instanceof WSlot) {
 				setDrawSlot((WSlot) widgetA);
+
 				setTooltipX(mouseX);
 				setTooltipY(mouseY);
-			} else if (widgetA instanceof WCollection) {
-				for (WAbstractWidget widgetB : ((WCollection) widgetA).getWidgets()) {
-					if (widgetB.updateFocus(mouseX, mouseY) && widgetB instanceof WSlot) {
-						setDrawSlot((WSlot) widgetB);
-						setTooltipX(mouseX);
-						setTooltipY(mouseY);
-					}
-				}
 			}
 		}
 	}

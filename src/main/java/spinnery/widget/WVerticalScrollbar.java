@@ -8,20 +8,20 @@ public class WVerticalScrollbar extends WAbstractWidget {
 	protected double clickMouseY;
 	protected boolean dragging = false;
 
-	public WVerticalScrollbar scrollable(WVerticalScrollable scrollable) {
+	public WVerticalScrollbar setScrollable(WVerticalScrollable scrollable) {
 		this.scrollable = scrollable;
 		return this;
 	}
 
 	@Override
 	public void draw() {
-		if (isHidden()) return;
-		BaseRenderer.drawBeveledPanel(getX(), getY(), getZ(), getWidth(), getHeight(), getStyle().asColor("scroll_line.top_left"), getStyle().asColor("scroll_line.background"), getStyle().asColor("scroll_line.bottom_right"));
-		drawScroller();
-	}
+		if (isHidden()) {
 
-	public void drawScroller() {
-		BaseRenderer.drawBeveledPanel(getX(), getScrollerY(), getZ(), getWidth(), getScrollerHeight(), getStyle().asColor("scroller.top_left"), getStyle().asColor("scroller.background"), getStyle().asColor("scroller.bottom_right"));
+			return;
+		}
+		BaseRenderer.drawBeveledPanel(getX(), getY(), getZ(), getWidth(), getHeight(), getStyle().asColor("scroll_line.top_left"), getStyle().asColor("scroll_line.background"), getStyle().asColor("scroll_line.bottom_right"));
+
+		BaseRenderer.drawBeveledPanel(getX() + 1, getScrollerY() + 1, getZ(), getWidth() - 2, Math.min(getHighY() - getScrollerY(), getScrollerHeight()) - 2, getStyle().asColor("scroller.top_left"), getStyle().asColor("scroller.background"), getStyle().asColor("scroller.bottom_right"));
 	}
 
 	@Override
@@ -67,7 +67,7 @@ public class WVerticalScrollbar extends WAbstractWidget {
 		if (mouseButton == 0) {
 			if (dragging) {
 				double scrollerOffsetY = getScrollerY() + clickMouseY - mouseY;
-				((WVerticalScrollableContainer) scrollable).scrollKineticDelta += -deltaY;
+				((WVerticalScrollableContainer) scrollable).kineticScrollDelta += -deltaY;
 				scrollable.scroll(0, scrollerOffsetY);
 			}
 		}

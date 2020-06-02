@@ -64,17 +64,19 @@
         "$label"
       ]
     },
-    "spinnery:vertical_list": {
+    "spinnery:vertical_scrollable_container": {
       $extend: [
         "$panel",
-        "$label"
-      ]
+        "$panel_label"
+      ],
+      fade: 0xff333333
     },
-    "spinnery:horizontal_list": {
+    "spinnery:horizontal_scrollable_container": {
       $extend: [
         "$panel",
-        "$label"
-      ]
+        "$panel_label"
+      ],
+      fade: 0xff333333
     },
     "spinnery:draggable_area": {
       $extend: [

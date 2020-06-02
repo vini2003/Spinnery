@@ -1,5 +1,8 @@
 package spinnery.util;
 
+import net.minecraft.client.MinecraftClient;
+import org.lwjgl.glfw.GLFW;
+
 public class MouseUtilities {
 	public static final long nanoDelay = 150000000;
 	public static int mouseX = 0, mouseY = 0;
@@ -37,5 +40,19 @@ public class MouseUtilities {
 	 */
 	public static void nanoUpdate() {
 		lastNanos = System.nanoTime();
+	}
+
+	/**
+	 * Set the cursor to the GLFW standard vertical resize cursor.
+	 */
+	public static void enableDragCursor() {
+		GLFW.glfwSetCursor(MinecraftClient.getInstance().getWindow().getHandle(), GLFW.glfwCreateStandardCursor(GLFW.GLFW_VRESIZE_CURSOR));
+	}
+
+	/**
+	 * Set the cursor to the GLFW standard arrow cursor.
+	 */
+	public static void enableArrowCursor() {
+		GLFW.glfwSetCursor(MinecraftClient.getInstance().getWindow().getHandle(), GLFW.glfwCreateStandardCursor(GLFW.GLFW_ARROW_CURSOR));
 	}
 }

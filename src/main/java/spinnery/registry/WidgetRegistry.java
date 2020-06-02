@@ -47,6 +47,8 @@ public class WidgetRegistry {
 		register(new Identifier("spinnery", "horizontal_bar"), WHorizontalBar.class);
 		register(new Identifier("spinnery", "vertical_scrollbar"), WVerticalScrollbar.class);
 		register(new Identifier("spinnery", "horizontal_scrollbar"), WHorizontalScrollbar.class);
+		register(new Identifier("spinnery", "vertical_scrollable_container"), WVerticalScrollableContainer.class);
+		register(new Identifier("spinnery", "horizontal_scrollable_container"), WHorizontalScrollableContainer.class);
 		register(new Identifier("spinnery", "textured_button"), WTexturedButton.class);
 		register(new Identifier("spinnery", "text_area"), WTextArea.class);
 		register(new Identifier("spinnery", "text_field"), WTextField.class);
