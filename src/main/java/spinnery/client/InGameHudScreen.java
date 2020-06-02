@@ -15,8 +15,8 @@ public class InGameHudScreen {
 	public static void onInitialize(InGameHud inGameHud) {
 		inGameHudCache = inGameHud;
 		hudInterface = ((Accessor) inGameHud).getInterface();
-		for (Runnable r : onInitialize) {
-			r.run();
+		for (Runnable runnable : onInitialize) {
+			runnable.run();
 		}
 	}
 

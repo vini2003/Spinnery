@@ -62,25 +62,25 @@ public class BaseScreen extends Screen implements WInterfaceProvider {
 
 	@Override
 	public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
-		screenInterface.onMouseClicked((int) mouseX, (int) mouseY, mouseButton);
+		screenInterface.onMouseClicked((float) mouseX, (float) mouseY, mouseButton);
 		return false;
 	}
 
 	@Override
 	public boolean mouseReleased(double mouseX, double mouseY, int mouseButton) {
-		screenInterface.onMouseReleased((int) mouseX, (int) mouseY, mouseButton);
+		screenInterface.onMouseReleased((float) mouseX, (float) mouseY, mouseButton);
 		return false;
 	}
 
 	@Override
 	public boolean mouseDragged(double mouseX, double mouseY, int mouseButton, double deltaX, double deltaY) {
-		screenInterface.onMouseDragged((int) mouseX, (int) mouseY, mouseButton, (int) deltaX, (int) deltaY);
+		screenInterface.onMouseDragged((float) mouseX, (float) mouseY, mouseButton, deltaX, deltaY);
 		return false;
 	}
 
 	@Override
 	public boolean mouseScrolled(double mouseX, double mouseY, double deltaY) {
-		screenInterface.onMouseScrolled((int) mouseX, (int) mouseY, deltaY);
+		screenInterface.onMouseScrolled((float) mouseX, (float) mouseY, deltaY);
 		return false;
 	}
 
@@ -98,9 +98,9 @@ public class BaseScreen extends Screen implements WInterfaceProvider {
 
 	@Override
 	public void mouseMoved(double mouseX, double mouseY) {
-		screenInterface.onMouseMoved((int) mouseX, (int) mouseY);
+		screenInterface.onMouseMoved((float) mouseX, (float) mouseY);
 
-		MouseUtilities.mouseX = (int) mouseX;
-		MouseUtilities.mouseY = (int) mouseY;
+		MouseUtilities.mouseX = (float) mouseX;
+		MouseUtilities.mouseY = (float) mouseY;
 	}
 }

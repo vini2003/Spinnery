@@ -12,28 +12,28 @@ import java.util.Objects;
 public class Position implements WPositioned, JanksonSerializable {
 	public static final Position ORIGIN = new Position(new WPositioned() {
 		@Override
-		public int getX() {
+		public float getX() {
 			return 0;
 		}
 
 		@Override
-		public int getY() {
+		public float getY() {
 			return 0;
 		}
 
 		@Override
-		public int getZ() {
+		public float getZ() {
 			return 0;
 		}
 	});
 
 	protected WPositioned anchor;
-	protected int x;
-	protected int y;
-	protected int z;
-	protected int offsetX;
-	protected int offsetY;
-	protected int offsetZ;
+	protected float x;
+	protected float y;
+	protected float z;
+	protected float offsetX;
+	protected float offsetY;
+	protected float offsetZ;
 
 	protected Position(WPositioned anchor) {
 		this.anchor = anchor;
@@ -50,7 +50,7 @@ public class Position implements WPositioned, JanksonSerializable {
 	 * @param y absolute y
 	 * @param z absolute z
 	 */
-	public static Position of(int x, int y, int z) {
+	public static Position of(float x, float y, float z) {
 		return new Position(ORIGIN).set(x, y, z);
 	}
 
@@ -62,7 +62,7 @@ public class Position implements WPositioned, JanksonSerializable {
 	 * @param z relative z
 	 * @return same position object
 	 */
-	public Position set(int x, int y, int z) {
+	public Position set(float x, float y, float z) {
 		setRelativeX(x);
 		setRelativeY(y);
 		setRelativeZ(z);
@@ -77,7 +77,7 @@ public class Position implements WPositioned, JanksonSerializable {
 	 * @param y      relative y
 	 * @param z      relative z
 	 */
-	public static Position of(WPositioned anchor, int x, int y, int z) {
+	public static Position of(WPositioned anchor, float x, float y, float z) {
 		return new Position(anchor).set(x, y, z);
 	}
 
@@ -88,7 +88,7 @@ public class Position implements WPositioned, JanksonSerializable {
 	 * @param x      relative x
 	 * @param y      relative y
 	 */
-	public static Position of(WPositioned anchor, int x, int y) {
+	public static Position of(WPositioned anchor, float x, float y) {
 		return new Position(anchor).set(x, y, 0);
 	}
 
@@ -109,7 +109,7 @@ public class Position implements WPositioned, JanksonSerializable {
 	 * @param z increment relative z
 	 * @return new position object
 	 */
-	public Position add(int x, int y, int z) {
+	public Position add(float x, float y, float z) {
 		Position newPos = Position.of(this);
 		newPos.set(newPos.x + x, newPos.y + y, newPos.z + z);
 		return newPos;
@@ -151,7 +151,7 @@ public class Position implements WPositioned, JanksonSerializable {
 	 * @param z offset z
 	 * @return same position object
 	 */
-	public Position setOffset(int x, int y, int z) {
+	public Position setOffset(float x, float y, float z) {
 		setOffsetX(x);
 		setOffsetY(y);
 		setOffsetZ(z);
@@ -173,7 +173,7 @@ public class Position implements WPositioned, JanksonSerializable {
 	 *
 	 * @return absolute coordinate
 	 */
-	public int getX() {
+	public float getX() {
 		return anchor.getX() + x + offsetX;
 	}
 
@@ -183,7 +183,7 @@ public class Position implements WPositioned, JanksonSerializable {
 	 *
 	 * @return absolute coordinate
 	 */
-	public int getY() {
+	public float getY() {
 		return anchor.getY() + y + offsetY;
 	}
 
@@ -193,7 +193,7 @@ public class Position implements WPositioned, JanksonSerializable {
 	 *
 	 * @return absolute coordinate
 	 */
-	public int getZ() {
+	public float getZ() {
 		return anchor.getZ() + z + offsetZ;
 	}
 
@@ -204,7 +204,7 @@ public class Position implements WPositioned, JanksonSerializable {
 	 * @param z absolute coordinate
 	 * @return same position object
 	 */
-	public Position setZ(int z) {
+	public Position setZ(float z) {
 		return setRelativeZ(z - anchor.getZ() - offsetZ);
 	}
 
@@ -215,7 +215,7 @@ public class Position implements WPositioned, JanksonSerializable {
 	 * @param y absolute coordinate
 	 * @return same position object
 	 */
-	public Position setY(int y) {
+	public Position setY(float y) {
 		return setRelativeY(y - anchor.getY() - offsetY);
 	}
 
@@ -226,60 +226,60 @@ public class Position implements WPositioned, JanksonSerializable {
 	 * @param x absolute coordinate
 	 * @return same position object
 	 */
-	public Position setX(int x) {
+	public Position setX(float x) {
 		return setRelativeX(x - anchor.getX() - offsetX);
 	}
 
-	public int getRelativeX() {
+	public float getRelativeX() {
 		return x;
 	}
 
-	public Position setRelativeX(int x) {
+	public Position setRelativeX(float x) {
 		this.x = x;
 		return this;
 	}
 
-	public int getRelativeY() {
+	public float getRelativeY() {
 		return y;
 	}
 
-	public Position setRelativeY(int y) {
+	public Position setRelativeY(float y) {
 		this.y = y;
 		return this;
 	}
 
-	public int getRelativeZ() {
+	public float getRelativeZ() {
 		return z;
 	}
 
-	public Position setRelativeZ(int offsetZ) {
+	public Position setRelativeZ(float offsetZ) {
 		this.z = offsetZ;
 		return this;
 	}
 
-	public int getOffsetX() {
+	public float getOffsetX() {
 		return offsetX;
 	}
 
-	public Position setOffsetX(int offsetX) {
+	public Position setOffsetX(float offsetX) {
 		this.offsetX = offsetX;
 		return this;
 	}
 
-	public int getOffsetY() {
+	public float getOffsetY() {
 		return offsetY;
 	}
 
-	public Position setOffsetY(int offsetY) {
+	public Position setOffsetY(float offsetY) {
 		this.offsetY = offsetY;
 		return this;
 	}
 
-	public int getOffsetZ() {
+	public float getOffsetZ() {
 		return offsetZ;
 	}
 
-	public Position setOffsetZ(int offsetZ) {
+	public Position setOffsetZ(float offsetZ) {
 		this.offsetZ = offsetZ;
 		return this;
 	}

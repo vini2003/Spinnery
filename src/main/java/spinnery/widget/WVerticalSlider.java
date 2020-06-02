@@ -15,12 +15,12 @@ public class WVerticalSlider extends WAbstractSlider {
 			return;
 		}
 
-		int x = getX();
-		int y = getY();
-		int z = getZ();
+		float x = getX();
+		float y = getY();
+		float z = getZ();
 
-		int sX = getWidth();
-		int sY = getHeight();
+		float sX = getWidth();
+		float sY = getHeight();
 
 		if (isProgressVisible()) {
 			Position tPos = getProgressTextAnchor();
@@ -36,22 +36,22 @@ public class WVerticalSlider extends WAbstractSlider {
 
 		Position innerAnchor = getInnerAnchor();
 		Size innerSize = getInnerSize();
-		int innerX = innerAnchor.getX();
-		int innerY = innerAnchor.getY();
-		int innerWidth = innerSize.getWidth();
-		int innerHeight = innerSize.getHeight();
-		double percentComplete = getPercentComplete();
-		double percentLeft = 1 - percentComplete;
+		float innerX = innerAnchor.getX();
+		float innerY = innerAnchor.getY();
+		float innerWidth = innerSize.getWidth();
+		float innerHeight = innerSize.getHeight();
+		float percentComplete = getPercentComplete();
+		float percentLeft = 1 - percentComplete;
 		BaseRenderer.drawRectangle(innerX, innerY + innerHeight * percentLeft, z, innerWidth, innerHeight * percentComplete,
 				getStyle().asColor("background.on"));
 		BaseRenderer.drawRectangle(innerX, innerY, z, innerWidth, innerHeight * percentLeft,
 				getStyle().asColor("background.off"));
 
 		Size knobSize = getKnobSize();
-		int knobWidth = knobSize.getWidth();
-		int knobHeight = knobSize.getHeight();
-		int knobY = (int) (y + (innerHeight - (double) knobSize.getHeight() / 2) * percentLeft);
-		int clampedY = (int) Math.min(y + innerHeight - (double) knobHeight / 2, Math.max(y, knobY));
+		float knobWidth = knobSize.getWidth();
+		float knobHeight = knobSize.getHeight();
+		float knobY = (y + (innerHeight - knobSize.getHeight() / 2f) * percentLeft);
+		float clampedY = Math.min(y + innerHeight - knobHeight / 2f, Math.max(y, knobY));
 		BaseRenderer.drawBeveledPanel(x - 1, clampedY, z, knobWidth, knobHeight,
 				getStyle().asColor("top_left.foreground"), getStyle().asColor("foreground"),
 				getStyle().asColor("bottom_right.foreground"));
@@ -68,9 +68,9 @@ public class WVerticalSlider extends WAbstractSlider {
 	}
 
 	@Override
-	protected void updatePosition(int mouseX, int mouseY) {
-		double innerHeight = getInnerSize().getHeight();
-		double percentComplete = Math.max(0, (getInnerAnchor().getY() + innerHeight - mouseY) / innerHeight);
+	protected void updatePosition(float mouseX, float mouseY) {
+		float innerHeight = getInnerSize().getHeight();
+		float percentComplete = Math.max(0, (getInnerAnchor().getY() + innerHeight - mouseY) / innerHeight);
 		setProgress(min + percentComplete * (max - min));
 	}
 }

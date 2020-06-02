@@ -15,12 +15,12 @@ public class WStaticImage extends WAbstractWidget {
 			return;
 		}
 
-		int x = getX();
-		int y = getY();
-		int z = getZ();
+		float x = getX();
+		float y = getY();
+		float z = getZ();
 
-		int sX = getWidth();
-		int sY = getHeight();
+		float sX = getWidth();
+		float sY = getHeight();
 
 		BaseRenderer.drawImage(x, y, z, sX, sY, getTexture());
 	}

@@ -10,16 +10,16 @@ public class WHorizontalBoxContainer extends WAbstractWidget implements WDrawabl
 	protected Set<WAbstractWidget> widgets = new HashSet<>();
 	protected List<WLayoutElement> orderedWidgets = new ArrayList<>();
 
-	public int topBottomPadding = 0;
+	public float topBottomPadding = 0f;
 	public boolean topBottomOverride = false;
 
-	public int leftRightPadding = 0;
+	public float leftRightPadding = 0f;
 	public boolean leftRightOverride = false;
 
-	public int intermediaryPadding = 0;
+	public float intermediaryPadding = 0f;
 	public boolean intermediaryOverride = false;
 
-	public int outerBorderWidth = 1;
+	public float outerBorderWidth = 1f;
 
 	public boolean hasBorder;
 
@@ -32,13 +32,13 @@ public class WHorizontalBoxContainer extends WAbstractWidget implements WDrawabl
 		return hasBorder;
 	}
 
-	public <W extends WHorizontalBoxContainer> W setTopBottomPadding(int topBottomPadding) {
+	public <W extends WHorizontalBoxContainer> W setTopBottomPadding(float topBottomPadding) {
 		this.topBottomPadding = topBottomPadding;
 		this.topBottomOverride = true;
 		return (W) this;
 	}
 
-	public int getTopBottomPadding() {
+	public float getTopBottomPadding() {
 		return topBottomPadding;
 	}
 
@@ -48,13 +48,13 @@ public class WHorizontalBoxContainer extends WAbstractWidget implements WDrawabl
 		return (W) this;
 	}
 
-	public <W extends WHorizontalBoxContainer> W setLeftRightPadding(int leftRightPadding) {
+	public <W extends WHorizontalBoxContainer> W setLeftRightPadding(float leftRightPadding) {
 		this.leftRightPadding = leftRightPadding;
 		this.leftRightOverride = true;
 		return (W) this;
 	}
 
-	public int getLeftRightPadding() {
+	public float getLeftRightPadding() {
 		return leftRightPadding;
 	}
 
@@ -64,13 +64,13 @@ public class WHorizontalBoxContainer extends WAbstractWidget implements WDrawabl
 		return (W) this;
 	}
 
-	public <W extends WHorizontalBoxContainer> W setIntermediaryPadding(int intermediaryPadding) {
+	public <W extends WHorizontalBoxContainer> W setIntermediaryPadding(float intermediaryPadding) {
 		this.intermediaryPadding = intermediaryPadding;
 		this.intermediaryOverride = true;
 		return (W) this;
 	}
 
-	public int getIntermediaryPadding() {
+	public float getIntermediaryPadding() {
 		return intermediaryPadding;
 	}
 
@@ -80,12 +80,12 @@ public class WHorizontalBoxContainer extends WAbstractWidget implements WDrawabl
 		return (W) this;
 	}
 
-	public <W extends WHorizontalBoxContainer> W setOuterBorderWidth(int outerBorderWidth) {
+	public <W extends WHorizontalBoxContainer> W setOuterBorderWidth(float outerBorderWidth) {
 		this.outerBorderWidth = outerBorderWidth;
 		return (W) this;
 	}
 
-	public int getOuterBorderWidth() {
+	public float getOuterBorderWidth() {
 		return outerBorderWidth;
 	}
 
@@ -134,17 +134,17 @@ public class WHorizontalBoxContainer extends WAbstractWidget implements WDrawabl
 	}
 
 	public void updateContents() {
-		if (!leftRightOverride) leftRightPadding = (int) ((0.05) * (float) getWidth());
-		if (!topBottomOverride) topBottomPadding = (int) ((0.1) * (float) getHeight());
-		if (!intermediaryOverride) intermediaryPadding = (int) ((0.025) * (float) getWidth());
+		if (!leftRightOverride) leftRightPadding = ((0.05f) * getWidth());
+		if (!topBottomOverride) topBottomPadding = ((0.1f) * getHeight());
+		if (!intermediaryOverride) intermediaryPadding = ((0.025f) * getWidth());
 
-		int totalWidgetSizeX = getWidth() - (2 * leftRightPadding) - ((this.widgets.size() > 1 ? this.widgets.size() - 1 : 0) * intermediaryPadding);
-		int totalWidgetSizeY = getHeight() - (2 * topBottomPadding);
+		float totalWidgetSizeX = getWidth() - (2 * leftRightPadding) - ((this.widgets.size() > 1 ? this.widgets.size() - 1 : 0) * intermediaryPadding);
+		float totalWidgetSizeY = getHeight() - (2 * topBottomPadding);
 
-		int lastPositionX = leftRightPadding;
-		int positionY = topBottomPadding;
-		int widgetSizeX = totalWidgetSizeX / Math.max(this.widgets.size(), 1);
-		int widgetSizeY = totalWidgetSizeY;
+		float lastPositionX = leftRightPadding;
+		float positionY = topBottomPadding;
+		float widgetSizeX = totalWidgetSizeX / Math.max(this.widgets.size(), 1);
+		float widgetSizeY = totalWidgetSizeY;
 
 		for (WAbstractWidget widget : widgets) {
 			Size newWidgetSize = Size.of(widgetSizeX, widgetSizeY);

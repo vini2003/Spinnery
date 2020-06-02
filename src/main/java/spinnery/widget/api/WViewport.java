@@ -17,7 +17,7 @@ public interface WViewport {
 	 *
 	 * @return The underlying height of this object.
 	 */
-	default int getUnderlyingHeight() {
+	default float getUnderlyingHeight() {
 		return getUnderlyingSize().getHeight();
 	}
 
@@ -26,7 +26,7 @@ public interface WViewport {
 	 *
 	 * @return The underlying width of this object.
 	 */
-	default int getUnderlyingWidth() {
+	default float getUnderlyingWidth() {
 		return getUnderlyingSize().getWidth();
 	}
 
@@ -42,7 +42,7 @@ public interface WViewport {
 	 *
 	 * @return The visible height of this object.
 	 */
-	default int getVisibleHeight() {
+	default float getVisibleHeight() {
 		return getVisibleSize().getHeight();
 	}
 
@@ -51,7 +51,7 @@ public interface WViewport {
 	 *
 	 * @return The visible height of this object.
 	 */
-	default int getVisibleWidth() {
+	default float getVisibleWidth() {
 		return getVisibleSize().getWidth();
 	}
 }

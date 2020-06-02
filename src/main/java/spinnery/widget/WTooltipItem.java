@@ -20,7 +20,7 @@ public class WTooltipItem extends WItem {
 	}
 
 	@Override
-	public void onMouseMoved(int mouseX, int mouseY) {
+	public void onMouseMoved(float mouseX, float mouseY) {
 		updateWidgets();
 		updateText();
 		updatePositions(mouseX, mouseY);
@@ -28,7 +28,7 @@ public class WTooltipItem extends WItem {
 	}
 
 	@Override
-	public void onMouseScrolled(int mouseX, int mouseY, double deltaY) {
+	public void onMouseScrolled(float mouseX, float mouseY, double deltaY) {
 		super.onMouseScrolled(mouseX, mouseY, deltaY);
 		updateWidgets();
 		updateText();
@@ -47,7 +47,7 @@ public class WTooltipItem extends WItem {
 		tooltipText.setText(stack.getName());
 	}
 
-	public void updatePositions(int mouseX, int mouseY) {
+	public void updatePositions(float mouseX, float mouseY) {
 		tooltip.setPosition(Position.of(mouseX + 12, mouseY - 4, 1));
 	}
 

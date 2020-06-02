@@ -20,8 +20,8 @@ import spinnery.widget.api.WInterfaceProvider;
 
 public class BaseContainerScreen<T extends BaseContainer> extends ContainerScreen<T> implements WInterfaceProvider {
 	protected final WInterface clientInterface;
-	protected int tooltipX = 0;
-	protected int tooltipY = 0;
+	protected float tooltipX = 0;
+	protected float tooltipY = 0;
 	protected WSlot drawSlot;
 
 	/**
@@ -46,7 +46,7 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 		clientInterface.draw();
 
 		if (getDrawSlot() != null && getContainer().getPlayerInventory().getCursorStack().isEmpty() && !getDrawSlot().getStack().isEmpty()) {
-			this.renderTooltip(getDrawSlot().getStack(), getTooltipX(), getTooltipY());
+			this.renderTooltip(getDrawSlot().getStack(), (int) getTooltipX(), (int) getTooltipY());
 		}
 
 		ItemStack stackA;
@@ -61,8 +61,8 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 
 		RenderSystem.pushMatrix();
 		RenderSystem.translatef(0, 0, 200);
-		BaseRenderer.getItemRenderer().renderGuiItem(stackA, mouseX - 8, mouseY - 8);
-		BaseRenderer.getItemRenderer().renderGuiItemOverlay(BaseRenderer.getTextRenderer(), stackA, mouseX - 8, mouseY - 8);
+		BaseRenderer.getItemRenderer().renderGuiItem(stackA, (int) (mouseX - 8), mouseY - 8);
+		BaseRenderer.getItemRenderer().renderGuiItemOverlay(BaseRenderer.getTextRenderer(), stackA, (int) (mouseX - 8), mouseY - 8);
 		RenderSystem.popMatrix();
 	}
 
@@ -109,7 +109,7 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 	@Override
 	@Environment(EnvType.CLIENT)
 	public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
-		getInterface().onMouseClicked((int) mouseX, (int) mouseY, mouseButton);
+		getInterface().onMouseClicked((float) mouseX, (float) mouseY, mouseButton);
 
 		return false;
 	}
@@ -124,7 +124,7 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 	@Override
 	@Environment(EnvType.CLIENT)
 	public boolean mouseReleased(double mouseX, double mouseY, int mouseButton) {
-		getInterface().onMouseReleased((int) mouseX, (int) mouseY, mouseButton);
+		getInterface().onMouseReleased((float) mouseX, (float) mouseY, mouseButton);
 
 		return false;
 	}
@@ -138,12 +138,12 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 	@Override
 	@Environment(EnvType.CLIENT)
 	public void mouseMoved(double mouseX, double mouseY) {
-		clientInterface.onMouseMoved((int) mouseX, (int) mouseY);
+		clientInterface.onMouseMoved((float) mouseX, (float) mouseY);
 
-		updateTooltip((int) mouseX, (int) mouseY);
+		updateTooltip((float) mouseX, (float) mouseY);
 
-		MouseUtilities.mouseX = (int) mouseX;
-		MouseUtilities.mouseY = (int) mouseY;
+		MouseUtilities.mouseX = (float) mouseX;
+		MouseUtilities.mouseY = (float) mouseY;
 	}
 
 	/**
@@ -158,7 +158,7 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 	@Override
 	@Environment(EnvType.CLIENT)
 	public boolean mouseDragged(double mouseX, double mouseY, int mouseButton, double deltaX, double deltaY) {
-		getInterface().onMouseDragged((int) mouseX, (int) mouseY, mouseButton, (int) deltaX, (int) deltaY);
+		getInterface().onMouseDragged((float) mouseX, (float) mouseY, mouseButton, deltaX, deltaY);
 
 		return false;
 	}
@@ -173,7 +173,7 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 	@Override
 	@Environment(EnvType.CLIENT)
 	public boolean mouseScrolled(double mouseX, double mouseY, double deltaY) {
-		getInterface().onMouseScrolled((int) mouseX, (int) mouseY, deltaY);
+		getInterface().onMouseScrolled((float) mouseX, (float) mouseY, deltaY);
 
 		return false;
 	}
@@ -296,7 +296,7 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 	 * @return Horizontal position at which the tooltip will be drawn.
 	 */
 	@Environment(EnvType.CLIENT)
-	public int getTooltipX() {
+	public float getTooltipX() {
 		return tooltipX;
 	}
 
@@ -306,7 +306,7 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 	 * @return Vertical position at which the tooltip will be drawn.
 	 */
 	@Environment(EnvType.CLIENT)
-	public int getTooltipY() {
+	public float getTooltipY() {
 		return tooltipY;
 	}
 
@@ -316,7 +316,7 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 	 * @param tooltipX Horizontal position at which the tooltip will be drawn.
 	 */
 	@Environment(EnvType.CLIENT)
-	public <S extends BaseContainerScreen> S setTooltipX(int tooltipX) {
+	public <S extends BaseContainerScreen> S setTooltipX(float tooltipX) {
 		this.tooltipX = tooltipX;
 		return (S) this;
 	}
@@ -327,7 +327,7 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 	 * @param tooltipY Vertical position at which the tooltip will be drawn.
 	 */
 	@Environment(EnvType.CLIENT)
-	public <S extends BaseContainerScreen> S setTooltipY(int tooltipY) {
+	public <S extends BaseContainerScreen> S setTooltipY(float tooltipY) {
 		this.tooltipY = tooltipY;
 		return (S) this;
 	}
@@ -354,7 +354,7 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 	 * @param mouseY Vertical position of mouse cursor.
 	 */
 	@Environment(EnvType.CLIENT)
-	public void updateTooltip(int mouseX, int mouseY) {
+	public void updateTooltip(float mouseX, float mouseY) {
 		setDrawSlot(null);
 		for (WAbstractWidget widgetA : getInterface().getAllWidgets()) {
 			if (widgetA.isFocused() && widgetA instanceof WSlot) {

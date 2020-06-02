@@ -63,9 +63,9 @@ public class WTabHolder extends WAbstractWidget implements WCollection, WDelegat
 
 	protected void updateTabs() {
 		if (tabs.size() == 0) return;
-		int baseTabSize = getWidth() / tabs.size();
-		int tabSize = baseTabSize;
-		int tabOffset = 0;
+		float baseTabSize = getWidth() / tabs.size();
+		float tabSize = baseTabSize;
+		float tabOffset = 0;
 		for (WTab tab : tabs) {
 			if (mode == Mode.OCCUPY_PARTIAL) {
 				tabSize = 0;

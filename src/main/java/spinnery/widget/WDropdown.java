@@ -50,7 +50,7 @@ public class WDropdown extends WAbstractWidget implements WDrawableCollection, W
 	}
 
 	@Override
-	public boolean updateFocus(int positionX, int positionY) {
+	public boolean updateFocus(float positionX, float positionY) {
 		super.updateFocus(positionX, positionY);
 
 		setFocus(isWithinBounds(positionX, positionY) && getAllWidgets().stream().noneMatch((WAbstractWidget::isFocused)));
@@ -64,12 +64,12 @@ public class WDropdown extends WAbstractWidget implements WDrawableCollection, W
 			return;
 		}
 
-		int x = getX();
-		int y = getY();
-		int z = getZ();
+		float x = getX();
+		float y = getY();
+		float z = getZ();
 
-		int sX = getWidth();
-		int sY = getHeight();
+		float sX = getWidth();
+		float sY = getHeight();
 
 		BaseRenderer.drawPanel(x, y, z, sX, sY + 1.75,
 				getStyle().asColor("shadow"), getStyle().asColor("background"),
@@ -94,17 +94,17 @@ public class WDropdown extends WAbstractWidget implements WDrawableCollection, W
 	}
 
 	@Override
-	public int getHeight() {
+	public float getHeight() {
 		return getToggleHeight() + (state ? dropdownSize.getHeight() : 0);
 	}
 
 	@Override
-	public int getWidth() {
+	public float getWidth() {
 		return Math.max(getToggleWidth(), state ? dropdownSize.getWidth() : 0);
 	}
 
 	@Override
-	public void onMouseClicked(int mouseX, int mouseY, int mouseButton) {
+	public void onMouseClicked(float mouseX, float mouseY, int mouseButton) {
 		boolean shouldOpen = isWithinBounds(mouseX, mouseY);
 		boolean shouldClose = false;
 
@@ -151,7 +151,7 @@ public class WDropdown extends WAbstractWidget implements WDrawableCollection, W
 		}
 	}
 
-	public int getToggleHeight() {
+	public float getToggleHeight() {
 		return super.getHeight();
 	}
 
@@ -162,7 +162,7 @@ public class WDropdown extends WAbstractWidget implements WDrawableCollection, W
 		return (W) this;
 	}
 
-	public int getToggleWidth() {
+	public float getToggleWidth() {
 		return super.getWidth();
 	}
 

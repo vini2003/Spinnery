@@ -163,12 +163,12 @@ public class WSlot extends WAbstractWidget {
 			return;
 		}
 
-		int x = getX();
-		int y = getY();
-		int z = getZ();
+		float x = getX();
+		float y = getY();
+		float z = getZ();
 
-		int sX = getWidth();
-		int sY = getHeight();
+		float sX = getWidth();
+		float sY = getHeight();
 
 		BaseRenderer.drawBeveledPanel(x, y, z, sX, sY, getStyle().asColor("top_left"), getStyle().asColor("background.unfocused"), getStyle().asColor("bottom_right"));
 
@@ -181,8 +181,8 @@ public class WSlot extends WAbstractWidget {
 		RenderSystem.translatef(0, 0, +250);
 		RenderSystem.translatef(0, 0, -150);
 		RenderSystem.enableLighting();
-		BaseRenderer.getItemRenderer().renderGuiItemIcon(stackA, 1 + x + (sX - 18) / 2, 1 + y + (sY - 18) / 2);
-		BaseRenderer.getItemRenderer().renderGuiItemOverlay(MinecraftClient.getInstance().textRenderer, stackA, 1 + x + (sX - 18) / 2, 1 + y + (sY - 18) / 2, stackA.getCount() == 1 ? "" : withSuffix(stackA.getCount()));
+		BaseRenderer.getItemRenderer().renderGuiItemIcon(stackA, (int) (1 + x + (sX - 18)) / 2, (int) ((1 + y + (sY - 18)) / 2));
+		BaseRenderer.getItemRenderer().renderGuiItemOverlay(MinecraftClient.getInstance().textRenderer, stackA, (int) (1 + x + (sX - 18)) / 2, (int) (1 + y + (sY - 18)) / 2, stackA.getCount() == 1 ? "" : withSuffix(stackA.getCount()));
 		RenderSystem.disableLighting();
 		RenderSystem.translatef(0, 0, +150);
 
@@ -194,7 +194,7 @@ public class WSlot extends WAbstractWidget {
 
 	@Override
 	@Environment(EnvType.CLIENT)
-	public void onMouseReleased(int mouseX, int mouseY, int button) {
+	public void onMouseReleased(float mouseX, float mouseY, int button) {
 		if (button == MIDDLE || isLocked()) return;
 
 		PlayerEntity player = getInterface().getContainer().getPlayerInventory().player;
@@ -227,7 +227,7 @@ public class WSlot extends WAbstractWidget {
 
 	@Override
 	@Environment(EnvType.CLIENT)
-	public void onMouseClicked(int mouseX, int mouseY, int button) {
+	public void onMouseClicked(float mouseX, float mouseY, int button) {
 		if (!isFocused() || isLocked()) return;
 
 		PlayerEntity player = getInterface().getContainer().getPlayerInventory().player;
@@ -265,7 +265,7 @@ public class WSlot extends WAbstractWidget {
 
 	@Override
 	@Environment(EnvType.CLIENT)
-	public void onMouseDragged(int mouseX, int mouseY, int button, double deltaX, double deltaY) {
+	public void onMouseDragged(float mouseX, float mouseY, int button, double deltaX, double deltaY) {
 		if (!isFocused() || button == MIDDLE || isLocked()) return;
 
 		PlayerEntity player = getInterface().getContainer().getPlayerInventory().player;

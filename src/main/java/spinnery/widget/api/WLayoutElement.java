@@ -23,6 +23,6 @@ public interface WLayoutElement extends WPositioned, WSized, Comparable<WLayoutE
 
 	@Override
 	default int compareTo(WLayoutElement element) {
-		return Integer.compare(element.getZ(), getZ());
+		return Float.compare(element.getZ(), getZ());
 	}
 }

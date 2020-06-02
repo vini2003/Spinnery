@@ -16,13 +16,13 @@ public class WPanel extends WAbstractWidget implements WModifiableCollection, WD
 	@Override
 	public void draw() {
 		if(isHidden()) { return; }
-		
-		int x = getX();
-		int y = getY();
-		int z = getZ();
 
-		int sX = getWidth();
-		int sY = getHeight();
+		float x = getX();
+		float y = getY();
+		float z = getZ();
+
+		float sX = getWidth();
+		float sY = getHeight();
 
 		BaseRenderer.drawPanel(x, y, z, sX, sY, getStyle().asColor("shadow"), getStyle().asColor("background"), getStyle().asColor("highlight"), getStyle().asColor("outline"));
 

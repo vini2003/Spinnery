@@ -18,10 +18,10 @@ import java.util.function.Consumer;
 @Environment(EnvType.CLIENT)
 @SuppressWarnings("unchecked")
 public abstract class WAbstractSlider extends WAbstractWidget implements WPadded {
-	protected double min = 0;
-	protected double max = 0;
-	protected double progress = 0;
-	protected double step = 1;
+	protected float min = 0;
+	protected float max = 0;
+	protected float progress = 0;
+	protected float step = 1;
 	protected boolean progressVisible = true;
 	protected Consumer<WAbstractSlider> runnableOnProgressChange;
 
@@ -30,7 +30,7 @@ public abstract class WAbstractSlider extends WAbstractWidget implements WPadded
 	 *
 	 * @return The minimum value for this slider.
 	 */
-	public double getMin() {
+	public float getMin() {
 		return min;
 	}
 
@@ -39,7 +39,7 @@ public abstract class WAbstractSlider extends WAbstractWidget implements WPadded
 	 *
 	 * @param min The value to be set as the minimum value for this slider.
 	 */
-	public <W extends WAbstractSlider> W setMin(double min) {
+	public <W extends WAbstractSlider> W setMin(float min) {
 		this.min = min;
 		if (progress < min) {
 			setProgress(min);
@@ -52,7 +52,7 @@ public abstract class WAbstractSlider extends WAbstractWidget implements WPadded
 	 *
 	 * @return The maximum value for this slider.
 	 */
-	public double getMax() {
+	public float getMax() {
 		return max;
 	}
 
@@ -61,7 +61,7 @@ public abstract class WAbstractSlider extends WAbstractWidget implements WPadded
 	 *
 	 * @param max The value to be set as the maximum value for this slider.
 	 */
-	public <W extends WAbstractSlider> W setMax(double max) {
+	public <W extends WAbstractSlider> W setMax(float max) {
 		this.max = max;
 		if (progress > max) {
 			setProgress(max);
@@ -74,7 +74,7 @@ public abstract class WAbstractSlider extends WAbstractWidget implements WPadded
 	 *
 	 * @return The step value for this slider.
 	 */
-	public double getStep() {
+	public float getStep() {
 		return step;
 	}
 
@@ -83,7 +83,7 @@ public abstract class WAbstractSlider extends WAbstractWidget implements WPadded
 	 *
 	 * @param step The value to be used as the step value for this slider.
 	 */
-	public <W extends WAbstractSlider> W setStep(double step) {
+	public <W extends WAbstractSlider> W setStep(float step) {
 		this.step = step;
 		return (W) this;
 	}
@@ -93,7 +93,7 @@ public abstract class WAbstractSlider extends WAbstractWidget implements WPadded
 	 *
 	 * @return The progress value of this slider.
 	 */
-	public double getProgress() {
+	public float getProgress() {
 		return progress;
 	}
 
@@ -102,8 +102,8 @@ public abstract class WAbstractSlider extends WAbstractWidget implements WPadded
 	 *
 	 * @param progress The value to be used as the progress value for this slider.
 	 */
-	public <W extends WAbstractSlider> W setProgress(double progress) {
-		double value = Math.floor(progress / step) * step;
+	public <W extends WAbstractSlider> W setProgress(float progress) {
+		float value = (float) (Math.floor(progress / step) * step);
 		this.progress = Math.max(min, Math.min(max, value));
 		if (runnableOnProgressChange != null) {
 			runnableOnProgressChange.accept(this);
@@ -151,8 +151,8 @@ public abstract class WAbstractSlider extends WAbstractWidget implements WPadded
 	 *
 	 * @return The percentage completion of the progress value in relation to the minimum and maximum values.
 	 */
-	public double getPercentComplete() {
-		return Math.max(0, (progress - min) / (max - min));
+	public float getPercentComplete() {
+		return (float) Math.max(0, (progress - min) / (max - min));
 	}
 
 	/**
@@ -208,15 +208,15 @@ public abstract class WAbstractSlider extends WAbstractWidget implements WPadded
 	}
 
 	@Override
-	public void onMouseClicked(int mouseX, int mouseY, int mouseButton) {
+	public void onMouseClicked(float mouseX, float mouseY, int mouseButton) {
 		updatePosition(mouseX, mouseY);
 		super.onMouseClicked(mouseX, mouseY, mouseButton);
 	}
 
-	protected abstract void updatePosition(int mouseX, int mouseY);
+	protected abstract void updatePosition(float mouseX, float mouseY);
 
 	@Override
-	public void onMouseDragged(int mouseX, int mouseY, int mouseButton, double deltaX, double deltaY) {
+	public void onMouseDragged(float mouseX, float mouseY, int mouseButton, double deltaX, double deltaY) {
 		updatePosition(mouseX, mouseY);
 		super.onMouseDragged(mouseX, mouseY, mouseButton, deltaX, deltaY);
 	}

@@ -16,27 +16,27 @@ public class WVerticalScrollableContainer extends WAbstractWidget implements WDr
 
 	protected WVerticalScrollbar scrollbar;
 
-	protected int scrollbarWidth = 12;
+	protected float scrollbarWidth = 12;
 
-	protected int divisionSpace = 2;
+	protected float divisionSpace = 2;
 	protected int borderSpace = 0;
 	protected int fadeSpace = 12;
 
-	protected int lastScrollX = 0;
-	protected int lastScrollY = 0;
+	protected float lastScrollX = 0;
+	protected float lastScrollY = 0;
 
-	protected int lastDragScrollY = 0;
+	protected float lastDragScrollY = 0;
 
 	protected long lastDragScrollMilliseconds = 0;
 
-	protected double offsetY = 0;
+	protected float offsetY = 0;
 
 	protected float kineticScrollDelta = 0;
 
-	protected double kineticReductionCoefficient = 1.5;
-	protected double kineticAccelerationCoefficient = 1.5;
+	protected float kineticReductionCoefficient = 1.1f;
+	protected float kineticAccelerationCoefficient = 1.5f;
 
-	protected double dragScrollAccelerationCoefficient = 0.0035;
+	protected float dragScrollAccelerationCoefficient = 0.0035f;
 
 	protected boolean isDragScrolling = false;
 
@@ -65,19 +65,19 @@ public class WVerticalScrollableContainer extends WAbstractWidget implements WDr
 		this.scrollbar = scrollbar;
 	}
 
-	public int getScrollbarWidth() {
+	public float getScrollbarWidth() {
 		return scrollbarWidth;
 	}
 
-	public void setScrollbarWidth(int scrollbarWidth) {
+	public void setScrollbarWidth(float scrollbarWidth) {
 		this.scrollbarWidth = scrollbarWidth;
 	}
 
-	public int getDivisionSpace() {
+	public float getDivisionSpace() {
 		return divisionSpace;
 	}
 
-	public void setDivisionSpace(int divisionSpace) {
+	public void setDivisionSpace(float divisionSpace) {
 		this.divisionSpace = divisionSpace;
 	}
 
@@ -97,27 +97,27 @@ public class WVerticalScrollableContainer extends WAbstractWidget implements WDr
 		this.fadeSpace = fadeSpace;
 	}
 
-	public int getLastScrollX() {
+	public float getLastScrollX() {
 		return lastScrollX;
 	}
 
-	public void setLastScrollX(int lastScrollX) {
+	public void setLastScrollX(float lastScrollX) {
 		this.lastScrollX = lastScrollX;
 	}
 
-	public int getLastScrollY() {
+	public float getLastScrollY() {
 		return lastScrollY;
 	}
 
-	public void setLastScrollY(int lastScrollY) {
+	public void setLastScrollY(float lastScrollY) {
 		this.lastScrollY = lastScrollY;
 	}
 
-	public int getLastDragScrollY() {
+	public float getLastDragScrollY() {
 		return lastDragScrollY;
 	}
 
-	public void setLastDragScrollY(int lastDragScrollY) {
+	public void setLastDragScrollY(float lastDragScrollY) {
 		this.lastDragScrollY = lastDragScrollY;
 	}
 
@@ -129,11 +129,11 @@ public class WVerticalScrollableContainer extends WAbstractWidget implements WDr
 		this.lastDragScrollMilliseconds = lastDragScrollMilliseconds;
 	}
 
-	public double getOffsetY() {
+	public float getOffsetY() {
 		return offsetY;
 	}
 
-	public void setOffsetY(double offsetY) {
+	public void setOffsetY(float offsetY) {
 		this.offsetY = offsetY;
 	}
 
@@ -145,27 +145,27 @@ public class WVerticalScrollableContainer extends WAbstractWidget implements WDr
 		this.kineticScrollDelta = kineticScrollDelta;
 	}
 
-	public double getKineticReductionCoefficient() {
+	public float getKineticReductionCoefficient() {
 		return kineticReductionCoefficient;
 	}
 
-	public void setKineticReductionCoefficient(double kineticReductionCoefficient) {
+	public void setKineticReductionCoefficient(float kineticReductionCoefficient) {
 		this.kineticReductionCoefficient = kineticReductionCoefficient;
 	}
 
-	public double getKineticAccelerationCoefficient() {
+	public float getKineticAccelerationCoefficient() {
 		return kineticAccelerationCoefficient;
 	}
 
-	public void setKineticAccelerationCoefficient(double kineticAccelerationCoefficient) {
+	public void setKineticAccelerationCoefficient(float kineticAccelerationCoefficient) {
 		this.kineticAccelerationCoefficient = kineticAccelerationCoefficient;
 	}
 
-	public double getDragScrollAccelerationCoefficient() {
+	public float getDragScrollAccelerationCoefficient() {
 		return dragScrollAccelerationCoefficient;
 	}
 
-	public void setDragScrollAccelerationCoefficient(double dragScrollAccelerationCoefficient) {
+	public void setDragScrollAccelerationCoefficient(float dragScrollAccelerationCoefficient) {
 		this.dragScrollAccelerationCoefficient = dragScrollAccelerationCoefficient;
 	}
 
@@ -193,12 +193,12 @@ public class WVerticalScrollableContainer extends WAbstractWidget implements WDr
 		this.hasSmoothing = hasSmoothing;
 	}
 
-	protected int getBottomWidgetY() {
-		return getWidgets().stream().mapToInt(widget -> widget.getY() + widget.getHeight()).max().orElse(0);
+	protected float getBottomWidgetY() {
+		return (float) getWidgets().stream().mapToDouble(widget -> widget.getY() + widget.getHeight()).max().orElse(0);
 	}
 
-	protected int getBottomWidgetOffsetY() {
-		return getWidgets().stream().mapToInt(widget -> widget.getPosition().getOffsetY() + widget.getHeight() + getDivisionSpace()).max().orElse(0);
+	protected float getBottomWidgetOffsetY() {
+		return (float) getWidgets().stream().mapToDouble(widget -> widget.getPosition().getOffsetY() + widget.getHeight() + getDivisionSpace()).max().orElse(0);
 	}
 
 	@Override
@@ -212,14 +212,14 @@ public class WVerticalScrollableContainer extends WAbstractWidget implements WDr
 			return;
 		}
 
-		int bottomWidgetY = getBottomWidgetY();
-		int bottomY = getBottomWidgetOffsetY();
+		float bottomWidgetY = getBottomWidgetY();
+		float bottomY = getBottomWidgetOffsetY();
 
 		boolean hitTop = offsetY < -getDivisionSpace();
 		boolean hitBottom = bottomWidgetY < getHighY();
 
 		if ((!hitTop && deltaY > 0) || (!hitBottom && deltaY < 0)) {
-			offsetY = Math.min(Math.max(0, offsetY - deltaY), bottomY - getHeight() + 1);
+			offsetY = (float) Math.min(Math.max(0, offsetY - deltaY), bottomY - getHeight() + 1);
 
 			kineticScrollDelta = offsetY - deltaY >= bottomY + (2 * getDivisionSpace()) ? 0 : kineticScrollDelta;
 
@@ -229,7 +229,7 @@ public class WVerticalScrollableContainer extends WAbstractWidget implements WDr
 
 	public void updateChildren() {
 		for (WAbstractWidget widget : getWidgets()) {
-			widget.getPosition().setY((int) -offsetY + widget.getPosition().getOffsetY() + getY());
+			widget.getPosition().setY(-offsetY + widget.getPosition().getOffsetY() + getY());
 			boolean startContained = isWithinBounds(widget.getX(), widget.getY(), 1) || isWithinBounds(widget.getX() + widget.getWidth(), widget.getY() + widget.getHeight(), 1);
 			widget.setHidden(!startContained);
 		}
@@ -256,11 +256,11 @@ public class WVerticalScrollableContainer extends WAbstractWidget implements WDr
 	}
 
 	public void updateScrollbar() {
-		int scrollBarWidth = getScrollbarWidth();
-		int scrollBarHeight = getHeight();
+		float scrollBarWidth = getScrollbarWidth();
+		float scrollBarHeight = getHeight();
 
-		int scrollBarOffsetX = getWidth() - scrollBarWidth - getBorderSpace();
-		int scrollBarOffsetY = getBorderSpace();
+		float scrollBarOffsetX = getWidth() - scrollBarWidth - getBorderSpace();
+		float scrollBarOffsetY = getBorderSpace();
 
 		scrollbar.setPosition(Position.of(this, scrollBarOffsetX, scrollBarOffsetY, 0));
 		scrollbar.setSize(Size.of(scrollBarWidth, scrollBarHeight - (2 * getBorderSpace())));
@@ -275,8 +275,8 @@ public class WVerticalScrollableContainer extends WAbstractWidget implements WDr
 	public Size getUnderlyingSize() {
 		Set<WAbstractWidget> widgets = getWidgets();
 
-		int topmostY = getStartAnchorY();
-		int bottommostY = topmostY;
+		float topmostY = getStartAnchorY();
+		float bottommostY = topmostY;
 		for (WAbstractWidget widget : widgets) {
 			if (widget.getPosition().getOffsetY() < topmostY) {
 				topmostY = widget.getPosition().getOffsetY();
@@ -312,8 +312,8 @@ public class WVerticalScrollableContainer extends WAbstractWidget implements WDr
 	}
 
 	public void addSequentially(WAbstractWidget... widgetArray) {
-		int maxY = 0;
-		int maxX = 0;
+		float maxY = 0;
+		float maxX = 0;
 
 		for (WAbstractWidget widget : getAllWidgets()) {
 			if (widget.getPosition().getOffsetY() > maxY) {
@@ -348,7 +348,7 @@ public class WVerticalScrollableContainer extends WAbstractWidget implements WDr
 				}
 			}
 
-			int bottomY = getWidgets().stream().mapToInt(widget -> widget.getPosition().getOffsetY() + widget.getHeight() + getDivisionSpace()).max().orElse(0);
+			float bottomY = (float) getWidgets().stream().mapToDouble(widget -> widget.getPosition().getOffsetY() + widget.getHeight() + getDivisionSpace()).max().orElse(0);
 
 			if (offsetY + getHeight() > bottomY) {
 				offsetY = bottomY - getHeight();
@@ -367,19 +367,19 @@ public class WVerticalScrollableContainer extends WAbstractWidget implements WDr
 	}
 
 	@Override
-	public int getStartAnchorY() {
+	public float getStartAnchorY() {
 		return getY();
 	}
 
 	@Override
-	public int getEndAnchorY() {
+	public float getEndAnchorY() {
 		if (getVisibleHeight() > getUnderlyingHeight()) return getStartAnchorY();
 		return getStartAnchorY() - (getUnderlyingHeight() - getVisibleHeight());
 	}
 
 	@Override
-	public int getStartOffsetY() {
-		return (int) offsetY;
+	public float getStartOffsetY() {
+		return offsetY;
 	}
 
 	@Override
@@ -398,14 +398,14 @@ public class WVerticalScrollableContainer extends WAbstractWidget implements WDr
 	}
 
 	@Override
-	public boolean updateFocus(int positionX, int positionY) {
+	public boolean updateFocus(float positionX, float positionY) {
 		setFocus(isWithinBounds(positionX, positionY) && getWidgets().stream().noneMatch((WAbstractWidget::isFocused)));
 
 		return isFocused();
 	}
 
 	@Override
-	public void onMouseClicked(int mouseX, int mouseY, int mouseButton) {
+	public void onMouseClicked(float mouseX, float mouseY, int mouseButton) {
 		if (isWithinBounds(mouseX, mouseY)) {
 			if (mouseButton == 2) {
 				isDragScrolling = true;
@@ -421,7 +421,7 @@ public class WVerticalScrollableContainer extends WAbstractWidget implements WDr
 	}
 
 	@Override
-	public void onMouseReleased(int mouseX, int mouseY, int mouseButton) {
+	public void onMouseReleased(float mouseX, float mouseY, int mouseButton) {
 		if (mouseButton == 2) {
 			isDragScrolling = false;
 
@@ -435,7 +435,7 @@ public class WVerticalScrollableContainer extends WAbstractWidget implements WDr
 	}
 
 	@Override
-	public void onMouseScrolled(int mouseX, int mouseY, double deltaY) {
+	public void onMouseScrolled(float mouseX, float mouseY, double deltaY) {
 		if (hasSmoothing()) {
 			kineticScrollDelta += deltaY;
 		}
@@ -450,17 +450,6 @@ public class WVerticalScrollableContainer extends WAbstractWidget implements WDr
 
 	@Override
 	public void tick() {
-		if (kineticScrollDelta > 0.05 || kineticScrollDelta < -0.05) {
-			kineticScrollDelta = (float) (kineticScrollDelta / getKineticReductionCoefficient());
-
-			scroll(0, kineticScrollDelta * kineticReductionCoefficient * getKineticAccelerationCoefficient());
-			updateChildrenFocus();
-		} else {
-			kineticScrollDelta = 0;
-			lastScrollX = 0;
-			lastScrollY = 0;
-		}
-
 		if (isDragScrolling()) {
 			scroll(0, Math.pow(5, Math.abs(((float) (mouseY - lastDragScrollY) / 100))) * ((System.currentTimeMillis() - lastDragScrollMilliseconds) * dragScrollAccelerationCoefficient) * (lastDragScrollY - mouseY > 0 ? 1 : -1));
 		}
@@ -472,10 +461,22 @@ public class WVerticalScrollableContainer extends WAbstractWidget implements WDr
 			return;
 		}
 
+		if (kineticScrollDelta > 0.05 || kineticScrollDelta < -0.05) {
+			kineticScrollDelta = kineticScrollDelta / getKineticReductionCoefficient();
+
+			scroll(0, kineticScrollDelta * kineticReductionCoefficient * getKineticAccelerationCoefficient());
+
+			updateChildrenFocus();
+		} else {
+			kineticScrollDelta = 0;
+			lastScrollX = 0;
+			lastScrollY = 0;
+		}
+
 		BaseRenderer.enableCropping();
 
 		for (WAbstractWidget widget : getWidgets()) {
-			BaseRenderer.crop(getX(), getY(), getWideX(), getHighY());
+			BaseRenderer.crop((int) getX(), (int) getY() + 1, (int) getWideX(), (int) getHighY());
 
 			widget.draw();
 		}

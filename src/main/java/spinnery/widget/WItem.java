@@ -21,6 +21,6 @@ public class WItem extends WAbstractWidget {
 		if (isHidden()) return;
 
 		RenderSystem.translatef(0, 0, getZ());
-		BaseRenderer.getItemRenderer().renderGuiItem(stack, getX(), getY());
+		BaseRenderer.getItemRenderer().renderGuiItem(stack, (int) getX(), (int) getY());
 	}
 }

@@ -14,17 +14,17 @@ public class WHorizontalBar extends WAbstractBar {
 			return;
 		}
 
-		int x = getX();
-		int y = getY();
-		int z = getZ();
+		float x = getX();
+		float y = getY();
+		float z = getZ();
 
-		int sX = getWidth();
-		int sY = getHeight();
+		float sX = getWidth();
+		float sY = getHeight();
 
-		int rawHeight = MinecraftClient.getInstance().getWindow().getHeight();
-		double scale = MinecraftClient.getInstance().getWindow().getScaleFactor();
+		float rawHeight = MinecraftClient.getInstance().getWindow().getHeight();
+		float scale = (float) MinecraftClient.getInstance().getWindow().getScaleFactor();
 
-		int sBGX = (int) ((((float) sX / limit.getValue().intValue()) * progress.getValue().intValue()));
+		float sBGX = (int) (((sX / limit.getValue().intValue()) * progress.getValue().intValue()));
 
 		GL11.glEnable(GL11.GL_SCISSOR_TEST);
 

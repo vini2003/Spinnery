@@ -13,12 +13,12 @@ public class WToggle extends WAbstractToggle {
 			return;
 		}
 
-		int x = getX();
-		int y = getY();
-		int z = getZ();
+		float x = getX();
+		float y = getY();
+		float z = getZ();
 
-		int sX = getWidth();
-		int sY = getHeight();
+		float sX = getWidth();
+		float sY = getHeight();
 
 		BaseRenderer.drawRectangle(x, y, z, sX, 1, getStyle().asColor("top_left.background"));
 		BaseRenderer.drawRectangle(x, y, z, 1, sY, getStyle().asColor("top_left.background"));

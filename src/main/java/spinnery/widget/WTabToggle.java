@@ -15,7 +15,7 @@ public class WTabToggle extends WAbstractToggle {
 	protected ItemConvertible symbol;
 
 	@Override
-	public void onMouseClicked(int mouseX, int mouseY, int mouseButton) {
+	public void onMouseClicked(float mouseX, float mouseY, int mouseButton) {
 		super.onMouseClicked(mouseX, mouseY, mouseButton);
 		setToggleState(true);
 		if (parent instanceof WTabHolder.WTab) {
@@ -32,12 +32,12 @@ public class WTabToggle extends WAbstractToggle {
 			return;
 		}
 
-		int x = getX();
-		int y = getY();
-		int z = getZ();
+		float x = getX();
+		float y = getY();
+		float z = getZ();
 
-		int sX = getWidth();
-		int sY = getHeight() + 4;
+		float sX = getWidth();
+		float sY = getHeight() + 4;
 
 		if (!getToggleState()) {
 			BaseRenderer.drawPanel(x, y, z - 1, sX, sY, getStyle().asColor("shadow.off"), getStyle().asColor("background.off"), getStyle().asColor("highlight.off"), getStyle().asColor("outline.off"));
@@ -49,7 +49,7 @@ public class WTabToggle extends WAbstractToggle {
 
 		if (symbol != null) {
 			RenderSystem.enableLighting();
-			BaseRenderer.getItemRenderer().renderGuiItemIcon(new ItemStack(symbol, 1), x + 4, y + 4);
+			BaseRenderer.getItemRenderer().renderGuiItemIcon(new ItemStack(symbol, 1), (int) x + 4, (int) y + 4);
 		}
 		RenderSystem.disableLighting();
 

@@ -13,18 +13,18 @@ public class WHorizontalScrollableContainer extends WAbstractWidget implements W
 
 	protected WHorizontalScrollbar scrollbar;
 
-	protected int xOffset = 0;
+	protected float xOffset = 0;
 	protected float scrollKineticDelta = 0;
-	protected int rightSpace = 0;
+	protected float rightSpace = 0;
 
-	protected int lastScrollX = 0;
-	protected int lastScrollY = 0;
+	protected float lastScrollX = 0;
+	protected float lastScrollY = 0;
 
 	public WHorizontalScrollableContainer() {
 		scrollbar = WWidgetFactory.buildDetached(WHorizontalScrollbar.class).scrollable(this).setParent(this);
 	}
 
-	public int getRightSpace() {
+	public float getRightSpace() {
 		return rightSpace;
 	}
 
@@ -78,8 +78,8 @@ public class WHorizontalScrollableContainer extends WAbstractWidget implements W
 		return (W) this;
 	}
 
-	protected int getMaxX() {
-		int max = widgets.stream().mapToInt(w -> w.getPosition().getRelativeX() + w.getWidth()).max().orElse(0);
+	protected float getMaxX() {
+		float max = (float) widgets.stream().mapToDouble(w -> w.getPosition().getRelativeX() + w.getWidth()).max().orElse(0);
 		if (max == 0) return getStartAnchorX();
 		return getStartAnchorX() + max - getVisibleWidth() + rightSpace;
 	}
@@ -88,8 +88,8 @@ public class WHorizontalScrollableContainer extends WAbstractWidget implements W
 	public Size getUnderlyingSize() {
 		Set<WAbstractWidget> widgets = getWidgets();
 
-		int leftmostX = getStartAnchorX();
-		int rightmostX = leftmostX;
+		float leftmostX = getStartAnchorX();
+		float rightmostX = leftmostX;
 		for (WAbstractWidget widget : widgets) {
 			if (widget.getX() < leftmostX) {
 				leftmostX = widget.getX();
@@ -118,16 +118,16 @@ public class WHorizontalScrollableContainer extends WAbstractWidget implements W
 	}
 
 	@Override
-	public int getStartAnchorX() {
+	public float getStartAnchorX() {
 		return getX();
 	}
 
-	public int getMaxOffsetX() {
+	public float getMaxOffsetX() {
 		return getMaxX() - getStartAnchorX();
 	}
 
 	@Override
-	public int getEndAnchorX() {
+	public float getEndAnchorX() {
 		if (getWidth() > getUnderlyingWidth()) return getStartAnchorX();
 		return getStartAnchorX() - (getUnderlyingWidth() - getVisibleWidth());
 	}
@@ -152,20 +152,20 @@ public class WHorizontalScrollableContainer extends WAbstractWidget implements W
 	}
 
 	@Override
-	public int getStartOffsetX() {
+	public float getStartOffsetX() {
 		return xOffset;
 	}
 
 	public void scrollToStart() {
-		xOffset = 0;
+		xOffset = 0f;
 		updateChildren();
 	}
 
 	public void updateScrollbar() {
-		int scrollBarWidth = getVisibleWidth();
-		int scrollBarHeight = 6;
-		int scrollBarOffsetX = 0;
-		int scrollBarOffsetY = getHeight() - scrollBarHeight;
+		float scrollBarWidth = getVisibleWidth();
+		float scrollBarHeight = 6f;
+		float scrollBarOffsetX = 0f;
+		float scrollBarOffsetY = getHeight() - scrollBarHeight;
 		scrollbar.setPosition(Position.of(this, scrollBarOffsetX, scrollBarOffsetY, scrollbar.getPosition().getRelativeZ()));
 		scrollbar.setSize(Size.of(scrollBarWidth, scrollBarHeight));
 	}
@@ -240,13 +240,13 @@ public class WHorizontalScrollableContainer extends WAbstractWidget implements W
 	}
 
 	@Override
-	public boolean updateFocus(int positionX, int positionY) {
+	public boolean updateFocus(float positionX, float positionY) {
 		setFocus(isWithinBounds(positionX, positionY) && getWidgets().stream().noneMatch((WAbstractWidget::isFocused)));
 		return isFocused();
 	}
 
 	@Override
-	public void onMouseScrolled(int mouseX, int mouseY, double deltaY) {
+	public void onMouseScrolled(float mouseX, float mouseY, double deltaY) {
 		if (isWithinBounds(mouseX, mouseY)) {
 			scrollKineticDelta += deltaY;
 			scroll(deltaY * 5, 0);

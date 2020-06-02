@@ -18,15 +18,15 @@ public class WDraggableContainer extends WAbstractWidget implements WDrawableCol
 	protected float scrollKineticDeltaY = 0;
 	protected int xOffset;
 	protected int yOffset;
-	protected MutablePair<Integer, Integer> clickPosition = MutablePair.of(0, 0);
+	protected MutablePair<Float, Float> clickPosition = MutablePair.of(0f, 0f);
 
 	@Override
 	public Size getUnderlyingSize() {
 		// Leftmost widget (lower X)
-		int leftmostX = getStartAnchorX();
-		int rightmostX = leftmostX;
-		int topmostY = getStartAnchorY();
-		int bottommostY = topmostY;
+		float leftmostX = getStartAnchorX();
+		float rightmostX = leftmostX;
+		float topmostY = getStartAnchorY();
+		float bottommostY = topmostY;
 		for (WAbstractWidget widget : getWidgets()) {
 			if (widget.getX() < leftmostX) {
 				leftmostX = widget.getX();
@@ -45,7 +45,7 @@ public class WDraggableContainer extends WAbstractWidget implements WDrawableCol
 	}
 
 	@Override
-	public int getStartAnchorX() {
+	public float getStartAnchorX() {
 		return getX();
 	}
 
@@ -55,7 +55,7 @@ public class WDraggableContainer extends WAbstractWidget implements WDrawableCol
 	}
 
 	@Override
-	public int getStartAnchorY() {
+	public float getStartAnchorY() {
 		return getY();
 	}
 
@@ -66,7 +66,7 @@ public class WDraggableContainer extends WAbstractWidget implements WDrawableCol
 	}
 
 	@Override
-	public int getEndAnchorX() {
+	public float getEndAnchorX() {
 		if (getVisibleWidth() > getUnderlyingWidth()) return getStartAnchorX();
 		return getStartAnchorX() - (getUnderlyingWidth() - getVisibleWidth());
 	}
@@ -78,7 +78,7 @@ public class WDraggableContainer extends WAbstractWidget implements WDrawableCol
 	}
 
 	@Override
-	public int getEndAnchorY() {
+	public float getEndAnchorY() {
 		if (getVisibleHeight() > getUnderlyingHeight()) return getStartAnchorY();
 		return getStartAnchorY() - (getUnderlyingHeight() - getVisibleHeight());
 	}
@@ -91,7 +91,7 @@ public class WDraggableContainer extends WAbstractWidget implements WDrawableCol
 	}
 
 	@Override
-	public int getStartOffsetX() {
+	public float getStartOffsetX() {
 		return xOffset;
 	}
 
@@ -101,7 +101,7 @@ public class WDraggableContainer extends WAbstractWidget implements WDrawableCol
 	}
 
 	@Override
-	public int getStartOffsetY() {
+	public float getStartOffsetY() {
 		return yOffset;
 	}
 
@@ -139,7 +139,7 @@ public class WDraggableContainer extends WAbstractWidget implements WDrawableCol
 	}
 
 	@Override
-	public void onMouseClicked(int mouseX, int mouseY, int mouseButton) {
+	public void onMouseClicked(float mouseX, float mouseY, int mouseButton) {
 		scrollKineticDeltaX = 0;
 		scrollKineticDeltaY = 0;
 		dragging = mouseButton == 0 && isWithinBounds(mouseX, mouseY);
@@ -151,7 +151,7 @@ public class WDraggableContainer extends WAbstractWidget implements WDrawableCol
 	}
 
 	@Override
-	public void onMouseDragged(int mouseX, int mouseY, int mouseButton, double deltaX, double deltaY) {
+	public void onMouseDragged(float mouseX, float mouseY, int mouseButton, double deltaX, double deltaY) {
 		if (mouseButton == 0 && dragging) {
 			scrollKineticDeltaX += deltaX;
 			scrollKineticDeltaY += deltaY;

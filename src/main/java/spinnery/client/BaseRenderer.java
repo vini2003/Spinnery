@@ -131,7 +131,7 @@ public class BaseRenderer {
 	}
 
 	public static void crop(WLayoutElement element) {
-		crop(element.getX(), element.getY(), element.getX() + element.getWidth(), element.getY() + element.getHeight());
+		crop((int) element.getX(), (int) element.getY(), (int) element.getX() + (int) element.getWidth(), (int) element.getY() + (int) element.getHeight());
 	}
 
 	public static TextureManager getTextureManager() {

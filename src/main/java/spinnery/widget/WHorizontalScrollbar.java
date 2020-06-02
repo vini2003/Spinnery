@@ -25,7 +25,7 @@ public class WHorizontalScrollbar extends WAbstractWidget {
 	}
 
 	@Override
-	public void onMouseClicked(int mouseX, int mouseY, int mouseButton) {
+	public void onMouseClicked(float mouseX, float mouseY, int mouseButton) {
 		if (mouseButton == 0) {
 			if (isWithinBounds(mouseX, mouseY)) {
 				if (mouseX >= getScrollerX() && mouseX <= getScrollerX() + getScrollerWidth()) {
@@ -46,24 +46,24 @@ public class WHorizontalScrollbar extends WAbstractWidget {
 		super.onMouseClicked(mouseX, mouseY, mouseButton);
 	}
 
-	public int getScrollerX() {
-		double outerWidth = getWidth();
-		double innerWidth = scrollable.getUnderlyingWidth();
-		double leftOffset = scrollable.getStartOffsetX();
-		double percentToEnd = leftOffset / (innerWidth - outerWidth);
-		double maximumOffset = getWidth() - getScrollerWidth();
-		return getX() + (int) (maximumOffset * percentToEnd);
+	public float getScrollerX() {
+		float outerWidth = getWidth();
+		float innerWidth = scrollable.getUnderlyingWidth();
+		float leftOffset = scrollable.getStartOffsetX();
+		float percentToEnd = leftOffset / (innerWidth - outerWidth);
+		float maximumOffset = getWidth() - getScrollerWidth();
+		return getX() + (maximumOffset * percentToEnd);
 	}
 
-	public int getScrollerWidth() {
-		double outerWidth = getWidth();
-		double innerWidth = scrollable.getUnderlyingWidth();
-		int calculated = (int) (outerWidth * (outerWidth / (Math.max(innerWidth, outerWidth))));
+	public float getScrollerWidth() {
+		float outerWidth = getWidth();
+		float innerWidth = scrollable.getUnderlyingWidth();
+		float calculated = (outerWidth * (outerWidth / (Math.max(innerWidth, outerWidth))));
 		return Math.max(calculated, 4);
 	}
 
 	@Override
-	public void onMouseDragged(int mouseX, int mouseY, int mouseButton, double deltaX, double deltaY) {
+	public void onMouseDragged(float mouseX, float mouseY, int mouseButton, double deltaX, double deltaY) {
 		if (mouseButton == 0) {
 			if (dragging) {
 				double scrollerOffsetX = getScrollerX() + clickMouseX - mouseX;

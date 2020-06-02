@@ -23,7 +23,7 @@ public abstract class WAbstractButton extends WAbstractWidget {
 	 * Method called when the mouse is clicked, sets the button as lowered and dispatches events.
 	 */
 	@Override
-	public void onMouseClicked(int mouseX, int mouseY, int mouseButton) {
+	public void onMouseClicked(float mouseX, float mouseY, int mouseButton) {
 		setLowered(true);
 		super.onMouseClicked(mouseX, mouseY, mouseButton);
 	}

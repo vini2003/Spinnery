@@ -39,8 +39,8 @@ public abstract class WAbstractTextEditor extends WAbstractWidget implements WPa
 	protected double scale = 1.0;
 	protected boolean editable = true;
 	protected boolean active = false;
-	protected int xOffset = 0;
-	protected int yOffset = 0;
+	protected float xOffset = 0;
+	protected float yOffset = 0;
 	protected int cursorTick = 20;
 
 	public WAbstractTextEditor() {
@@ -61,20 +61,20 @@ public abstract class WAbstractTextEditor extends WAbstractWidget implements WPa
 	}
 
 	protected int getVisibleColumns() {
-		return getInnerSize().getWidth() / getXOffsetStep();
+		return (int) (getInnerSize().getWidth() / getXOffsetStep());
 	}
 
 	protected int getXOffsetStep() {
 		return (int) (TextRenderer.width('m') * scale);
 	}
 
-	protected Cursor getCursorFromMouse(int mouseX, int mouseY) {
+	protected Cursor getCursorFromMouse(float mouseX, float mouseY) {
 		Position innerPos = getInnerAnchor();
 		int x = -1;
 		int y = -1;
 		int lineOffset = getLineOffset();
 		int cH = getTextHeight();
-		int offsetMouseX = -xOffset + mouseX;
+		float offsetMouseX = -xOffset + mouseX;
 		for (int i = 0; i < getVisibleLines(); i++) {
 			if (mouseY >= innerPos.getY() + (cH + 2) * i && mouseY <= innerPos.getY() + (cH + 2) * i + cH) {
 				if (lineOffset + i > lines.size() - 1) {
@@ -205,7 +205,7 @@ public abstract class WAbstractTextEditor extends WAbstractWidget implements WPa
 	}
 
 	@Override
-	public void onMouseClicked(int mouseX, int mouseY, int mouseButton) {
+	public void onMouseClicked(float mouseX, float mouseY, int mouseButton) {
 		if (!isHidden() && editable && mouseButton == 0) {
 			setActive(isWithinBounds(mouseX, mouseY));
 			cursorTick = 20;
@@ -223,7 +223,7 @@ public abstract class WAbstractTextEditor extends WAbstractWidget implements WPa
 	}
 
 	@Override
-	public void onMouseDragged(int mouseX, int mouseY, int mouseButton, double deltaX, double deltaY) {
+	public void onMouseDragged(float mouseX, float mouseY, int mouseButton, double deltaX, double deltaY) {
 		if (!isHidden() && editable && mouseButton == 0 && active) {
 			cursorTick = 20;
 			Cursor mousePos = getCursorFromMouse(mouseX, mouseY);
@@ -264,7 +264,7 @@ public abstract class WAbstractTextEditor extends WAbstractWidget implements WPa
 	}
 
 	@Override
-	public void onMouseScrolled(int mouseX, int mouseY, double deltaY) {
+	public void onMouseScrolled(float mouseX, float mouseY, double deltaY) {
 		int cH = getTextHeight();
 		int textHeight = (lines.size() - 1) * cH;
 		if (textHeight <= getInnerSize().getHeight()) return;
@@ -571,23 +571,23 @@ public abstract class WAbstractTextEditor extends WAbstractWidget implements WPa
 	protected void onCursorMove() {
 		Position innerPos = getInnerAnchor();
 		Size innerSize = getInnerSize();
-		int innerX = innerPos.getX();
-		int innerY = innerPos.getY();
-		int innerWidth = innerSize.getWidth();
-		int innerHeight = innerSize.getHeight();
+		float innerX = innerPos.getX();
+		float innerY = innerPos.getY();
+		float innerWidth = innerSize.getWidth();
+		float innerHeight = innerSize.getHeight();
 		int lineOffset = getLineOffset();
 		int cH = getTextHeight();
-		int cursorX = innerX + getXOffset(cursor.y, cursor.x) - 1;
-		int cursorY = innerY + (cH + 2) * (cursor.y - lineOffset) - 2;
-		int offsetCursorX = cursorX + xOffset;
-		int yRenderOffset = yOffset + lineOffset * cH;
-		int offsetCursorStartY = cursorY + yRenderOffset;
-		int offsetCursorEndY = cursorY + yRenderOffset + cH;
+		float cursorX = innerX + getXOffset(cursor.y, cursor.x) - 1;
+		float cursorY = innerY + (cH + 2) * (cursor.y - lineOffset) - 2;
+		float offsetCursorX = cursorX + xOffset;
+		float yRenderOffset = yOffset + lineOffset * cH;
+		float offsetCursorStartY = cursorY + yRenderOffset;
+		float offsetCursorEndY = cursorY + yRenderOffset + cH;
 		if (offsetCursorX > innerX + innerWidth) {
 			xOffset -= (offsetCursorX - (innerX + innerWidth)) + 2;
 		} else if (offsetCursorX < innerX) {
-			int compensateOffset = xOffset + (innerX - offsetCursorX);
-			int widthOffset = xOffset + innerWidth;
+			float compensateOffset = xOffset + (innerX - offsetCursorX);
+			float widthOffset = xOffset + innerWidth;
 			xOffset = Math.min(0, Math.max(widthOffset, compensateOffset));
 		}
 		if (offsetCursorEndY > innerY + innerHeight) {
@@ -603,14 +603,14 @@ public abstract class WAbstractTextEditor extends WAbstractWidget implements WPa
 	}
 
 	protected void renderField() {
-		int z = getZ();
+		float z = getZ();
 
 		Position innerPos = getInnerAnchor();
 		Size innerSize = getInnerSize();
-		int innerX = innerPos.getX();
-		int innerY = innerPos.getY();
-		int innerWidth = innerSize.getWidth();
-		int innerHeight = innerSize.getHeight();
+		float innerX = innerPos.getX();
+		float innerY = innerPos.getY();
+		float innerWidth = innerSize.getWidth();
+		float innerHeight = innerSize.getHeight();
 
 		if (isEmpty() && !active) {
 			TextRenderer.pass().text(getLabel()).at(innerX, innerY, z).scale(scale)
@@ -627,9 +627,9 @@ public abstract class WAbstractTextEditor extends WAbstractWidget implements WPa
 
 		int lineOffset = getLineOffset();
 		int cH = getTextHeight();
-		int cursorX = innerX + getXOffset(cursor.y, cursor.x) - 1;
-		int cursorY = innerY + (cH + 2) * (cursor.y - lineOffset) - 2;
-		int yRenderOffset = yOffset + lineOffset * cH;
+		float cursorX = innerX + getXOffset(cursor.y, cursor.x) - 1;
+		float cursorY = innerY + (cH + 2) * (cursor.y - lineOffset) - 2;
+		float yRenderOffset = yOffset + lineOffset * cH;
 
 		RenderSystem.pushMatrix();
 		RenderSystem.translatef(xOffset, yRenderOffset, 0f);
@@ -663,7 +663,7 @@ public abstract class WAbstractTextEditor extends WAbstractWidget implements WPa
 	}
 
 	protected int getLineOffset() {
-		return -yOffset / getTextHeight();
+		return (int) (-yOffset / getTextHeight());
 	}
 
 	protected int getXOffset(int lineIndex, int charIndex) {
@@ -674,7 +674,7 @@ public abstract class WAbstractTextEditor extends WAbstractWidget implements WPa
 	}
 
 	protected int getVisibleLines() {
-		return Math.max(1, getInnerSize().getHeight() / getTextHeight());
+		return (int) Math.max(1, getInnerSize().getHeight() / getTextHeight());
 	}
 
 	protected boolean isLineVisible(int line) {

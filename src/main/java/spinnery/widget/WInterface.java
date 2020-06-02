@@ -108,7 +108,7 @@ public class WInterface implements WDrawableCollection, WModifiableCollection, W
 		onLayoutChange();
 	}
 
-	public void onMouseClicked(int mouseX, int mouseY, int mouseButton) {
+	public void onMouseClicked(float mouseX, float mouseY, int mouseButton) {
 		for (WAbstractWidget widget : getWidgets()) {
 			if (!EventUtilities.canReceiveMouse(widget)) continue;
 			widget.onMouseClicked(mouseX, mouseY, mouseButton);
@@ -119,7 +119,7 @@ public class WInterface implements WDrawableCollection, WModifiableCollection, W
 		}
 	}
 
-	public void onMouseReleased(int mouseX, int mouseY, int mouseButton) {
+	public void onMouseReleased(float mouseX, float mouseY, int mouseButton) {
 		for (WAbstractWidget widget : getWidgets()) {
 			if (!EventUtilities.canReceiveMouse(widget)) continue;
 			widget.onMouseReleased(mouseX, mouseY, mouseButton);
@@ -130,7 +130,7 @@ public class WInterface implements WDrawableCollection, WModifiableCollection, W
 		}
 	}
 
-	public boolean onMouseDragged(int mouseX, int mouseY, int mouseButton, int deltaX, int deltaY) {
+	public boolean onMouseDragged(float mouseX, float mouseY, int mouseButton, double deltaX, double deltaY) {
 		for (WAbstractWidget widget : getWidgets()) {
 			if (!EventUtilities.canReceiveMouse(widget)) continue;
 			widget.onMouseDragged(mouseX, mouseY, mouseButton, deltaX, deltaY);
@@ -142,7 +142,7 @@ public class WInterface implements WDrawableCollection, WModifiableCollection, W
 		return false;
 	}
 
-	public void onMouseScrolled(int mouseX, int mouseY, double deltaY) {
+	public void onMouseScrolled(float mouseX, float mouseY, double deltaY) {
 		for (WAbstractWidget widget : getWidgets()) {
 			if (!EventUtilities.canReceiveMouse(widget)) continue;
 			widget.onMouseScrolled(mouseX, mouseY, deltaY);
@@ -153,7 +153,7 @@ public class WInterface implements WDrawableCollection, WModifiableCollection, W
 		}
 	}
 
-	public void onMouseMoved(int mouseX, int mouseY) {
+	public void onMouseMoved(float mouseX, float mouseY) {
 		for (WAbstractWidget widget : getWidgets()) {
 			widget.updateFocus(mouseX, mouseY);
 			if (!EventUtilities.canReceiveMouse(widget)) continue;
@@ -198,7 +198,7 @@ public class WInterface implements WDrawableCollection, WModifiableCollection, W
 		}
 	}
 
-	public void onDrawMouseoverTooltip(int mouseX, int mouseY) {
+	public void onDrawMouseoverTooltip(float mouseX, float mouseY) {
 		for (WAbstractWidget widget : getWidgets()) {
 			widget.onDrawTooltip(mouseX, mouseY);
 		}
@@ -255,31 +255,31 @@ public class WInterface implements WDrawableCollection, WModifiableCollection, W
 
 	@Override
 	@Environment(EnvType.CLIENT)
-	public int getX() {
+	public float getX() {
 		return 0;
 	}
 
 	@Override
 	@Environment(EnvType.CLIENT)
-	public int getY() {
+	public float getY() {
 		return 0;
 	}
 
 	@Override
 	@Environment(EnvType.CLIENT)
-	public int getZ() {
+	public float getZ() {
 		return 0;
 	}
 
 	@Override
 	@Environment(EnvType.CLIENT)
-	public int getWidth() {
+	public float getWidth() {
 		return MinecraftClient.getInstance().getWindow().getScaledWidth();
 	}
 
 	@Override
 	@Environment(EnvType.CLIENT)
-	public int getHeight() {
+	public float getHeight() {
 		return MinecraftClient.getInstance().getWindow().getScaledHeight();
 	}
 }

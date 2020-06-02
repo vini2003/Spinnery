@@ -10,16 +10,16 @@ public class WVerticalBoxContainer extends WAbstractWidget implements WDrawableC
 	protected Set<WAbstractWidget> widgets = new HashSet<>();
 	protected List<WLayoutElement> orderedWidgets = new ArrayList<>();
 
-	public int topBottomPadding = 0;
+	public float topBottomPadding = 0;
 	public boolean topBottomOverride = false;
 
-	public int leftRightPadding = 0;
+	public float leftRightPadding = 0;
 	public boolean leftRightOverride = false;
 
-	public int intermediaryPadding = 0;
+	public float intermediaryPadding = 0;
 	public boolean intermediaryOverride = false;
 
-	public int outerBorderWidth = 1;
+	public float outerBorderWidth = 1;
 
 	public boolean hasBorder;
 
@@ -32,13 +32,13 @@ public class WVerticalBoxContainer extends WAbstractWidget implements WDrawableC
 		return hasBorder;
 	}
 
-	public <W extends WVerticalBoxContainer> W setTopBottomPadding(int topBottomPadding) {
+	public <W extends WVerticalBoxContainer> W setTopBottomPadding(float topBottomPadding) {
 		this.topBottomPadding = topBottomPadding;
 		this.topBottomOverride = true;
 		return (W) this;
 	}
 
-	public int getTopBottomPadding() {
+	public float getTopBottomPadding() {
 		return topBottomPadding;
 	}
 
@@ -48,13 +48,13 @@ public class WVerticalBoxContainer extends WAbstractWidget implements WDrawableC
 		return (W) this;
 	}
 
-	public <W extends WVerticalBoxContainer> W setLeftRightPadding(int leftRightPadding) {
+	public <W extends WVerticalBoxContainer> W setLeftRightPadding(float leftRightPadding) {
 		this.leftRightPadding = leftRightPadding;
 		this.leftRightOverride = true;
 		return (W) this;
 	}
 
-	public int getLeftRightPadding() {
+	public float getLeftRightPadding() {
 		return leftRightPadding;
 	}
 
@@ -64,13 +64,13 @@ public class WVerticalBoxContainer extends WAbstractWidget implements WDrawableC
 		return (W) this;
 	}
 
-	public <W extends WVerticalBoxContainer> W setIntermediaryPadding(int intermediaryPadding) {
+	public <W extends WVerticalBoxContainer> W setIntermediaryPadding(float intermediaryPadding) {
 		this.intermediaryPadding = intermediaryPadding;
 		this.intermediaryOverride = true;
 		return (W) this;
 	}
 
-	public int getIntermediaryPadding() {
+	public float getIntermediaryPadding() {
 		return intermediaryPadding;
 	}
 
@@ -80,12 +80,12 @@ public class WVerticalBoxContainer extends WAbstractWidget implements WDrawableC
 		return (W) this;
 	}
 
-	public <W extends WVerticalBoxContainer> W setOuterBorderWidth(int outerBorderWidth) {
+	public <W extends WVerticalBoxContainer> W setOuterBorderWidth(float outerBorderWidth) {
 		this.outerBorderWidth = outerBorderWidth;
 		return (W) this;
 	}
 
-	public int getOuterBorderWidth() {
+	public float getOuterBorderWidth() {
 		return outerBorderWidth;
 	}
 
@@ -134,17 +134,17 @@ public class WVerticalBoxContainer extends WAbstractWidget implements WDrawableC
 	}
 
 	public void updateContents() {
-		if (!leftRightOverride) leftRightPadding = (int) ((0.1) * (float) getWidth());
-		if (!topBottomOverride) topBottomPadding = (int) ((0.05) * (float) getHeight());
-		if (!intermediaryOverride) intermediaryPadding = (int) ((0.025) * (float) getHeight());
+		if (!leftRightOverride) leftRightPadding = ((0.1f) * getWidth());
+		if (!topBottomOverride) topBottomPadding = ((0.05f) * getHeight());
+		if (!intermediaryOverride) intermediaryPadding = ((0.025f) * getHeight());
 
-		int totalWidgetSizeX = getWidth() - (2 * leftRightPadding);
-		int totalWidgetSizeY = getHeight() - (2 * topBottomPadding) - ((this.widgets.size() > 1 ? this.widgets.size() - 1 : 0) * intermediaryPadding);
+		float totalWidgetSizeX = getWidth() - (2 * leftRightPadding);
+		float totalWidgetSizeY = getHeight() - (2 * topBottomPadding) - ((this.widgets.size() > 1 ? this.widgets.size() - 1 : 0) * intermediaryPadding);
 
-		int lastPositionY = topBottomPadding;
-		int positionX = leftRightPadding;
-		int widgetSizeX = totalWidgetSizeX;
-		int widgetSizeY = totalWidgetSizeY / Math.max(this.widgets.size(), 1);
+		float lastPositionY = topBottomPadding;
+		float positionX = leftRightPadding;
+		float widgetSizeX = totalWidgetSizeX;
+		float widgetSizeY = totalWidgetSizeY / Math.max(this.widgets.size(), 1);
 
 		for (WAbstractWidget widget : widgets) {
 			Size newWidgetSize = Size.of(widgetSizeX, widgetSizeY);

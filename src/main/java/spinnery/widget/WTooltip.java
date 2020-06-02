@@ -16,11 +16,11 @@ public class WTooltip extends WAbstractWidget implements WDrawableCollection, WM
 	public void draw() {
 		if (isHidden()) return;
 
-		int x = position.getX();
-		int y = position.getY();
-		int z = position.getRelativeZ();
-		int width = size.getWidth();
-		int height = size.getHeight();
+		float x = position.getX();
+		float y = position.getY();
+		float z = position.getRelativeZ();
+		float width = size.getWidth();
+		float height = size.getHeight();
 
 		Color backgroundStart = getStyle().asColor("background.start");
 		Color backgroundEnd = getStyle().asColor("background.end");

@@ -5,7 +5,7 @@ import org.lwjgl.glfw.GLFW;
 
 public class MouseUtilities {
 	public static final long nanoDelay = 150000000;
-	public static int mouseX = 0, mouseY = 0;
+	public static float mouseX = 0, mouseY = 0;
 	public static long lastNanos = 0;
 
 	/**

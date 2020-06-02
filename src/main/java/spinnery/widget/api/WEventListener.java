@@ -47,7 +47,7 @@ public interface WEventListener {
 	 * @param mouseY      Vertical position of mouse cursor.
 	 * @param mouseButton Mouse button released.
 	 */
-	void onMouseReleased(int mouseX, int mouseY, int mouseButton);
+	void onMouseReleased(float mouseX, float mouseY, int mouseButton);
 
 	/**
 	 * Event dispatched when the mouse is clicked.
@@ -56,7 +56,7 @@ public interface WEventListener {
 	 * @param mouseY      Vertical position of mouse cursor.
 	 * @param mouseButton Mouse button clicked.
 	 */
-	void onMouseClicked(int mouseX, int mouseY, int mouseButton);
+	void onMouseClicked(float mouseX, float mouseY, int mouseButton);
 
 	/**
 	 * Event dispatched when the mouse is dragged.
@@ -67,7 +67,7 @@ public interface WEventListener {
 	 * @param deltaX      Horizontal delta of mouse drag.
 	 * @param deltaY      Vertical delta of mouse drag.
 	 */
-	void onMouseDragged(int mouseX, int mouseY, int mouseButton, double deltaX, double deltaY);
+	void onMouseDragged(float mouseX, float mouseY, int mouseButton, double deltaX, double deltaY);
 
 	/**
 	 * Event dispatched when the mouse is moved.
@@ -75,7 +75,7 @@ public interface WEventListener {
 	 * @param mouseX Horizontal position of mouse cursor.
 	 * @param mouseY Vertical position of mouse cursor.
 	 */
-	void onMouseMoved(int mouseX, int mouseY);
+	void onMouseMoved(float mouseX, float mouseY);
 
 	/**
 	 * Event dispatched when the mouse wheel is scrolled.
@@ -84,7 +84,7 @@ public interface WEventListener {
 	 * @param mouseY Vertical position of the mouse cursor.
 	 * @param deltaY Vertical delta of mouse scroll.
 	 */
-	void onMouseScrolled(int mouseX, int mouseY, double deltaY);
+	void onMouseScrolled(float mouseX, float mouseY, double deltaY);
 
 	/**
 	 * Event dispatched when a tooltip should be drawn, however, currently not implemented.
@@ -92,7 +92,7 @@ public interface WEventListener {
 	 * @param mouseX Horizontal position of mouse cursor.
 	 * @param mouseY Vertical position of mouse cursor.
 	 */
-	void onDrawTooltip(int mouseX, int mouseY);
+	void onDrawTooltip(float mouseX, float mouseY);
 
 	/**
 	 * Event dispatched on game GUI alignment, e.g. when the game window is resized.

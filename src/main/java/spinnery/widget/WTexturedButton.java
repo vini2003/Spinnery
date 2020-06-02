@@ -69,13 +69,13 @@ public class WTexturedButton extends WAbstractWidget {
 	}
 
 	@Override
-	public void onMouseReleased(int mouseX, int mouseY, int mouseButton) {
+	public void onMouseReleased(float mouseX, float mouseY, int mouseButton) {
 		if (isDisabled) return;
 		super.onMouseReleased(mouseX, mouseY, mouseButton);
 	}
 
 	@Override
-	public void onMouseClicked(int mouseX, int mouseY, int mouseButton) {
+	public void onMouseClicked(float mouseX, float mouseY, int mouseButton) {
 		if (isDisabled) return;
 		super.onMouseClicked(mouseX, mouseY, mouseButton);
 	}

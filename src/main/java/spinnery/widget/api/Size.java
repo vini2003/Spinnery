@@ -9,19 +9,19 @@ import java.util.Objects;
  * Data class representing a width/height pair.
  */
 public class Size implements WSized, JanksonSerializable {
-	protected int width;
-	protected int height;
+	protected float width;
+	protected float height;
 
-	protected Size(int width, int height) {
+	protected Size(float width, float height) {
 		this.width = width;
 		this.height = height;
 	}
 
-	public static Size of(int width, int height) {
+	public static Size of(float width, float height) {
 		return new Size(width, height);
 	}
 
-	public static Size of(int side) {
+	public static Size of(float side) {
 		return new Size(side, side);
 	}
 
@@ -30,7 +30,7 @@ public class Size implements WSized, JanksonSerializable {
 	 *
 	 * @return Size copy with incremented fields
 	 */
-	public Size add(int width, int height) {
+	public Size add(float width, float height) {
 		Size newSize = Size.of(this);
 		return newSize.setWidth(newSize.getWidth() + width).setHeight(newSize.getHeight() + height);
 	}
@@ -44,20 +44,20 @@ public class Size implements WSized, JanksonSerializable {
 		return new Size(widget.getWidth(), widget.getHeight());
 	}
 
-	public int getWidth() {
+	public float getWidth() {
 		return width;
 	}
 
-	public Size setWidth(int width) {
+	public Size setWidth(float width) {
 		this.width = width;
 		return this;
 	}
 
-	public int getHeight() {
+	public float getHeight() {
 		return height;
 	}
 
-	public Size setHeight(int height) {
+	public Size setHeight(float height) {
 		this.height = height;
 		return this;
 	}

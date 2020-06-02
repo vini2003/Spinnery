@@ -25,7 +25,7 @@ public class WVerticalScrollbar extends WAbstractWidget {
 	}
 
 	@Override
-	public void onMouseClicked(int mouseX, int mouseY, int mouseButton) {
+	public void onMouseClicked(float mouseX, float mouseY, int mouseButton) {
 		if (mouseButton == 0) {
 			if (isWithinBounds(mouseX, mouseY)) {
 				if (mouseY >= getScrollerY() && mouseY <= getScrollerY() + getScrollerHeight()) {
@@ -46,24 +46,24 @@ public class WVerticalScrollbar extends WAbstractWidget {
 		super.onMouseClicked(mouseX, mouseY, mouseButton);
 	}
 
-	public int getScrollerY() {
-		double outerHeight = getHeight();
-		double innerHeight = scrollable.getUnderlyingHeight();
-		double topOffset = scrollable.getStartOffsetY();
-		double percentToEnd = topOffset / (innerHeight - outerHeight);
-		double maximumOffset = getHeight() - getScrollerHeight();
-		return getY() + (int) (maximumOffset * percentToEnd);
+	public float getScrollerY() {
+		float outerHeight = getHeight();
+		float innerHeight = scrollable.getUnderlyingHeight();
+		float topOffset = scrollable.getStartOffsetY();
+		float percentToEnd = topOffset / (innerHeight - outerHeight);
+		float maximumOffset = getHeight() - getScrollerHeight();
+		return getY() + (maximumOffset * percentToEnd);
 	}
 
-	public int getScrollerHeight() {
-		double outerHeight = getHeight();
-		double innerHeight = scrollable.getUnderlyingHeight();
-		int calculated = (int) (outerHeight * (outerHeight / Math.max(innerHeight, outerHeight)));
+	public float getScrollerHeight() {
+		float outerHeight = getHeight();
+		float innerHeight = scrollable.getUnderlyingHeight();
+		float calculated = (outerHeight * (outerHeight / Math.max(innerHeight, outerHeight)));
 		return Math.max(calculated, 4);
 	}
 
 	@Override
-	public void onMouseDragged(int mouseX, int mouseY, int mouseButton, double deltaX, double deltaY) {
+	public void onMouseDragged(float mouseX, float mouseY, int mouseButton, double deltaX, double deltaY) {
 		if (mouseButton == 0) {
 			if (dragging) {
 				double scrollerOffsetY = getScrollerY() + clickMouseY - mouseY;

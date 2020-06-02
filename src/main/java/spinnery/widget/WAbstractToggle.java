@@ -8,7 +8,7 @@ public abstract class WAbstractToggle extends WAbstractWidget {
 	protected boolean toggleState = false;
 
 	@Override
-	public void onMouseClicked(int mouseX, int mouseY, int mouseButton) {
+	public void onMouseClicked(float mouseX, float mouseY, int mouseButton) {
 		setToggleState(!getToggleState());
 		super.onMouseClicked(mouseX, mouseY, mouseButton);
 	}

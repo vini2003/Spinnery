@@ -235,12 +235,12 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 	}
 
 	@Environment(EnvType.CLIENT)
-	public int getWidth() {
+	public float getWidth() {
 		return size.getWidth();
 	}
 
 	@Environment(EnvType.CLIENT)
-	public int getHeight() {
+	public float getHeight() {
 		return size.getHeight();
 	}
 
@@ -250,7 +250,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 	 * @param height Value to be used as height.
 	 */
 	@Environment(EnvType.CLIENT)
-	public <W extends WAbstractWidget> W setHeight(int height) {
+	public <W extends WAbstractWidget> W setHeight(float height) {
 		return setSize(Size.of(size).setHeight(height));
 	}
 
@@ -260,7 +260,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 	 * @param width Value to be used as width.
 	 */
 	@Environment(EnvType.CLIENT)
-	public <W extends WAbstractWidget> W setWidth(int width) {
+	public <W extends WAbstractWidget> W setWidth(float width) {
 		return setSize(Size.of(size).setWidth(width));
 	}
 
@@ -538,7 +538,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 	 */
 	@Environment(EnvType.CLIENT)
 	@Override
-	public void onMouseReleased(int mouseX, int mouseY, int mouseButton) {
+	public void onMouseReleased(float mouseX, float mouseY, int mouseButton) {
 		if (this instanceof WDelegatedEventListener) {
 			for (WEventListener widget : ((WDelegatedEventListener) this).getEventDelegates()) {
 				widget.onMouseReleased(mouseX, mouseY, mouseButton);
@@ -555,7 +555,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 	 */
 	@Environment(EnvType.CLIENT)
 	@Override
-	public void onMouseClicked(int mouseX, int mouseY, int mouseButton) {
+	public void onMouseClicked(float mouseX, float mouseY, int mouseButton) {
 		if (this instanceof WDelegatedEventListener) {
 			for (WEventListener widget : ((WDelegatedEventListener) this).getEventDelegates()) {
 				if (EventUtilities.canReceiveMouse(widget))
@@ -573,7 +573,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 	 */
 	@Environment(EnvType.CLIENT)
 	@Override
-	public void onMouseDragged(int mouseX, int mouseY, int mouseButton, double deltaX, double deltaY) {
+	public void onMouseDragged(float mouseX, float mouseY, int mouseButton, double deltaX, double deltaY) {
 		if (this instanceof WDelegatedEventListener) {
 			for (WEventListener widget : ((WDelegatedEventListener) this).getEventDelegates()) {
 				if (EventUtilities.canReceiveMouse(widget))
@@ -591,7 +591,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 	 */
 	@Environment(EnvType.CLIENT)
 	@Override
-	public void onMouseMoved(int mouseX, int mouseY) {
+	public void onMouseMoved(float mouseX, float mouseY) {
 		if (this instanceof WDelegatedEventListener) {
 			for (WEventListener widget : ((WDelegatedEventListener) this).getEventDelegates()) {
 				if (widget instanceof WAbstractWidget) {
@@ -623,7 +623,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 	 * @return True if focused; False if not.
 	 */
 	@Environment(EnvType.CLIENT)
-	public boolean updateFocus(int positionX, int positionY) {
+	public boolean updateFocus(float positionX, float positionY) {
 		if (isHidden()) {
 			return false;
 		}
@@ -687,7 +687,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 	 * @return True if within boundaries; False if not.
 	 */
 	@Environment(EnvType.CLIENT)
-	public boolean isWithinBounds(int positionX, int positionY) {
+	public boolean isWithinBounds(float positionX, float positionY) {
 		return isWithinBounds(positionX, positionY, 0);
 	}
 
@@ -701,7 +701,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 	 * @return True if within boundaries; False if not.
 	 */
 	@Environment(EnvType.CLIENT)
-	public boolean isWithinBounds(int positionX, int positionY, int tolerance) {
+	public boolean isWithinBounds(float positionX, float positionY, float tolerance) {
 		return positionX + tolerance > getX()
 				&& positionX - tolerance < getWideX()
 				&& positionY + tolerance > getY()
@@ -709,27 +709,27 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 	}
 
 	@Environment(EnvType.CLIENT)
-	public int getX() {
+	public float getX() {
 		return position.getX();
 	}
 
 	@Environment(EnvType.CLIENT)
-	public int getWideX() {
+	public float getWideX() {
 		return getX() + getWidth();
 	}
 
 	@Environment(EnvType.CLIENT)
-	public int getY() {
+	public float getY() {
 		return position.getY();
 	}
 
 	@Environment(EnvType.CLIENT)
-	public int getHighY() {
+	public float getHighY() {
 		return getY() + getHeight();
 	}
 
 	@Environment(EnvType.CLIENT)
-	public int getZ() {
+	public float getZ() {
 		return position.getZ();
 	}
 
@@ -739,7 +739,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 	 * @param z Value to be used as depth (Z) position.
 	 */
 	@Environment(EnvType.CLIENT)
-	public <W extends WAbstractWidget> W setZ(int z) {
+	public <W extends WAbstractWidget> W setZ(float z) {
 		return setPosition(Position.of(position).setZ(z));
 	}
 
@@ -749,7 +749,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 	 * @param y Value to be used as vertical (Y) position.
 	 */
 	@Environment(EnvType.CLIENT)
-	public <W extends WAbstractWidget> W setY(int y) {
+	public <W extends WAbstractWidget> W setY(float y) {
 		return setPosition(Position.of(position).setY(y));
 	}
 
@@ -759,7 +759,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 	 * @param x Value to be used as horizontal (X) position.
 	 */
 	@Environment(EnvType.CLIENT)
-	public <W extends WAbstractWidget> W setX(int x) {
+	public <W extends WAbstractWidget> W setX(float x) {
 		return setPosition(Position.of(position).setX(x));
 	}
 
@@ -769,7 +769,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 	 */
 	@Environment(EnvType.CLIENT)
 	@Override
-	public void onMouseScrolled(int mouseX, int mouseY, double deltaY) {
+	public void onMouseScrolled(float mouseX, float mouseY, double deltaY) {
 		if (this instanceof WDelegatedEventListener) {
 			for (WEventListener widget : ((WDelegatedEventListener) this).getEventDelegates()) {
 				if (EventUtilities.canReceiveMouse(widget)) {
@@ -788,7 +788,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 	 */
 	@Environment(EnvType.CLIENT)
 	@Override
-	public void onDrawTooltip(int mouseX, int mouseY) {
+	public void onDrawTooltip(float mouseX, float mouseY) {
 		if (this instanceof WDelegatedEventListener) {
 			for (WEventListener widget : ((WDelegatedEventListener) this).getEventDelegates()) {
 				widget.onDrawTooltip(mouseX, mouseY);
@@ -914,7 +914,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 	}
 
 	/**
-	 * Retrieves this widget's event called when {@link #onMouseClicked(int, int, int)} is called.
+	 * Retrieves this widget's event called when {@link #onMouseClicked(float, float, int)} is called.
 	 */
 	@Environment(EnvType.CLIENT)
 	public <W extends WAbstractWidget> WMouseClickListener<W> getOnMouseClicked() {
@@ -922,7 +922,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 	}
 
 	/**
-	 * Sets this widget's event called when {@link #onMouseClicked(int, int, int)} is called.
+	 * Sets this widget's event called when {@link #onMouseClicked(float, float, int)} is called.
 	 *
 	 * @param linkedRunnable Event to be associated with this widget.
 	 */
@@ -933,7 +933,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 	}
 
 	/**
-	 * Retrieves this widget's event called when {@link #onMouseDragged(int, int, int, double, double)} is called.
+	 * Retrieves this widget's event called when {@link #onMouseDragged(float, float, int, double, double)} is called.
 	 */
 	@Environment(EnvType.CLIENT)
 	public <W extends WAbstractWidget> WMouseDragListener<W> getOnMouseDragged() {
@@ -941,7 +941,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 	}
 
 	/**
-	 * Sets this widget's event called when {@link #onMouseDragged(int, int, int, double, double)} is called.
+	 * Sets this widget's event called when {@link #onMouseDragged(float, float, int, double, double)} is called.
 	 *
 	 * @param linkedRunnable Event to be associated with this widget.
 	 */
@@ -952,7 +952,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 	}
 
 	/**
-	 * Retrieves this widget's event called when {@link #onMouseMoved(int, int)} is called.
+	 * Retrieves this widget's event called when {@link #onMouseMoved(float, float)} is called.
 	 */
 	@Environment(EnvType.CLIENT)
 	public <W extends WAbstractWidget> WMouseMoveListener<W> getOnMouseMoved() {
@@ -960,7 +960,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 	}
 
 	/**
-	 * Sets this widget's event called when {@link #onMouseMoved(int, int)} is called.
+	 * Sets this widget's event called when {@link #onMouseMoved(float, float)} is called.
 	 *
 	 * @param linkedRunnable Event to be associated with this widget.
 	 */
@@ -971,7 +971,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 	}
 
 	/**
-	 * Retrieves this widget's event called when {@link #onMouseScrolled(int, int, double)} is called.
+	 * Retrieves this widget's event called when {@link #onMouseScrolled(float, float, double)} is called.
 	 */
 	@Environment(EnvType.CLIENT)
 	public <W extends WAbstractWidget> WMouseScrollListener<W> getOnMouseScrolled() {
@@ -979,7 +979,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 	}
 
 	/**
-	 * Sets this widget's event called when {@link #onMouseScrolled(int, int, double)} is called.
+	 * Sets this widget's event called when {@link #onMouseScrolled(float, float, double)} is called.
 	 *
 	 * @param linkedRunnable Event to be associated with this widget.
 	 */
@@ -990,7 +990,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 	}
 
 	/**
-	 * Retrieves this widget's event called when {@link #onMouseReleased(int, int, int)} is called.
+	 * Retrieves this widget's event called when {@link #onMouseReleased(float, float, int)} is called.
 	 */
 	@Environment(EnvType.CLIENT)
 	public <W extends WAbstractWidget> WMouseReleaseListener<W> getOnMouseReleased() {
@@ -998,7 +998,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 	}
 
 	/**
-	 * Sets this widget's event called when {@link #onMouseReleased(int, int, int)} is called.
+	 * Sets this widget's event called when {@link #onMouseReleased(float, float, int)} is called.
 	 *
 	 * @param linkedRunnable Event to be associated with this widget.
 	 */
@@ -1009,7 +1009,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 	}
 
 	/**
-	 * Retrieves this widget's event called when {@link #onDrawTooltip(int, int)} is called.
+	 * Retrieves this widget's event called when {@link #onDrawTooltip(float, float)} is called.
 	 */
 	@Environment(EnvType.CLIENT)
 	public <W extends WAbstractWidget> WTooltipDrawListener<W> getOnDrawTooltip() {
@@ -1017,7 +1017,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 	}
 
 	/**
-	 * Sets this widget's event called when {@link #onDrawTooltip(int, int)} is called.
+	 * Sets this widget's event called when {@link #onDrawTooltip(float, float)} is called.
 	 *
 	 * @param linkedRunnable Event to be associated with this widget.
 	 */

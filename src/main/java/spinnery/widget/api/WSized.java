@@ -10,7 +10,7 @@ public interface WSized {
 	 *
 	 * @return The width of this object.
 	 */
-	default int getWidth() {
+	default float getWidth() {
 		return 0;
 	}
 
@@ -19,7 +19,7 @@ public interface WSized {
 	 *
 	 * @return The height of this object.
 	 */
-	default int getHeight() {
+	default float getHeight() {
 		return 0;
 	}
 }

@@ -46,9 +46,9 @@ public class WStaticText extends WAbstractWidget {
 			return;
 		}
 
-		int x = getX();
-		int y = getY();
-		int z = getZ();
+		float x = getX();
+		float y = getY();
+		float z = getZ();
 
 		TextRenderer.pass().text(getText()).font(font).at(x, y, z).scale(scale).maxWidth(maxWidth)
 				.shadow(getStyle().asBoolean("shadow")).shadowColor(getStyle().asColor("shadowColor"))
@@ -56,12 +56,12 @@ public class WStaticText extends WAbstractWidget {
 	}
 
 	@Override
-	public int getHeight() {
+	public float getHeight() {
 		return TextRenderer.height(font);
 	}
 
 	@Override
-	public int getWidth() {
+	public float getWidth() {
 		return TextRenderer.width(text);
 	}
 

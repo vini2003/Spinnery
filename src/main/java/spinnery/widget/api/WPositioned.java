@@ -14,7 +14,7 @@ public interface WPositioned {
 	 *
 	 * @return The X position of this object.
 	 */
-	default int getX() {
+	default float getX() {
 		return 0;
 	}
 
@@ -23,7 +23,7 @@ public interface WPositioned {
 	 *
 	 * @return The Y position of this object.
 	 */
-	default int getY() {
+	default float getY() {
 		return 0;
 	}
 
@@ -32,7 +32,7 @@ public interface WPositioned {
 	 *
 	 * @return The Z position of this object.
 	 */
-	default int getZ() {
+	default float getZ() {
 		return 0;
 	}
 }

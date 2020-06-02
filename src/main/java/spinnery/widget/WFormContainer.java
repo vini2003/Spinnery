@@ -12,19 +12,19 @@ public class WFormContainer extends WAbstractWidget implements WDrawableCollecti
 
 	protected Map<WAbstractWidget, WAbstractWidget> widgetMap = new LinkedHashMap<>();
 
-	public int topBottomPadding = 0;
+	public float topBottomPadding = 0f;
 	public boolean topBottomOverride = false;
 
-	public int leftRightPadding = 0;
+	public float leftRightPadding = 0f;
 	public boolean leftRightOverride = false;
 
-	public int verticalIntermediaryPadding = 0;
+	public float verticalIntermediaryPadding = 0f;
 	public boolean verticalIntermediaryOverride = false;
 
-	public int horizontalIntermediaryPadding = 0;
+	public float horizontalIntermediaryPadding = 0f;
 	public boolean horizontalIntermediaryOverride = false;
 
-	public int outerBorderWidth = 1;
+	public float outerBorderWidth = 1f;
 
 	public boolean hasBorder;
 
@@ -37,13 +37,13 @@ public class WFormContainer extends WAbstractWidget implements WDrawableCollecti
 		return hasBorder;
 	}
 
-	public <W extends WFormContainer> W setTopBottomPadding(int topBottomPadding) {
+	public <W extends WFormContainer> W setTopBottomPadding(float topBottomPadding) {
 		this.topBottomPadding = topBottomPadding;
 		this.topBottomOverride = true;
 		return (W) this;
 	}
 
-	public int getTopBottomPadding() {
+	public float getTopBottomPadding() {
 		return topBottomPadding;
 	}
 
@@ -53,13 +53,13 @@ public class WFormContainer extends WAbstractWidget implements WDrawableCollecti
 		return (W) this;
 	}
 
-	public <W extends WFormContainer> W setLeftRightPadding(int leftRightPadding) {
+	public <W extends WFormContainer> W setLeftRightPadding(float leftRightPadding) {
 		this.leftRightPadding = leftRightPadding;
 		this.leftRightOverride = true;
 		return (W) this;
 	}
 
-	public int getLeftRightPadding() {
+	public float getLeftRightPadding() {
 		return leftRightPadding;
 	}
 
@@ -69,13 +69,13 @@ public class WFormContainer extends WAbstractWidget implements WDrawableCollecti
 		return (W) this;
 	}
 
-	public <W extends WFormContainer> W setVerticalIntermediaryPadding(int verticalIntermediaryPadding) {
+	public <W extends WFormContainer> W setVerticalIntermediaryPadding(float verticalIntermediaryPadding) {
 		this.verticalIntermediaryPadding = verticalIntermediaryPadding;
 		this.verticalIntermediaryOverride = true;
 		return (W) this;
 	}
 
-	public int getVerticalIntermediaryPadding() {
+	public float getVerticalIntermediaryPadding() {
 		return verticalIntermediaryPadding;
 	}
 
@@ -85,13 +85,13 @@ public class WFormContainer extends WAbstractWidget implements WDrawableCollecti
 		return (W) this;
 	}
 
-	public <W extends WFormContainer> W setHorizontalIntermediaryPadding(int horizontalIntermediaryPadding) {
+	public <W extends WFormContainer> W setHorizontalIntermediaryPadding(float horizontalIntermediaryPadding) {
 		this.horizontalIntermediaryPadding = horizontalIntermediaryPadding;
 		this.horizontalIntermediaryOverride = true;
 		return (W) this;
 	}
 
-	public int getHorizontalIntermediaryPadding() {
+	public float getHorizontalIntermediaryPadding() {
 		return horizontalIntermediaryPadding;
 	}
 
@@ -101,12 +101,12 @@ public class WFormContainer extends WAbstractWidget implements WDrawableCollecti
 		return (W) this;
 	}
 
-	public <W extends WFormContainer> W setOuterBorderWidth(int outerBorderWidth) {
+	public <W extends WFormContainer> W setOuterBorderWidth(float outerBorderWidth) {
 		this.outerBorderWidth = outerBorderWidth;
 		return (W) this;
 	}
 
-	public int getOuterBorderWidth() {
+	public float getOuterBorderWidth() {
 		return outerBorderWidth;
 	}
 
@@ -179,18 +179,18 @@ public class WFormContainer extends WAbstractWidget implements WDrawableCollecti
 	}
 
 	public void updateContents() {
-		if (!leftRightOverride) leftRightPadding = (int) ((0.1) * (float) getWidth());
-		if (!topBottomOverride) topBottomPadding = (int) ((0.05) * (float) getHeight());
-		if (!verticalIntermediaryOverride) verticalIntermediaryPadding = (int) ((0.025) * (float) getHeight());
-		if (!horizontalIntermediaryOverride) horizontalIntermediaryPadding = (int) ((0.05) * (float) getWidth());
+		if (!leftRightOverride) leftRightPadding = ((0.1f) * getWidth());
+		if (!topBottomOverride) topBottomPadding = ((0.05f) * getHeight());
+		if (!verticalIntermediaryOverride) verticalIntermediaryPadding = ((0.025f) * getHeight());
+		if (!horizontalIntermediaryOverride) horizontalIntermediaryPadding = ((0.05f) * getWidth());
 
-		int totalWidgetSizeX = getWidth() - (2 * leftRightPadding) - horizontalIntermediaryPadding;
-		int totalWidgetSizeY = getHeight() - (2 * topBottomPadding) - ((this.widgets.size() > 1 ? this.widgets.size() / 2 - 2 : 0) * verticalIntermediaryPadding);
+		float totalWidgetSizeX = getWidth() - (2 * leftRightPadding) - horizontalIntermediaryPadding;
+		float totalWidgetSizeY = getHeight() - (2 * topBottomPadding) - ((this.widgets.size() > 1 ? this.widgets.size() / 2 - 2 : 0) * verticalIntermediaryPadding);
 
-		int lastPositionY = topBottomPadding;
-		int positionX = leftRightPadding;
-		int widgetSizeX = totalWidgetSizeX;
-		int widgetSizeY = totalWidgetSizeY / Math.max(this.widgets.size() / 2, 1);
+		float lastPositionY = topBottomPadding;
+		float positionX = leftRightPadding;
+		float widgetSizeX = totalWidgetSizeX;
+		float widgetSizeY = totalWidgetSizeY / Math.max(this.widgets.size() / 2, 1);
 
 		for (Map.Entry<WAbstractWidget, WAbstractWidget> entry : widgetMap.entrySet()) {
 			Size newSizeKey = Size.of(widgetSizeX / 2, widgetSizeY);

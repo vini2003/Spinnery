@@ -10,7 +10,7 @@ public interface WHorizontalScrollable extends WScrollable {
 	 *
 	 * @return start anchor X position
 	 */
-	int getStartAnchorX();
+	float getStartAnchorX();
 
 	/**
 	 * Gets the X coordinate of the end anchor. When containing widgets are positioned at the end anchor,
@@ -18,7 +18,7 @@ public interface WHorizontalScrollable extends WScrollable {
 	 *
 	 * @return end anchor X position
 	 */
-	int getEndAnchorX();
+	float getEndAnchorX();
 
 	/**
 	 * Gets the X offset from the start anchor. This offset represents how far from the start anchor along
@@ -26,5 +26,5 @@ public interface WHorizontalScrollable extends WScrollable {
 	 *
 	 * @return X offset from start anchor
 	 */
-	int getStartOffsetX();
+	float getStartOffsetX();
 }

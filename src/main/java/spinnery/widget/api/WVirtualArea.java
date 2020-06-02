@@ -31,17 +31,17 @@ public class WVirtualArea implements WLayoutElement {
 	}
 
 	@Override
-	public int getX() {
+	public float getX() {
 		return position.getX();
 	}
 
 	@Override
-	public int getY() {
+	public float getY() {
 		return position.getY();
 	}
 
 	@Override
-	public int getZ() {
+	public float getZ() {
 		return position.getZ();
 	}
 
@@ -53,33 +53,33 @@ public class WVirtualArea implements WLayoutElement {
 
 	@Environment(EnvType.CLIENT)
 	public void centerX() {
-		int x;
+		float x;
 		if (parent == null) {
-			x = MinecraftClient.getInstance().getWindow().getScaledWidth() / 2 - getWidth() / 2;
+			x = MinecraftClient.getInstance().getWindow().getScaledWidth() / 2f - getWidth() / 2f;
 		} else {
-			x = parent.getWidth() / 2 - getWidth() / 2;
+			x = parent.getWidth() / 2f - getWidth() / 2f;
 		}
 		position.setX(x);
 	}
 
 	@Environment(EnvType.CLIENT)
 	public void centerY() {
-		int y;
+		float y;
 		if (parent == null) {
-			y = MinecraftClient.getInstance().getWindow().getScaledHeight() / 2 - getHeight() / 2;
+			y = MinecraftClient.getInstance().getWindow().getScaledHeight() / 2f - getHeight() / 2f;
 		} else {
-			y = parent.getHeight() / 2 - getHeight() / 2;
+			y = parent.getHeight() / 2f - getHeight() / 2f;
 		}
 		position.setY(y);
 	}
 
 	@Override
-	public int getWidth() {
+	public float getWidth() {
 		return size.getWidth();
 	}
 
 	@Override
-	public int getHeight() {
+	public float getHeight() {
 		return size.getHeight();
 	}
 
@@ -87,7 +87,7 @@ public class WVirtualArea implements WLayoutElement {
 	public void draw() {
 	}
 
-	public boolean isWithinBounds(int x, int y) {
+	public boolean isWithinBounds(float x, float y) {
 		return x >= position.getX() && x <= position.getX() + size.getWidth()
 				&& y >= position.getY() && y <= position.getY() + size.getHeight();
 	}
