@@ -56,6 +56,8 @@ public class WidgetRegistry {
 		register(new Identifier("spinnery", "horizontal_box_container"), WHorizontalBoxContainer.class);
 		register(new Identifier("spinnery", "vertical_box_container"), WVerticalBoxContainer.class);
 		register(new Identifier("spinnery", "form_container"), WFormContainer.class);
+		register(new Identifier("spinnery", "vertical_arrow_up"), WVerticalArrowUp.class);
+		register(new Identifier("spinnery", "vertical_arrow_down"), WVerticalArrowDown.class);
 	}
 
 	public static void register(Identifier id, Class<? extends WAbstractWidget> wClass) {

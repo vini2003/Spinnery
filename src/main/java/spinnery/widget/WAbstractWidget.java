@@ -36,6 +36,9 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 
 	protected boolean isHidden = false;
 	protected boolean hasFocus = false;
+	protected boolean isHeld = false;
+
+	protected long heldSince = 0;
 
 	protected WCharTypeListener runnableOnCharTyped;
 	protected WMouseClickListener runnableOnMouseClicked;
@@ -547,6 +550,8 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 		if (runnableOnMouseReleased != null) {
 			runnableOnMouseReleased.event(this, mouseX, mouseY, mouseButton);
 		}
+
+		isHeld = false;
 	}
 
 	/**
@@ -562,8 +567,14 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 					widget.onMouseClicked(mouseX, mouseY, mouseButton);
 			}
 		}
+
 		if (runnableOnMouseClicked != null) {
 			runnableOnMouseClicked.event(this, mouseX, mouseY, mouseButton);
+		}
+
+		if (isWithinBounds(mouseX, mouseY)) {
+			isHeld = true;
+			heldSince = System.currentTimeMillis();
 		}
 	}
 
@@ -677,6 +688,26 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 	@Environment(EnvType.CLIENT)
 	public boolean isFocused() {
 		return hasFocus;
+	}
+
+	/**
+	 * Asserts whether this widget is held or not.
+	 *
+	 * @return True if held; false if not.
+	 */
+	@Environment(EnvType.CLIENT)
+	public boolean isHeld() {
+		return isHeld;
+	}
+
+	/**
+	 * Retrieves the time since this widget was last held.
+	 *
+	 * @return the requested value
+	 */
+	@Environment(EnvType.CLIENT)
+	public long isHeldSince() {
+		return heldSince;
 	}
 
 	/**

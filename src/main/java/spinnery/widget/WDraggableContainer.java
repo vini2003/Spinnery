@@ -2,7 +2,7 @@ package spinnery.widget;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import spinnery.client.BaseRenderer;
+import spinnery.client.render.BaseRenderer;
 import spinnery.util.MutablePair;
 import spinnery.widget.api.*;
 

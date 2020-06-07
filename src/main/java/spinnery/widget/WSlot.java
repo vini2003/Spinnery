@@ -13,7 +13,7 @@ import net.minecraft.tag.Tag;
 import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.Level;
 import spinnery.Spinnery;
-import spinnery.client.BaseRenderer;
+import spinnery.client.render.BaseRenderer;
 import spinnery.common.BaseContainer;
 import spinnery.widget.api.Action;
 import spinnery.widget.api.Position;
@@ -181,14 +181,15 @@ public class WSlot extends WAbstractWidget {
 		RenderSystem.translatef(0, 0, +250);
 		RenderSystem.translatef(0, 0, -150);
 		RenderSystem.enableLighting();
-		BaseRenderer.getItemRenderer().renderGuiItemIcon(stackA, (int) (1 + x + (sX - 18)) / 2, (int) ((1 + y + (sY - 18)) / 2));
-		BaseRenderer.getItemRenderer().renderGuiItemOverlay(MinecraftClient.getInstance().textRenderer, stackA, (int) (1 + x + (sX - 18)) / 2, (int) (1 + y + (sY - 18)) / 2, stackA.getCount() == 1 ? "" : withSuffix(stackA.getCount()));
+		BaseRenderer.getItemRenderer().renderGuiItemIcon(stackA, (int) ((1 + x) + ((sX - 18) / 2)), (int) ((1 + y) + ((sY - 18) / 2)));
+		BaseRenderer.getItemRenderer().renderGuiItemOverlay(MinecraftClient.getInstance().textRenderer, stackA, (int) ((1 + x) + ((sX - 18) / 2)), (int) ((1 + y) + ((sY - 18) / 2)), stackA.getCount() == 1 ? "" : withSuffix(stackA.getCount()));
 		RenderSystem.disableLighting();
 		RenderSystem.translatef(0, 0, +150);
 
 		if (isFocused()) {
 			BaseRenderer.drawRectangle(x + 1, y + 1, z + 1, sX - 2, sY - 2, getStyle().asColor("overlay"));
 		}
+
 		RenderSystem.translatef(0, 0, -250);
 	}
 

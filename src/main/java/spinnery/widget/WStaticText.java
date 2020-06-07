@@ -4,7 +4,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
-import spinnery.client.TextRenderer;
+import spinnery.client.render.TextRenderer;
 
 @Environment(EnvType.CLIENT)
 public class WStaticText extends WAbstractWidget {

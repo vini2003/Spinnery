@@ -54,6 +54,17 @@ dependencies {
 	// Jankson
 	modCompile "blue.endless:jankson:1.2.0"
 	include "blue.endless:jankson:1.2.0"
+
+	// ClotConfig
+	modApi "me.shedaniel.cloth:config-2:${clothconfig_version}"
+	include "me.shedaniel.cloth:config-2:${clothconfig_version}"
+
+	// AutoConfig
+	modApi "me.sargunvohra.mcmods:autoconfig1u:${autoconfig_version}"
+	include "me.sargunvohra.mcmods:autoconfig1u:${autoconfig_version}"
+
+	// ModMenu
+	modImplementation "io.github.prospector:modmenu:${modmenu_version}"
 }
 
 processResources {

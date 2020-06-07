@@ -6,8 +6,8 @@ import net.fabricmc.api.Environment;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
-import spinnery.client.BaseRenderer;
-import spinnery.client.TextRenderer;
+import spinnery.client.render.BaseRenderer;
+import spinnery.client.render.TextRenderer;
 
 @SuppressWarnings("unchecked")
 @Environment(EnvType.CLIENT)

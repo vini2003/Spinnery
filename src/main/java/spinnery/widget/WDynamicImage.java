@@ -3,7 +3,7 @@ package spinnery.widget;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.util.Identifier;
-import spinnery.client.BaseRenderer;
+import spinnery.client.render.BaseRenderer;
 
 @Environment(EnvType.CLIENT)
 public class WDynamicImage extends WAbstractWidget {

@@ -19,7 +19,11 @@
     ],
     "client": [
       "spinnery.SpinneryClient"
+    ],
+    "modmenu": [
+      "spinnery.client.SpinneryModMenuIntegration"
     ]
+
   },
   "mixins": [
     "spinnery.mixins.json"

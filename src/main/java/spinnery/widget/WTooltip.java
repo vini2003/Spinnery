@@ -1,6 +1,6 @@
 package spinnery.widget;
 
-import spinnery.client.BaseRenderer;
+import spinnery.client.render.BaseRenderer;
 import spinnery.widget.api.Color;
 import spinnery.widget.api.WDrawableCollection;
 import spinnery.widget.api.WLayoutElement;

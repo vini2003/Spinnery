@@ -2,8 +2,8 @@ package spinnery.widget;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import spinnery.client.BaseRenderer;
-import spinnery.client.TextRenderer;
+import spinnery.client.render.BaseRenderer;
+import spinnery.client.render.TextRenderer;
 import spinnery.widget.api.*;
 
 import java.util.*;

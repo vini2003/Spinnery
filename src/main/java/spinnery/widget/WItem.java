@@ -2,7 +2,7 @@ package spinnery.widget;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.item.ItemStack;
-import spinnery.client.BaseRenderer;
+import spinnery.client.render.BaseRenderer;
 
 public class WItem extends WAbstractWidget {
 	ItemStack stack = ItemStack.EMPTY;

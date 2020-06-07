@@ -1,7 +1,7 @@
 package spinnery.widget;
 
 import com.google.common.collect.ImmutableSet;
-import spinnery.client.BaseRenderer;
+import spinnery.client.render.BaseRenderer;
 import spinnery.widget.api.*;
 
 import java.util.*;

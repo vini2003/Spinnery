@@ -4,10 +4,9 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 
-import spinnery.client.TextRenderer;
+import spinnery.client.render.TextRenderer;
 import spinnery.widget.api.*;
 
 import java.util.*;

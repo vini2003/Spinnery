@@ -4,7 +4,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import org.lwjgl.opengl.GL11;
-import spinnery.client.BaseRenderer;
+import spinnery.client.render.BaseRenderer;
 
 @Environment(EnvType.CLIENT)
 public class WVerticalBar extends WAbstractBar {

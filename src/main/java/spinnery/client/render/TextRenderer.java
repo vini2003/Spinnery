@@ -1,4 +1,4 @@
-package spinnery.client;
+package spinnery.client.render;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;

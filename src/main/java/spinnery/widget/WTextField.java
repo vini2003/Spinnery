@@ -2,7 +2,7 @@ package spinnery.widget;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import spinnery.client.BaseRenderer;
+import spinnery.client.render.BaseRenderer;
 
 @Environment(EnvType.CLIENT)
 public class WTextField extends WAbstractTextEditor {

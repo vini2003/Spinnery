@@ -1,6 +1,6 @@
 package spinnery.widget;
 
-import spinnery.client.BaseRenderer;
+import spinnery.client.render.BaseRenderer;
 import spinnery.widget.api.WHorizontalScrollable;
 
 public class WHorizontalScrollbar extends WAbstractWidget {

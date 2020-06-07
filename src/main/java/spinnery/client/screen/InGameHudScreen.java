@@ -1,4 +1,4 @@
-package spinnery.client;
+package spinnery.client.screen;
 
 import net.minecraft.client.gui.hud.InGameHud;
 import spinnery.widget.WInterface;

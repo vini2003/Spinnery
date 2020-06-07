@@ -9,8 +9,8 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Pair;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
-import spinnery.client.BaseRenderer;
-import spinnery.client.TextRenderer;
+import spinnery.client.render.BaseRenderer;
+import spinnery.client.render.TextRenderer;
 import spinnery.widget.api.*;
 
 import java.util.ArrayList;

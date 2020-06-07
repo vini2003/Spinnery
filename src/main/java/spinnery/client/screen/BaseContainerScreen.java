@@ -1,4 +1,4 @@
-package spinnery.common;
+package spinnery.client.screen;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
@@ -9,12 +9,12 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import org.lwjgl.glfw.GLFW;
-import spinnery.client.BaseRenderer;
+import spinnery.client.render.BaseRenderer;
+import spinnery.common.BaseContainer;
 import spinnery.util.MouseUtilities;
 import spinnery.widget.WAbstractWidget;
 import spinnery.widget.WInterface;
 import spinnery.widget.WSlot;
-import spinnery.widget.api.WCollection;
 import spinnery.widget.api.WContextLock;
 import spinnery.widget.api.WInterfaceProvider;
 

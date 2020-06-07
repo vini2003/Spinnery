@@ -1,24 +1,37 @@
 package spinnery.widget;
 
-import spinnery.client.BaseRenderer;
+import spinnery.client.render.BaseRenderer;
 import spinnery.widget.api.WVerticalScrollable;
 
 public class WVerticalScrollbar extends WAbstractWidget {
 	protected WVerticalScrollable scrollable;
-	protected double clickMouseY;
+	protected float clickMouseY;
 	protected boolean dragging = false;
+	protected boolean hasArrows = true;
 
 	public WVerticalScrollbar setScrollable(WVerticalScrollable scrollable) {
 		this.scrollable = scrollable;
 		return this;
 	}
 
+	public WVerticalScrollable getScrollable() {
+		return scrollable;
+	}
+
+	public boolean hasArrows() {
+		return hasArrows;
+	}
+
+	public void setHasArrows(boolean hasArrows) {
+		this.hasArrows = hasArrows;
+	}
+
 	@Override
 	public void draw() {
 		if (isHidden()) {
-
 			return;
 		}
+
 		BaseRenderer.drawBeveledPanel(getX(), getY(), getZ(), getWidth(), getHeight(), getStyle().asColor("scroll_line.top_left"), getStyle().asColor("scroll_line.background"), getStyle().asColor("scroll_line.bottom_right"));
 
 		BaseRenderer.drawBeveledPanel(getX() + 1, getScrollerY() + 1, getZ(), getWidth() - 2, Math.min(getHighY() - getScrollerY(), getScrollerHeight()) - 2, getStyle().asColor("scroller.top_left"), getStyle().asColor("scroller.background"), getStyle().asColor("scroller.bottom_right"));
@@ -33,21 +46,31 @@ public class WVerticalScrollbar extends WAbstractWidget {
 					clickMouseY = mouseY - getScrollerY();
 				} else {
 					dragging = false;
+
 					if (mouseY > getScrollerY()) {
-						scrollable.scroll(0, -50);
+						if (((WVerticalScrollableContainer) scrollable).hasSmoothing()) {
+							((WVerticalScrollableContainer) scrollable).kineticScrollDelta -= 3.5;
+						} else {
+							scrollable.scroll(0, -50);
+						}
 					} else {
-						scrollable.scroll(0, 50);
+						if (((WVerticalScrollableContainer) scrollable).hasSmoothing()) {
+							((WVerticalScrollableContainer) scrollable).kineticScrollDelta += 3.5;
+						} else {
+							scrollable.scroll(0, +50);
+						}
 					}
 				}
 			} else {
 				dragging = false;
 			}
 		}
+
 		super.onMouseClicked(mouseX, mouseY, mouseButton);
 	}
 
 	public float getScrollerY() {
-		float outerHeight = getHeight();
+		float outerHeight = scrollable.getVisibleHeight();
 		float innerHeight = scrollable.getUnderlyingHeight();
 		float topOffset = scrollable.getStartOffsetY();
 		float percentToEnd = topOffset / (innerHeight - outerHeight);
@@ -67,19 +90,11 @@ public class WVerticalScrollbar extends WAbstractWidget {
 		if (mouseButton == 0) {
 			if (dragging) {
 				double scrollerOffsetY = getScrollerY() + clickMouseY - mouseY;
-				((WVerticalScrollableContainer) scrollable).kineticScrollDelta += -deltaY;
+
 				scrollable.scroll(0, scrollerOffsetY);
 			}
 		}
+
 		super.onMouseDragged(mouseX, mouseY, mouseButton, deltaX, deltaY);
-	}
-
-	public WVerticalScrollable getScrollableParent() {
-		return scrollable;
-	}
-
-	public <W extends WVerticalScrollbar> W setScrollableParent(WVerticalScrollable parent) {
-		this.scrollable = parent;
-		return (W) this;
 	}
 }

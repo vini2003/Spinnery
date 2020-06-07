@@ -245,6 +245,40 @@
     },
     "spinnery:form_container": {
       border: 0xff000000
+    },
+    "spinnery:vertical_arrow_up": {
+      $extend: [
+        "$label"
+      ],
+      top_left: {
+        on: "$bevel_dark",
+        off: "$bevel_light"
+      },
+      bottom_right: {
+        on: "$bevel_light",
+        off: "$bevel_dark"
+      },
+      background: {
+        on: "$bevel_dark",
+        off: "$bg_panel"
+      }
+    },
+    "spinnery:vertical_arrow_down": {
+      $extend: [
+        "$label"
+      ],
+      top_left: {
+        on: "$bevel_dark",
+        off: "$bevel_light"
+      },
+      bottom_right: {
+        on: "$bevel_light",
+        off: "$bevel_dark"
+      },
+      background: {
+        on: "$bevel_dark",
+        off: "$bg_panel"
+      }
     }
   }
 }
