@@ -2,6 +2,8 @@ package spinnery.widget;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import spinnery.client.render.TextRenderer;
@@ -41,7 +43,7 @@ public class WStaticText extends WAbstractWidget {
 	}
 
 	@Override
-	public void draw() {
+	public void draw(MatrixStack matrices, VertexConsumerProvider.Immediate provider) {
 		if (isHidden()) {
 			return;
 		}
@@ -52,7 +54,7 @@ public class WStaticText extends WAbstractWidget {
 
 		TextRenderer.pass().text(getText()).font(font).at(x, y, z).scale(scale).maxWidth(maxWidth)
 				.shadow(getStyle().asBoolean("shadow")).shadowColor(getStyle().asColor("shadowColor"))
-				.color(getStyle().asColor("text")).render();
+				.color(getStyle().asColor("text")).render(matrices, provider);
 	}
 
 	@Override

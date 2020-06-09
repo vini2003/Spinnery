@@ -2,6 +2,8 @@ package spinnery.widget;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.text.Text;
@@ -119,17 +121,17 @@ public class WTabHolder extends WAbstractWidget implements WCollection, WDelegat
 	}
 
 	@Override
-	public void draw() {
+	public void draw(MatrixStack matrices, VertexConsumerProvider.Immediate provider) {
 		if (isHidden()) {
 			return;
 		}
 
 		for (WTab tab : tabs) {
-			tab.getToggle().draw();
+			tab.getToggle().draw(matrices, provider);
 		}
 
 		for (WTab tab : tabs) {
-			tab.draw();
+			tab.draw(matrices, provider);
 		}
 	}
 
@@ -189,8 +191,8 @@ public class WTabHolder extends WAbstractWidget implements WCollection, WDelegat
 		}
 
 		@Override
-		public void draw() {
-			body.draw();
+		public void draw(MatrixStack matrices, VertexConsumerProvider.Immediate provider) {
+			body.draw(matrices, provider);
 		}
 
 		public int getNumber() {

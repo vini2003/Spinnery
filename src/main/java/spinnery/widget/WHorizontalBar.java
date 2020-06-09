@@ -3,13 +3,15 @@ package spinnery.widget;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.util.math.MatrixStack;
 import org.lwjgl.opengl.GL11;
 import spinnery.client.render.BaseRenderer;
 
 @Environment(EnvType.CLIENT)
 public class WHorizontalBar extends WAbstractBar {
 	@Override
-	public void draw() {
+	public void draw(MatrixStack matrices, VertexConsumerProvider.Immediate provider) {
 		if (isHidden()) {
 			return;
 		}
@@ -30,11 +32,11 @@ public class WHorizontalBar extends WAbstractBar {
 
 		GL11.glScissor((int) (x * scale), (int) (rawHeight - ((y + sY) * scale)), (int) (sX * scale), (int) (sY * scale));
 
-		BaseRenderer.drawImage(getX(), getY(), z, getWidth(), getHeight(), getBackgroundTexture());
+		BaseRenderer.drawTexturedQuad(matrices, provider, getX(), getY(), z, getWidth(), getHeight(), getBackgroundTexture());
 
 		GL11.glScissor((int) (x * scale), (int) (rawHeight - ((y + sY) * scale)), (int) (sBGX * scale), (int) (sY * scale));
 
-		BaseRenderer.drawImage(getX(), getY(), z, getWidth(), getHeight(), getForegroundTexture());
+		BaseRenderer.drawTexturedQuad(matrices, provider, getX(), getY(), z, getWidth(), getHeight(), getForegroundTexture());
 
 		GL11.glDisable(GL11.GL_SCISSOR_TEST);
 	}

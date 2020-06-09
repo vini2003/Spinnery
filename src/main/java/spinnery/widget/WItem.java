@@ -1,6 +1,7 @@
 package spinnery.widget;
 
-import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import spinnery.client.render.BaseRenderer;
 
@@ -17,10 +18,9 @@ public class WItem extends WAbstractWidget {
 	}
 
 	@Override
-	public void draw() {
+	public void draw(MatrixStack matrices, VertexConsumerProvider.Immediate provider) {
 		if (isHidden()) return;
 
-		RenderSystem.translatef(0, 0, getZ());
-		BaseRenderer.getItemRenderer().renderGuiItem(stack, (int) getX(), (int) getY());
+		BaseRenderer.getItemRenderer().renderInGui(stack, (int) getX(), (int) getY());
 	}
 }

@@ -1,5 +1,7 @@
 package spinnery.widget;
 
+import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.util.math.MatrixStack;
 import spinnery.widget.api.Position;
 import spinnery.widget.api.Size;
 
@@ -38,9 +40,9 @@ public class WTooltipItem extends WItem {
 
 	public void updateWidgets() {
 		if (tooltip == null)
-			tooltip = getInterface().createChild(WTooltip.class, Position.of(this), Size.of(this)).setHidden(true);
+			tooltip = getInterface().createChild(WTooltip::new, Position.of(this), Size.of(this)).setHidden(true);
 		if (tooltipText == null)
-			tooltipText = getInterface().createChild(WStaticText.class, Position.of(tooltip).add(0, 0, 1), Size.of(this)).setHidden(true);
+			tooltipText = getInterface().createChild(WStaticText::new, Position.of(tooltip).add(0, 0, 1), Size.of(this)).setHidden(true);
 	}
 
 	public void updateText() {
@@ -67,10 +69,10 @@ public class WTooltipItem extends WItem {
 	}
 
 	@Override
-	public void draw() {
+	public void draw(MatrixStack matrices, VertexConsumerProvider.Immediate provider) {
 		if (tooltip == null || tooltipText == null) return;
-		super.draw();
-		tooltip.draw();
-		tooltipText.draw();
+		super.draw(matrices, provider);
+		tooltip.draw(matrices, provider);
+		tooltipText.draw(matrices, provider);
 	}
 }

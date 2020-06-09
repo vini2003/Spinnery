@@ -2,6 +2,8 @@ package spinnery.widget;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.util.math.MatrixStack;
 import spinnery.client.render.BaseRenderer;
 import spinnery.client.render.TextRenderer;
 import spinnery.widget.api.Position;
@@ -10,7 +12,7 @@ import spinnery.widget.api.Size;
 @Environment(EnvType.CLIENT)
 public class WVerticalSlider extends WAbstractSlider {
 	@Override
-	public void draw() {
+	public void draw(MatrixStack matrices, VertexConsumerProvider.Immediate provider) {
 		if (isHidden()) {
 			return;
 		}
@@ -25,14 +27,14 @@ public class WVerticalSlider extends WAbstractSlider {
 		if (isProgressVisible()) {
 			Position tPos = getProgressTextAnchor();
 			TextRenderer.pass().shadow(isLabelShadowed()).text(getFormattedProgress()).at(tPos.getX(), tPos.getY(), tPos.getZ())
-					.color(getStyle().asColor("label.color")).shadowColor(getStyle().asColor("label.shadow_color")).render();
+					.color(getStyle().asColor("label.color")).shadowColor(getStyle().asColor("label.shadow_color")).render(matrices, provider);
 		}
 
-		BaseRenderer.drawRectangle(x, y, z, sX, 1, getStyle().asColor("top_left.background"));
-		BaseRenderer.drawRectangle(x, y, z, 1, (sY), getStyle().asColor("top_left.background"));
+		BaseRenderer.drawQuad(matrices, provider, x, y, z, sX, 1, getStyle().asColor("top_left.background"));
+		BaseRenderer.drawQuad(matrices, provider, x, y, z, 1, (sY), getStyle().asColor("top_left.background"));
 
-		BaseRenderer.drawRectangle(x, y + (sY) - 1, z, sX, 1, getStyle().asColor("bottom_right.background"));
-		BaseRenderer.drawRectangle(x + sX, y, z, 1, sY, getStyle().asColor("bottom_right.background"));
+		BaseRenderer.drawQuad(matrices, provider, x, y + (sY) - 1, z, sX, 1, getStyle().asColor("bottom_right.background"));
+		BaseRenderer.drawQuad(matrices, provider, x + sX, y, z, 1, sY, getStyle().asColor("bottom_right.background"));
 
 		Position innerAnchor = getInnerAnchor();
 		Size innerSize = getInnerSize();
@@ -42,9 +44,9 @@ public class WVerticalSlider extends WAbstractSlider {
 		float innerHeight = innerSize.getHeight();
 		float percentComplete = getPercentComplete();
 		float percentLeft = 1 - percentComplete;
-		BaseRenderer.drawRectangle(innerX, innerY + innerHeight * percentLeft, z, innerWidth, innerHeight * percentComplete,
+		BaseRenderer.drawQuad(matrices, provider, innerX, innerY + innerHeight * percentLeft, z, innerWidth, innerHeight * percentComplete,
 				getStyle().asColor("background.on"));
-		BaseRenderer.drawRectangle(innerX, innerY, z, innerWidth, innerHeight * percentLeft,
+		BaseRenderer.drawQuad(matrices, provider, innerX, innerY, z, innerWidth, innerHeight * percentLeft,
 				getStyle().asColor("background.off"));
 
 		Size knobSize = getKnobSize();
@@ -52,7 +54,7 @@ public class WVerticalSlider extends WAbstractSlider {
 		float knobHeight = knobSize.getHeight();
 		float knobY = (y + (innerHeight - knobSize.getHeight() / 2f) * percentLeft);
 		float clampedY = Math.min(y + innerHeight - knobHeight / 2f, Math.max(y, knobY));
-		BaseRenderer.drawBeveledPanel(x - 1, clampedY, z, knobWidth, knobHeight,
+		BaseRenderer.drawBeveledPanel(matrices, provider, x - 1, clampedY, z, knobWidth, knobHeight,
 				getStyle().asColor("top_left.foreground"), getStyle().asColor("foreground"),
 				getStyle().asColor("bottom_right.foreground"));
 	}

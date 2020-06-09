@@ -4,7 +4,10 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.ingame.ContainerScreen;
+import net.minecraft.client.gui.screen.ingame.HandledScreen;
+import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
@@ -18,7 +21,7 @@ import spinnery.widget.WSlot;
 import spinnery.widget.api.WContextLock;
 import spinnery.widget.api.WInterfaceProvider;
 
-public class BaseContainerScreen<T extends BaseContainer> extends ContainerScreen<T> implements WInterfaceProvider {
+public class BaseContainerScreen<T extends BaseContainer> extends HandledScreen<T> implements WInterfaceProvider {
 	protected final WInterface clientInterface;
 	protected float tooltipX = 0;
 	protected float tooltipY = 0;
@@ -42,11 +45,13 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 	 */
 	@Override
 	@Environment(EnvType.CLIENT)
-	public void render(int mouseX, int mouseY, float tickDelta) {
-		clientInterface.draw();
+	public void render(MatrixStack matrices, int mouseX, int mouseY, float tickDelta) {
+		VertexConsumerProvider.Immediate provider = VertexConsumerProvider.immediate(MinecraftClient.getInstance().getBufferBuilders().getBlockBufferBuilders().get(RenderLayer.getSolid()));
+
+		clientInterface.draw(matrices, provider);
 
 		if (getDrawSlot() != null && getContainer().getPlayerInventory().getCursorStack().isEmpty() && !getDrawSlot().getStack().isEmpty()) {
-			this.renderTooltip(getDrawSlot().getStack(), (int) getTooltipX(), (int) getTooltipY());
+			this.renderTooltip(matrices, getDrawSlot().getStack(), (int) getTooltipX(), (int) getTooltipY());
 		}
 
 		ItemStack stackA;
@@ -61,9 +66,11 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 
 		RenderSystem.pushMatrix();
 		RenderSystem.translatef(0, 0, 200);
-		BaseRenderer.getItemRenderer().renderGuiItem(stackA, (int) (mouseX - 8), mouseY - 8);
+		BaseRenderer.getItemRenderer().renderInGui(stackA, mouseX - 8, mouseY - 8);
 		BaseRenderer.getItemRenderer().renderGuiItemOverlay(BaseRenderer.getTextRenderer(), stackA, (int) (mouseX - 8), mouseY - 8);
 		RenderSystem.popMatrix();
+
+		provider.draw();
 	}
 
 	/**
@@ -72,7 +79,7 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 	@Deprecated
 	@Override
 	@Environment(EnvType.CLIENT)
-	protected void drawBackground(float tick, int mouseX, int mouseY) {
+	protected void drawBackground(MatrixStack matrices, float tick, int mouseX, int mouseY) {
 	}
 
 	/**
@@ -93,10 +100,10 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 	 */
 	@Override
 	@Environment(EnvType.CLIENT)
-	protected void drawMouseoverTooltip(int mouseX, int mouseY) {
+	protected void drawMouseoverTooltip(MatrixStack matrices, int mouseX, int mouseY) {
 		clientInterface.onDrawMouseoverTooltip(mouseX, mouseY);
 
-		super.drawMouseoverTooltip(mouseX, mouseY);
+		super.drawMouseoverTooltip(matrices, mouseX, mouseY);
 	}
 
 	/**
@@ -192,7 +199,7 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 
 		if (keyCode == GLFW.GLFW_KEY_ESCAPE || MinecraftClient.getInstance().options.keyInventory.matchesKey(keyCode, character)) {
 			if (clientInterface.getAllWidgets().stream().noneMatch(widget -> widget instanceof WContextLock && ((WContextLock) widget).isActive())) {
-				MinecraftClient.getInstance().player.closeContainer();
+				MinecraftClient.getInstance().player.closeHandledScreen();
 				return true;
 			}
 		}
@@ -255,7 +262,7 @@ public class BaseContainerScreen<T extends BaseContainer> extends ContainerScree
 	 */
 	@Environment(EnvType.CLIENT)
 	public T getContainer() {
-		return super.container;
+		return super.handler;
 	}
 
 	/**

@@ -2,6 +2,8 @@ package spinnery.widget;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import spinnery.client.render.BaseRenderer;
 
@@ -23,8 +25,8 @@ public class WTexturedButton extends WAbstractWidget {
 	}
 
 	@Override
-	public void draw() {
-		BaseRenderer.drawImage(getX(), getY(), getZ(), getWidth(), getHeight(), getDrawTexture());
+	public void draw(MatrixStack matrices, VertexConsumerProvider.Immediate provider) {
+		BaseRenderer.drawTexturedQuad(matrices, provider, getX(), getY(), getZ(), getWidth(), getHeight(), getDrawTexture());
 	}
 
 	protected Identifier getDrawTexture() {

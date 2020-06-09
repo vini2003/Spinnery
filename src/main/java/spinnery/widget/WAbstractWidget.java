@@ -2,6 +2,8 @@ package spinnery.widget;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -90,7 +92,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 	 */
 	@Environment(EnvType.CLIENT)
 	public boolean hasLabel() {
-		return !label.asFormattedString().isEmpty();
+		return !label.asString().isEmpty();
 	}
 
 	/**
@@ -314,7 +316,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 
 	@Override
 	@Environment(EnvType.CLIENT)
-	public void draw() {
+	public void draw(MatrixStack matrices, VertexConsumerProvider.Immediate provider) {
 	}
 
 	// WLayoutElement

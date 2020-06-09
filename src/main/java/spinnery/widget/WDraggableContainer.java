@@ -2,6 +2,8 @@ package spinnery.widget;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.util.math.MatrixStack;
 import spinnery.client.utility.ScissorArea;
 import spinnery.common.utility.MutablePair;
 import spinnery.widget.api.*;
@@ -125,13 +127,13 @@ public class WDraggableContainer extends WAbstractWidget implements WDrawableCol
 	}
 
 	@Override
-	public void draw() {
+	public void draw(MatrixStack matrices, VertexConsumerProvider.Immediate provider) {
 		if (isHidden()) return;
 
 		ScissorArea area = new ScissorArea(this);
 
 		for (WLayoutElement widget : getOrderedWidgets()) {
-			widget.draw();
+			widget.draw(matrices, provider);
 		}
 
 		area.destroy();

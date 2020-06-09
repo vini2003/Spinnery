@@ -1,9 +1,11 @@
 package spinnery.widget;
 
 import com.google.common.collect.ImmutableSet;
+import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.util.math.MatrixStack;
 import org.lwjgl.glfw.GLFW;
-import spinnery.client.integration.SpinneryConfigurationScreen;
 import spinnery.client.render.BaseRenderer;
+import spinnery.client.integration.SpinneryConfigurationScreen;
 import spinnery.client.utility.ScissorArea;
 import spinnery.common.utility.MouseUtilities;
 import spinnery.widget.api.*;
@@ -529,7 +531,7 @@ public class WVerticalScrollableContainer extends WAbstractWidget implements WDr
 	}
 
 	@Override
-	public void draw() {
+	public void draw(MatrixStack matrices, VertexConsumerProvider.Immediate provider) {
 		if (isHidden()) {
 			return;
 		}
@@ -554,7 +556,7 @@ public class WVerticalScrollableContainer extends WAbstractWidget implements WDr
 		ScissorArea area = new ScissorArea(this);
 
 		for (WAbstractWidget widget : getWidgets()) {
-			widget.draw();
+			widget.draw(matrices, provider);
 		}
 
 		area.destroy();
@@ -564,23 +566,23 @@ public class WVerticalScrollableContainer extends WAbstractWidget implements WDr
 			fadeOut = Color.of("0x00" + Integer.toHexString((int) (fadeOut.R * 255)) + Integer.toHexString((int) (fadeOut.G * 255)) + Integer.toHexString((int) (fadeOut.B * 255)));
 
 			if (offsetY > 1) {
-				BaseRenderer.drawGradient(getX(), getY() - 1, getWideX(), getY() + getFadeSpace() - 6, getZ(), getStyle().asColor("background"), fadeOut);
-				BaseRenderer.drawGradient(getX(), getY() - 1, getWideX(), getY() + getFadeSpace() - 3, getZ(), getStyle().asColor("background"), fadeOut);
-				BaseRenderer.drawGradient(getX(), getY() - 1, getWideX(), getY() + getFadeSpace(), getZ(), getStyle().asColor("background"), fadeOut);
+				BaseRenderer.drawGradientQuad(matrices, provider, getX(), getY() - 1, getWideX(), getY() + getFadeSpace() - 6, getZ(), getStyle().asColor("background"), fadeOut);
+				BaseRenderer.drawGradientQuad(matrices, provider, getX(), getY() - 1, getWideX(), getY() + getFadeSpace() - 3, getZ(), getStyle().asColor("background"), fadeOut);
+				BaseRenderer.drawGradientQuad(matrices, provider, getX(), getY() - 1, getWideX(), getY() + getFadeSpace(), getZ(), getStyle().asColor("background"), fadeOut);
 			}
 
 			if (getBottomWidgetY() > getHighY()) {
-				BaseRenderer.drawGradient(getX(), getHighY() - getFadeSpace() + 6 , getWideX(), getHighY() + 1, getZ(), fadeOut, getStyle().asColor("background"));
-				BaseRenderer.drawGradient(getX(), getHighY() - getFadeSpace() + 3, getWideX(), getHighY() + 1, getZ(), fadeOut, getStyle().asColor("background"));
-				BaseRenderer.drawGradient(getX(), getHighY() - getFadeSpace() , getWideX(), getHighY() + 1, getZ(), fadeOut, getStyle().asColor("background"));
+				BaseRenderer.drawGradientQuad(matrices, provider, getX(), getHighY() - getFadeSpace() + 6 , getWideX(), getHighY() + 1, getZ(), fadeOut, getStyle().asColor("background"));
+				BaseRenderer.drawGradientQuad(matrices, provider, getX(), getHighY() - getFadeSpace() + 3, getWideX(), getHighY() + 1, getZ(), fadeOut, getStyle().asColor("background"));
+				BaseRenderer.drawGradientQuad(matrices, provider, getX(), getHighY() - getFadeSpace() , getWideX(), getHighY() + 1, getZ(), fadeOut, getStyle().asColor("background"));
 			}
 		}
 
-		scrollbar.draw();
+		scrollbar.draw(matrices, provider);
 
 		if (hasArrows()) {
-			verticalArrowUp.draw();
-			verticalArrowDown.draw();
+			verticalArrowUp.draw(matrices, provider);
+			verticalArrowDown.draw(matrices, provider);
 		}
 	}
 

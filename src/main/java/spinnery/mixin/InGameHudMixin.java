@@ -2,6 +2,9 @@ package spinnery.mixin;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.hud.InGameHud;
+import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.util.math.MatrixStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -22,9 +25,13 @@ public class InGameHudMixin implements InGameHudScreen.Accessor {
 		InGameHudScreen.onInitialize(getInGameHud());
 	}
 
-	@Inject(method = "render", at = @At("RETURN"))
-	public void renderInterfaces(float tickDelta, CallbackInfo ci) {
-		hudInterface.draw();
+	@Inject(method = "render(Lnet/minecraft/client/util/math/MatrixStack;F)V", at = @At("RETURN"))
+	public void renderInterfaces(MatrixStack matrices, float f, CallbackInfo callbackInformation) {
+		VertexConsumerProvider.Immediate provider = VertexConsumerProvider.immediate(MinecraftClient.getInstance().getBufferBuilders().getBlockBufferBuilders().get(RenderLayer.getSolid()));
+
+		hudInterface.draw(matrices, provider);
+
+		provider.draw();
 	}
 
 	@Override

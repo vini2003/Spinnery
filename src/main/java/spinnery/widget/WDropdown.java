@@ -2,6 +2,8 @@ package spinnery.widget;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.util.math.MatrixStack;
 import org.lwjgl.glfw.GLFW;
 import spinnery.client.render.BaseRenderer;
 import spinnery.client.render.TextRenderer;
@@ -59,7 +61,7 @@ public class WDropdown extends WAbstractWidget implements WDrawableCollection, W
 	}
 
 	@Override
-	public void draw() {
+	public void draw(MatrixStack matrices, VertexConsumerProvider.Immediate provider) {
 		if (isHidden()) {
 			return;
 		}
@@ -71,24 +73,24 @@ public class WDropdown extends WAbstractWidget implements WDrawableCollection, W
 		float sX = getWidth();
 		float sY = getHeight();
 
-		BaseRenderer.drawPanel(x, y, z, sX, sY + 1.75,
+		BaseRenderer.drawPanel(matrices, provider, x, y, z, sX, sY + 1.75f,
 				getStyle().asColor("shadow"), getStyle().asColor("background"),
 				getStyle().asColor("highlight"), getStyle().asColor("outline"));
 
 		if (hasLabel()) {
 			TextRenderer.pass().shadow(isLabelShadowed())
 					.text(getLabel()).at(x + 8, y + 6, z)
-					.color(getStyle().asColor("label.color")).shadowColor(getStyle().asColor("label.shadow_color")).render();
+					.color(getStyle().asColor("label.color")).shadowColor(getStyle().asColor("label.shadow_color")).render(matrices, provider);
 
 			if (getState()) {
-				BaseRenderer.drawRectangle(x, y + 16, z, sX, 1, getStyle().asColor("outline"));
-				BaseRenderer.drawRectangle(x + 1, y + 17, z, sX - 2, 0.75, getStyle().asColor("shadow"));
+				BaseRenderer.drawQuad(matrices, provider, x, y + 16, z, sX, 1, getStyle().asColor("outline"));
+				BaseRenderer.drawQuad(matrices, provider, x + 1, y + 17, z, sX - 2, 0.75f, getStyle().asColor("shadow"));
 			}
 		}
 
 		if (getState()) {
 			for (WLayoutElement widgetC : getOrderedWidgets()) {
-				widgetC.draw();
+				widgetC.draw(matrices, provider);
 			}
 		}
 	}

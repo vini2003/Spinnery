@@ -1,6 +1,8 @@
 package spinnery.widget;
 
 import com.google.common.collect.ImmutableSet;
+import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.util.math.MatrixStack;
 import spinnery.client.utility.ScissorArea;
 import spinnery.widget.api.*;
 
@@ -23,7 +25,7 @@ public class WHorizontalScrollableContainer extends WAbstractWidget implements W
 	protected float lastScrollY = 0;
 
 	public WHorizontalScrollableContainer() {
-		scrollbar = WWidgetFactory.buildDetached(WHorizontalScrollbar.class).scrollable(this).setParent(this);
+		scrollbar = new WHorizontalScrollbar().scrollable(this).setParent(this).setInterface(linkedInterface);;
 	}
 
 	public float getRightSpace() {
@@ -223,7 +225,7 @@ public class WHorizontalScrollableContainer extends WAbstractWidget implements W
 	}
 
 	@Override
-	public void draw() {
+	public void draw(MatrixStack matrices, VertexConsumerProvider.Immediate provider) {
 		if (isHidden()) {
 			return;
 		}
@@ -231,12 +233,12 @@ public class WHorizontalScrollableContainer extends WAbstractWidget implements W
 		ScissorArea area = new ScissorArea(this);
 
 		for (WLayoutElement widget : getOrderedWidgets()) {
-			widget.draw();
+			widget.draw(matrices, provider);
 		}
 
 		area.destroy();
 
-		scrollbar.draw();
+		scrollbar.draw(matrices, provider);
 	}
 
 	@Override

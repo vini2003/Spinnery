@@ -5,6 +5,8 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Pair;
 import org.lwjgl.glfw.GLFW;
@@ -147,7 +149,7 @@ public abstract class WAbstractTextEditor extends WAbstractWidget implements WPa
 	}
 
 	public <W extends WAbstractTextEditor> W setText(Text text) {
-		return setText(text.asFormattedString());
+		return setText(text.asString());
 	}
 
 	public List<String> getLines() {
@@ -615,7 +617,7 @@ public abstract class WAbstractTextEditor extends WAbstractWidget implements WPa
 		return getStyle().asPadding("padding");
 	}
 
-	protected void renderField() {
+	protected void renderField(MatrixStack matrices, VertexConsumerProvider.Immediate provider) {
 		float z = getZ();
 
 		Position innerPos = getInnerAnchor();
@@ -629,7 +631,7 @@ public abstract class WAbstractTextEditor extends WAbstractWidget implements WPa
 			TextRenderer.pass().text(getLabel()).at(innerX, innerY, z).scale(scale)
 					.shadow(getStyle().asBoolean("label.shadow")).shadowColor(getStyle().asColor("label.shadow_color"))
 					.color(getStyle().asColor("label.color"))
-					.render();
+					.render(matrices, provider);
 			return;
 		}
 
@@ -655,17 +657,17 @@ public abstract class WAbstractTextEditor extends WAbstractWidget implements WPa
 			TextRenderer.pass().text(line).at(innerX, innerY + (cH + 2) * adjustedI, z).scale(scale)
 					.shadow(getStyle().asBoolean("text.shadow")).shadowColor(getStyle().asColor("text.shadow_color"))
 					.color(getStyle().asColor("text.color"))
-					.render();
+					.render(matrices, provider);
 
 			Pair<Integer, Integer> selectedChars = getSelectedChars(i);
 			if (selectedChars != null) {
 				float selW = getXOffset(i, selectedChars.getRight()) - getXOffset(i, selectedChars.getLeft());
-				BaseRenderer.drawRectangle(innerX + getXOffset(i, selectedChars.getLeft()),
+				BaseRenderer.drawQuad(matrices, provider, innerX + getXOffset(i, selectedChars.getLeft()),
 						innerY + (cH + 2) * adjustedI, z, selW, cH + 1, getStyle().asColor("highlight"));
 			}
 		}
 		if (active && cursorTick > 10) {
-			BaseRenderer.drawRectangle(cursorX, cursorY, z, 1, cH + 2,
+			BaseRenderer.drawQuad(matrices, provider, cursorX, cursorY, z, 1, cH + 2,
 					getStyle().asColor("cursor"));
 		}
 		RenderSystem.popMatrix();

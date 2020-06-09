@@ -2,7 +2,6 @@ package spinnery.widget.api;
 
 import spinnery.widget.WAbstractWidget;
 import spinnery.widget.WInterface;
-import spinnery.widget.WWidgetFactory;
 
 import java.util.function.Supplier;
 
@@ -29,18 +28,6 @@ public interface WModifiableCollection extends WCollection {
 	void remove(WAbstractWidget... widgets);
 
 	/**
-	 * Convenience method for short-circuiting getFactory().build(Class).
-	 *
-	 * @param wClass widget class
-	 * @return created widget
-	 * @deprecated Reflective APIs for adding widgets are deprecated. Use {@link #createChild(Supplier)} instead.
-	 */
-	@Deprecated
-	default <W extends WAbstractWidget> W createChild(Class<W> wClass) {
-		return createChild(wClass, null, null);
-	}
-
-	/**
 	 * Convenience method for short-circuiting factory.get().
 	 *
 	 * @param factory widget factory
@@ -48,21 +35,6 @@ public interface WModifiableCollection extends WCollection {
 	 */
 	default <W extends WAbstractWidget> W createChild(Supplier<W> factory) {
 		return createChild(factory, null, null);
-	}
-
-	/**
-	 * Convenience method for short-circuiting getFactory().build(Class) and setting the widget's
-	 * position and size.
-	 *
-	 * @param wClass   widget class
-	 * @param position initial widget position
-	 * @param size     initial widget size
-	 * @return created widget
-	 * @deprecated Reflective APIs for adding widgets are deprecated. Use {@link #createChild(Supplier, Position, Size)} instead.
-	 */
-	@Deprecated
-	default <W extends WAbstractWidget> W createChild(Class<W> wClass, Position position, Size size) {
-		return createChild(() -> getFactory().build(wClass), position, size);
 	}
 
 	/**
@@ -92,31 +64,6 @@ public interface WModifiableCollection extends WCollection {
 		add(widget);
 
 		return widget;
-	}
-
-	/**
-	 * Gets the widget factory for creating children of this modifiable collection.
-	 *
-	 * @return widget factory instance
-	 * @deprecated Reflective APIs for adding widgets are deprecated.
-	 */
-	@Deprecated
-	default WWidgetFactory getFactory() {
-		return new WWidgetFactory(this);
-	}
-
-	/**
-	 * Convenience method for short-circuiting getFactory().build(Class) and setting the widget's
-	 * position.
-	 *
-	 * @param wClass   widget class
-	 * @param position initial widget position
-	 * @return created widget
-	 * @deprecated Reflective APIs for adding widgets are deprecated. Use {@link #createChild(Supplier, Position)} instead.
-	 */
-	@Deprecated
-	default <W extends WAbstractWidget> W createChild(Class<W> wClass, Position position) {
-		return createChild(wClass, position, null);
 	}
 
 	/**

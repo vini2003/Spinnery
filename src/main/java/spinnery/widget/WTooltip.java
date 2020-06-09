@@ -1,5 +1,7 @@
 package spinnery.widget;
 
+import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.util.math.MatrixStack;
 import spinnery.client.render.BaseRenderer;
 import spinnery.widget.api.Color;
 import spinnery.widget.api.WDrawableCollection;
@@ -13,7 +15,7 @@ public class WTooltip extends WAbstractWidget implements WDrawableCollection, WM
 	protected List<WLayoutElement> orderedWidgets = new ArrayList<>();
 
 	@Override
-	public void draw() {
+	public void draw(MatrixStack matrices, VertexConsumerProvider.Immediate provider) {
 		if (isHidden()) return;
 
 		float x = position.getX();
@@ -30,19 +32,19 @@ public class WTooltip extends WAbstractWidget implements WDrawableCollection, WM
 		Color shadowEnd = getStyle().asColor("shadow.end");
 
 		// Vanilla drawing process
-		BaseRenderer.drawGradient(x - 3, y - 4, x + width + 3, y - 3, z, shadowStart, shadowStart); // top border
-		BaseRenderer.drawGradient(x - 3, y + height + 3, x + width + 3, y + height + 4, z, shadowEnd, shadowEnd); // bottom border
-		BaseRenderer.drawGradient(x - 3, y - 3, x + width + 3, y + height + 3, z, backgroundStart, backgroundEnd); // body
-		BaseRenderer.drawGradient(x - 4, y - 3, x - 3, y + height + 3, z, shadowStart, shadowEnd); // left border
-		BaseRenderer.drawGradient(x + width + 3, y - 3, x + width + 4, y + height + 3, z, shadowStart, shadowEnd); // right border
+		BaseRenderer.drawGradientQuad(matrices, provider, x - 3, y - 4, x + width + 3, y - 3, z, shadowStart, shadowStart); // top border
+		BaseRenderer.drawGradientQuad(matrices, provider, x - 3, y + height + 3, x + width + 3, y + height + 4, z, shadowEnd, shadowEnd); // bottom border
+		BaseRenderer.drawGradientQuad(matrices, provider, x - 3, y - 3, x + width + 3, y + height + 3, z, backgroundStart, backgroundEnd); // body
+		BaseRenderer.drawGradientQuad(matrices, provider, x - 4, y - 3, x - 3, y + height + 3, z, shadowStart, shadowEnd); // left border
+		BaseRenderer.drawGradientQuad(matrices, provider, x + width + 3, y - 3, x + width + 4, y + height + 3, z, shadowStart, shadowEnd); // right border
 
-		BaseRenderer.drawGradient(x - 3, y - 3 + 1, x - 3 + 1, y + height + 3 - 1, z, colorStart, colorEnd); // left outline
-		BaseRenderer.drawGradient(x + width + 2, y - 3 + 1, x + width + 3, y + height + 3 - 1, z, colorStart, colorEnd); // right outline
-		BaseRenderer.drawGradient(x - 3, y - 3, x + width + 3, y - 3 + 1, z, colorStart, colorStart); // top outline
-		BaseRenderer.drawGradient(x - 3, y + height + 2, x + width + 3, y + height + 3, z, colorEnd, colorEnd); // bottom outline
+		BaseRenderer.drawGradientQuad(matrices, provider, x - 3, y - 3 + 1, x - 3 + 1, y + height + 3 - 1, z, colorStart, colorEnd); // left outline
+		BaseRenderer.drawGradientQuad(matrices, provider, x + width + 2, y - 3 + 1, x + width + 3, y + height + 3 - 1, z, colorStart, colorEnd); // right outline
+		BaseRenderer.drawGradientQuad(matrices, provider, x - 3, y - 3, x + width + 3, y - 3 + 1, z, colorStart, colorStart); // top outline
+		BaseRenderer.drawGradientQuad(matrices, provider, x - 3, y + height + 2, x + width + 3, y + height + 3, z, colorEnd, colorEnd); // bottom outline
 
 		for (WLayoutElement widget : getOrderedWidgets()) {
-			widget.draw();
+			widget.draw(matrices, provider);
 		}
 	}
 

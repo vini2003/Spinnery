@@ -1,5 +1,8 @@
 package spinnery.widget.api;
 
+import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.util.math.MatrixStack;
+
 /**
  * Generic interface representing a layout element.
  *
@@ -10,7 +13,7 @@ public interface WLayoutElement extends WPositioned, WSized, Comparable<WLayoutE
 	/**
 	 * Method called on every frame, where widget rendering happens.
 	 */
-	void draw();
+	void draw(MatrixStack matrices, VertexConsumerProvider.Immediate provider);
 
 	/**
 	 * Runs whenever the layout has been changed significantly enough to warrant potential adjustment of

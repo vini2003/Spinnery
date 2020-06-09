@@ -2,6 +2,9 @@ package spinnery.client.render;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.StringRenderable;
 import net.minecraft.text.Text;
 import spinnery.widget.api.Color;
 import spinnery.widget.api.Position;
@@ -20,14 +23,7 @@ public class TextRenderer {
 	}
 
 	public static net.minecraft.client.font.TextRenderer getTextRenderer(Font font) {
-		switch (font) {
-			case ENCHANTMENT:
-				return MinecraftClient.getInstance().getFontManager()
-						.getTextRenderer(MinecraftClient.ALT_TEXT_RENDERER_ID);
-			case DEFAULT:
-			default:
-				return MinecraftClient.getInstance().textRenderer;
-		}
+		return MinecraftClient.getInstance().textRenderer;
 	}
 
 	public static int width(char character) {
@@ -35,7 +31,7 @@ public class TextRenderer {
 	}
 
 	public static int width(char character, Font font) {
-		return (int) getTextRenderer(font).getCharWidth(character);
+		return getTextRenderer(font).getWidth(String.valueOf(character));
 	}
 
 	public static int width(String string) {
@@ -43,15 +39,15 @@ public class TextRenderer {
 	}
 
 	public static int width(String string, Font font) {
-		return getTextRenderer(font).getStringWidth(string);
+		return getTextRenderer(font).getWidth(string);
 	}
 
 	public static int width(Text text, Font font) {
-		return width(text.asFormattedString(), font);
+		return width(text.asString(), font);
 	}
 
 	public static int width(Text text) {
-		return width(text.asFormattedString(), Font.DEFAULT);
+		return width(text.asString(), Font.DEFAULT);
 	}
 
 	public enum Font {
@@ -85,7 +81,7 @@ public class TextRenderer {
 		}
 
 		public RenderPass text(Text text) {
-			this.text = text.asFormattedString();
+			this.text = text.asString();
 			this.shadowText = this.text.replaceAll("§[0-9a-f]", "");
 			return this;
 		}
@@ -143,7 +139,7 @@ public class TextRenderer {
 			return this;
 		}
 
-		public void render() {
+		public void render(MatrixStack matrices, VertexConsumerProvider.Immediate provider) {
 			float oX = x * (1f - (float) scale);
 			float oY = y * (1f - (float) scale);
 			RenderSystem.pushMatrix();
@@ -151,11 +147,11 @@ public class TextRenderer {
 			RenderSystem.scaled(scale, scale, 1);
 			if (maxWidth != null) {
 				if (shadow)
-					getTextRenderer(font).drawTrimmed(shadowText, x + 1, y + 1, maxWidth, shadowColor);
-				getTextRenderer(font).drawTrimmed(text, x, y, maxWidth, color);
+					getTextRenderer(font).drawTrimmed(StringRenderable.plain(shadowText), x + 1, y + 1, maxWidth, shadowColor);
+				getTextRenderer(font).drawTrimmed(StringRenderable.plain(text), x, y, maxWidth, color);
 			} else {
-				if (shadow) getTextRenderer(font).draw(shadowText, x + 1, y + 1, shadowColor);
-				getTextRenderer(font).draw(text, x, y, color);
+				if (shadow) getTextRenderer(font).draw(matrices, StringRenderable.plain(shadowText), x + 1, y + 1, shadowColor);
+				getTextRenderer(font).draw(matrices, StringRenderable.plain(text), x, y, color);
 			}
 			RenderSystem.popMatrix();
 		}

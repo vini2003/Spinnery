@@ -1,6 +1,8 @@
 package spinnery.widget;
 
 import com.google.common.collect.ImmutableSet;
+import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.util.math.MatrixStack;
 import spinnery.client.render.BaseRenderer;
 import spinnery.client.utility.ScissorArea;
 import spinnery.widget.api.*;
@@ -169,7 +171,7 @@ public class WVerticalBoxContainer extends WAbstractWidget implements WDrawableC
 	}
 
 	@Override
-	public void draw() {
+	public void draw(MatrixStack matrices, VertexConsumerProvider.Immediate provider) {
 		if (isHidden()) {
 			return;
 		}
@@ -177,14 +179,14 @@ public class WVerticalBoxContainer extends WAbstractWidget implements WDrawableC
 		ScissorArea area = new ScissorArea(this);
 
 		for (WAbstractWidget widget : widgets) {
-			widget.draw();
+			widget.draw(matrices, provider);
 		}
 
 		if (hasBorder()) {
-			BaseRenderer.drawRectangle(getX(), getY(), getZ(), getWidth(), outerBorderWidth, getStyle().asColor("border"));
-			BaseRenderer.drawRectangle(getX(), getY(), getZ(), outerBorderWidth, getHeight(), getStyle().asColor("border"));
-			BaseRenderer.drawRectangle(getX(), getHighY() - 1, getZ(), getWidth(), outerBorderWidth, getStyle().asColor("border"));
-			BaseRenderer.drawRectangle(getWideX() - 1, getY(), getZ(), outerBorderWidth, getHeight(), getStyle().asColor("border"));
+			BaseRenderer.drawQuad(matrices, provider, getX(), getY(), getZ(), getWidth(), outerBorderWidth, getStyle().asColor("border"));
+			BaseRenderer.drawQuad(matrices, provider, getX(), getY(), getZ(), outerBorderWidth, getHeight(), getStyle().asColor("border"));
+			BaseRenderer.drawQuad(matrices, provider, getX(), getHighY() - 1, getZ(), getWidth(), outerBorderWidth, getStyle().asColor("border"));
+			BaseRenderer.drawQuad(matrices, provider, getWideX() - 1, getY(), getZ(), outerBorderWidth, getHeight(), getStyle().asColor("border"));
 		}
 
 		area.destroy();

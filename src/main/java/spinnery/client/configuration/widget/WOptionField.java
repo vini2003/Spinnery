@@ -1,6 +1,8 @@
 package spinnery.client.configuration.widget;
 
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.util.math.MatrixStack;
 import spinnery.common.configuration.data.ConfigurationHolder;
 import spinnery.client.render.BaseRenderer;
 import spinnery.widget.WTextField;
@@ -42,7 +44,7 @@ public class WOptionField extends WTextField {
 	}
 
 	@Override
-	public void draw() {
+	public void draw(MatrixStack matrices, VertexConsumerProvider.Immediate provider) {
 		if (isHidden()) {
 			return;
 		}
@@ -56,20 +58,20 @@ public class WOptionField extends WTextField {
 
 		if (filter == Filter.BOOLEAN_FILTER) {
 			if (text.equals("true")) {
-				BaseRenderer.drawBeveledPanel(x, y, z, sX, sY, getStyle().asColor("top_left"), getStyle().asColor("background.boolean_true"), getStyle().asColor("bottom_right"));
+				BaseRenderer.drawBeveledPanel(matrices, provider, x, y, z, sX, sY, getStyle().asColor("top_left"), getStyle().asColor("background.boolean_true"), getStyle().asColor("bottom_right"));
 			} else if (text.equals("false")){
-				BaseRenderer.drawBeveledPanel(x, y, z, sX, sY, getStyle().asColor("top_left"), getStyle().asColor("background.boolean_false"), getStyle().asColor("bottom_right"));
+				BaseRenderer.drawBeveledPanel(matrices, provider, x, y, z, sX, sY, getStyle().asColor("top_left"), getStyle().asColor("background.boolean_false"), getStyle().asColor("bottom_right"));
 			} else {
-				BaseRenderer.drawBeveledPanel(x, y, z, sX, sY, getStyle().asColor("top_left"), getStyle().asColor("background.incomplete"), getStyle().asColor("bottom_right"));
+				BaseRenderer.drawBeveledPanel(matrices, provider, x, y, z, sX, sY, getStyle().asColor("top_left"), getStyle().asColor("background.incomplete"), getStyle().asColor("bottom_right"));
 			}
 		} else {
 			if (text.isEmpty()) {
-				BaseRenderer.drawBeveledPanel(x, y, z, sX, sY, getStyle().asColor("top_left"), getStyle().asColor("background.incomplete"), getStyle().asColor("bottom_right"));
+				BaseRenderer.drawBeveledPanel(matrices, provider, x, y, z, sX, sY, getStyle().asColor("top_left"), getStyle().asColor("background.incomplete"), getStyle().asColor("bottom_right"));
 			} else {
-				BaseRenderer.drawBeveledPanel(x, y, z, sX, sY, getStyle().asColor("top_left"), getStyle().asColor("background.complete"), getStyle().asColor("bottom_right"));
+				BaseRenderer.drawBeveledPanel(matrices, provider, x, y, z, sX, sY, getStyle().asColor("top_left"), getStyle().asColor("background.complete"), getStyle().asColor("bottom_right"));
 			}
 		}
 
-		renderField();
+		renderField(matrices, provider);
 	}
 }

@@ -2,6 +2,8 @@ package spinnery.widget;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.util.math.MatrixStack;
 import spinnery.client.render.BaseRenderer;
 import spinnery.client.render.TextRenderer;
 import spinnery.widget.api.*;
@@ -14,7 +16,7 @@ public class WPanel extends WAbstractWidget implements WModifiableCollection, WD
 	protected List<WLayoutElement> orderedWidgets = new ArrayList<>();
 
 	@Override
-	public void draw() {
+	public void draw(MatrixStack matrices, VertexConsumerProvider.Immediate provider) {
 		if(isHidden()) { return; }
 
 		float x = getX();
@@ -24,16 +26,16 @@ public class WPanel extends WAbstractWidget implements WModifiableCollection, WD
 		float sX = getWidth();
 		float sY = getHeight();
 
-		BaseRenderer.drawPanel(x, y, z, sX, sY, getStyle().asColor("shadow"), getStyle().asColor("background"), getStyle().asColor("highlight"), getStyle().asColor("outline"));
+		BaseRenderer.drawPanel(matrices, provider, x, y, z, sX, sY, getStyle().asColor("shadow"), getStyle().asColor("background"), getStyle().asColor("highlight"), getStyle().asColor("outline"));
 
 		if (hasLabel()) {
 			TextRenderer.pass().shadow(isLabelShadowed())
 					.text(getLabel()).at(x + 8, y + 6, z)
-					.color(getStyle().asColor("label.color")).shadowColor(getStyle().asColor("label.shadow_color")).render();
+					.color(getStyle().asColor("label.color")).shadowColor(getStyle().asColor("label.shadow_color")).render(matrices, provider);
 		}
 
 		for (WLayoutElement widget : getOrderedWidgets()) {
-			widget.draw();
+			widget.draw(matrices, provider);
 		}
 	}
 

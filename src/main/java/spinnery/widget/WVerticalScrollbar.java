@@ -1,5 +1,7 @@
 package spinnery.widget;
 
+import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.util.math.MatrixStack;
 import spinnery.client.render.BaseRenderer;
 import spinnery.common.utility.MouseUtilities;
 import spinnery.widget.api.Color;
@@ -29,12 +31,12 @@ public class WVerticalScrollbar extends WAbstractWidget {
 	}
 
 	@Override
-	public void draw() {
+	public void draw(MatrixStack matrices, VertexConsumerProvider.Immediate.Immediate provider) {
 		if (isHidden()) {
 			return;
 		}
 
-		BaseRenderer.drawBeveledPanel(getX(), getY(), getZ(), getWidth(), getHeight(), getStyle().asColor("scroll_line.top_left"), getStyle().asColor("scroll_line.background"), getStyle().asColor("scroll_line.bottom_right"));
+		BaseRenderer.drawBeveledPanel(matrices, provider, getX(), getY(), getZ(), getWidth(), getHeight(), getStyle().asColor("scroll_line.top_left"), getStyle().asColor("scroll_line.background"), getStyle().asColor("scroll_line.bottom_right"));
 
 		Color scrollerColor = getStyle().asColor("scroller.background_default");
 
@@ -45,7 +47,7 @@ public class WVerticalScrollbar extends WAbstractWidget {
 			scrollerColor = getStyle().asColor("scroller.background_held");
 		}
 
-		BaseRenderer.drawBeveledPanel(getX() + 1, getScrollerY() + 1, getZ(), getWidth() - 2, Math.min(getHighY() - getScrollerY(), getScrollerHeight()) - 2, getStyle().asColor("scroller.top_left"), scrollerColor, getStyle().asColor("scroller.bottom_right"));
+		BaseRenderer.drawBeveledPanel(matrices, provider, getX() + 1, getScrollerY() + 1, getZ(), getWidth() - 2, Math.min(getHighY() - getScrollerY(), getScrollerHeight()) - 2, getStyle().asColor("scroller.top_left"), scrollerColor, getStyle().asColor("scroller.bottom_right"));
 	}
 
 	@Override

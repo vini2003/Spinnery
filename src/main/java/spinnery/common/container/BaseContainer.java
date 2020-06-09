@@ -3,14 +3,14 @@ package spinnery.common.container;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
-import net.minecraft.container.Container;
-import net.minecraft.container.Slot;
-import net.minecraft.container.SlotActionType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.screen.ScreenHandler;
+import net.minecraft.screen.slot.Slot;
+import net.minecraft.screen.slot.SlotActionType;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.world.World;
 import org.lwjgl.glfw.GLFW;
@@ -38,7 +38,7 @@ import java.util.*;
  * the BaseContainer should NOT contain
  * a Position, or a Size.
  */
-public class BaseContainer extends Container {
+public class BaseContainer extends ScreenHandler {
 	public static final int PLAYER_INVENTORY = 0;
 	protected final WInterface serverInterface;
 	public Map<Integer, Inventory> inventories = new HashMap<>();
@@ -459,7 +459,7 @@ public class BaseContainer extends Container {
 	@Deprecated
 	@Override
 	public ItemStack onSlotClick(int identifier, int button, SlotActionType action, PlayerEntity player) {
-		throw new UnsupportedOperationException(Container.class.getName() + "::onSlotClick cannot happen in a Spinnery " + BaseContainer.class.getName() + "!");
+		throw new UnsupportedOperationException(ScreenHandler.class.getName() + "::onSlotClick cannot happen in a Spinnery " + BaseContainer.class.getName() + "!");
 	}
 
 	/**

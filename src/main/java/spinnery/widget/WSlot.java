@@ -5,6 +5,8 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.Item;
@@ -136,7 +138,7 @@ public class WSlot extends WAbstractWidget {
 	}
 
 	public boolean accepts(ItemStack... stacks) {
-		if (!(Arrays.stream(stacks).allMatch(stack -> getLinkedInventory().isValidInvStack(slotNumber, stack)))) {
+		if (!(Arrays.stream(stacks).allMatch(stack -> getLinkedInventory().isValid(slotNumber, stack)))) {
 			return false;
 		}
 		if (isWhitelist) {
@@ -158,7 +160,7 @@ public class WSlot extends WAbstractWidget {
 
 	@Override
 	@Environment(EnvType.CLIENT)
-	public void draw() {
+	public void draw(MatrixStack matrices, VertexConsumerProvider.Immediate provider) {
 		if (isHidden()) {
 			return;
 		}
@@ -170,10 +172,10 @@ public class WSlot extends WAbstractWidget {
 		float sX = getWidth();
 		float sY = getHeight();
 
-		BaseRenderer.drawBeveledPanel(x, y, z, sX, sY, getStyle().asColor("top_left"), getStyle().asColor("background.unfocused"), getStyle().asColor("bottom_right"));
+		BaseRenderer.drawBeveledPanel(matrices, provider, x, y, z, sX, sY, getStyle().asColor("top_left"), getStyle().asColor("background.unfocused"), getStyle().asColor("bottom_right"));
 
 		if (hasPreviewTexture()) {
-			BaseRenderer.drawImage(x + 1, y + 1, z, sX - 2, sY - 2, getPreviewTexture());
+			BaseRenderer.drawTexturedQuad(matrices, provider, x + 1, y + 1, z, sX - 2, sY - 2, getPreviewTexture());
 		}
 
 		ItemStack stackA = getPreviewStack().isEmpty() ? getStack() : getPreviewStack();
@@ -187,7 +189,7 @@ public class WSlot extends WAbstractWidget {
 		RenderSystem.translatef(0, 0, +150);
 
 		if (isFocused()) {
-			BaseRenderer.drawRectangle(x + 1, y + 1, z + 1, sX - 2, sY - 2, getStyle().asColor("overlay"));
+			BaseRenderer.drawQuad(matrices, provider, x + 1, y + 1, z + 1, sX - 2, sY - 2, getStyle().asColor("overlay"));
 		}
 
 		RenderSystem.translatef(0, 0, -250);
@@ -350,7 +352,7 @@ public class WSlot extends WAbstractWidget {
 
 	public ItemStack getStack() {
 		try {
-			ItemStack stackA = getLinkedInventory().getInvStack(getSlotNumber());
+			ItemStack stackA = getLinkedInventory().getStack(getSlotNumber());
 			;
 			if (!isOverrideMaximumCount()) {
 				setMaximumCount(stackA.getMaxCount());
@@ -375,7 +377,7 @@ public class WSlot extends WAbstractWidget {
 
 	public <W extends WSlot> W setStack(ItemStack stack) {
 		try {
-			getLinkedInventory().setInvStack(slotNumber, stack);
+			getLinkedInventory().setStack(slotNumber, stack);
 			if (!isOverrideMaximumCount()) {
 				setMaximumCount(stack.getMaxCount());
 			}

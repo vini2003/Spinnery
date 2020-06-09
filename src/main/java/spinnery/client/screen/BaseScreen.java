@@ -2,6 +2,9 @@ package spinnery.client.screen;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import org.lwjgl.glfw.GLFW;
 import spinnery.common.utility.MouseUtilities;
@@ -18,8 +21,12 @@ public class BaseScreen extends Screen implements WInterfaceProvider {
 	}
 
 	@Override
-	public void render(int mouseX, int mouseY, float tick) {
-		getInterface().draw();
+	public void render(MatrixStack matrices, int mouseX, int mouseY, float tick) {
+		VertexConsumerProvider.Immediate provider = VertexConsumerProvider.immediate(MinecraftClient.getInstance().getBufferBuilders().getBlockBufferBuilders().get(RenderLayer.getSolid()));
+
+		getInterface().draw(matrices, provider);
+
+		provider.draw();
 	}
 
 	@Override

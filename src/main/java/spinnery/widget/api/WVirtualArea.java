@@ -3,6 +3,8 @@ package spinnery.widget.api;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.util.math.MatrixStack;
 
 /**
  * Utility class representing a virtual layout element that has a parent, position and size, but no drawing
@@ -84,7 +86,7 @@ public class WVirtualArea implements WLayoutElement {
 	}
 
 	@Override
-	public void draw() {
+	public void draw(MatrixStack matrices, VertexConsumerProvider.Immediate provider) {
 	}
 
 	public boolean isWithinBounds(float x, float y) {

@@ -6,8 +6,8 @@ import net.minecraft.util.Identifier;
 import spinnery.Spinnery;
 
 @Environment(EnvType.CLIENT)
-public final class WKibbyImmage extends WStaticImage {
-	public WKibbyImmage() {
+public final class WKibbyImage extends WStaticImage {
+	public WKibbyImage() {
 		setTexture(new Identifier(Spinnery.MOD_ID, "textures/kirby.png"));
 	}
 }

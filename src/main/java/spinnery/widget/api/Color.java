@@ -6,10 +6,12 @@ import net.minecraft.util.math.MathHelper;
 
 /**
  * Data object representing a color. Components may be accessed via the fields
- * A, R, G, B; the color int may be accessed via the fields
- * RGB and ARGB.
+ * <tt>A</tt>, <tt>R</tt>, <tt>G</tt>, <tt>B</tt>; the color int may be accessed via the fields
+ * <tt>RGB</tt> and <tt>ARGB</tt>.
  */
 public class Color implements JanksonSerializable {
+	public static final Color DEFAULT = Color.of(0xffffffff);
+
 	public float A = 1.0f, R = 1.0f, G = 1.0f, B = 1.0f;
 
 	public int ARGB = 0xffffffff;

@@ -4,7 +4,9 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.Window;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import spinnery.client.render.BaseRenderer;
 import spinnery.common.container.BaseContainer;
@@ -218,14 +220,14 @@ public class WInterface implements WDrawableCollection, WModifiableCollection, W
 	}
 
 	@Override
-	public void draw() {
+	public void draw(MatrixStack matrices, VertexConsumerProvider.Immediate provider) {
 		if (isBlurred()) {
 			Window window = MinecraftClient.getInstance().getWindow();
-			BaseRenderer.drawRectangle(0, 0, 0, window.getWidth(), window.getHeight(), Color.of(0x90000000));
+			BaseRenderer.drawQuad(matrices, provider, 0, 0, 0, window.getWidth(), window.getHeight(), Color.of(0x90000000));
 		}
 
 		for (WLayoutElement widget : getOrderedWidgets()) {
-			widget.draw();
+			widget.draw(matrices, provider);
 		}
 	}
 
