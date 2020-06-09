@@ -1,4 +1,4 @@
-package spinnery.util;
+package spinnery.common.utility;
 
 import blue.endless.jankson.JsonArray;
 import blue.endless.jankson.JsonElement;

@@ -1,11 +1,12 @@
-package spinnery.util;
+package spinnery.common.utility;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
-import spinnery.registry.ResourceRegistry;
+import spinnery.common.configuration.registry.ConfigurationRegistry;
+import spinnery.common.registry.ThemeResourceRegistry;
 
 /**
  * A basic implementation of
@@ -18,8 +19,10 @@ public class ResourceListener implements SimpleSynchronousResourceReloadListener
 
 	@Override
 	public void apply(ResourceManager resourceManager) {
-		ResourceRegistry.clear();
-		ResourceRegistry.load(resourceManager);
+		ThemeResourceRegistry.clear();
+		ThemeResourceRegistry.load(resourceManager);
+
+		ConfigurationRegistry.load(resourceManager);
 	}
 
 	@Override

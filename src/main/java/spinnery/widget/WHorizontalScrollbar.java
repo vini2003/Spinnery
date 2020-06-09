@@ -3,6 +3,7 @@ package spinnery.widget;
 import spinnery.client.render.BaseRenderer;
 import spinnery.widget.api.WHorizontalScrollable;
 
+@Deprecated // Will be fixed soon!
 public class WHorizontalScrollbar extends WAbstractWidget {
 	protected WHorizontalScrollable scrollable;
 	protected double clickMouseX;

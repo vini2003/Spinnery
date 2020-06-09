@@ -1,4 +1,4 @@
-package spinnery.registry;
+package spinnery.common.registry;
 
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
@@ -9,9 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.PacketByteBuf;
-import spinnery.common.BaseContainer;
-import spinnery.util.StackUtilities;
-import spinnery.widget.WAbstractWidget;
+import spinnery.common.container.BaseContainer;
 import spinnery.widget.WSlot;
 import spinnery.widget.api.Action;
 import spinnery.widget.api.WNetworked;

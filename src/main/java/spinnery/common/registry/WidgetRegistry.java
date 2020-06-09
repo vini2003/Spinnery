@@ -1,8 +1,9 @@
-package spinnery.registry;
+package spinnery.common.registry;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import net.minecraft.util.Identifier;
+import spinnery.client.configuration.widget.WOptionField;
 import spinnery.widget.*;
 
 /**
@@ -58,6 +59,7 @@ public class WidgetRegistry {
 		register(new Identifier("spinnery", "form_container"), WFormContainer.class);
 		register(new Identifier("spinnery", "vertical_arrow_up"), WVerticalArrowUp.class);
 		register(new Identifier("spinnery", "vertical_arrow_down"), WVerticalArrowDown.class);
+		register(new Identifier("spinnery", "option_field"), WOptionField.class);
 	}
 
 	public static void register(Identifier id, Class<? extends WAbstractWidget> wClass) {

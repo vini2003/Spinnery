@@ -2,6 +2,7 @@ package spinnery.widget;
 
 import com.google.common.collect.ImmutableSet;
 import spinnery.client.render.BaseRenderer;
+import spinnery.client.utility.ScissorArea;
 import spinnery.widget.api.*;
 
 import java.util.*;
@@ -220,6 +221,7 @@ public class WFormContainer extends WAbstractWidget implements WDrawableCollecti
 	@Override
 	public void onLayoutChange() {
 		super.onLayoutChange();
+
 		updateContents();
 	}
 
@@ -229,14 +231,13 @@ public class WFormContainer extends WAbstractWidget implements WDrawableCollecti
 			return;
 		}
 
-		BaseRenderer.enableCropping();
+		ScissorArea area = new ScissorArea(this);
 
 		for (WAbstractWidget widget : widgets) {
-			BaseRenderer.crop(this);
 			widget.draw();
 		}
 
-		BaseRenderer.crop(this);
+		area.destroy();
 
 		if (hasBorder()) {
 			BaseRenderer.drawRectangle(getX(), getY(), getZ(), getWidth(), outerBorderWidth, getStyle().asColor("border"));
@@ -244,7 +245,5 @@ public class WFormContainer extends WAbstractWidget implements WDrawableCollecti
 			BaseRenderer.drawRectangle(getX(), getHighY() - 1, getZ(), getWidth(), outerBorderWidth, getStyle().asColor("border"));
 			BaseRenderer.drawRectangle(getWideX() - 1, getY(), getZ(), outerBorderWidth, getHeight(), getStyle().asColor("border"));
 		}
-
-		BaseRenderer.disableCropping();
 	}
 }

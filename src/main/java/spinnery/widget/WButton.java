@@ -20,8 +20,7 @@ public class WButton extends WAbstractButton {
 		}
 
 		if (hasLabel()) {
-			float x = (TextRenderer.width(getLabel()) > getWidth() - 6) ? (getWideX() + 2) : (getX() + 3);
-			TextRenderer.pass().text(getLabel()).at(x, getHighY() / 2 - 4.5, getZ())
+			TextRenderer.pass().text(getLabel()).at(getX() + (getWidth() / 2 - TextRenderer.width(getLabel()) / 2), getY() + (getHeight() / 2 - 4), getZ())
 					.shadow(getStyle().asBoolean("label.shadow")).shadowColor(getStyle().asColor("label.shadow_color"))
 					.color(getStyle().asColor("label.color")).render();
 		}

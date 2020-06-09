@@ -1,9 +1,8 @@
-package spinnery.common;
+package spinnery.common.container;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.container.Container;
 import net.minecraft.container.Slot;
 import net.minecraft.container.SlotActionType;
@@ -15,9 +14,9 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.world.World;
 import org.lwjgl.glfw.GLFW;
-import spinnery.registry.NetworkRegistry;
-import spinnery.util.MutablePair;
-import spinnery.util.StackUtilities;
+import spinnery.common.registry.NetworkRegistry;
+import spinnery.common.utility.MutablePair;
+import spinnery.common.utility.StackUtilities;
 import spinnery.widget.WAbstractWidget;
 import spinnery.widget.WInterface;
 import spinnery.widget.WSlot;

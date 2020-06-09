@@ -5,7 +5,7 @@ import io.github.prospector.modmenu.api.ModMenuApi;
 import net.minecraft.client.gui.screen.Screen;
 import spinnery.Spinnery;
 
-public class SpinneryModMenuIntegration implements ModMenuApi {
+public class SpinneryModMenu implements ModMenuApi {
 	@Override
 	public String getModId() {
 		return Spinnery.MOD_ID;
@@ -13,11 +13,6 @@ public class SpinneryModMenuIntegration implements ModMenuApi {
 
 	@Override
 	public ConfigScreenFactory<?> getModConfigScreenFactory() {
-		return new ConfigScreenFactory<Screen>() {
-			@Override
-			public Screen create(Screen parent) {
-
-			}
-		}
+		return (ConfigScreenFactory<Screen>) parent -> new SpinneryConfigurationScreen();
 	}
 }

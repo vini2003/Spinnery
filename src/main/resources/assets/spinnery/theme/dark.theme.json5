@@ -200,24 +200,26 @@
       scroller: {
         top_left: "$bevel_light",
         bottom_right: "$bevel_dark",
-        background: "$bg_panel",
+        background_default: "$bg_panel",
+        background_hovered: 0xff202020,
+        background_held: 0xff121212
       },
       scroll_line: {
         top_left: "$bevel_dark",
         bottom_right: "$bevel_light",
-        background: "$bg_interactable",
+        background: "$bg_interactable"
       },
     },
     "spinnery:horizontal_scrollbar": {
       scroller: {
         top_left: "$bevel_light",
         bottom_right: "$bevel_dark",
-        background: "$bg_panel",
+        background: 0xff626262
       },
       scroll_line: {
         top_left: "$bevel_dark",
         bottom_right: "$bevel_light",
-        background: "$bg_interactable",
+        background: 0xff626262
       }
     },
     "spinnery:text_area": {
@@ -231,13 +233,58 @@
       ]
     },
     "spinnery:horizontal_box_container": {
-      border: 0xffffffff
+      border: 0xff000000
     },
     "spinnery:vertical_box_container": {
-      border: 0xffffffff
+      border: 0xff000000
     },
     "spinnery:form_container": {
-      border: 0xffffffff
+      border: 0xff000000
+    },
+    "spinnery:vertical_arrow_up": {
+      $extend: [
+        "$label"
+      ],
+      top_left: {
+        on: "$bevel_dark",
+        off: "$bevel_light"
+      },
+      bottom_right: {
+        on: "$bevel_light",
+        off: "$bevel_dark"
+      },
+      background: {
+        on: "$bevel_dark",
+        off: "$bg_panel"
+      }
+    },
+    "spinnery:vertical_arrow_down": {
+      $extend: [
+        "$label"
+      ],
+      top_left: {
+        on: "$bevel_dark",
+        off: "$bevel_light"
+      },
+      bottom_right: {
+        on: "$bevel_light",
+        off: "$bevel_dark"
+      },
+      background: {
+        on: "$bevel_dark",
+        off: "$bg_panel"
+      }
+    },
+    "spinnery:option_field": {
+      $extend: [
+        "$text_editor"
+      ],
+      background: {
+        boolean_true: 0xff3d632d,
+        boolean_false: 0xff96222c,
+        incomplete: 0xff934a26,
+        complete: 0xff000000
+      }
     }
   }
 }

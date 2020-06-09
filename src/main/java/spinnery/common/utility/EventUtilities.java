@@ -1,4 +1,4 @@
-package spinnery.util;
+package spinnery.common.utility;
 
 import spinnery.widget.WAbstractWidget;
 import spinnery.widget.api.WEventListener;

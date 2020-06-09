@@ -1,4 +1,4 @@
-package spinnery.registry;
+package spinnery.common.registry;
 
 import blue.endless.jankson.Jankson;
 import blue.endless.jankson.JsonObject;
@@ -11,12 +11,12 @@ import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.Level;
 import spinnery.Spinnery;
-import spinnery.util.ResourceListener;
+import spinnery.common.utility.ResourceListener;
 import spinnery.widget.api.Theme;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Collection;
+import java.util.*;
 
 /**
  * Registers all the resource-related
@@ -25,7 +25,7 @@ import java.util.Collection;
  * reload listeners.
  */
 @Environment(EnvType.CLIENT)
-public class ResourceRegistry {
+public class ThemeResourceRegistry {
 	public static final ResourceListener RESOURCE_LISTENER = new ResourceListener();
 
 	public static void initialize() {
@@ -37,13 +37,12 @@ public class ResourceRegistry {
 	}
 
 	public static void load(ResourceManager resourceManager) {
-		Collection<Identifier> themeFiles = resourceManager.findResources("spinnery",
-				(string) -> string.endsWith(".theme.json5"));
+		Collection<Identifier> themeFiles = resourceManager.findResources("theme", (string) -> string.endsWith(".theme.json5"));
 
 		for (Identifier id : themeFiles) {
 			try {
 				Identifier themeId = new Identifier(id.getNamespace(),
-						id.getPath().replaceFirst("^spinnery/", "").replaceFirst("\\.theme\\.json5", ""));
+						id.getPath().replaceFirst("theme/", "").replaceFirst("\\.theme\\.json5", ""));
 				register(themeId, resourceManager.getResource(id).getInputStream());
 			} catch (IOException e) {
 				Spinnery.LOGGER.warn("[Spinnery] Failed to load theme {}.", id);

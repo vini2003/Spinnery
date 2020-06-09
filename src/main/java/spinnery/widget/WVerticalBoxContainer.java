@@ -2,6 +2,7 @@ package spinnery.widget;
 
 import com.google.common.collect.ImmutableSet;
 import spinnery.client.render.BaseRenderer;
+import spinnery.client.utility.ScissorArea;
 import spinnery.widget.api.*;
 
 import java.util.*;
@@ -173,14 +174,11 @@ public class WVerticalBoxContainer extends WAbstractWidget implements WDrawableC
 			return;
 		}
 
-		BaseRenderer.enableCropping();
+		ScissorArea area = new ScissorArea(this);
 
 		for (WAbstractWidget widget : widgets) {
-			BaseRenderer.crop(this);
 			widget.draw();
 		}
-
-		BaseRenderer.crop(this);
 
 		if (hasBorder()) {
 			BaseRenderer.drawRectangle(getX(), getY(), getZ(), getWidth(), outerBorderWidth, getStyle().asColor("border"));
@@ -189,6 +187,6 @@ public class WVerticalBoxContainer extends WAbstractWidget implements WDrawableC
 			BaseRenderer.drawRectangle(getWideX() - 1, getY(), getZ(), outerBorderWidth, getHeight(), getStyle().asColor("border"));
 		}
 
-		BaseRenderer.disableCropping();
+		area.destroy();
 	}
 }

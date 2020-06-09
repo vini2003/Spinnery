@@ -1,5 +1,5 @@
 plugins {
-	id 'fabric-loom' version '0.2.6-SNAPSHOT'
+	id 'fabric-loom' version '0.4-SNAPSHOT'
 	id 'maven-publish'
 	id "com.jfrog.bintray" version "1.8.4"
 }
@@ -14,7 +14,6 @@ sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
 archivesBaseName = project.archives_base_name
-version = "${project.ext.mod_version}+${project.ext.version_meta}"
 group = project.maven_group
 
 bintray {
@@ -23,14 +22,14 @@ bintray {
 	publications = ['SpinneryPublication']
 	pkg {
 		repo = 'Spinnery'
-		name = project.archives_base_name
+		name = archives_base_name
 		userOrg = 'spinnery'
 		licenses = ['LGPL-3.0']
 		vcsUrl = 'https://github.com/vini2003/Spinnery.git'
 		version {
-			name = project.version
+			name = mod_version
 			released  = new Date()
-			vcsTag = project.version
+			vcsTag = mod_version
 		}
 	}
 }
@@ -55,24 +54,16 @@ dependencies {
 	modCompile "blue.endless:jankson:1.2.0"
 	include "blue.endless:jankson:1.2.0"
 
-	// ClotConfig
-	modApi "me.shedaniel.cloth:config-2:${clothconfig_version}"
-	include "me.shedaniel.cloth:config-2:${clothconfig_version}"
-
-	// AutoConfig
-	modApi "me.sargunvohra.mcmods:autoconfig1u:${autoconfig_version}"
-	include "me.sargunvohra.mcmods:autoconfig1u:${autoconfig_version}"
-
 	// ModMenu
 	modImplementation "io.github.prospector:modmenu:${modmenu_version}"
 }
 
 processResources {
-	inputs.property "version", project.version
+	inputs.property "mod_version", mod_version
 
 	from(sourceSets.main.resources.srcDirs) {
 		include "fabric.mod.json"
-		expand "version": project.version
+		expand "mod_version": mod_version
 	}
 
 	from(sourceSets.main.resources.srcDirs) {

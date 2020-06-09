@@ -2,12 +2,13 @@ package spinnery.widget;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import spinnery.client.render.BaseRenderer;
-import spinnery.util.MutablePair;
+import spinnery.client.utility.ScissorArea;
+import spinnery.common.utility.MutablePair;
 import spinnery.widget.api.*;
 
 import java.util.*;
 
+// TODO: Add smoothing.
 @Environment(EnvType.CLIENT)
 public class WDraggableContainer extends WAbstractWidget implements WDrawableCollection, WModifiableCollection, WVerticalScrollable, WHorizontalScrollable {
 	protected Set<WAbstractWidget> widgets = new LinkedHashSet<>();
@@ -127,15 +128,13 @@ public class WDraggableContainer extends WAbstractWidget implements WDrawableCol
 	public void draw() {
 		if (isHidden()) return;
 
-		BaseRenderer.enableCropping();
-
-		BaseRenderer.crop(this);
+		ScissorArea area = new ScissorArea(this);
 
 		for (WLayoutElement widget : getOrderedWidgets()) {
 			widget.draw();
 		}
 
-		BaseRenderer.disableCropping();
+		area.destroy();
 	}
 
 	@Override

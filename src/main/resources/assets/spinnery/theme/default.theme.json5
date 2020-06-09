@@ -207,7 +207,9 @@
       scroller: {
         top_left: "$bevel_light",
         bottom_right: "$bevel_dark",
-        background: "$bg_panel"
+        background_default: "$bg_panel",
+        background_hovered: 0xff949494,
+        background_held: 0xff626262
       },
       scroll_line: {
         top_left: "$bevel_dark",
@@ -278,6 +280,17 @@
       background: {
         on: "$bevel_dark",
         off: "$bg_panel"
+      }
+    },
+    "spinnery:option_field": {
+      $extend: [
+        "$text_editor"
+      ],
+      background: {
+        boolean_true: 0xff3d632d,
+        boolean_false: 0xff96222c,
+        incomplete: 0xff934a26,
+        complete: 0xff000000
       }
     }
   }

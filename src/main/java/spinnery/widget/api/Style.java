@@ -5,7 +5,7 @@ import blue.endless.jankson.JsonElement;
 import blue.endless.jankson.JsonPrimitive;
 import net.minecraft.util.Identifier;
 import spinnery.Spinnery;
-import spinnery.util.JanksonUtilities;
+import spinnery.common.utility.JanksonUtilities;
 import spinnery.widget.WAbstractWidget;
 
 import java.util.HashMap;

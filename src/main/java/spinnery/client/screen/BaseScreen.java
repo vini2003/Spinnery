@@ -4,7 +4,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.LiteralText;
 import org.lwjgl.glfw.GLFW;
-import spinnery.util.MouseUtilities;
+import spinnery.common.utility.MouseUtilities;
 import spinnery.widget.WInterface;
 import spinnery.widget.api.WInterfaceProvider;
 

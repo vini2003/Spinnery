@@ -8,8 +8,8 @@ import com.google.common.collect.ImmutableMap;
 import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.Level;
 import spinnery.Spinnery;
-import spinnery.registry.ThemeRegistry;
-import spinnery.util.JanksonUtilities;
+import spinnery.common.registry.ThemeRegistry;
+import spinnery.common.utility.JanksonUtilities;
 
 import java.util.HashMap;
 import java.util.Map;

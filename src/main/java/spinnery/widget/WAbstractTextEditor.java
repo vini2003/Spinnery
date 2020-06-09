@@ -8,15 +8,12 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
 import net.minecraft.util.Pair;
 import org.lwjgl.glfw.GLFW;
-import org.lwjgl.opengl.GL11;
 import spinnery.client.render.BaseRenderer;
+import spinnery.client.utility.ScissorArea;
 import spinnery.client.render.TextRenderer;
 import spinnery.widget.api.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 
 /**
@@ -27,6 +24,9 @@ import java.util.Objects;
  * 10:52PM, 4/8/2020
  * I will not be commenting this in the name
  * of my sanity.
+ * 7:53AM, 6/8/2020
+ * I am forced to sit through this and
+ * add input filters. I am suffering.
  */
 @SuppressWarnings("unchecked")
 @Environment(EnvType.CLIENT)
@@ -42,9 +42,19 @@ public abstract class WAbstractTextEditor extends WAbstractWidget implements WPa
 	protected float xOffset = 0;
 	protected float yOffset = 0;
 	protected int cursorTick = 20;
+	protected WInputFilter<?> filter = null;
 
 	public WAbstractTextEditor() {
 		setText("");
+	}
+
+	public WInputFilter<?> getFilter() {
+		return filter;
+	}
+
+	public <W extends WAbstractTextEditor> W setFilter(WInputFilter<?> filter) {
+		this.filter = filter;
+		return (W) this;
 	}
 
 	protected boolean hasSelection() {
@@ -72,7 +82,7 @@ public abstract class WAbstractTextEditor extends WAbstractWidget implements WPa
 		Position innerPos = getInnerAnchor();
 		int x = -1;
 		int y = -1;
-		int lineOffset = getLineOffset();
+		float lineOffset = getLineOffset();
 		int cH = getTextHeight();
 		float offsetMouseX = -xOffset + mouseX;
 		for (int i = 0; i < getVisibleLines(); i++) {
@@ -84,7 +94,7 @@ public abstract class WAbstractTextEditor extends WAbstractWidget implements WPa
 					}
 					break;
 				}
-				y = lineOffset + i;
+				y = (int) (lineOffset + i);
 				if (offsetMouseX >= innerPos.getX() + getLineWidth(y)) {
 					x = getLineLength(y);
 					break;
@@ -186,21 +196,24 @@ public abstract class WAbstractTextEditor extends WAbstractWidget implements WPa
 
 	@Override
 	public void onCharTyped(char character, int keyCode) {
-		if (active) {
-			if (hasSelection()) {
-				cursor.assign(selection.getLeft());
-				deleteText(selection.getLeft(), selection.getRight());
-				clearSelection();
-			}
-			insertText(String.valueOf(character));
-			int prevY = cursor.y;
-			cursor.right();
-			if (cursor.y != prevY) {
+		if (filter == null || filter.accepts(String.valueOf(character), text)) {
+			if (active) {
+				if (hasSelection()) {
+					cursor.assign(selection.getLeft());
+					deleteText(selection.getLeft(), selection.getRight());
+					clearSelection();
+				}
+				insertText(String.valueOf(character));
+				int prevY = cursor.y;
 				cursor.right();
+				if (cursor.y != prevY) {
+					cursor.right();
+				}
+				onCursorMove();
 			}
-			onCursorMove();
+			cursorTick = 20;
 		}
-		cursorTick = 20;
+
 		super.onCharTyped(character, keyCode);
 	}
 
@@ -575,7 +588,7 @@ public abstract class WAbstractTextEditor extends WAbstractWidget implements WPa
 		float innerY = innerPos.getY();
 		float innerWidth = innerSize.getWidth();
 		float innerHeight = innerSize.getHeight();
-		int lineOffset = getLineOffset();
+		float lineOffset = getLineOffset();
 		int cH = getTextHeight();
 		float cursorX = innerX + getXOffset(cursor.y, cursor.x) - 1;
 		float cursorY = innerY + (cH + 2) * (cursor.y - lineOffset) - 2;
@@ -622,20 +635,22 @@ public abstract class WAbstractTextEditor extends WAbstractWidget implements WPa
 
 		double glScale = MinecraftClient.getInstance().getWindow().getScaleFactor();
 		int rawHeight = MinecraftClient.getInstance().getWindow().getHeight();
-		GL11.glEnable(GL11.GL_SCISSOR_TEST);
-		GL11.glScissor((int) ((innerX - 1) * glScale), (int) (rawHeight - (innerY * glScale + innerHeight * glScale)), (int) (innerWidth * glScale), (int) (innerHeight * glScale));
 
-		int lineOffset = getLineOffset();
-		int cH = getTextHeight();
+
+
+		ScissorArea area = new ScissorArea((int) ((innerX - 1) * glScale), (int) (rawHeight - ((innerY - 2) * glScale + innerHeight * glScale)), (int) (innerWidth * glScale), (int) (innerHeight * glScale));
+
+		float lineOffset = getLineOffset();
+		float cH = getTextHeight();
 		float cursorX = innerX + getXOffset(cursor.y, cursor.x) - 1;
 		float cursorY = innerY + (cH + 2) * (cursor.y - lineOffset) - 2;
 		float yRenderOffset = yOffset + lineOffset * cH;
 
 		RenderSystem.pushMatrix();
 		RenderSystem.translatef(xOffset, yRenderOffset, 0f);
-		for (int i = lineOffset; i < lineOffset + getVisibleLines(); i++) {
+		for (int i = (int) lineOffset; i < lineOffset + getVisibleLines(); i++) {
 			if (i < 0 || !isLineVisible(i) || i > lines.size() - 1) continue;
-			int adjustedI = i - lineOffset;
+			float adjustedI = i - lineOffset;
 			String line = lines.get(i);
 			TextRenderer.pass().text(line).at(innerX, innerY + (cH + 2) * adjustedI, z).scale(scale)
 					.shadow(getStyle().asBoolean("text.shadow")).shadowColor(getStyle().asColor("text.shadow_color"))
@@ -644,9 +659,9 @@ public abstract class WAbstractTextEditor extends WAbstractWidget implements WPa
 
 			Pair<Integer, Integer> selectedChars = getSelectedChars(i);
 			if (selectedChars != null) {
-				int selW = getXOffset(i, selectedChars.getRight()) - getXOffset(i, selectedChars.getLeft());
+				float selW = getXOffset(i, selectedChars.getRight()) - getXOffset(i, selectedChars.getLeft());
 				BaseRenderer.drawRectangle(innerX + getXOffset(i, selectedChars.getLeft()),
-						innerY + (cH + 2) * adjustedI, z, selW, cH, getStyle().asColor("highlight"));
+						innerY + (cH + 2) * adjustedI, z, selW, cH + 1, getStyle().asColor("highlight"));
 			}
 		}
 		if (active && cursorTick > 10) {
@@ -655,22 +670,22 @@ public abstract class WAbstractTextEditor extends WAbstractWidget implements WPa
 		}
 		RenderSystem.popMatrix();
 
-		GL11.glDisable(GL11.GL_SCISSOR_TEST);
+		area.destroy();
 	}
 
 	public boolean isEmpty() {
 		return text.isEmpty();
 	}
 
-	protected int getLineOffset() {
-		return (int) (-yOffset / getTextHeight());
+	protected float getLineOffset() {
+		return (-yOffset / getTextHeight());
 	}
 
-	protected int getXOffset(int lineIndex, int charIndex) {
+	protected float getXOffset(int lineIndex, int charIndex) {
 		if (charIndex < 0 || lines.isEmpty() || lineIndex > lines.size() - 1) return 0;
 		String line = lines.get(lineIndex);
 		int endIndex = Math.min(charIndex, line.length());
-		return (int) (TextRenderer.width(line.substring(0, endIndex)) * scale);
+		return (float) (TextRenderer.width(line.substring(0, endIndex)) * scale);
 	}
 
 	protected int getVisibleLines() {
@@ -678,7 +693,7 @@ public abstract class WAbstractTextEditor extends WAbstractWidget implements WPa
 	}
 
 	protected boolean isLineVisible(int line) {
-		int lineOffset = getLineOffset();
+		float lineOffset = getLineOffset();
 		return line >= lineOffset && line <= lineOffset + getVisibleLines();
 	}
 

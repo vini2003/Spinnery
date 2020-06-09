@@ -3,6 +3,6 @@ spinnery.client
 spinnery.common
 spinnery.debug
 spinnery.mixin
-spinnery.registry
+spinnery.common.registry
 spinnery.util
 spinnery.widget

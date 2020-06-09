@@ -1,4 +1,4 @@
-package spinnery.util;
+package spinnery.common.utility;
 
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
@@ -6,7 +6,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import org.apache.logging.log4j.Level;
 import spinnery.Spinnery;
-import spinnery.common.BaseInventory;
+import spinnery.common.inventory.BaseInventory;
 
 public class InventoryUtilities {
 	/**

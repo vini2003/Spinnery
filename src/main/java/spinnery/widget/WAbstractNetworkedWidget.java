@@ -3,7 +3,7 @@ package spinnery.widget;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.nbt.CompoundTag;
-import spinnery.registry.NetworkRegistry;
+import spinnery.common.registry.NetworkRegistry;
 import spinnery.widget.api.WNetworked;
 
 import java.util.function.BiConsumer;

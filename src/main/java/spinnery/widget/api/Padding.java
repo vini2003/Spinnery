@@ -1,7 +1,7 @@
 package spinnery.widget.api;
 
 import blue.endless.jankson.JsonElement;
-import spinnery.util.JanksonUtilities;
+import spinnery.common.utility.JanksonUtilities;
 
 import java.util.Objects;
 

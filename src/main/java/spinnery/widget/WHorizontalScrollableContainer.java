@@ -1,12 +1,14 @@
 package spinnery.widget;
 
 import com.google.common.collect.ImmutableSet;
-import spinnery.client.render.BaseRenderer;
+import spinnery.client.utility.ScissorArea;
 import spinnery.widget.api.*;
 
 import java.util.*;
 
+// TODO: Add smoothing.
 @SuppressWarnings("unchecked")
+@Deprecated // Will be fixed soon!
 public class WHorizontalScrollableContainer extends WAbstractWidget implements WDrawableCollection, WModifiableCollection, WHorizontalScrollable, WDelegatedEventListener {
 	protected Set<WAbstractWidget> widgets = new HashSet<>();
 	protected List<WLayoutElement> orderedWidgets = new ArrayList<>();
@@ -226,15 +228,13 @@ public class WHorizontalScrollableContainer extends WAbstractWidget implements W
 			return;
 		}
 
-		BaseRenderer.enableCropping();
-
-		BaseRenderer.crop(this);
+		ScissorArea area = new ScissorArea(this);
 
 		for (WLayoutElement widget : getOrderedWidgets()) {
 			widget.draw();
 		}
 
-		BaseRenderer.disableCropping();
+		area.destroy();
 
 		scrollbar.draw();
 	}

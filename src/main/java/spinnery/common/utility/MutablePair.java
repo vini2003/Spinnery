@@ -1,4 +1,4 @@
-package spinnery.util;
+package spinnery.common.utility;
 
 import java.util.function.Consumer;
 

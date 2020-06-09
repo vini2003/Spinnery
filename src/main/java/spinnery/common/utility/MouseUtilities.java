@@ -1,4 +1,4 @@
-package spinnery.util;
+package spinnery.common.utility;
 
 import net.minecraft.client.MinecraftClient;
 import org.lwjgl.glfw.GLFW;

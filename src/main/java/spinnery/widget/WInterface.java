@@ -7,9 +7,9 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.Window;
 import net.minecraft.util.Identifier;
 import spinnery.client.render.BaseRenderer;
-import spinnery.common.BaseContainer;
-import spinnery.registry.NetworkRegistry;
-import spinnery.util.EventUtilities;
+import spinnery.common.container.BaseContainer;
+import spinnery.common.registry.NetworkRegistry;
+import spinnery.common.utility.EventUtilities;
 import spinnery.widget.api.*;
 
 import java.util.*;

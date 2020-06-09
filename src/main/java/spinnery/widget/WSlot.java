@@ -14,7 +14,7 @@ import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.Level;
 import spinnery.Spinnery;
 import spinnery.client.render.BaseRenderer;
-import spinnery.common.BaseContainer;
+import spinnery.common.container.BaseContainer;
 import spinnery.widget.api.Action;
 import spinnery.widget.api.Position;
 import spinnery.widget.api.Size;
@@ -24,8 +24,8 @@ import java.util.*;
 import java.util.function.BiConsumer;
 
 import static net.fabricmc.fabric.api.network.ClientSidePacketRegistry.INSTANCE;
-import static spinnery.registry.NetworkRegistry.*;
-import static spinnery.util.MouseUtilities.*;
+import static spinnery.common.registry.NetworkRegistry.*;
+import static spinnery.common.utility.MouseUtilities.*;
 import static spinnery.widget.api.Action.*;
 
 public class WSlot extends WAbstractWidget {

@@ -6,13 +6,14 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Tickable;
-import spinnery.registry.ThemeRegistry;
-import spinnery.registry.WidgetRegistry;
-import spinnery.util.EventUtilities;
+import spinnery.client.integration.SpinneryConfigurationScreen;
+import spinnery.common.registry.ThemeRegistry;
+import spinnery.common.registry.WidgetRegistry;
+import spinnery.common.utility.EventUtilities;
 import spinnery.widget.api.*;
 import spinnery.widget.api.listener.*;
 
-import static spinnery.registry.ThemeRegistry.DEFAULT_THEME;
+import static spinnery.common.registry.ThemeRegistry.DEFAULT_THEME;
 
 /**
  * A WAbstractWidget provides the base functionality
@@ -750,6 +751,11 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 	}
 
 	@Environment(EnvType.CLIENT)
+	public float getOffsetX() {
+		return position.getOffsetX();
+	}
+
+	@Environment(EnvType.CLIENT)
 	public float getY() {
 		return position.getY();
 	}
@@ -760,8 +766,18 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 	}
 
 	@Environment(EnvType.CLIENT)
+	public float getOffsetY() {
+		return position.getOffsetY();
+	}
+
+	@Environment(EnvType.CLIENT)
 	public float getZ() {
 		return position.getZ();
+	}
+
+	@Environment(EnvType.CLIENT)
+	public float getOffsetZ() {
+		return position.getOffsetZ();
 	}
 
 	/**

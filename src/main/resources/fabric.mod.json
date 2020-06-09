@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "spinnery",
-  "version": "${version}",
+  "version": "${mod_version}",
   "name": "Spinnery",
   "description": "Spinnery, a complete GUI library for your needs.",
   "authors": [
@@ -21,7 +21,7 @@
       "spinnery.SpinneryClient"
     ],
     "modmenu": [
-      "spinnery.client.SpinneryModMenuIntegration"
+      "spinnery.client.integration.SpinneryModMenu"
     ]
 
   },

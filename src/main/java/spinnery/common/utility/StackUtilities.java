@@ -1,15 +1,8 @@
-package spinnery.util;
+package spinnery.common.utility;
 
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
-import org.apache.logging.log4j.Level;
-import spinnery.Spinnery;
-import spinnery.common.BaseContainer;
+import spinnery.common.container.BaseContainer;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;

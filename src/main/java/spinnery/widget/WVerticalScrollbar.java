@@ -1,6 +1,8 @@
 package spinnery.widget;
 
 import spinnery.client.render.BaseRenderer;
+import spinnery.common.utility.MouseUtilities;
+import spinnery.widget.api.Color;
 import spinnery.widget.api.WVerticalScrollable;
 
 public class WVerticalScrollbar extends WAbstractWidget {
@@ -34,7 +36,16 @@ public class WVerticalScrollbar extends WAbstractWidget {
 
 		BaseRenderer.drawBeveledPanel(getX(), getY(), getZ(), getWidth(), getHeight(), getStyle().asColor("scroll_line.top_left"), getStyle().asColor("scroll_line.background"), getStyle().asColor("scroll_line.bottom_right"));
 
-		BaseRenderer.drawBeveledPanel(getX() + 1, getScrollerY() + 1, getZ(), getWidth() - 2, Math.min(getHighY() - getScrollerY(), getScrollerHeight()) - 2, getStyle().asColor("scroller.top_left"), getStyle().asColor("scroller.background"), getStyle().asColor("scroller.bottom_right"));
+		Color scrollerColor = getStyle().asColor("scroller.background_default");
+
+		if (MouseUtilities.mouseX > getX() + 1 && MouseUtilities.mouseX < getWideX() - 1
+		&&  MouseUtilities.mouseY > getScrollerY() + 1 && MouseUtilities.mouseY < getScrollerY() + getScrollerHeight() - 1 && !isHeld()) {
+			scrollerColor = getStyle().asColor("scroller.background_hovered");
+		} else if (isHeld()) {
+			scrollerColor = getStyle().asColor("scroller.background_held");
+		}
+
+		BaseRenderer.drawBeveledPanel(getX() + 1, getScrollerY() + 1, getZ(), getWidth() - 2, Math.min(getHighY() - getScrollerY(), getScrollerHeight()) - 2, getStyle().asColor("scroller.top_left"), scrollerColor, getStyle().asColor("scroller.bottom_right"));
 	}
 
 	@Override

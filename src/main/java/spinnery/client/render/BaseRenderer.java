@@ -9,9 +9,12 @@ import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.texture.TextureManager;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Pair;
 import org.lwjgl.opengl.GL11;
 import spinnery.widget.api.Color;
 import spinnery.widget.api.WLayoutElement;
+
+import java.util.Stack;
 
 public class BaseRenderer {
 	public static void drawPanel(double x, double y, double z, double sX, double sY, Color shadow, Color panel, Color hilight, Color outline) {
@@ -109,29 +112,6 @@ public class BaseRenderer {
 		getTesselator().draw();
 
 		RenderSystem.disableBlend();
-	}
-
-	public static void drawPixel(double x, double y, double z, Color color) {
-		drawRectangle(x, y, z, 1, 1, color);
-	}
-
-	public static void enableCropping() {
-		GL11.glEnable(GL11.GL_SCISSOR_TEST);
-	}
-
-	public static void disableCropping() {
-		GL11.glDisable(GL11.GL_SCISSOR_TEST);
-	}
-
-	public static void crop(int x1, int y1, int x2, int y2) {
-		double h = MinecraftClient.getInstance().getWindow().getHeight();
-		double s = MinecraftClient.getInstance().getWindow().getScaleFactor();
-
-		GL11.glScissor((int) (x1 * s), (int) (h - y2 * s), (int) ((x2 - x1) * s), (int) ((y1 - y2) * s * -1));
-	}
-
-	public static void crop(WLayoutElement element) {
-		crop((int) element.getX(), (int) element.getY(), (int) element.getX() + (int) element.getWidth(), (int) element.getY() + (int) element.getHeight());
 	}
 
 	public static TextureManager getTextureManager() {
