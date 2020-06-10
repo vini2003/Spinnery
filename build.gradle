@@ -13,7 +13,7 @@ if (file("${rootDir}/${System.getenv("CONFIG")}").exists())
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
-archivesBaseName = project.archives_base_name
+archivesBaseName = project.archives_base_name + "-" + project.mod_version + "+" + project.version_meta
 group = project.maven_group
 
 bintray {
