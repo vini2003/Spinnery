@@ -27,9 +27,9 @@ bintray {
 		licenses = ['LGPL-3.0']
 		vcsUrl = 'https://github.com/vini2003/Spinnery.git'
 		version {
-			name = mod_version
+			name = project.mod_version + "+" + project.version_meta
 			released  = new Date()
-			vcsTag = mod_version
+			vcsTag = project.mod_version + "+" + project.version_meta
 		}
 	}
 }
@@ -94,7 +94,7 @@ publishing {
 		SpinneryPublication(MavenPublication) {
 			groupId 'com.github.vini2003'
 			artifactId 'spinnery'
-			version project.version
+			version project.mod_version + "+" + project.version_meta
 
 			artifact(remapJar) {
 				builtBy remapJar
