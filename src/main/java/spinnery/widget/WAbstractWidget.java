@@ -92,7 +92,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 	 */
 	@Environment(EnvType.CLIENT)
 	public boolean hasLabel() {
-		return !label.asString().isEmpty();
+		return !label.getString().isEmpty();
 	}
 
 	/**

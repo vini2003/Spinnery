@@ -46,7 +46,7 @@ public class BaseContainerScreen<T extends BaseContainer> extends HandledScreen<
 	@Override
 	@Environment(EnvType.CLIENT)
 	public void render(MatrixStack matrices, int mouseX, int mouseY, float tickDelta) {
-		VertexConsumerProvider.Immediate provider = VertexConsumerProvider.immediate(MinecraftClient.getInstance().getBufferBuilders().getBlockBufferBuilders().get(RenderLayer.getSolid()));
+		VertexConsumerProvider.Immediate provider =  MinecraftClient.getInstance().getBufferBuilders().getEntityVertexConsumers();
 
 		clientInterface.draw(matrices, provider);
 
@@ -64,11 +64,14 @@ public class BaseContainerScreen<T extends BaseContainer> extends HandledScreen<
 			stackA = getContainer().getPreviewCursorStack();
 		}
 
-		RenderSystem.pushMatrix();
-		RenderSystem.translatef(0, 0, 200);
+		matrices.push();
+
+		matrices.translate(0, 0, 200);
+
 		BaseRenderer.getItemRenderer().renderInGui(stackA, mouseX - 8, mouseY - 8);
-		BaseRenderer.getItemRenderer().renderGuiItemOverlay(BaseRenderer.getTextRenderer(), stackA, (int) (mouseX - 8), mouseY - 8);
-		RenderSystem.popMatrix();
+		BaseRenderer.getItemRenderer().renderGuiItemOverlay(BaseRenderer.getTextRenderer(), stackA, (mouseX - 8), mouseY - 8);
+
+		matrices.pop();
 
 		provider.draw();
 	}

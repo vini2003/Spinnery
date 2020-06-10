@@ -3,10 +3,13 @@ package spinnery.client.render;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.item.ItemRenderer;
+import net.minecraft.client.texture.AbstractTexture;
 import net.minecraft.client.texture.TextureManager;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.data.client.model.Texture;
 import net.minecraft.util.Identifier;
 import org.lwjgl.opengl.GL11;
 import spinnery.client.render.layer.InterfaceLayer;
@@ -29,6 +32,8 @@ public class BaseRenderer {
 		consumer.vertex(matrices.peek().getModel(), x + sX, y, z).color(color.R, color.G, color.B, color.A).light(light).next();
 
 		matrices.pop();
+
+		provider.draw();
 	}
 
 	public static void drawGradientQuad(MatrixStack matrices, VertexConsumerProvider.Immediate provider, float startX, float startY, float endX, float endY, float z, Color colorStart, Color colorEnd) {
@@ -42,19 +47,25 @@ public class BaseRenderer {
 	public static void drawGradientQuad(MatrixStack matrices, VertexConsumerProvider.Immediate provider, float startX, float startY, float endX, float endY, float z, float uS, float vS, float uE, float vE, int light, Color colorStart, Color colorEnd, boolean textured) {
 		if (!textured) RenderSystem.disableTexture();
 
+		matrices.push();
+
 		RenderSystem.enableBlend();
 		RenderSystem.defaultBlendFunc();
 
-		VertexConsumer consumer = provider.getBuffer(RenderLayer.getSolid());
+		VertexConsumer consumer = provider.getBuffer(InterfaceLayer.getInterface());
 
-		consumer.vertex(matrices.peek().getModel(), endX, startY, z).color(colorStart.R, colorStart.G, colorStart.B, colorStart.A).texture(uS, vS).light(light).normal(matrices.peek().getNormal(), 0, 1, 0).next();
-		consumer.vertex(matrices.peek().getModel(), startX, startY, z).color(colorStart.R, colorStart.G, colorStart.B, colorStart.A).texture(uS, vE).light(light).normal(matrices.peek().getNormal(), 0, 1, 0).next();
-		consumer.vertex(matrices.peek().getModel(), startX, endY, z).color(colorEnd.R, colorEnd.G, colorEnd.B, colorEnd.A).texture(uE, vS).light(light).normal(matrices.peek().getNormal(), 0, 1, 0).next();
-		consumer.vertex(matrices.peek().getModel(), endX, endY, z).color(colorEnd.R, colorEnd.G, colorEnd.B, colorEnd.A).texture(uE, vE).light(light).normal(matrices.peek().getNormal(), 0, 1, 0).next();
+		consumer.vertex(matrices.peek().getModel(), endX, startY, z + 201).color(colorStart.R, colorStart.G, colorStart.B, colorStart.A).texture(uS, vS).light(light).normal(matrices.peek().getNormal(), 0, 1, 0).next();
+		consumer.vertex(matrices.peek().getModel(), startX, startY, z + 201).color(colorStart.R, colorStart.G, colorStart.B, colorStart.A).texture(uS, vE).light(light).normal(matrices.peek().getNormal(), 0, 1, 0).next();
+		consumer.vertex(matrices.peek().getModel(), startX, endY, z + 201).color(colorEnd.R, colorEnd.G, colorEnd.B, colorEnd.A).texture(uE, vS).light(light).normal(matrices.peek().getNormal(), 0, 1, 0).next();
+		consumer.vertex(matrices.peek().getModel(), endX, endY, z + 201).color(colorEnd.R, colorEnd.G, colorEnd.B, colorEnd.A).texture(uE, vE).light(light).normal(matrices.peek().getNormal(), 0, 1, 0).next();
 
 		RenderSystem.disableBlend();
 
 		if (!textured) RenderSystem.enableTexture();
+
+		matrices.pop();
+
+		provider.draw();
 	}
 
 	public static void drawPanel(MatrixStack matrices, VertexConsumerProvider.Immediate provider, float x, float y, float z, float sX, float sY, Color shadow, Color panel, Color hilight, Color outline) {
@@ -103,20 +114,26 @@ public class BaseRenderer {
 		drawTexturedQuad(matrices, provider, x, y, z, sX, sY, 0, 0, 1, 1, light, color, texture);
 	}
 
-	public static void drawTexturedQuad(MatrixStack matrices, VertexConsumerProvider.Immediate provider, float x, float y, float z, float sX, float sY, float uS, float vS, float uE, float vE, int light, Color color, Identifier texture) {
+	public static void drawTexturedQuad(MatrixStack matrices, VertexConsumerProvider.Immediate provider, float x, float y, float z, float sX, float sY, float u0, float v0, float u1, float v1, int light, Color color, Identifier texture) {
 		getTextureManager().bindTexture(texture);
 
 		RenderSystem.enableBlend();
 		RenderSystem.blendFuncSeparate(770, 771, 1, 0);
 
-		VertexConsumer consumer = provider.getBuffer(RenderLayer.getSolid());
+		VertexConsumer consumer = provider.getBuffer(RenderLayer.getEntityCutout(texture));
 
-		consumer.vertex(matrices.peek().getModel(), x, y, z).color(color.R, color.G, color.B, color.A).texture(uS, vS).light(light).normal(matrices.peek().getNormal(), 0, 1, 0).next();
-		consumer.vertex(matrices.peek().getModel(), x, y + sY, z).color(color.R, color.G, color.B, color.A).texture(uS, vE).light(light).normal(matrices.peek().getNormal(), 0, 1, 0).next();
-		consumer.vertex(matrices.peek().getModel(), x + sX, y + sY, z).color(color.R, color.G, color.B, color.A).texture(uE, vS).light(light).normal(matrices.peek().getNormal(), 0, 1, 0).next();
-		consumer.vertex(matrices.peek().getModel(), x + sX, y, z).color(color.R, color.G, color.B, color.A).texture(uE, vE).light(light).normal(matrices.peek().getNormal(), 0, 1, 0).next();
+		matrices.push();
+
+		consumer.vertex(matrices.peek().getModel(), x, y + sY, z).color(color.R, color.G, color.B, color.A).texture(u0, v1).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(matrices.peek().getNormal(), 0, 1, 0).next();
+		consumer.vertex(matrices.peek().getModel(), x + sX, y + sY, z).color(color.R, color.G, color.B, color.A).texture(u1, v1).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(matrices.peek().getNormal(), 0, 1, 0).next();
+		consumer.vertex(matrices.peek().getModel(), x + sX, y, z).color(color.R, color.G, color.B, color.A).texture(u1, v0).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(matrices.peek().getNormal(), 0, 1, 0).next();
+		consumer.vertex(matrices.peek().getModel(), x, y, z).color(color.R, color.G, color.B, color.A).texture(u0, v0).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(matrices.peek().getNormal(), 0, 1, 0).next();
 
 		RenderSystem.disableBlend();
+
+		matrices.pop();
+
+		provider.draw();
 	}
 
 	public static TextureManager getTextureManager() {

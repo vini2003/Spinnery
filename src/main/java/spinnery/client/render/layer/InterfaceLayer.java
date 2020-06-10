@@ -9,7 +9,12 @@ public class InterfaceLayer extends RenderLayer {
 		super(name, vertexFormat, drawMode, expectedBufferSize, hasCrumbling, translucent, startAction, endAction);
 	}
 
-	private static final RenderLayer INTERFACE = RenderLayer.of("spinnery", VertexFormats.POSITION_COLOR_LIGHT, 7, 256, RenderLayer.MultiPhaseParameters.builder().texture(NO_TEXTURE).cull(DISABLE_CULLING).lightmap(ENABLE_LIGHTMAP).build(false));
+	private static final RenderLayer INTERFACE = RenderLayer.of("spinnery", VertexFormats.POSITION_COLOR_LIGHT, 7, 256, RenderLayer.MultiPhaseParameters.builder()
+			.texture(NO_TEXTURE)
+			.cull(DISABLE_CULLING)
+			.lightmap(ENABLE_LIGHTMAP)
+			.shadeModel(ShadeModel.SMOOTH_SHADE_MODEL)
+			.transparency(Transparency.TRANSLUCENT_TRANSPARENCY).build(false));
 
 	public static RenderLayer getInterface() {
 		return INTERFACE;

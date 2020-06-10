@@ -23,7 +23,7 @@ public class WVerticalArrowDown extends WButton {
 	public void draw(MatrixStack matrices, VertexConsumerProvider.Immediate provider) {
 		if (!isLowered()) {
 			BaseRenderer.drawTexturedQuad(matrices, provider, getX(), getY(), getZ(), getWidth(), getHeight(), IMAGE);
-	}
+		}
 	}
 
 	@Override

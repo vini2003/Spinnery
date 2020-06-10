@@ -43,11 +43,11 @@ public class TextRenderer {
 	}
 
 	public static int width(Text text, Font font) {
-		return width(text.asString(), font);
+		return width(text.getString(), font);
 	}
 
 	public static int width(Text text) {
-		return width(text.asString(), Font.DEFAULT);
+		return width(text.getString(), Font.DEFAULT);
 	}
 
 	public enum Font {
@@ -81,7 +81,7 @@ public class TextRenderer {
 		}
 
 		public RenderPass text(Text text) {
-			this.text = text.asString();
+			this.text = text.getString();
 			this.shadowText = this.text.replaceAll("§[0-9a-f]", "");
 			return this;
 		}
@@ -140,20 +140,21 @@ public class TextRenderer {
 		}
 
 		public void render(MatrixStack matrices, VertexConsumerProvider.Immediate provider) {
-			float oX = x * (1f - (float) scale);
-			float oY = y * (1f - (float) scale);
-			RenderSystem.pushMatrix();
-			RenderSystem.translatef(oX, oY, z);
-			RenderSystem.scaled(scale, scale, 1);
+			matrices.push();
+
 			if (maxWidth != null) {
 				if (shadow)
 					getTextRenderer(font).drawTrimmed(StringRenderable.plain(shadowText), x + 1, y + 1, maxWidth, shadowColor);
 				getTextRenderer(font).drawTrimmed(StringRenderable.plain(text), x, y, maxWidth, color);
 			} else {
-				if (shadow) getTextRenderer(font).draw(matrices, StringRenderable.plain(shadowText), x + 1, y + 1, shadowColor);
+				if (shadow)
+					getTextRenderer(font).draw(matrices, StringRenderable.plain(shadowText), x + 1, y + 1, shadowColor);
 				getTextRenderer(font).draw(matrices, StringRenderable.plain(text), x, y, color);
 			}
-			RenderSystem.popMatrix();
+
+			matrices.pop();
+
+			provider.draw();
 		}
 	}
 }

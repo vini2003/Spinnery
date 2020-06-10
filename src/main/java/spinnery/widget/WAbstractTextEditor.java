@@ -149,7 +149,7 @@ public abstract class WAbstractTextEditor extends WAbstractWidget implements WPa
 	}
 
 	public <W extends WAbstractTextEditor> W setText(Text text) {
-		return setText(text.asString());
+		return setText(text.getString());
 	}
 
 	public List<String> getLines() {

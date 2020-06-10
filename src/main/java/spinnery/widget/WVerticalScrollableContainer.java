@@ -566,15 +566,15 @@ public class WVerticalScrollableContainer extends WAbstractWidget implements WDr
 			fadeOut = Color.of("0x00" + Integer.toHexString((int) (fadeOut.R * 255)) + Integer.toHexString((int) (fadeOut.G * 255)) + Integer.toHexString((int) (fadeOut.B * 255)));
 
 			if (offsetY > 1) {
-				BaseRenderer.drawGradientQuad(matrices, provider, getX(), getY() - 1, getWideX(), getY() + getFadeSpace() - 6, getZ(), getStyle().asColor("background"), fadeOut);
-				BaseRenderer.drawGradientQuad(matrices, provider, getX(), getY() - 1, getWideX(), getY() + getFadeSpace() - 3, getZ(), getStyle().asColor("background"), fadeOut);
-				BaseRenderer.drawGradientQuad(matrices, provider, getX(), getY() - 1, getWideX(), getY() + getFadeSpace(), getZ(), getStyle().asColor("background"), fadeOut);
+				BaseRenderer.drawGradientQuad(matrices, provider, getX(), getY() - 1, getWideX() - getScrollbarWidth(), getY() + getFadeSpace() - 6, getZ(), getStyle().asColor("background"), fadeOut);
+				BaseRenderer.drawGradientQuad(matrices, provider, getX(), getY() - 1, getWideX() - getScrollbarWidth(), getY() + getFadeSpace() - 3, getZ(), getStyle().asColor("background"), fadeOut);
+				BaseRenderer.drawGradientQuad(matrices, provider, getX(), getY() - 1, getWideX() - getScrollbarWidth(), getY() + getFadeSpace(), getZ(), getStyle().asColor("background"), fadeOut);
 			}
 
 			if (getBottomWidgetY() > getHighY()) {
-				BaseRenderer.drawGradientQuad(matrices, provider, getX(), getHighY() - getFadeSpace() + 6 , getWideX(), getHighY() + 1, getZ(), fadeOut, getStyle().asColor("background"));
-				BaseRenderer.drawGradientQuad(matrices, provider, getX(), getHighY() - getFadeSpace() + 3, getWideX(), getHighY() + 1, getZ(), fadeOut, getStyle().asColor("background"));
-				BaseRenderer.drawGradientQuad(matrices, provider, getX(), getHighY() - getFadeSpace() , getWideX(), getHighY() + 1, getZ(), fadeOut, getStyle().asColor("background"));
+				BaseRenderer.drawGradientQuad(matrices, provider, getX(), getHighY() - getFadeSpace() + 6 , getWideX() - getScrollbarWidth(), getHighY() + 1, getZ(), fadeOut, getStyle().asColor("background"));
+				BaseRenderer.drawGradientQuad(matrices, provider, getX(), getHighY() - getFadeSpace() + 3, getWideX() - getScrollbarWidth(), getHighY() + 1, getZ(), fadeOut, getStyle().asColor("background"));
+				BaseRenderer.drawGradientQuad(matrices, provider, getX(), getHighY() - getFadeSpace() , getWideX() - getScrollbarWidth(), getHighY() + 1, getZ(), fadeOut, getStyle().asColor("background"));
 			}
 		}
 
