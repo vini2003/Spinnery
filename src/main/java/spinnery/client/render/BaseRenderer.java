@@ -96,20 +96,24 @@ public class BaseRenderer {
 	}
 
 	public static void drawImage(double x, double y, double z, double sX, double sY, Identifier texture) {
-		getTextureManager().bindTexture(texture);
+		drawSprite(x, y, z, sX, sY, texture, 0, 0, 1, 1);
+	}
+
+	public static void drawSprite(double x, double y, double z, double sX, double sY, Identifier texture, float u1, float v1, float u2, float v2) {
+		BaseRenderer.getTextureManager().bindTexture(texture);
 
 		RenderSystem.enableBlend();
 		RenderSystem.blendFuncSeparate(770, 771, 1, 0);
 		RenderSystem.color4f(255, 255, 255, 255);
 
-		getBufferBuilder().begin(GL11.GL_QUADS, VertexFormats.POSITION_TEXTURE);
+		BaseRenderer.getBufferBuilder().begin(GL11.GL_QUADS, VertexFormats.POSITION_TEXTURE);
 
-		getBufferBuilder().vertex(x, y + sY, 0).texture(0, 1).next();
-		getBufferBuilder().vertex(x + sX, y + sY, 0).texture(1, 1).next();
-		getBufferBuilder().vertex(x + sX, y, 0).texture(1, 0).next();
-		getBufferBuilder().vertex(x, y, 0).texture(0, 0).next();
+		BaseRenderer.getBufferBuilder().vertex(x, y + sY, 0).texture(u1, v2).next();
+		BaseRenderer.getBufferBuilder().vertex(x + sX, y + sY, 0).texture(u2, v2).next();
+		BaseRenderer.getBufferBuilder().vertex(x + sX, y, 0).texture(u2, v1).next();
+		BaseRenderer.getBufferBuilder().vertex(x, y, 0).texture(u1, v1).next();
 
-		getTesselator().draw();
+		BaseRenderer.getTesselator().draw();
 
 		RenderSystem.disableBlend();
 	}
