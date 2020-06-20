@@ -651,6 +651,13 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 	 */
 	@Environment(EnvType.CLIENT)
 	public boolean isHidden() {
+		if (parent instanceof WAbstractWidget) {
+			WAbstractWidget parentWidget = (WAbstractWidget) parent;
+
+			if (parentWidget.isHidden()) {
+				return true;
+			}
+		}
 		return isHidden;
 	}
 
@@ -688,7 +695,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 	 */
 	@Environment(EnvType.CLIENT)
 	public boolean isFocused() {
-		return hasFocus;
+		return !isHidden() && hasFocus;
 	}
 
 	/**

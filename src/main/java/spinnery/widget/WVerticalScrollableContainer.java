@@ -376,6 +376,8 @@ public class WVerticalScrollableContainer extends WAbstractWidget implements WDr
 		}
 
 		for (WAbstractWidget widget : widgetArray) {
+			widget.setParent(this);
+			widget.setInterface(getInterface());
 			widget.setPosition(Position.of(this));
 
 			widget.getPosition().setOffsetX(maxX + getDivisionSpace());
