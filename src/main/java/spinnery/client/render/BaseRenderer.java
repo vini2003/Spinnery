@@ -3,132 +3,119 @@ package spinnery.client.render;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.render.*;
+import net.minecraft.client.render.BufferBuilder;
+import net.minecraft.client.render.Tessellator;
+import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.texture.TextureManager;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
-import spinnery.client.render.layer.SpinneryLayers;
+import net.minecraft.util.Pair;
+import org.lwjgl.opengl.GL11;
 import spinnery.widget.api.Color;
+import spinnery.widget.api.WLayoutElement;
+
+import java.util.Stack;
 
 public class BaseRenderer {
-	public static void drawQuad(MatrixStack matrices, VertexConsumerProvider.Immediate provider, float x, float y, float z, float sX, float sY, Color color) {
-		drawQuad(matrices, provider, x, y, z, sX, sY, 0x00f000f0, color);
+	public static void drawPanel(double x, double y, double z, double sX, double sY, Color shadow, Color panel, Color hilight, Color outline) {
+		drawRectangle(x + 3, y + 3, z, sX - 6, sY - 6, panel);
+
+		drawRectangle(x + 2, y + 1, z, sX - 4, 2, hilight);
+		drawRectangle(x + 2, y + sY - 3, z, sX - 4, 2, shadow);
+		drawRectangle(x + 1, y + 2, z, 2, sY - 4, hilight);
+		drawRectangle(x + sX - 3, y + 2, z, 2, sY - 4, shadow);
+		drawRectangle(x + sX - 3, y + 2, z, 1, 1, panel);
+		drawRectangle(x + 2, y + sY - 3, z, 1, 1, panel);
+		drawRectangle(x + 3, y + 3, z, 1, 1, hilight);
+		drawRectangle(x + sX - 4, y + sY - 4, z, 1, 1, shadow);
+
+		drawRectangle(x + 2, y, z, sX - 4, 1, outline);
+		drawRectangle(x, y + 2, z, 1, sY - 4, outline);
+		drawRectangle(x + sX - 1, y + 2, z, 1, sY - 4, outline);
+		drawRectangle(x + 2, y + sY - 1, z, sX - 4, 1, outline);
+		drawRectangle(x + 1, y + 1, z, 1, 1, outline);
+		drawRectangle(x + 1, y + sY - 2, z, 1, 1, outline);
+		drawRectangle(x + sX - 2, y + 1, z, 1, 1, outline);
+		drawRectangle(x + sX - 2, y + sY - 2, z, 1, 1, outline);
 	}
 
-	public static void drawQuad(MatrixStack matrices, VertexConsumerProvider.Immediate provider, float x, float y, float z, float sX, float sY, int light, Color color) {
-		matrices.push();
-
-		VertexConsumer consumer = provider.getBuffer(SpinneryLayers.getInterface());
-
-		consumer.vertex(matrices.peek().getModel(), x, y, z).color(color.R, color.G, color.B, color.A).light(light).next();
-		consumer.vertex(matrices.peek().getModel(), x, y + sY, z).color(color.R, color.G, color.B, color.A).light(light).next();
-		consumer.vertex(matrices.peek().getModel(), x + sX, y + sY, z).color(color.R, color.G, color.B, color.A).light(light).next();
-		consumer.vertex(matrices.peek().getModel(), x + sX, y, z).color(color.R, color.G, color.B, color.A).light(light).next();
-
-		matrices.pop();
-
-		provider.draw();
-	}
-
-	public static void drawGradientQuad(MatrixStack matrices, VertexConsumerProvider.Immediate provider, float startX, float startY, float endX, float endY, float z, Color colorStart, Color colorEnd) {
-		drawGradientQuad(matrices, provider, startX, startY, endX, endY, z, 0, 0, 1, 1, 0x00f000f0, colorStart, colorEnd, false);
-	}
-
-	public static void drawGradientQuad(MatrixStack matrices, VertexConsumerProvider.Immediate provider, float startX, float startY, float endX, float endY, float z, int light, Color colorStart, Color colorEnd) {
-		drawGradientQuad(matrices, provider, startX, startY, endX, endY, z, 0, 0, 1, 1, light, colorStart, colorEnd, false);
-	}
-
-	public static void drawGradientQuad(MatrixStack matrices, VertexConsumerProvider.Immediate provider, float startX, float startY, float endX, float endY, float z, float uS, float vS, float uE, float vE, int light, Color colorStart, Color colorEnd, boolean textured) {
-		if (!textured) RenderSystem.disableTexture();
-
-		matrices.push();
-
+	public static void drawRectangle(double x, double y, double z, double sX, double sY, Color color) {
 		RenderSystem.enableBlend();
-		RenderSystem.defaultBlendFunc();
+		RenderSystem.disableTexture();
+		RenderSystem.blendFuncSeparate(770, 771, 1, 0);
+		RenderSystem.color4f(color.R, color.G, color.B, color.A);
 
-		VertexConsumer consumer = provider.getBuffer(SpinneryLayers.getInterface());
+		getBufferBuilder().begin(GL11.GL_TRIANGLES, VertexFormats.POSITION);
 
-		consumer.vertex(matrices.peek().getModel(), endX, startY, z + 201).color(colorStart.R, colorStart.G, colorStart.B, colorStart.A).texture(uS, vS).light(light).normal(matrices.peek().getNormal(), 0, 1, 0).next();
-		consumer.vertex(matrices.peek().getModel(), startX, startY, z + 201).color(colorStart.R, colorStart.G, colorStart.B, colorStart.A).texture(uS, vE).light(light).normal(matrices.peek().getNormal(), 0, 1, 0).next();
-		consumer.vertex(matrices.peek().getModel(), startX, endY, z + 201).color(colorEnd.R, colorEnd.G, colorEnd.B, colorEnd.A).texture(uE, vS).light(light).normal(matrices.peek().getNormal(), 0, 1, 0).next();
-		consumer.vertex(matrices.peek().getModel(), endX, endY, z + 201).color(colorEnd.R, colorEnd.G, colorEnd.B, colorEnd.A).texture(uE, vE).light(light).normal(matrices.peek().getNormal(), 0, 1, 0).next();
+		getBufferBuilder().vertex(x, y, 0).next();
+		getBufferBuilder().vertex(x, y + sY, 0).next();
+		getBufferBuilder().vertex(x + sX, y, 0).next();
 
+		getBufferBuilder().vertex(x, y + sY, 0).next();
+		getBufferBuilder().vertex(x + sX, y + sY, 0).next();
+		getBufferBuilder().vertex(x + sX, y, 0).next();
+
+		getTesselator().draw();
+
+		RenderSystem.enableTexture();
 		RenderSystem.disableBlend();
-
-		if (!textured) RenderSystem.enableTexture();
-
-		matrices.pop();
-
-		provider.draw();
 	}
 
-	public static void drawPanel(MatrixStack matrices, VertexConsumerProvider.Immediate provider, float x, float y, float z, float sX, float sY, Color shadow, Color panel, Color hilight, Color outline) {
-		drawQuad(matrices, provider, x + 3, y + 3, z, sX - 6, sY - 6, 0x00f000f0, panel);
-
-		drawQuad(matrices, provider, x + 2, y + 1, z, sX - 4, 2, 0x00f000f0, hilight);
-		drawQuad(matrices, provider, x + 2, y + sY - 3, z, sX - 4, 2, 0x00f000f0, shadow);
-		drawQuad(matrices, provider, x + 1, y + 2, z, 2, sY - 4, 0x00f000f0, hilight);
-		drawQuad(matrices, provider, x + sX - 3, y + 2, z, 2, sY - 4, 0x00f000f0, shadow);
-		drawQuad(matrices, provider, x + sX - 3, y + 2, z, 1, 1, 0x00f000f0, panel);
-		drawQuad(matrices, provider, x + 2, y + sY - 3, z, 1, 1, 0x00f000f0, panel);
-		drawQuad(matrices, provider, x + 3, y + 3, z, 1, 1, 0x00f000f0, hilight);
-		drawQuad(matrices, provider, x + sX - 4, y + sY - 4, z, 1, 1, 0x00f000f0, shadow);
-
-		drawQuad(matrices, provider, x + 2, y, z, sX - 4, 1, 0x00f000f0, outline);
-		drawQuad(matrices, provider, x, y + 2, z, 1, sY - 4, 0x00f000f0, outline);
-		drawQuad(matrices, provider, x + sX - 1, y + 2, z, 1, sY - 4, 0x00f000f0, outline);
-		drawQuad(matrices, provider, x + 2, y + sY - 1, z, sX - 4, 1, 0x00f000f0, outline);
-		drawQuad(matrices, provider, x + 1, y + 1, z, 1, 1, 0x00f000f0, outline);
-		drawQuad(matrices, provider, x + 1, y + sY - 2, z, 1, 1, 0x00f000f0, outline);
-		drawQuad(matrices, provider, x + sX - 2, y + 1, z, 1, 1, 0x00f000f0, outline);
-		drawQuad(matrices, provider, x + sX - 2, y + sY - 2, z, 1, 1, 0x00f000f0, outline);
+	public static BufferBuilder getBufferBuilder() {
+		return getTesselator().getBuffer();
 	}
 
-	public static void drawBeveledPanel(MatrixStack matrices, VertexConsumerProvider.Immediate provider, float x, float y, float z, float sX, float sY, Color topleft, Color panel, Color bottomright) {
-		drawBeveledPanel(matrices, provider, x, y, z, sX, sY, 0x00f000f0, topleft, panel, bottomright);
+	public static Tessellator getTesselator() {
+		return Tessellator.getInstance();
 	}
 
-	public static void drawBeveledPanel(MatrixStack matrices, VertexConsumerProvider.Immediate provider, float x, float y, float z, float sX, float sY, int light, Color topleft, Color panel, Color bottomright) {
-		drawQuad(matrices, provider, x, y, z, sX, sY, light, panel);
-		drawQuad(matrices, provider, x, y, z, sX, 1, light, topleft);
-		drawQuad(matrices, provider, x, y + 1, z, 1, sY - 1, light, topleft);
-		drawQuad(matrices, provider, x + sX - 1, y + 1, z, 1, sY - 1, light, bottomright);
-		drawQuad(matrices, provider, x, y + sY - 1, z, sX - 1, 1, light, bottomright);
+	public static void drawGradient(double startX, double startY, double endX, double endY, double z, Color colorStart, Color colorEnd) {
+		RenderSystem.disableTexture();
+		RenderSystem.enableBlend();
+		RenderSystem.disableAlphaTest();
+		RenderSystem.defaultBlendFunc();
+		RenderSystem.shadeModel(7425);
+		getBufferBuilder().begin(7, VertexFormats.POSITION_COLOR);
+		getBufferBuilder().vertex(endX, startY, 0).color(colorStart.R, colorStart.G, colorStart.B, colorStart.A).next();
+		getBufferBuilder().vertex(startX, startY, 0).color(colorStart.R, colorStart.G, colorStart.B, colorStart.A).next();
+		getBufferBuilder().vertex(startX, endY, 0).color(colorEnd.R, colorEnd.G, colorEnd.B, colorEnd.A).next();
+		getBufferBuilder().vertex(endX, endY, 0).color(colorEnd.R, colorEnd.G, colorEnd.B, colorEnd.A).next();
+		getTesselator().draw();
+		RenderSystem.shadeModel(7424);
+		RenderSystem.disableBlend();
+		RenderSystem.enableAlphaTest();
+		RenderSystem.enableTexture();
 	}
 
-	public static void drawTexturedQuad(MatrixStack matrices, VertexConsumerProvider.Immediate provider, float x, float y, float z, float sX, float sY, Identifier texture) {
-		drawTexturedQuad(matrices, provider, x, y, z, sX, sY, 0, 0, 1, 1, 0x00f000f0, Color.DEFAULT, texture);
+	public static void drawBeveledPanel(double x, double y, double z, double sX, double sY, Color topleft, Color panel, Color bottomright) {
+		drawRectangle(x, y, z, sX, sY, panel);
+		drawRectangle(x, y, z, sX, 1, topleft);
+		drawRectangle(x, y + 1, z, 1, sY - 1, topleft);
+		drawRectangle(x + sX - 1, y + 1, z, 1, sY - 1, bottomright);
+		drawRectangle(x, y + sY - 1, z, sX - 1, 1, bottomright);
 	}
 
-	public static void drawTexturedQuad(MatrixStack matrices, VertexConsumerProvider.Immediate provider, float x, float y, float z, float sX, float sY, Color color, Identifier texture) {
-		drawTexturedQuad(matrices, provider, x, y, z, sX, sY, 0, 0, 1, 1, 0x00f000f0, color, texture);
+	public static void drawImage(double x, double y, double z, double sX, double sY, Identifier texture) {
+		drawSprite(x, y, z, sX, sY, texture, 0, 0, 1, 1);
 	}
 
-	public static void drawTexturedQuad(MatrixStack matrices, VertexConsumerProvider.Immediate provider, float x, float y, float z, float sX, float sY, int light, Color color, Identifier texture) {
-		drawTexturedQuad(matrices, provider, x, y, z, sX, sY, 0, 0, 1, 1, light, color, texture);
-	}
-
-	public static void drawTexturedQuad(MatrixStack matrices, VertexConsumerProvider.Immediate provider, float x, float y, float z, float sX, float sY, float u0, float v0, float u1, float v1, int light, Color color, Identifier texture) {
-		getTextureManager().bindTexture(texture);
+	public static void drawSprite(double x, double y, double z, double sX, double sY, Identifier texture, float u1, float v1, float u2, float v2) {
+		BaseRenderer.getTextureManager().bindTexture(texture);
 
 		RenderSystem.enableBlend();
 		RenderSystem.blendFuncSeparate(770, 771, 1, 0);
+		RenderSystem.color4f(255, 255, 255, 255);
 
-		VertexConsumer consumer = provider.getBuffer(SpinneryLayers.get(texture));
+		BaseRenderer.getBufferBuilder().begin(GL11.GL_QUADS, VertexFormats.POSITION_TEXTURE);
 
-		matrices.push();
+		BaseRenderer.getBufferBuilder().vertex(x, y + sY, 0).texture(u1, v2).next();
+		BaseRenderer.getBufferBuilder().vertex(x + sX, y + sY, 0).texture(u2, v2).next();
+		BaseRenderer.getBufferBuilder().vertex(x + sX, y, 0).texture(u2, v1).next();
+		BaseRenderer.getBufferBuilder().vertex(x, y, 0).texture(u1, v1).next();
 
-		consumer.vertex(matrices.peek().getModel(), x, y + sY, z).color(color.R, color.G, color.B, color.A).texture(u0, v1).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(matrices.peek().getNormal(), 0, 0, 0).next();
-		consumer.vertex(matrices.peek().getModel(), x + sX, y + sY, z).color(color.R, color.G, color.B, color.A).texture(u1, v1).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(matrices.peek().getNormal(), 0, 0, 0).next();
-		consumer.vertex(matrices.peek().getModel(), x + sX, y, z).color(color.R, color.G, color.B, color.A).texture(u1, v0).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(matrices.peek().getNormal(), 0, 0, 0).next();
-		consumer.vertex(matrices.peek().getModel(), x, y, z).color(color.R, color.G, color.B, color.A).texture(u0, v0).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(matrices.peek().getNormal(), 0, 0, 0).next();
+		BaseRenderer.getTesselator().draw();
 
 		RenderSystem.disableBlend();
-
-		matrices.pop();
-
-		provider.draw();
 	}
 
 	public static TextureManager getTextureManager() {
