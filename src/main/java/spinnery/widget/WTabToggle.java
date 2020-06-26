@@ -41,7 +41,7 @@ public class WTabToggle extends WAbstractToggle {
 		float sX = getWidth();
 		float sY = getHeight() + 4;
 
-		if (!getToggleState()) {
+		if (getToggleState()) {
 			BaseRenderer.drawPanel(matrices, provider, x, y, z - 1, sX, sY, getStyle().asColor("shadow.off"), getStyle().asColor("background.off"), getStyle().asColor("highlight.off"), getStyle().asColor("outline.off"));
 		} else {
 			BaseRenderer.drawPanel(matrices, provider, x, y, z - 1, sX, sY, getStyle().asColor("shadow.on"), getStyle().asColor("background.on"), getStyle().asColor("highlight.on"), getStyle().asColor("outline.on"));
@@ -51,7 +51,7 @@ public class WTabToggle extends WAbstractToggle {
 
 		if (symbol != null) {
 			RenderSystem.enableLighting();
-			BaseRenderer.getItemRenderer().renderGuiItemIcon(new ItemStack(symbol, 1), (int) x + 4, (int) y + 4);
+			BaseRenderer.getItemRenderer().renderGuiItemIcon(new ItemStack(symbol, 1), (int) x + 4, (int) y + 6);
 		}
 		RenderSystem.disableLighting();
 

@@ -26,8 +26,14 @@ public class Color implements JanksonSerializable {
 		G = g;
 		B = b;
 		A = a;
-		RGB = MathHelper.packRgb(r, g, b);
+		RGB = packRgb((int) Math.floor(r * 255.0F), (int) Math.floor(g * 255.0F), (int) Math.floor(b * 255.0F));
 		ARGB = RGB + ((int) (a * 255) << 24);
+	}
+
+	public static int packRgb(int r, int g, int b) {
+		int i = (r << 8) + g;
+		i = (i << 8) + b;
+		return i;
 	}
 
 	public Color(String ARGB) {

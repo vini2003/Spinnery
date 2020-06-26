@@ -1,7 +1,10 @@
 package spinnery.client.utility;
 
+import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import spinnery.client.render.BaseRenderer;
+import spinnery.widget.api.Color;
 
 /**
  * Provides utilities for using texture atlases. Used by
@@ -31,7 +34,7 @@ public class SpriteSheet {
             this.h = h;
         }
 
-        public void draw(double x, double y, double z, double sX, double sY, boolean mirror) {
+        public void draw(MatrixStack matrices, VertexConsumerProvider.Immediate provider, float x, float y, float z, float sX, float sY, boolean mirror) {
             float u1 = this.x;
             float v1 = this.y;
             float u2 = u1 + this.w;
@@ -44,7 +47,7 @@ public class SpriteSheet {
                 u1 = temp;
             }
 
-            BaseRenderer.drawSprite(x, y, z, sX, sY, atlas, u1, v1, u2, v2);
+            BaseRenderer.drawTexturedQuad(matrices, provider, x, y, z, sX, sY, u1, v1, u2, v2, 0x00f000f0, Color.DEFAULT, atlas);
         }
     }
 

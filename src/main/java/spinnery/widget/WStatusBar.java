@@ -2,6 +2,9 @@ package spinnery.widget;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.LivingEntity;
 import spinnery.client.utility.SpriteSheet;
 import spinnery.widget.api.*;
 
@@ -92,7 +95,7 @@ public class WStatusBar extends WAbstractWidget {
     /**
      * Sets the values of the bar.
      * @param value The current value, for health bars this would be {@link net.minecraft.entity.LivingEntity#getHealth}.
-     * @param maxValue The highest possible value, for health bars this would be {@link net.minecraft.entity.LivingEntity#getMaximumHealth}.
+     * @param maxValue The highest possible value, for health bars this would be {@link LivingEntity#getMaxHealth()}.
      */
     public <W extends WStatusBar> W setValue(int value, int maxValue) {
         this.maxValue = maxValue;
@@ -109,7 +112,7 @@ public class WStatusBar extends WAbstractWidget {
     }
 
     @Override
-    public void draw() {
+    public void draw(MatrixStack matrices, VertexConsumerProvider.Immediate provider) {
         if (isHidden()) {
             return;
         }
@@ -125,14 +128,14 @@ public class WStatusBar extends WAbstractWidget {
                 x = (numContainers - i - 1) * config.spriteWidth;
             }
 
-            config.background.draw(getX() + x, getY(), getZ(), config.spriteWidth, config.spriteHeight, config.mirror);
+            config.background.draw(matrices, provider, getX() + x, getY(), getZ(), config.spriteWidth, config.spriteHeight, config.mirror);
 
             if (i * 2 <= value) {
                 SpriteSheet.Sprite sprite = config.half;
                 if (value - 2 * i > 1.0F) {
                     sprite = config.full;
                 }
-                sprite.draw(getX() + x, getY(), getZ() + 1, config.spriteWidth, config.spriteHeight, config.mirror);
+                sprite.draw(matrices, provider, getX() + x, getY(), getZ() + 1, config.spriteWidth, config.spriteHeight, config.mirror);
             }
         }
     }

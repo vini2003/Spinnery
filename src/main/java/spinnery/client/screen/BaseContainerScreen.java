@@ -66,10 +66,12 @@ public class BaseContainerScreen<T extends BaseContainer> extends HandledScreen<
 
 		matrices.push();
 
-		matrices.translate(0, 0, 200);
+		RenderSystem.translatef(0, 0, 300);
 
 		BaseRenderer.getItemRenderer().renderInGui(stackA, mouseX - 8, mouseY - 8);
 		BaseRenderer.getItemRenderer().renderGuiItemOverlay(BaseRenderer.getTextRenderer(), stackA, (mouseX - 8), mouseY - 8);
+
+		RenderSystem.translatef(0, 0, -300);
 
 		matrices.pop();
 

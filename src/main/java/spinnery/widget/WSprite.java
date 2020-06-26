@@ -2,6 +2,8 @@ package spinnery.widget;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.util.math.MatrixStack;
 import spinnery.client.utility.SpriteSheet;
 
 /**
@@ -22,11 +24,11 @@ public class WSprite extends WAbstractWidget {
     }
 
     @Override
-    public void draw() {
+    public void draw(MatrixStack matrices, VertexConsumerProvider.Immediate provider) {
         if (isHidden()) {
             return;
         }
 
-        getSprite().draw(getX(), getY(), getZ(), getWidth(), getHeight(), false);
+        getSprite().draw(matrices, provider, getX(), getY(), getZ(), getWidth(), getHeight(), false);
     }
 }
