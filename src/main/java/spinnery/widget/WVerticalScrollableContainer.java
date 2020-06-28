@@ -264,7 +264,7 @@ public class WVerticalScrollableContainer extends WAbstractWidget implements WDr
 		float bottomY = getBottomWidgetOffsetY();
 
 		boolean hitTop = offsetY < -getDivisionSpace();
-		boolean hitBottom = bottomY < getHighY();
+		boolean hitBottom = bottomY < getHeight();
 
 		if ((!hitTop && deltaY > 0) || (!hitBottom && deltaY < 0)) {
 			offsetY = (float) Math.min(Math.max(0, offsetY - deltaY), bottomY - getHeight() + 1);
