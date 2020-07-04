@@ -1,6 +1,7 @@
 package spinnery.widget;
 
 import com.google.common.collect.ImmutableSet;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import spinnery.client.render.BaseRenderer;
@@ -176,6 +177,9 @@ public class WHorizontalBoxContainer extends WAbstractWidget implements WDrawabl
 			return;
 		}
 
+		RenderSystem.translatef(0, 0, getZ() * 400f);
+  		matrices.translate(0, 0, getZ() * 400f);
+
 		ScissorArea area = new ScissorArea(this);
 
 		for (WAbstractWidget widget : widgets) {
@@ -190,5 +194,8 @@ public class WHorizontalBoxContainer extends WAbstractWidget implements WDrawabl
 			BaseRenderer.drawQuad(matrices, provider, getX(), getHighY() - 1, getZ(), getWidth(), outerBorderWidth, getStyle().asColor("border"));
 			BaseRenderer.drawQuad(matrices, provider, getWideX() - 1, getY(), getZ(), outerBorderWidth, getHeight(), getStyle().asColor("border"));
 		}
+
+  		matrices.translate(0, 0, getZ() * -400f);
+		RenderSystem.translatef(0, 0, getZ() * -400f);
 	}
 }

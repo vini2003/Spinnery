@@ -1,5 +1,6 @@
 package spinnery.widget;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -117,6 +118,9 @@ public class WStatusBar extends WAbstractWidget {
             return;
         }
 
+        RenderSystem.translatef(0, 0, getZ() * 400f);
+        matrices.translate(0, 0, getZ() * 400f);
+
         int numContainers = (maxValue + 1) / 2;
         for (int i = 0; i < numContainers; i++) {
             boolean flip = config.direction == BarConfig.Direction.RIGHT_TO_LEFT;
@@ -138,5 +142,8 @@ public class WStatusBar extends WAbstractWidget {
                 sprite.draw(matrices, provider, getX() + x, getY(), getZ() + 1, config.spriteWidth, config.spriteHeight, config.mirror);
             }
         }
+
+        matrices.translate(0, 0, getZ() * -400f);
+        RenderSystem.translatef(0, 0, getZ() * -400f);
     }
 }

@@ -190,7 +190,7 @@ public class BaseContainer extends ScreenHandler {
 		HashMap<Integer, WSlot> slots = new HashMap<>();
 
 		for (int i = 0; i < slotNumber.length; ++i) {
-			WSlot slot = getInterface().getSlot(inventoryNumber[0], slotNumber[0]);
+			WSlot slot = getInterface().getSlot(inventoryNumber[i], slotNumber[i]);
 
 			if (slot != null) {
 				slots.put(i, slot);

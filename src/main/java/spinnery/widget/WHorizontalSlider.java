@@ -1,5 +1,6 @@
 package spinnery.widget;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -16,6 +17,9 @@ public class WHorizontalSlider extends WAbstractSlider {
 		if (isHidden()) {
 			return;
 		}
+
+		RenderSystem.translatef(0, 0, getZ() * 400f);
+  		matrices.translate(0, 0, getZ() * 400f);
 
 		float x = getX();
 		float y = getY();
@@ -57,6 +61,9 @@ public class WHorizontalSlider extends WAbstractSlider {
 		BaseRenderer.drawBeveledPanel(matrices, provider, clampedX, y - 1, z, knobWidth, knobHeight,
 				getStyle().asColor("top_left.foreground"), getStyle().asColor("foreground"),
 				getStyle().asColor("bottom_right.foreground"));
+
+  		matrices.translate(0, 0, getZ() * -400f);
+		RenderSystem.translatef(0, 0, getZ() * -400f);
 	}
 
 	@Override

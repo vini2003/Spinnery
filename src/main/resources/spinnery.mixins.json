@@ -2,13 +2,11 @@
   "required": true,
   "package": "spinnery.mixin",
   "compatibilityLevel": "JAVA_8",
-  "mixins": [
-    "ItemStackMixin"
-  ],
+  "mixins": ["ItemRendererMixin", "ItemStackMixin", "TextRendererMixin"],
   "client": [
-    "InGameHudMixin"
+	"InGameHudMixin"
   ],
   "injectors": {
-    "defaultRequire": 1
+	"defaultRequire": 1
   }
 }

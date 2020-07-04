@@ -1,5 +1,6 @@
 package spinnery.widget;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -48,6 +49,9 @@ public class WStaticText extends WAbstractWidget {
 			return;
 		}
 
+		RenderSystem.translatef(0, 0, getZ() * 400f);
+  		matrices.translate(0, 0, getZ() * 400f);
+
 		float x = getX();
 		float y = getY();
 		float z = getZ();
@@ -55,6 +59,9 @@ public class WStaticText extends WAbstractWidget {
 		TextRenderer.pass().text(getText()).font(font).at(x, y, z).scale(scale).maxWidth(maxWidth)
 				.shadow(getStyle().asBoolean("shadow")).shadowColor(getStyle().asColor("shadowColor"))
 				.color(getStyle().asColor("text")).render(matrices, provider);
+
+  		matrices.translate(0, 0, getZ() * -400f);
+		RenderSystem.translatef(0, 0, getZ() * -400f);
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 package spinnery.widget;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -33,6 +34,9 @@ public class WTextArea extends WAbstractTextEditor {
 			return;
 		}
 
+		RenderSystem.translatef(0, 0, getZ() * 400f);
+  		matrices.translate(0, 0, getZ() * 400f);
+
 		float x = getX();
 		float y = getY();
 		float z = getZ();
@@ -45,6 +49,9 @@ public class WTextArea extends WAbstractTextEditor {
 		if (lineWrap && xOffset != 0) xOffset = 0;
 
 		renderField(matrices, provider);
+
+		RenderSystem.translatef(0, 0, getZ() * -400f);
+  		matrices.translate(0, 0, getZ() * -400f);
 	}    // Essentially this function checks if a given line is a true "new" line, or if it's wrapped.
 
 	// This is useful e.g. for line numbering

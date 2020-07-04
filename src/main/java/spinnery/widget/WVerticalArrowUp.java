@@ -1,5 +1,6 @@
 package spinnery.widget;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
@@ -21,9 +22,19 @@ public class WVerticalArrowUp extends WButton {
 
 	@Override
 	public void draw(MatrixStack matrices, VertexConsumerProvider.Immediate provider) {
+		if (isHidden()) {
+			return;
+		}
+
+		RenderSystem.translatef(0, 0, getZ() * 400f);
+  		matrices.translate(0, 0, getZ() * 400f);
+
 		if (!isLowered()) {
 			BaseRenderer.drawTexturedQuad(matrices, provider, getX(), getY(), getZ(), getWidth(), getHeight(), IMAGE);
 		}
+
+  		matrices.translate(0, 0, getZ() * -400f);
+		RenderSystem.translatef(0, 0, getZ() * -400f);
 	}
 
 	@Override

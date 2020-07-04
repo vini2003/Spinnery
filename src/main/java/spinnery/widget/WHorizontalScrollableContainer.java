@@ -1,6 +1,7 @@
 package spinnery.widget;
 
 import com.google.common.collect.ImmutableSet;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import spinnery.client.utility.ScissorArea;
@@ -230,6 +231,9 @@ public class WHorizontalScrollableContainer extends WAbstractWidget implements W
 			return;
 		}
 
+		RenderSystem.translatef(0, 0, getZ() * 400f);
+  		matrices.translate(0, 0, getZ() * 400f);
+
 		ScissorArea area = new ScissorArea(this);
 
 		for (WLayoutElement widget : getOrderedWidgets()) {
@@ -239,6 +243,9 @@ public class WHorizontalScrollableContainer extends WAbstractWidget implements W
 		area.destroy();
 
 		scrollbar.draw(matrices, provider);
+
+  		matrices.translate(0, 0, getZ() * -400f);
+		RenderSystem.translatef(0, 0, getZ() * -400f);
 	}
 
 	@Override

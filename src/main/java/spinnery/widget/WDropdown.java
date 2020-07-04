@@ -1,5 +1,6 @@
 package spinnery.widget;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -66,6 +67,9 @@ public class WDropdown extends WAbstractWidget implements WDrawableCollection, W
 			return;
 		}
 
+		RenderSystem.translatef(0, 0, getZ() * 400f);
+  		matrices.translate(0, 0, getZ() * 400f);
+
 		float x = getX();
 		float y = getY();
 		float z = getZ();
@@ -93,6 +97,9 @@ public class WDropdown extends WAbstractWidget implements WDrawableCollection, W
 				widgetC.draw(matrices, provider);
 			}
 		}
+
+  		matrices.translate(0, 0, getZ() * -400f);
+		RenderSystem.translatef(0, 0, getZ() * -400f);
 	}
 
 	@Override

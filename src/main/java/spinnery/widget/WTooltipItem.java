@@ -1,5 +1,6 @@
 package spinnery.widget;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import spinnery.widget.api.Position;
@@ -70,9 +71,17 @@ public class WTooltipItem extends WItem {
 
 	@Override
 	public void draw(MatrixStack matrices, VertexConsumerProvider.Immediate provider) {
-		if (tooltip == null || tooltipText == null) return;
+		if (isHidden() || tooltip == null || tooltipText == null) return;
+
+		RenderSystem.translatef(0, 0, getZ() * 400f);
+  		matrices.translate(0, 0, getZ() * 400f);
+
 		super.draw(matrices, provider);
+
 		tooltip.draw(matrices, provider);
 		tooltipText.draw(matrices, provider);
+
+  		matrices.translate(0, 0, getZ() * -400f);
+		RenderSystem.translatef(0, 0, getZ() * -400f);
 	}
 }

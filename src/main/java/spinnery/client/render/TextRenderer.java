@@ -1,15 +1,17 @@
 package spinnery.client.render;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.StringRenderable;
 import net.minecraft.text.Text;
+import spinnery.access.TextRendererAccessor;
 import spinnery.widget.api.Color;
 import spinnery.widget.api.Position;
 
 public class TextRenderer {
+	private static ExposedTextRenderer textRenderer;
+
 	public static RenderPass pass() {
 		return new RenderPass();
 	}
@@ -22,8 +24,12 @@ public class TextRenderer {
 		return getTextRenderer(font).fontHeight;
 	}
 
-	public static net.minecraft.client.font.TextRenderer getTextRenderer(Font font) {
-		return MinecraftClient.getInstance().textRenderer;
+	public static ExposedTextRenderer getTextRenderer(Font font) {
+		if (textRenderer == null) {
+			textRenderer = new ExposedTextRenderer(((TextRendererAccessor) MinecraftClient.getInstance().textRenderer).spinnery_getStorageAccessor());
+		}
+
+		return textRenderer;
 	}
 
 	public static int width(char character) {
@@ -144,12 +150,12 @@ public class TextRenderer {
 
 			if (maxWidth != null) {
 				if (shadow)
-					getTextRenderer(font).drawTrimmed(StringRenderable.plain(shadowText), x + 1, y + 1, maxWidth, shadowColor);
-				getTextRenderer(font).drawTrimmed(StringRenderable.plain(text), x, y, maxWidth, color);
+					getTextRenderer(font).drawTrimmed(matrices, StringRenderable.plain(shadowText), x + 1, y + 1, z, maxWidth, shadowColor);
+				getTextRenderer(font).drawTrimmed(matrices, StringRenderable.plain(text), x, y, z, maxWidth, color);
 			} else {
 				if (shadow)
-					getTextRenderer(font).draw(matrices, StringRenderable.plain(shadowText), x + 1, y + 1, shadowColor);
-				getTextRenderer(font).draw(matrices, StringRenderable.plain(text), x, y, color);
+					getTextRenderer(font).draw(matrices, StringRenderable.plain(shadowText), x + 1, y + 1, z, shadowColor);
+				getTextRenderer(font).draw(matrices, StringRenderable.plain(text), x, y, z, color);
 			}
 
 			matrices.pop();

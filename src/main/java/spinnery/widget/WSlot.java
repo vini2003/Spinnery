@@ -17,6 +17,7 @@ import org.apache.logging.log4j.Level;
 import spinnery.Spinnery;
 import spinnery.client.render.BaseRenderer;
 import spinnery.common.container.BaseContainer;
+import spinnery.common.utility.MouseUtilities;
 import spinnery.widget.api.Action;
 import spinnery.widget.api.Position;
 import spinnery.widget.api.Size;
@@ -165,6 +166,9 @@ public class WSlot extends WAbstractWidget {
 			return;
 		}
 
+		RenderSystem.translatef(0, 0, getZ() * 400f);
+  		matrices.translate(0, 0, getZ() * 400f);
+
 		float x = getX();
 		float y = getY();
 		float z = getZ();
@@ -180,12 +184,23 @@ public class WSlot extends WAbstractWidget {
 
 		ItemStack stackA = getPreviewStack().isEmpty() ? getStack() : getPreviewStack();
 
-		BaseRenderer.getItemRenderer().renderGuiItemIcon(stackA, (int) ((1 + x) + ((sX - 18) / 2)), (int) ((1 + y) + ((sY - 18) / 2)));
-		BaseRenderer.getItemRenderer().renderGuiItemOverlay(MinecraftClient.getInstance().textRenderer, stackA, (int) ((1 + x) + ((sX - 18) / 2)), (int) ((1 + y) + ((sY - 18) / 2)), stackA.getCount() == 1 ? "" : withSuffix(stackA.getCount()));
+		matrices.push();
+
+		BaseRenderer.getExposedItemRenderer().renderInGui(matrices, provider, stackA, (int) ((1 + x) + ((sX - 18) / 2)), (int) ((1 + y) + ((sY - 18) / 2)), z + 3);
+
+		matrices.pop();
+		matrices.push();
+
+		BaseRenderer.getExposedItemRenderer().renderGuiItemOverlay(matrices, provider, MinecraftClient.getInstance().textRenderer, stackA, x, y, z + 16, stackA.getCount() == 1 ? "" : withSuffix(stackA.getCount()));
+
+		matrices.pop();
 
 		if (isFocused()) {
-			BaseRenderer.drawQuad(matrices, provider, x + 1, y + 1, z + 201, sX - 2, sY - 2, getStyle().asColor("overlay"));
+			BaseRenderer.drawQuad(matrices, provider, x + 1, y + 1, z, sX - 2, sY - 2, getStyle().asColor("overlay"));
 		}
+
+  		matrices.translate(0, 0, getZ() * -400f);
+		RenderSystem.translatef(0, 0, getZ() * -400f);
 	}
 
 	@Override
@@ -279,7 +294,7 @@ public class WSlot extends WAbstractWidget {
 				INSTANCE.sendToServer(SLOT_CLICK_PACKET, createSlotClickPacket(container.syncId, slotNumber, inventoryNumber, button, QUICK_MOVE));
 			}
 		} else {
-			if ((button == LEFT || button == RIGHT) && nanoInterval() > nanoDelay()) {
+			if ((button == LEFT || button == RIGHT) && nanoInterval() > nanoDelay() / 1.5f) {
 				if (!container.getDragSlots(button).isEmpty()) {
 					ItemStack stackA = container.getDragSlots(button).iterator().next().getStack();
 					ItemStack stackB = getStack();
@@ -346,13 +361,19 @@ public class WSlot extends WAbstractWidget {
 	public ItemStack getStack() {
 		try {
 			ItemStack stackA = getLinkedInventory().getStack(getSlotNumber());
-			;
+
 			if (!isOverrideMaximumCount()) {
 				setMaximumCount(stackA.getMaxCount());
 			}
+
 			return stackA;
 		} catch (ArrayIndexOutOfBoundsException exception) {
 			Spinnery.LOGGER.log(Level.ERROR, "Cannot access slot " + getSlotNumber() + ", as it does exist in the inventory!");
+			exception.printStackTrace();
+			return ItemStack.EMPTY;
+		} catch (NullPointerException exception) {
+			Spinnery.LOGGER.log(Level.ERROR, "Cannot retrieve stack for slot " + getSlotNumber() + ", due to NullPointerException!");
+			exception.printStackTrace();
 			return ItemStack.EMPTY;
 		}
 	}
@@ -376,6 +397,7 @@ public class WSlot extends WAbstractWidget {
 			}
 		} catch (ArrayIndexOutOfBoundsException exception) {
 			Spinnery.LOGGER.log(Level.ERROR, "Cannot access slot " + getSlotNumber() + ", as it does exist in the inventory!");
+			exception.printStackTrace();
 		}
 		return (W) this;
 	}

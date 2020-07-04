@@ -10,6 +10,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Pair;
 import org.lwjgl.opengl.GL11;
+import spinnery.access.ItemRendererAccessor;
 import spinnery.client.render.layer.SpinneryLayers;
 import spinnery.widget.api.Color;
 import spinnery.widget.api.WLayoutElement;
@@ -17,6 +18,8 @@ import spinnery.widget.api.WLayoutElement;
 import java.util.Stack;
 
 public class BaseRenderer {
+	private static ExposedItemRenderer exposedItemRenderer;
+
 	public static void drawQuad(MatrixStack matrices, VertexConsumerProvider.Immediate provider, float x, float y, float z, float sX, float sY, Color color) {
 		drawQuad(matrices, provider, x, y, z, sX, sY, 0x00f000f0, color);
 	}
@@ -140,8 +143,23 @@ public class BaseRenderer {
 		return MinecraftClient.getInstance().getTextureManager();
 	}
 
-	public static ItemRenderer getItemRenderer() {
+	public static ItemRenderer getDefaultItemRenderer() {
 		return MinecraftClient.getInstance().getItemRenderer();
+	}
+
+	public static ExposedItemRenderer getExposedItemRenderer() {
+		ItemRenderer defaultRenderer = getDefaultItemRenderer();
+
+		if (exposedItemRenderer == null) {
+			exposedItemRenderer = new ExposedItemRenderer();
+		}
+
+		ExposedItemRenderer.setWithoutModels(((ItemRendererAccessor) defaultRenderer).spinnery_getWithoutModels());
+		exposedItemRenderer.setColorMap(((ItemRendererAccessor) defaultRenderer).spinner_getColorMap());
+		exposedItemRenderer.setModels(((ItemRendererAccessor) defaultRenderer).spinnery_getModels());
+		exposedItemRenderer.setTextureManager(((ItemRendererAccessor) defaultRenderer).spinnery_getTextureManager());
+
+		return exposedItemRenderer;
 	}
 
 	public static TextRenderer getTextRenderer() {

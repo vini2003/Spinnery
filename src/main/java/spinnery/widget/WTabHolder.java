@@ -1,5 +1,6 @@
 package spinnery.widget;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -126,6 +127,9 @@ public class WTabHolder extends WAbstractWidget implements WCollection, WDelegat
 			return;
 		}
 
+		RenderSystem.translatef(0, 0, getZ() * 400f);
+  		matrices.translate(0, 0, getZ() * 400f);
+
 		for (WTab tab : tabs) {
 			tab.getToggle().draw(matrices, provider);
 		}
@@ -133,6 +137,9 @@ public class WTabHolder extends WAbstractWidget implements WCollection, WDelegat
 		for (WTab tab : tabs) {
 			tab.draw(matrices, provider);
 		}
+
+  		matrices.translate(0, 0, getZ() * -400f);
+		RenderSystem.translatef(0, 0, getZ() * -400f);
 	}
 
 	public class WTab extends WAbstractWidget implements WDrawableCollection, WModifiableCollection, WDelegatedEventListener {

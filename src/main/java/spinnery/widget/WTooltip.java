@@ -1,5 +1,6 @@
 package spinnery.widget;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import spinnery.client.render.BaseRenderer;
@@ -18,9 +19,13 @@ public class WTooltip extends WAbstractWidget implements WDrawableCollection, WM
 	public void draw(MatrixStack matrices, VertexConsumerProvider.Immediate provider) {
 		if (isHidden()) return;
 
+		RenderSystem.translatef(0, 0, getZ() * 400f);
+  		matrices.translate(0, 0, getZ() * 400f);
+
 		float x = position.getX();
 		float y = position.getY();
 		float z = position.getRelativeZ();
+
 		float width = size.getWidth();
 		float height = size.getHeight();
 
@@ -46,6 +51,9 @@ public class WTooltip extends WAbstractWidget implements WDrawableCollection, WM
 		for (WLayoutElement widget : getOrderedWidgets()) {
 			widget.draw(matrices, provider);
 		}
+
+  		matrices.translate(0, 0, getZ() * -400f);
+		RenderSystem.translatef(0, 0, getZ() * -400f);
 	}
 
 	@Override

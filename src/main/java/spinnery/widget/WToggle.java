@@ -1,5 +1,6 @@
 package spinnery.widget;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -14,6 +15,9 @@ public class WToggle extends WAbstractToggle {
 		if (isHidden()) {
 			return;
 		}
+
+		RenderSystem.translatef(0, 0, getZ() * 400f);
+  		matrices.translate(0, 0, getZ() * 400f);
 
 		float x = getX();
 		float y = getY();
@@ -41,6 +45,9 @@ public class WToggle extends WAbstractToggle {
 					.text(getLabel()).at(x + sX + 2, y + sY / 2 - 4.5, z)
 					.color(getStyle().asColor("label.color")).shadowColor(getStyle().asColor("label.shadow_color")).render(matrices, provider);
 		}
+
+  		matrices.translate(0, 0, getZ() * -400f);
+		RenderSystem.translatef(0, 0, getZ() * -400f);
 	}
 
 	@Override

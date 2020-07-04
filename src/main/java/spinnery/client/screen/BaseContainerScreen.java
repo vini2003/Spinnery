@@ -5,7 +5,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
-import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
@@ -40,6 +39,10 @@ public class BaseContainerScreen<T extends BaseContainer> extends HandledScreen<
 		clientInterface = new WInterface(linkedContainer);
 	}
 
+	@Override
+	protected void drawForeground(MatrixStack matrices, int mouseX, int mouseY) {
+	}
+
 	/**
 	 * Method called for every frame, where all of Spinnery rendering happens.
 	 */
@@ -66,16 +69,18 @@ public class BaseContainerScreen<T extends BaseContainer> extends HandledScreen<
 
 		matrices.push();
 
-		RenderSystem.translatef(0, 0, 300);
+		//RenderSystem.translatef(0, 0, 300);
 
-		BaseRenderer.getItemRenderer().renderInGui(stackA, mouseX - 8, mouseY - 8);
-		BaseRenderer.getItemRenderer().renderGuiItemOverlay(BaseRenderer.getTextRenderer(), stackA, (mouseX - 8), mouseY - 8);
+		BaseRenderer.getExposedItemRenderer().renderInGui(matrices, provider, stackA, mouseX - 8, mouseY - 8, 100F);
+		BaseRenderer.getExposedItemRenderer().renderGuiItemOverlay(matrices, provider, BaseRenderer.getTextRenderer(), stackA, (mouseX - 8), mouseY - 8, 100F);
 
-		RenderSystem.translatef(0, 0, -300);
+		//RenderSystem.translatef(0, 0, -300);
 
 		matrices.pop();
 
 		provider.draw();
+
+		super.render(matrices, mouseX, mouseY, tickDelta);
 	}
 
 	/**

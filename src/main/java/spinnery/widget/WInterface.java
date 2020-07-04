@@ -1,9 +1,11 @@
 package spinnery.widget;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.Window;
 import net.minecraft.client.util.math.MatrixStack;
@@ -23,7 +25,6 @@ public class WInterface implements WDrawableCollection, WModifiableCollection, W
 	protected Map<Class<? extends WAbstractWidget>, WAbstractWidget> cachedWidgets = new HashMap<>();
 	protected boolean isClientside;
 	protected Identifier theme;
-	protected boolean isBlurred = false;
 
 	public WInterface() {
 		setClientside(true);
@@ -221,23 +222,15 @@ public class WInterface implements WDrawableCollection, WModifiableCollection, W
 
 	@Override
 	public void draw(MatrixStack matrices, VertexConsumerProvider.Immediate provider) {
-		if (isBlurred()) {
-			Window window = MinecraftClient.getInstance().getWindow();
-			BaseRenderer.drawQuad(matrices, provider, 0, 0, 0, window.getWidth(), window.getHeight(), Color.of(0x90000000));
-		}
+		RenderSystem.translatef(0, 0, getZ() * 400f);
+  		matrices.translate(0, 0, getZ() * 400f);
 
 		for (WLayoutElement widget : getOrderedWidgets()) {
 			widget.draw(matrices, provider);
 		}
-	}
 
-	public boolean isBlurred() {
-		return isBlurred;
-	}
-
-	public <W extends WInterface> W setBlurred(boolean isBlurred) {
-		this.isBlurred = isBlurred;
-		return (W) this;
+		RenderSystem.translatef(0, 0, getZ() * -400f);
+  		matrices.translate(0, 0, getZ() * -400f);
 	}
 
 	public <W extends WSlot> W getSlot(int inventoryNumber, int slotNumber) {

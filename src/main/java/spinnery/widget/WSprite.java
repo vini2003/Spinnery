@@ -1,5 +1,6 @@
 package spinnery.widget;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -29,6 +30,12 @@ public class WSprite extends WAbstractWidget {
             return;
         }
 
+        RenderSystem.translatef(0, 0, getZ() * 400f);
+        matrices.translate(0, 0, getZ() * 400f);
+
         getSprite().draw(matrices, provider, getX(), getY(), getZ(), getWidth(), getHeight(), false);
+
+        matrices.translate(0, 0, getZ() * -400f);
+        RenderSystem.translatef(0, 0, getZ() * -400f);
     }
 }
