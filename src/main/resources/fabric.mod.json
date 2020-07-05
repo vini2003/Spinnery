@@ -22,8 +22,10 @@
     ],
     "modmenu": [
       "spinnery.client.integration.SpinneryModMenu"
+    ],
+    "rei_plugins": [
+      "spinnery.client.rei.SpinneryPlugin"
     ]
-
   },
   "mixins": [
     "spinnery.mixins.json"

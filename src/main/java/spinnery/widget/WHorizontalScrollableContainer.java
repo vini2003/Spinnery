@@ -231,9 +231,6 @@ public class WHorizontalScrollableContainer extends WAbstractWidget implements W
 			return;
 		}
 
-		RenderSystem.translatef(0, 0, getZ() * 400f);
-  		matrices.translate(0, 0, getZ() * 400f);
-
 		ScissorArea area = new ScissorArea(this);
 
 		for (WLayoutElement widget : getOrderedWidgets()) {
@@ -243,9 +240,6 @@ public class WHorizontalScrollableContainer extends WAbstractWidget implements W
 		area.destroy();
 
 		scrollbar.draw(matrices, provider);
-
-  		matrices.translate(0, 0, getZ() * -400f);
-		RenderSystem.translatef(0, 0, getZ() * -400f);
 	}
 
 	@Override

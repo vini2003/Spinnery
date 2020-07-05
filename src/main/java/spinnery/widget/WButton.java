@@ -16,8 +16,8 @@ public class WButton extends WAbstractButton {
 			return;
 		}
 
-		RenderSystem.translatef(0, 0, getZ() * 400f);
-  		matrices.translate(0, 0, getZ() * 400f);
+		//RenderSystem.translatef(0, 0, getZ() * 400f);
+  		//matrices.translate(0, 0, getZ() * 400f);
 
 		if (isLowered()) {
 			BaseRenderer.drawBeveledPanel(matrices, provider, getX(), getY(), getZ(), getWidth(), getHeight(), getStyle().asColor("top_left.on"), getStyle().asColor("background.on"), getStyle().asColor("bottom_right.on"));
@@ -31,8 +31,8 @@ public class WButton extends WAbstractButton {
 					.color(getStyle().asColor("label.color")).render(matrices, provider);
 		}
 
-  		matrices.translate(0, 0, getZ() * -400f);
-		RenderSystem.translatef(0, 0, getZ() * -400f);
+		//RenderSystem.translatef(0, 0, getZ() * -400f);
+  		//matrices.translate(0, 0, getZ() * -400f);
 	}
 
 	@Override

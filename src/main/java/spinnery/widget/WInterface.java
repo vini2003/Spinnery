@@ -222,15 +222,9 @@ public class WInterface implements WDrawableCollection, WModifiableCollection, W
 
 	@Override
 	public void draw(MatrixStack matrices, VertexConsumerProvider.Immediate provider) {
-		RenderSystem.translatef(0, 0, getZ() * 400f);
-  		matrices.translate(0, 0, getZ() * 400f);
-
 		for (WLayoutElement widget : getOrderedWidgets()) {
 			widget.draw(matrices, provider);
 		}
-
-		RenderSystem.translatef(0, 0, getZ() * -400f);
-  		matrices.translate(0, 0, getZ() * -400f);
 	}
 
 	public <W extends WSlot> W getSlot(int inventoryNumber, int slotNumber) {
@@ -276,5 +270,16 @@ public class WInterface implements WDrawableCollection, WModifiableCollection, W
 	@Environment(EnvType.CLIENT)
 	public float getHeight() {
 		return MinecraftClient.getInstance().getWindow().getScaledHeight();
+	}
+
+
+	@Deprecated
+	public boolean isBlurred() {
+		return false;
+	}
+
+	@Deprecated
+	public <W extends WInterface> W setBlurred(boolean isBlurred) {
+		return (W) this;
 	}
 }

@@ -539,9 +539,6 @@ public class WVerticalScrollableContainer extends WAbstractWidget implements WDr
 			return;
 		}
 
-		RenderSystem.translatef(0, 0, getZ() * 400f);
-  		matrices.translate(0, 0, getZ() * 400f);
-
 		if (isDragScrolling()) {
 			scroll(0, Math.pow(5, Math.abs(((MouseUtilities.mouseY - lastDragScrollY) / 100))) * ((System.currentTimeMillis() - lastDragScrollMilliseconds) * dragScrollAccelerationCoefficient) * (lastDragScrollY - MouseUtilities.mouseY > 0 ? 1 : -1));
 		}
@@ -590,9 +587,6 @@ public class WVerticalScrollableContainer extends WAbstractWidget implements WDr
 			verticalArrowUp.draw(matrices, provider);
 			verticalArrowDown.draw(matrices, provider);
 		}
-
-		RenderSystem.translatef(0, 0, getZ() * -400f);
-  		matrices.translate(0, 0, getZ() * -400f);
 	}
 
 	@Override

@@ -234,9 +234,6 @@ public class WFormContainer extends WAbstractWidget implements WDrawableCollecti
 			return;
 		}
 
-		RenderSystem.translatef(0, 0, getZ() * 400f);
-  		matrices.translate(0, 0, getZ() * 400f);
-
 		ScissorArea area = new ScissorArea(this);
 
 		for (WAbstractWidget widget : widgets) {
@@ -251,8 +248,5 @@ public class WFormContainer extends WAbstractWidget implements WDrawableCollecti
 			BaseRenderer.drawQuad(matrices, provider, getX(), getHighY() - 1, getZ(), getWidth(), outerBorderWidth, getStyle().asColor("border"));
 			BaseRenderer.drawQuad(matrices, provider, getWideX() - 1, getY(), getZ(), outerBorderWidth, getHeight(), getStyle().asColor("border"));
 		}
-
-  		matrices.translate(0, 0, getZ() * -400f);
-		RenderSystem.translatef(0, 0, getZ() * -400f);
 	}
 }

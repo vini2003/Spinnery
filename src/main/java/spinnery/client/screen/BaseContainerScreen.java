@@ -1,6 +1,5 @@
 package spinnery.client.screen;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -25,6 +24,8 @@ public class BaseContainerScreen<T extends BaseContainer> extends HandledScreen<
 	protected float tooltipX = 0;
 	protected float tooltipY = 0;
 	protected WSlot drawSlot;
+
+	public static boolean shouldUpdate = false;
 
 	/**
 	 * Instantiates a BaseContainerScreen.
@@ -69,12 +70,8 @@ public class BaseContainerScreen<T extends BaseContainer> extends HandledScreen<
 
 		matrices.push();
 
-		//RenderSystem.translatef(0, 0, 300);
-
-		BaseRenderer.getExposedItemRenderer().renderInGui(matrices, provider, stackA, mouseX - 8, mouseY - 8, 100F);
-		BaseRenderer.getExposedItemRenderer().renderGuiItemOverlay(matrices, provider, BaseRenderer.getTextRenderer(), stackA, (mouseX - 8), mouseY - 8, 100F);
-
-		//RenderSystem.translatef(0, 0, -300);
+		BaseRenderer.getExposedItemRenderer().renderInGui(matrices, provider, stackA, mouseX - 8, mouseY - 8, Integer.MAX_VALUE);
+		BaseRenderer.getExposedItemRenderer().renderGuiItemOverlay(matrices, provider, BaseRenderer.getTextRenderer(), stackA, (mouseX - 8), mouseY - 8, Integer.MAX_VALUE);
 
 		matrices.pop();
 
@@ -128,7 +125,7 @@ public class BaseContainerScreen<T extends BaseContainer> extends HandledScreen<
 	public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
 		getInterface().onMouseClicked((float) mouseX, (float) mouseY, mouseButton);
 
-		return false;
+		return super.mouseClicked(mouseX, mouseY, mouseButton);
 	}
 
 	/**
@@ -143,7 +140,7 @@ public class BaseContainerScreen<T extends BaseContainer> extends HandledScreen<
 	public boolean mouseReleased(double mouseX, double mouseY, int mouseButton) {
 		getInterface().onMouseReleased((float) mouseX, (float) mouseY, mouseButton);
 
-		return false;
+		return super.mouseReleased(mouseX, mouseY, mouseButton);
 	}
 
 	/**
@@ -161,6 +158,8 @@ public class BaseContainerScreen<T extends BaseContainer> extends HandledScreen<
 
 		MouseUtilities.mouseX = (float) mouseX;
 		MouseUtilities.mouseY = (float) mouseY;
+
+		super.mouseMoved(mouseX, mouseY);
 	}
 
 	/**
@@ -177,7 +176,7 @@ public class BaseContainerScreen<T extends BaseContainer> extends HandledScreen<
 	public boolean mouseDragged(double mouseX, double mouseY, int mouseButton, double deltaX, double deltaY) {
 		getInterface().onMouseDragged((float) mouseX, (float) mouseY, mouseButton, deltaX, deltaY);
 
-		return false;
+		return super.mouseDragged(mouseX, mouseY, mouseButton, deltaX, deltaY);
 	}
 
 	/**
@@ -192,7 +191,7 @@ public class BaseContainerScreen<T extends BaseContainer> extends HandledScreen<
 	public boolean mouseScrolled(double mouseX, double mouseY, double deltaY) {
 		getInterface().onMouseScrolled((float) mouseX, (float) mouseY, deltaY);
 
-		return false;
+		return super.mouseScrolled(mouseX, mouseY, deltaY);
 	}
 
 	/**
@@ -214,7 +213,7 @@ public class BaseContainerScreen<T extends BaseContainer> extends HandledScreen<
 			}
 		}
 
-		return false;
+		return super.keyPressed(keyCode, character, keyModifier);
 	}
 
 	/**
@@ -229,7 +228,7 @@ public class BaseContainerScreen<T extends BaseContainer> extends HandledScreen<
 	public boolean keyReleased(int character, int keyCode, int keyModifier) {
 		getInterface().onKeyReleased(character, keyCode, keyModifier);
 
-		return false;
+		return super.keyReleased(character, keyCode, keyModifier);
 	}
 
 	/**
@@ -360,6 +359,27 @@ public class BaseContainerScreen<T extends BaseContainer> extends HandledScreen<
 	public void resize(MinecraftClient client, int width, int height) {
 		getInterface().onAlign();
 		super.resize(client, width, height);
+
+		int minX = Integer.MAX_VALUE;
+		int minY = Integer.MAX_VALUE;
+		int maxX = Integer.MIN_VALUE;
+		int maxY = Integer.MIN_VALUE;
+
+		for (WAbstractWidget widget : getInterface().getAllWidgets()) {
+			if (widget.getX() < minX) minX = (int) widget.getX();
+			if (widget.getY() < minY) minY = (int) widget.getY();
+			if (widget.getX() + widget.getWidth() > maxX) maxX = (int) (widget.getX() + widget.getWidth());
+			if (widget.getY() + widget.getHeight() > maxY) maxY = (int) (widget.getY() + widget.getHeight());
+		}
+
+		super.x = minX;
+		super.y = minY;
+		super.width = minX;
+		super.height = minY;
+		super.backgroundWidth = maxX;
+		super.backgroundHeight = maxY;
+
+		shouldUpdate = true;
 	}
 
 	/**
@@ -381,5 +401,29 @@ public class BaseContainerScreen<T extends BaseContainer> extends HandledScreen<
 				setTooltipY(mouseY);
 			}
 		}
+	}
+
+	public int getX() {
+		return super.x;
+	}
+
+	public int getY() {
+		return super.y;
+	}
+
+	public int getMinX() {
+		return super.width;
+	}
+
+	public int getMinY() {
+		return super.height;
+	}
+
+	public int getMaxX() {
+		return super.backgroundWidth;
+	}
+
+	public int getMaxY() {
+		return super.backgroundHeight;
 	}
 }

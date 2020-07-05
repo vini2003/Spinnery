@@ -4,36 +4,32 @@ import blue.endless.jankson.JsonElement;
 import spinnery.common.utility.JanksonUtilities;
 
 import java.util.Objects;
+import java.util.function.Supplier;
 
 /**
  * Data class representing a position offset relative to an anchor. By default, the anchor is ORIGIN,
  * a position with all 0 coordinates.
  */
 public class Position implements WPositioned, JanksonSerializable {
-	public static final Position ORIGIN = new Position(new WPositioned() {
-		@Override
-		public float getX() {
-			return 0;
-		}
-
-		@Override
-		public float getY() {
-			return 0;
-		}
-
-		@Override
-		public float getZ() {
-			return 0;
-		}
-	});
+	public static final Position ORIGIN = Position.of(0, 0, 0);
 
 	protected WPositioned anchor;
+
 	protected float x;
 	protected float y;
 	protected float z;
+
 	protected float offsetX;
 	protected float offsetY;
 	protected float offsetZ;
+
+	protected float xSupplied;
+	protected float ySupplied;
+	protected float zSupplied;
+
+	protected Supplier<Float> xSupplier;
+	protected Supplier<Float> ySupplier;
+	protected Supplier<Float> zSupplier;
 
 	protected Position(WPositioned anchor) {
 		this.anchor = anchor;
@@ -55,17 +51,43 @@ public class Position implements WPositioned, JanksonSerializable {
 	}
 
 	/**
+	 * Creates a position with the given supplier-based coordinates.
+	 *
+	 * @param xSupplier supplier of x
+	 * @param ySupplier supplier of y
+	 * @param zSupplier supplier of z
+	 */
+	public static Position of(Supplier<Float> xSupplier, Supplier<Float> ySupplier, Supplier<Float> zSupplier) {
+		Position position = new Position(ORIGIN).set(xSupplier, ySupplier, zSupplier);
+		position.onLayoutChange();
+		return position;
+	}
+
+	/**
 	 * Sets new coordinates of this position object relative to its anchor.
 	 *
 	 * @param x relative x
 	 * @param y relative y
 	 * @param z relative z
-	 * @return same position object
 	 */
 	public Position set(float x, float y, float z) {
 		setRelativeX(x);
 		setRelativeY(y);
 		setRelativeZ(z);
+		return this;
+	}
+
+	/**
+	 * Sets new coordinate suppliers of this position object.
+	 *
+	 * @param xSupplier supplier of x
+	 * @param ySupplier supplier of y
+	 * @param zSupplier supplier of z
+	 */
+	public Position set(Supplier<Float> xSupplier, Supplier<Float> ySupplier, Supplier<Float> zSupplier ) {
+		setXSupplier(xSupplier);
+		setYSupplier(ySupplier);
+		setZSupplier(zSupplier);
 		return this;
 	}
 
@@ -174,7 +196,7 @@ public class Position implements WPositioned, JanksonSerializable {
 	 * @return absolute coordinate
 	 */
 	public float getX() {
-		return anchor.getX() + x + offsetX;
+		return anchor == null ? 0 :  xSupplier == null ? anchor.getX() + x + offsetX : xSupplied;
 	}
 
 	/**
@@ -184,7 +206,7 @@ public class Position implements WPositioned, JanksonSerializable {
 	 * @return absolute coordinate
 	 */
 	public float getY() {
-		return anchor.getY() + y + offsetY;
+		return anchor == null ? 0 : ySupplier == null ? anchor.getY() + y + offsetY : ySupplied;
 	}
 
 	/**
@@ -194,7 +216,7 @@ public class Position implements WPositioned, JanksonSerializable {
 	 * @return absolute coordinate
 	 */
 	public float getZ() {
-		return anchor.getZ() + z + offsetZ;
+		return anchor == null ? 0 : zSupplier == null ? anchor.getZ() + z + offsetZ : zSupplied;
 	}
 
 	/**
@@ -228,6 +250,16 @@ public class Position implements WPositioned, JanksonSerializable {
 	 */
 	public Position setX(float x) {
 		return setRelativeX(x - anchor.getX() - offsetX);
+	}
+
+	/**
+	 * Updates this position's supplied coordinates.
+	 */
+	public Position onLayoutChange() {
+		if (this.xSupplier != null) this.xSupplied = xSupplier.get();
+		if (this.ySupplier != null) this.ySupplied = ySupplier.get();
+		if (this.zSupplier != null) this.zSupplied = zSupplier.get();
+		return this;
 	}
 
 	public float getRelativeX() {
@@ -282,6 +314,30 @@ public class Position implements WPositioned, JanksonSerializable {
 	public Position setOffsetZ(float offsetZ) {
 		this.offsetZ = offsetZ;
 		return this;
+	}
+
+	public Supplier<Float> getXSupplier() {
+		return xSupplier;
+	}
+
+	public void setXSupplier(Supplier<Float> xSupplier) {
+		this.xSupplier = xSupplier;
+	}
+
+	public Supplier<Float> getYSupplier() {
+		return ySupplier;
+	}
+
+	public void setYSupplier(Supplier<Float> ySupplier) {
+		this.ySupplier = ySupplier;
+	}
+
+	public Supplier<Float> getZSupplier() {
+		return zSupplier;
+	}
+
+	public void setZSupplier(Supplier<Float> zSupplier) {
+		this.zSupplier = zSupplier;
 	}
 
 	@Override

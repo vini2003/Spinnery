@@ -8,7 +8,6 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Tickable;
-import spinnery.client.integration.SpinneryConfigurationScreen;
 import spinnery.common.registry.ThemeRegistry;
 import spinnery.common.registry.WidgetRegistry;
 import spinnery.common.utility.EventUtilities;
@@ -228,6 +227,8 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 	@Override
 	public void onLayoutChange() {
 		if (parent != null) parent.onLayoutChange();
+		if (position != null) position.onLayoutChange();
+		if (size != null) size.onLayoutChange();
 	}
 
 	/**

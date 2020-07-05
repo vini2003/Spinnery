@@ -37,9 +37,6 @@ public class WVerticalScrollbar extends WAbstractWidget {
 			return;
 		}
 
-		RenderSystem.translatef(0, 0, getZ() * 400f);
-  		matrices.translate(0, 0, getZ() * 400f);
-
 		BaseRenderer.drawBeveledPanel(matrices, provider, getX(), getY(), getZ(), getWidth(), getHeight(), getStyle().asColor("scroll_line.top_left"), getStyle().asColor("scroll_line.background"), getStyle().asColor("scroll_line.bottom_right"));
 
 		Color scrollerColor = getStyle().asColor("scroller.background_default");
@@ -52,9 +49,6 @@ public class WVerticalScrollbar extends WAbstractWidget {
 		}
 
 		BaseRenderer.drawBeveledPanel(matrices, provider, getX() + 1, getScrollerY() + 1, getZ(), getWidth() - 2, Math.min(getHighY() - getScrollerY(), getScrollerHeight()) - 2, getStyle().asColor("scroller.top_left"), scrollerColor, getStyle().asColor("scroller.bottom_right"));
-
-  		matrices.translate(0, 0, getZ() * -400f);
-		RenderSystem.translatef(0, 0, getZ() * -400f);
 	}
 
 	@Override

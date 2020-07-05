@@ -18,9 +18,6 @@ public class WHorizontalBar extends WAbstractBar {
 			return;
 		}
 
-		RenderSystem.translatef(0, 0, getZ() * 400f);
-  		matrices.translate(0, 0, getZ() * 400f);
-
 		float x = getX();
 		float y = getY();
 		float z = getZ();
@@ -44,8 +41,5 @@ public class WHorizontalBar extends WAbstractBar {
 		BaseRenderer.drawTexturedQuad(matrices, provider, getX(), getY(), z, getWidth(), getHeight(), getForegroundTexture());
 
 		scissorArea.destroy();
-
-  		matrices.translate(0, 0, getZ() * -400f);
-		RenderSystem.translatef(0, 0, getZ() * -400f);
 	}
 }

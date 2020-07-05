@@ -24,12 +24,6 @@ public class WItem extends WAbstractWidget {
 			return;
 		}
 
-		RenderSystem.translatef(0, 0, getZ() * 400f);
-  		matrices.translate(0, 0, getZ() * 400f);
-
 		BaseRenderer.getExposedItemRenderer().renderInGui(matrices, provider, stack, getX(), getY(), getZ());
-
-  		matrices.translate(0, 0, getZ() * -400f);
-		RenderSystem.translatef(0, 0, getZ() * -400f);
 	}
 }

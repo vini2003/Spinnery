@@ -19,9 +19,6 @@ public class WTooltip extends WAbstractWidget implements WDrawableCollection, WM
 	public void draw(MatrixStack matrices, VertexConsumerProvider.Immediate provider) {
 		if (isHidden()) return;
 
-		RenderSystem.translatef(0, 0, getZ() * 400f);
-  		matrices.translate(0, 0, getZ() * 400f);
-
 		float x = position.getX();
 		float y = position.getY();
 		float z = position.getRelativeZ();
@@ -51,9 +48,6 @@ public class WTooltip extends WAbstractWidget implements WDrawableCollection, WM
 		for (WLayoutElement widget : getOrderedWidgets()) {
 			widget.draw(matrices, provider);
 		}
-
-  		matrices.translate(0, 0, getZ() * -400f);
-		RenderSystem.translatef(0, 0, getZ() * -400f);
 	}
 
 	@Override

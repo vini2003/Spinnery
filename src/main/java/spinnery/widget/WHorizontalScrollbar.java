@@ -23,14 +23,9 @@ public class WHorizontalScrollbar extends WAbstractWidget {
 			return;
 		}
 
-		RenderSystem.translatef(0, 0, getZ() * 400f);
-  		matrices.translate(0, 0, getZ() * 400f);
-
 		BaseRenderer.drawBeveledPanel(matrices, provider, getX(), getY(), getZ(), getWidth(), getHeight(), getStyle().asColor("scroll_line.top_left"), getStyle().asColor("scroll_line.background"), getStyle().asColor("scroll_line.bottom_right"));
-		drawScroller(matrices, provider);
 
-  		matrices.translate(0, 0, getZ() * -400f);
-		RenderSystem.translatef(0, 0, getZ() * -400f);
+		drawScroller(matrices, provider);
 	}
 
 	public void drawScroller(MatrixStack matrices, VertexConsumerProvider.Immediate provider) {

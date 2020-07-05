@@ -18,9 +18,6 @@ public class WHorizontalSlider extends WAbstractSlider {
 			return;
 		}
 
-		RenderSystem.translatef(0, 0, getZ() * 400f);
-  		matrices.translate(0, 0, getZ() * 400f);
-
 		float x = getX();
 		float y = getY();
 		float z = getZ();
@@ -41,29 +38,31 @@ public class WHorizontalSlider extends WAbstractSlider {
 		BaseRenderer.drawQuad(matrices, provider, x + (sX), y, z, 1, sY + 1, getStyle().asColor("bottom_right.background"));
 
 		Position innerAnchor = getInnerAnchor();
+
 		Size innerSize = getInnerSize();
+
 		float innerX = innerAnchor.getX();
 		float innerY = innerAnchor.getY();
 		float innerWidth = innerSize.getWidth();
 		float innerHeight = innerSize.getHeight();
 		float percentComplete = getPercentComplete();
 		float percentLeft = 1 - percentComplete;
+
 		BaseRenderer.drawQuad(matrices, provider, innerX, innerY, z, innerWidth * percentComplete, innerHeight,
 				getStyle().asColor("background.on"));
 		BaseRenderer.drawQuad(matrices, provider, innerX + innerWidth * percentComplete, innerY, z, innerWidth * percentLeft, innerHeight,
 				getStyle().asColor("background.off"));
 
 		Size knobSize = getKnobSize();
+
 		float knobWidth = knobSize.getWidth();
 		float knobHeight = knobSize.getHeight();
 		float knobX = (x + (innerWidth - knobWidth / 2f) * percentComplete);
 		float clampedX = Math.min(x + innerWidth - knobWidth / 2f, Math.max(x, knobX));
+
 		BaseRenderer.drawBeveledPanel(matrices, provider, clampedX, y - 1, z, knobWidth, knobHeight,
 				getStyle().asColor("top_left.foreground"), getStyle().asColor("foreground"),
 				getStyle().asColor("bottom_right.foreground"));
-
-  		matrices.translate(0, 0, getZ() * -400f);
-		RenderSystem.translatef(0, 0, getZ() * -400f);
 	}
 
 	@Override

@@ -67,8 +67,8 @@ public class WDropdown extends WAbstractWidget implements WDrawableCollection, W
 			return;
 		}
 
-		RenderSystem.translatef(0, 0, getZ() * 400f);
-  		matrices.translate(0, 0, getZ() * 400f);
+		//RenderSystem.translatef(0, 0, getZ() * 400f);
+  		//matrices.translate(0, 0, getZ() * 400f);
 
 		float x = getX();
 		float y = getY();
@@ -98,8 +98,8 @@ public class WDropdown extends WAbstractWidget implements WDrawableCollection, W
 			}
 		}
 
-  		matrices.translate(0, 0, getZ() * -400f);
-		RenderSystem.translatef(0, 0, getZ() * -400f);
+		//RenderSystem.translatef(0, 0, getZ() * -400f);
+  		//matrices.translate(0, 0, getZ() * -400f);
 	}
 
 	@Override

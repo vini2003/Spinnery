@@ -18,8 +18,6 @@ public class WStaticImage extends WAbstractWidget {
 			return;
 		}
 
-		RenderSystem.translatef(0, 0, getZ() * 400f);
-
 		float x = getX();
 		float y = getY();
 		float z = getZ();
@@ -28,8 +26,6 @@ public class WStaticImage extends WAbstractWidget {
 		float sY = getHeight();
 
 		BaseRenderer.drawTexturedQuad(matrices, provider, x, y, z, sX, sY, getTexture());
-
-		RenderSystem.translatef(0, 0, getZ() * -400f);
 	}
 
 	public Identifier getTexture() {

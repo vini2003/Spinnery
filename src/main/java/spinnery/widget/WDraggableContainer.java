@@ -133,8 +133,8 @@ public class WDraggableContainer extends WAbstractWidget implements WDrawableCol
 			return;
 		}
 
-		RenderSystem.translatef(0, 0, getZ() * 400f);
-  		matrices.translate(0, 0, getZ() * 400f);
+		//RenderSystem.translatef(0, 0, getZ() * 400f);
+  		//matrices.translate(0, 0, getZ() * 400f);
 
 		ScissorArea area = new ScissorArea(this);
 
@@ -144,8 +144,8 @@ public class WDraggableContainer extends WAbstractWidget implements WDrawableCol
 
 		area.destroy();
 
-  		matrices.translate(0, 0, getZ() * -400f);
-		RenderSystem.translatef(0, 0, getZ() * -400f);
+		//RenderSystem.translatef(0, 0, getZ() * -400f);
+  		//matrices.translate(0, 0, getZ() * -400f);
 	}
 
 	@Override
