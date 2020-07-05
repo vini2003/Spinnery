@@ -30,8 +30,8 @@ import static spinnery.common.utility.MouseUtilities.*;
 import static spinnery.widget.api.Action.*;
 
 public class WSlot extends WAbstractWidget {
-	private static final int Z_ITEM_OFFSET = 3;
-	private static final int Z_ITEM_INFORMATION_OFFSET = 4;
+	private static final int Z_ITEM_OFFSET = 100;
+	private static final int Z_ITEM_INFORMATION_OFFSET = 200;
 
 	public static final int LEFT = 0;
 	public static final int RIGHT = 1;
@@ -199,7 +199,7 @@ public class WSlot extends WAbstractWidget {
 		matrices.pop();
 
 		if (isFocused()) {
-			BaseRenderer.drawQuad(matrices, provider, x + 1, y + 1, z, sX - 2, sY - 2, getStyle().asColor("overlay"));
+			BaseRenderer.drawQuad(matrices, provider, x + 1, y + 1, z + Z_ITEM_INFORMATION_OFFSET + 1, sX - 2, sY - 2, getStyle().asColor("overlay"));
 		}
 	}
 

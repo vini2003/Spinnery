@@ -50,10 +50,8 @@ public class WTabToggle extends WAbstractToggle {
 		Item symbol = getSymbol();
 
 		if (symbol != null) {
-			RenderSystem.enableLighting();
 			BaseRenderer.getAdvancedItemRenderer().renderGuiItemIcon(matrices, provider, new ItemStack(symbol, 1), (int) x + 4, (int) y + 6, z);
 		}
-		RenderSystem.disableLighting();
 
 		if (label != null) {
 			TextRenderer.pass().shadow(isLabelShadowed()).text(getLabel()).at(x + 8 + (symbol != null ? 16 : 0), y + sY / 2 - 4.5, z)

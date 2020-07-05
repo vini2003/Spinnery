@@ -32,8 +32,6 @@ public class BaseRenderer {
 		consumer.vertex(matrices.peek().getModel(), x + sX, y, z).color(color.R, color.G, color.B, color.A).light(light).next();
 
 		matrices.pop();
-
-		provider.draw();
 	}
 
 	public static void drawGradientQuad(MatrixStack matrices, VertexConsumerProvider.Immediate provider, float startX, float startY, float endX, float endY, float z, Color colorStart, Color colorEnd) {
@@ -64,8 +62,6 @@ public class BaseRenderer {
 		if (!textured) RenderSystem.enableTexture();
 
 		matrices.pop();
-
-		provider.draw();
 	}
 
 	public static void drawPanel(MatrixStack matrices, VertexConsumerProvider.Immediate provider, float x, float y, float z, float sX, float sY, Color shadow, Color panel, Color hilight, Color outline) {
@@ -132,8 +128,6 @@ public class BaseRenderer {
 		RenderSystem.disableBlend();
 
 		matrices.pop();
-
-		provider.draw();
 	}
 
 	public static TextureManager getTextureManager() {

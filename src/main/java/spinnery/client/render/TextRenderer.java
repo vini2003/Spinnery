@@ -129,8 +129,6 @@ public class TextRenderer {
 			}
 
 			matrices.pop();
-
-			provider.draw();
 		}
 	}
 }
