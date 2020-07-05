@@ -4,6 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -11,6 +12,7 @@ import net.minecraft.client.util.Window;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import spinnery.client.render.BaseRenderer;
+import spinnery.client.screen.BaseContainerScreen;
 import spinnery.common.container.BaseContainer;
 import spinnery.common.registry.NetworkRegistry;
 import spinnery.common.utility.EventUtilities;
@@ -240,6 +242,14 @@ public class WInterface implements WDrawableCollection, WModifiableCollection, W
 	@Override
 	public void onLayoutChange() {
 		recalculateCache();
+
+		if (linkedContainer != null && FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
+			BaseContainerScreen<?> screen = (BaseContainerScreen<?>) MinecraftClient.getInstance().currentScreen;
+
+			if (screen != null) {
+				screen.setRequiresRecalculation(true);
+			}
+		}
 	}
 
 	@Override

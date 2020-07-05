@@ -10,69 +10,42 @@ import spinnery.widget.api.Color;
 import spinnery.widget.api.Position;
 
 public class TextRenderer {
-	private static ExposedTextRenderer textRenderer;
-
 	public static RenderPass pass() {
 		return new RenderPass();
 	}
 
 	public static int height() {
-		return height(Font.DEFAULT);
-	}
-
-	public static int height(Font font) {
-		return getTextRenderer(font).fontHeight;
-	}
-
-	public static ExposedTextRenderer getTextRenderer(Font font) {
-		if (textRenderer == null) {
-			textRenderer = new ExposedTextRenderer(((TextRendererAccessor) MinecraftClient.getInstance().textRenderer).spinnery_getStorageAccessor());
-		}
-
-		return textRenderer;
+		return BaseRenderer.getAdvancedTextRenderer().fontHeight;
 	}
 
 	public static int width(char character) {
-		return width(character, Font.DEFAULT);
-	}
-
-	public static int width(char character, Font font) {
-		return getTextRenderer(font).getWidth(String.valueOf(character));
+		return BaseRenderer.getAdvancedTextRenderer().getWidth(String.valueOf(character));
 	}
 
 	public static int width(String string) {
-		return width(string, Font.DEFAULT);
-	}
-
-	public static int width(String string, Font font) {
-		return getTextRenderer(font).getWidth(string);
-	}
-
-	public static int width(Text text, Font font) {
-		return width(text.getString(), font);
+		return BaseRenderer.getAdvancedTextRenderer().getWidth(string);
 	}
 
 	public static int width(Text text) {
-		return width(text.getString(), Font.DEFAULT);
-	}
-
-	public enum Font {
-		DEFAULT,
-		ENCHANTMENT,
+		return width(text.getString());
 	}
 
 	public static class RenderPass {
 		private String text;
 		private String shadowText;
-		private int x;
-		private int y;
-		private int z;
+
+		private float x;
+		private float y;
+		private float z;
+
 		private int color = 0xffffffff;
 		private int shadowColor = 0xff3e3e3e;
-		private double scale = 1.0;
+
+		private float scale = 1.0F;
+
 		private boolean shadow;
-		private Integer maxWidth;
-		private Font font = Font.DEFAULT;
+
+		private int maxWidth = Integer.MIN_VALUE;
 
 		public RenderPass text(String text) {
 			this.text = text;
@@ -97,17 +70,17 @@ public class TextRenderer {
 		}
 
 		public RenderPass at(Number x, Number y, Number z) {
-			this.x = x.intValue();
-			this.y = y.intValue();
-			this.z = z.intValue();
+			this.x = x.floatValue();
+			this.y = y.floatValue();
+			this.z = z.floatValue();
 			return this;
 		}
 
-		public RenderPass size(int size) {
-			return scale(size / 9D);
+		public RenderPass size(float size) {
+			return scale(size / 9f);
 		}
 
-		public RenderPass scale(double scale) {
+		public RenderPass scale(float scale) {
 			this.scale = scale;
 			return this;
 		}
@@ -135,27 +108,24 @@ public class TextRenderer {
 			return this;
 		}
 
-		public RenderPass maxWidth(Integer maxWidth) {
+		public RenderPass maxWidth(int maxWidth) {
 			this.maxWidth = maxWidth;
-			return this;
-		}
-
-		public RenderPass font(Font font) {
-			this.font = font;
 			return this;
 		}
 
 		public void render(MatrixStack matrices, VertexConsumerProvider.Immediate provider) {
 			matrices.push();
 
-			if (maxWidth != null) {
+			matrices.scale(scale, scale, 0);
+
+			if (maxWidth != Integer.MIN_VALUE) {
 				if (shadow)
-					getTextRenderer(font).drawTrimmed(matrices, StringRenderable.plain(shadowText), x + 1, y + 1, z, maxWidth, shadowColor);
-				getTextRenderer(font).drawTrimmed(matrices, StringRenderable.plain(text), x, y, z, maxWidth, color);
+					BaseRenderer.getAdvancedTextRenderer().drawTrimmed(matrices, StringRenderable.plain(shadowText), x + 1, y + 1, z, maxWidth, shadowColor);
+				BaseRenderer.getAdvancedTextRenderer().drawTrimmed(matrices, StringRenderable.plain(text), x, y, z, maxWidth, color);
 			} else {
 				if (shadow)
-					getTextRenderer(font).draw(matrices, StringRenderable.plain(shadowText), x + 1, y + 1, z, shadowColor);
-				getTextRenderer(font).draw(matrices, StringRenderable.plain(text), x, y, z, color);
+					BaseRenderer.getAdvancedTextRenderer().draw(matrices, StringRenderable.plain(shadowText), x + 1, y + 1, z, shadowColor);
+				BaseRenderer.getAdvancedTextRenderer().draw(matrices, StringRenderable.plain(text), x, y, z, color);
 			}
 
 			matrices.pop();

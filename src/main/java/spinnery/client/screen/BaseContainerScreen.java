@@ -19,13 +19,20 @@ import spinnery.widget.WSlot;
 import spinnery.widget.api.WContextLock;
 import spinnery.widget.api.WInterfaceProvider;
 
+import javax.print.DocFlavor;
+
 public class BaseContainerScreen<T extends BaseContainer> extends HandledScreen<T> implements WInterfaceProvider {
 	protected final WInterface clientInterface;
 	protected float tooltipX = 0;
 	protected float tooltipY = 0;
 	protected WSlot drawSlot;
 
-	public static boolean shouldUpdate = false;
+	protected int minX = Integer.MAX_VALUE;
+	protected int minY = Integer.MAX_VALUE;
+	protected int maxX = Integer.MIN_VALUE;
+	protected int maxY = Integer.MIN_VALUE;
+
+	protected boolean requiresRecalculation = true;
 
 	/**
 	 * Instantiates a BaseContainerScreen.
@@ -70,8 +77,8 @@ public class BaseContainerScreen<T extends BaseContainer> extends HandledScreen<
 
 		matrices.push();
 
-		BaseRenderer.getExposedItemRenderer().renderInGui(matrices, provider, stackA, mouseX - 8, mouseY - 8, Integer.MAX_VALUE);
-		BaseRenderer.getExposedItemRenderer().renderGuiItemOverlay(matrices, provider, BaseRenderer.getTextRenderer(), stackA, (mouseX - 8), mouseY - 8, Integer.MAX_VALUE);
+		BaseRenderer.getAdvancedItemRenderer().renderInGui(matrices, provider, stackA, mouseX - 8, mouseY - 8, Integer.MAX_VALUE);
+		BaseRenderer.getAdvancedItemRenderer().renderGuiItemOverlay(matrices, provider, BaseRenderer.getDefaultTextRenderer(), stackA, (mouseX - 8), mouseY - 8, Integer.MAX_VALUE);
 
 		matrices.pop();
 
@@ -358,28 +365,8 @@ public class BaseContainerScreen<T extends BaseContainer> extends HandledScreen<
 	@Override
 	public void resize(MinecraftClient client, int width, int height) {
 		getInterface().onAlign();
+
 		super.resize(client, width, height);
-
-		int minX = Integer.MAX_VALUE;
-		int minY = Integer.MAX_VALUE;
-		int maxX = Integer.MIN_VALUE;
-		int maxY = Integer.MIN_VALUE;
-
-		for (WAbstractWidget widget : getInterface().getAllWidgets()) {
-			if (widget.getX() < minX) minX = (int) widget.getX();
-			if (widget.getY() < minY) minY = (int) widget.getY();
-			if (widget.getX() + widget.getWidth() > maxX) maxX = (int) (widget.getX() + widget.getWidth());
-			if (widget.getY() + widget.getHeight() > maxY) maxY = (int) (widget.getY() + widget.getHeight());
-		}
-
-		super.x = minX;
-		super.y = minY;
-		super.width = minX;
-		super.height = minY;
-		super.backgroundWidth = maxX;
-		super.backgroundHeight = maxY;
-
-		shouldUpdate = true;
 	}
 
 	/**
@@ -403,27 +390,42 @@ public class BaseContainerScreen<T extends BaseContainer> extends HandledScreen<
 		}
 	}
 
-	public int getX() {
-		return super.x;
+	@Override
+	protected void init() {
+		super.init();
+
+		tryRecalculatingDimensions();
 	}
 
-	public int getY() {
-		return super.y;
+	public void tryRecalculatingDimensions() {
+		if (requiresRecalculation) {
+			for (WAbstractWidget widget : getInterface().getAllWidgets()) {
+				if (widget.getX() < minX) minX = (int) widget.getX();
+				if (widget.getY() < minY) minY = (int) widget.getY();
+				if (widget.getX() + widget.getWidth() > maxX) maxX = (int) (widget.getX() + widget.getWidth());
+				if (widget.getY() + widget.getHeight() > maxY) maxY = (int) (widget.getY() + widget.getHeight());
+			}
+			requiresRecalculation = false;
+		}
+	}
+
+	public void setRequiresRecalculation(boolean requiresRecalculation) {
+		this.requiresRecalculation = requiresRecalculation;
 	}
 
 	public int getMinX() {
-		return super.width;
+		return minX;
 	}
 
 	public int getMinY() {
-		return super.height;
+		return minY;
 	}
 
 	public int getMaxX() {
-		return super.backgroundWidth;
+		return maxX;
 	}
 
 	public int getMaxY() {
-		return super.backgroundHeight;
+		return maxY;
 	}
 }

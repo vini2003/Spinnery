@@ -46,7 +46,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
-public class ExposedItemRenderer implements SynchronousResourceReloadListener {
+public class AdvancedItemRenderer implements SynchronousResourceReloadListener {
     public static final Identifier ENCHANTED_ITEM_GLINT = new Identifier("textures/misc/enchanted_item_glint.png");
 
     private static Set<Item> WITHOUT_MODELS;
@@ -55,7 +55,7 @@ public class ExposedItemRenderer implements SynchronousResourceReloadListener {
     private TextureManager textureManager;
     private ItemColors colorMap;
 
-    public ExposedItemRenderer() {
+    public AdvancedItemRenderer() {
     }
 
     public static void setWithoutModels(Set<Item> withoutModels) {

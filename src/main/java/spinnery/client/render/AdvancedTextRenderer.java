@@ -21,24 +21,29 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.Language;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Matrix4f;
+import spinnery.client.render.layer.SpinneryLayers;
 
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import java.util.function.Function;
 
-public class ExposedTextRenderer {
+public class AdvancedTextRenderer {
     private static final Vector3f FORWARD_SHIFT = new Vector3f(0.0F, 0.0F, 0.03F);
     public final int fontHeight = 9;
     public final Random random = new Random();
-    private final Function<Identifier, FontStorage> fontStorageAccessor;
-    private final TextHandler handler;
+    private Function<Identifier, FontStorage> fontStorageAccessor;
+    private TextHandler handler;
 
-    public ExposedTextRenderer(Function<Identifier, FontStorage> fontStorageAccessor) {
+    public AdvancedTextRenderer() {
+    }
+
+    public void setFontStorageAccessor(Function<Identifier, FontStorage> fontStorageAccessor) {
         this.fontStorageAccessor = fontStorageAccessor;
-        this.handler = new TextHandler((i, style) -> {
-            return this.getFontStorage(style.getFont()).getGlyph(i).getAdvance(style.isBold());
-        });
+    }
+
+    public void setHandler(TextHandler handler) {
+        this.handler = handler;
     }
 
     private FontStorage getFontStorage(Identifier id) {
@@ -310,20 +315,19 @@ public class ExposedTextRenderer {
 
         public float drawLayer(int underlineColor, float x) {
             if (underlineColor != 0) {
-                float f = (float)(underlineColor >> 24 & 255) / 255.0F;
-                float g = (float)(underlineColor >> 16 & 255) / 255.0F;
-                float h = (float)(underlineColor >> 8 & 255) / 255.0F;
-                float i = (float)(underlineColor & 255) / 255.0F;
-                this.addRectangle(new GlyphRenderer.Rectangle(x - 1.0F, this.y + 9.0F, this.x + 1.0F, this.y - 1.0F, 0.01F, g, h, i, f));
+                float a = (underlineColor >> 24 & 255) / 255.0F;
+                float r = (underlineColor >> 16 & 255) / 255.0F;
+                float g = (underlineColor >> 8 & 255) / 255.0F;
+                float b = (underlineColor & 255) / 255.0F;
+
+                this.addRectangle(new GlyphRenderer.Rectangle(x - 1.0F, this.y + 9.0F, this.x + 1.0F, this.y - 1.0F, 0.01F, r, g, b, a));
             }
 
             if (this.rectangles != null) {
                 GlyphRenderer glyphRenderer = getFontStorage(Style.DEFAULT_FONT_ID).getRectangleRenderer();
-                VertexConsumer vertexConsumer = this.vertexConsumers.getBuffer(glyphRenderer.method_24045(this.seeThrough));
-                Iterator var9 = this.rectangles.iterator();
+                VertexConsumer vertexConsumer = this.vertexConsumers.getBuffer(SpinneryLayers.getInterface());
 
-                while(var9.hasNext()) {
-                    GlyphRenderer.Rectangle rectangle = (GlyphRenderer.Rectangle)var9.next();
+                for (GlyphRenderer.Rectangle rectangle : rectangles) {
                     glyphRenderer.drawRectangle(rectangle, this.matrix, vertexConsumer, this.light);
                 }
             }

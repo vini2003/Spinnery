@@ -38,7 +38,7 @@ public abstract class WAbstractTextEditor extends WAbstractWidget implements WPa
 	protected final Pair<Cursor, Cursor> selection = new Pair<>(new Cursor(-1, -1), new Cursor(-1, -1));
 	protected final Cursor mouseClick = new Cursor(0, 0);
 	protected String text = "";
-	protected double scale = 1.0;
+	protected float scale = 1.0F;
 	protected boolean editable = true;
 	protected boolean active = false;
 	protected float xOffset = 0;
@@ -713,11 +713,11 @@ public abstract class WAbstractTextEditor extends WAbstractWidget implements WPa
 		return lines.get(index).length();
 	}
 
-	public double getScale() {
+	public float getScale() {
 		return scale;
 	}
 
-	public <W extends WAbstractTextEditor> W setScale(double scale) {
+	public <W extends WAbstractTextEditor> W setScale(float scale) {
 		this.scale = scale;
 		return (W) this;
 	}

@@ -12,33 +12,25 @@ import spinnery.client.render.TextRenderer;
 @Environment(EnvType.CLIENT)
 public class WStaticText extends WAbstractWidget {
 	protected Text text = new LiteralText("");
-	protected double scale = 1.0;
-	protected TextRenderer.Font font = TextRenderer.Font.DEFAULT;
-	protected Integer maxWidth = null;
 
-	public Integer getMaxWidth() {
+	protected float scale = 1.0F;
+
+	protected int maxWidth = Integer.MIN_VALUE;
+
+	public int getMaxWidth() {
 		return maxWidth;
 	}
 
-	public <W extends WStaticText> W setMaxWidth(Integer maxWidth) {
+	public <W extends WStaticText> W setMaxWidth(int maxWidth) {
 		this.maxWidth = maxWidth;
 		return (W) this;
 	}
 
-	public TextRenderer.Font getFont() {
-		return font;
-	}
-
-	public <W extends WStaticText> W setFont(TextRenderer.Font font) {
-		this.font = font;
-		return (W) this;
-	}
-
-	public double getScale() {
+	public float getScale() {
 		return scale;
 	}
 
-	public WStaticText setScale(double scale) {
+	public WStaticText setScale(float scale) {
 		this.scale = scale;
 		return this;
 	}
@@ -53,14 +45,14 @@ public class WStaticText extends WAbstractWidget {
 		float y = getY();
 		float z = getZ();
 
-		TextRenderer.pass().text(getText()).font(font).at(x, y, z).scale(scale).maxWidth(maxWidth)
+		TextRenderer.pass().text(getText()).at(x, y, z).scale(scale).maxWidth(maxWidth)
 				.shadow(getStyle().asBoolean("shadow")).shadowColor(getStyle().asColor("shadowColor"))
 				.color(getStyle().asColor("text")).render(matrices, provider);
 	}
 
 	@Override
 	public float getHeight() {
-		return TextRenderer.height(font);
+		return TextRenderer.height();
 	}
 
 	@Override

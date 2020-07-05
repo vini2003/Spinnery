@@ -51,7 +51,7 @@ public class WTabToggle extends WAbstractToggle {
 
 		if (symbol != null) {
 			RenderSystem.enableLighting();
-			BaseRenderer.getExposedItemRenderer().renderGuiItemIcon(matrices, provider, new ItemStack(symbol, 1), (int) x + 4, (int) y + 6, z);
+			BaseRenderer.getAdvancedItemRenderer().renderGuiItemIcon(matrices, provider, new ItemStack(symbol, 1), (int) x + 4, (int) y + 6, z);
 		}
 		RenderSystem.disableLighting();
 

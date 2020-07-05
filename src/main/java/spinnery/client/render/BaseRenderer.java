@@ -8,17 +8,14 @@ import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.texture.TextureManager;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.Pair;
-import org.lwjgl.opengl.GL11;
 import spinnery.access.ItemRendererAccessor;
+import spinnery.access.TextRendererAccessor;
 import spinnery.client.render.layer.SpinneryLayers;
 import spinnery.widget.api.Color;
-import spinnery.widget.api.WLayoutElement;
-
-import java.util.Stack;
 
 public class BaseRenderer {
-	private static ExposedItemRenderer exposedItemRenderer;
+	private static AdvancedItemRenderer advancedItemRenderer = new AdvancedItemRenderer();
+	private static AdvancedTextRenderer advancedTextRenderer = new AdvancedTextRenderer();
 
 	public static void drawQuad(MatrixStack matrices, VertexConsumerProvider.Immediate provider, float x, float y, float z, float sX, float sY, Color color) {
 		drawQuad(matrices, provider, x, y, z, sX, sY, 0x00f000f0, color);
@@ -147,22 +144,27 @@ public class BaseRenderer {
 		return MinecraftClient.getInstance().getItemRenderer();
 	}
 
-	public static ExposedItemRenderer getExposedItemRenderer() {
-		ItemRenderer defaultRenderer = getDefaultItemRenderer();
-
-		if (exposedItemRenderer == null) {
-			exposedItemRenderer = new ExposedItemRenderer();
-		}
-
-		ExposedItemRenderer.setWithoutModels(((ItemRendererAccessor) defaultRenderer).spinnery_getWithoutModels());
-		exposedItemRenderer.setColorMap(((ItemRendererAccessor) defaultRenderer).spinner_getColorMap());
-		exposedItemRenderer.setModels(((ItemRendererAccessor) defaultRenderer).spinnery_getModels());
-		exposedItemRenderer.setTextureManager(((ItemRendererAccessor) defaultRenderer).spinnery_getTextureManager());
-
-		return exposedItemRenderer;
+	public static TextRenderer getDefaultTextRenderer() {
+		return MinecraftClient.getInstance().textRenderer;
 	}
 
-	public static TextRenderer getTextRenderer() {
-		return MinecraftClient.getInstance().textRenderer;
+	public static AdvancedItemRenderer getAdvancedItemRenderer() {
+		ItemRenderer defaultRenderer = getDefaultItemRenderer();
+
+		AdvancedItemRenderer.setWithoutModels(((ItemRendererAccessor) defaultRenderer).spinnery_getWithoutModels());
+		advancedItemRenderer.setColorMap(((ItemRendererAccessor) defaultRenderer).spinner_getColorMap());
+		advancedItemRenderer.setModels(((ItemRendererAccessor) defaultRenderer).spinnery_getModels());
+		advancedItemRenderer.setTextureManager(((ItemRendererAccessor) defaultRenderer).spinnery_getTextureManager());
+
+		return advancedItemRenderer;
+	}
+
+	public static AdvancedTextRenderer getAdvancedTextRenderer() {
+		TextRenderer defaultRenderer = getDefaultTextRenderer();
+
+		advancedTextRenderer.setFontStorageAccessor(((TextRendererAccessor) defaultRenderer).spinnery_getStorageAccessor());
+		advancedTextRenderer.setHandler(((TextRendererAccessor) defaultRenderer).spinnery_getTextHandler());
+
+		return advancedTextRenderer;
 	}
 }
