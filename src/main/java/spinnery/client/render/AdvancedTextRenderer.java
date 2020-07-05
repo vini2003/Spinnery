@@ -283,7 +283,6 @@ public class AdvancedTextRenderer {
 
             boolean isBold = style.isBold();
 
-
             TextColor textColor = style.getColor();
 
             float red;
@@ -343,7 +342,7 @@ public class AdvancedTextRenderer {
             if (this.rectangles != null) {
                 GlyphRenderer glyphRenderer = getFontStorage(Style.DEFAULT_FONT_ID).getRectangleRenderer();
 
-                VertexConsumer consumer = this.provider.getBuffer(SpinneryLayers.getInterface());
+                VertexConsumer consumer = this.provider.getBuffer(glyphRenderer.method_24045(this.seeThrough));
 
                 for (GlyphRenderer.Rectangle rectangle : rectangles) {
                     glyphRenderer.drawRectangle(rectangle, this.matrices.peek().getModel(), consumer, this.light);
