@@ -30,19 +30,27 @@ import static spinnery.common.utility.MouseUtilities.*;
 import static spinnery.widget.api.Action.*;
 
 public class WSlot extends WAbstractWidget {
+	private static final int Z_ITEM_OFFSET = 3;
+	private static final int Z_ITEM_INFORMATION_OFFSET = 4;
+
 	public static final int LEFT = 0;
 	public static final int RIGHT = 1;
 	public static final int MIDDLE = 2;
+
 	protected int slotNumber;
 	protected int inventoryNumber;
 	protected int maximumCount = 0;
+
 	protected boolean overrideMaximumCount = false;
 	protected boolean skipRelease = false;
 	protected boolean isLocked = false;
 	protected boolean isWhitelist = false;
+
 	protected Identifier previewTexture;
+
 	protected List<Item> acceptItems = new ArrayList<>();
 	protected List<Item> denyItems = new ArrayList<>();
+
 	protected List<Tag<Item>> acceptTags = new ArrayList<>();
 	protected List<Tag<Item>> denyTags = new ArrayList<>();
 
@@ -181,12 +189,12 @@ public class WSlot extends WAbstractWidget {
 
 		matrices.push();
 
-		BaseRenderer.getAdvancedItemRenderer().renderInGui(matrices, provider, stackA, (int) ((1 + x) + ((sX - 18) / 2)), (int) ((1 + y) + ((sY - 18) / 2)), z + 3);
+		BaseRenderer.getAdvancedItemRenderer().renderInGui(matrices, provider, stackA, (int) ((1 + x) + ((sX - 18) / 2)), (int) ((1 + y) + ((sY - 18) / 2)), z + Z_ITEM_OFFSET);
 
 		matrices.pop();
 		matrices.push();
 
-		BaseRenderer.getAdvancedItemRenderer().renderGuiItemOverlay(matrices, provider, MinecraftClient.getInstance().textRenderer, stackA, x, y, z + 16, stackA.getCount() == 1 ? "" : withSuffix(stackA.getCount()));
+		BaseRenderer.getAdvancedItemRenderer().renderGuiItemOverlay(matrices, provider, MinecraftClient.getInstance().textRenderer, stackA, x, y, z + Z_ITEM_INFORMATION_OFFSET, stackA.getCount() == 1 ? "" : withSuffix(stackA.getCount()));
 
 		matrices.pop();
 
@@ -325,6 +333,12 @@ public class WSlot extends WAbstractWidget {
 	}
 
 	public <W extends WSlot> W setSlotNumber(int slotNumber) {
+		this.slotNumber = slotNumber;
+		return (W) this;
+	}
+
+	public <W extends WSlot> W setNumber(int inventoryNumber, int slotNumber) {
+		this.inventoryNumber = inventoryNumber;
 		this.slotNumber = slotNumber;
 		return (W) this;
 	}

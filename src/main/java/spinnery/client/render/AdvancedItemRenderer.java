@@ -234,9 +234,9 @@ public class AdvancedItemRenderer implements SynchronousResourceReloadListener {
         RenderSystem.blendFunc(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE_MINUS_SRC_ALPHA);
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
-        boolean bl = !model.isSideLit();
+        boolean isSideNotLit = !model.isSideLit();
 
-        if (bl) {
+        if (isSideNotLit) {
             DiffuseLighting.disableGuiDepthLighting();
         }
 
@@ -245,7 +245,8 @@ public class AdvancedItemRenderer implements SynchronousResourceReloadListener {
         provider.draw();
 
         RenderSystem.enableDepthTest();
-        if (bl) {
+
+        if (isSideNotLit) {
             DiffuseLighting.enableGuiDepthLighting();
         }
 

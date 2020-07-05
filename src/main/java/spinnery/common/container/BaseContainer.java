@@ -459,7 +459,7 @@ public class BaseContainer extends ScreenHandler {
 	@Deprecated
 	@Override
 	public ItemStack onSlotClick(int identifier, int button, SlotActionType action, PlayerEntity player) {
-		throw new UnsupportedOperationException(ScreenHandler.class.getName() + "::onSlotClick cannot happen in a Spinnery " + BaseContainer.class.getName() + "!");
+		return ItemStack.EMPTY;
 	}
 
 	/**

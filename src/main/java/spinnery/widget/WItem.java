@@ -6,7 +6,9 @@ import net.minecraft.item.ItemStack;
 import spinnery.client.render.BaseRenderer;
 
 public class WItem extends WAbstractWidget {
-	ItemStack stack = ItemStack.EMPTY;
+	private static final int Z_ITEM_OFFSET = 3;
+
+	protected ItemStack stack = ItemStack.EMPTY;
 
 	public ItemStack getStack() {
 		return stack;
@@ -23,6 +25,6 @@ public class WItem extends WAbstractWidget {
 			return;
 		}
 
-		BaseRenderer.getAdvancedItemRenderer().renderInGui(matrices, provider, stack, getX(), getY(), getZ());
+		BaseRenderer.getAdvancedItemRenderer().renderInGui(matrices, provider, stack, getX(), getY(), getZ() + Z_ITEM_OFFSET);
 	}
 }
