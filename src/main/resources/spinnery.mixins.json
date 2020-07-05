@@ -2,7 +2,7 @@
   "required": true,
   "package": "spinnery.mixin",
   "compatibilityLevel": "JAVA_8",
-  "mixins": ["ItemRendererMixin", "ItemStackMixin", "TextRendererMixin"],
+  "mixins": ["GlyphRendererMixin", "ItemRendererMixin", "ItemStackMixin", "TextRendererMixin"],
   "client": [
 	"InGameHudMixin"
   ],

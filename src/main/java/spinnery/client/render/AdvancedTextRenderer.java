@@ -109,9 +109,6 @@ public class AdvancedTextRenderer {
             text = this.mirror(text);
         }
 
-        x /= 2;
-        y /= 2;
-
         color = tweakTransparency(color);
 
         matrices.push();
@@ -121,21 +118,18 @@ public class AdvancedTextRenderer {
         Matrix4f matrix4f = matrices.peek().getModel().copy();
 
         if (shadow) {
-            this.drawLayer(matrices, provider, text, x, y, color, true, seeThrough, backgroundColor, light);
+            this.drawLayer(matrices, provider, text, x, y, z, color, true, seeThrough, backgroundColor, light);
             matrix4f.addToLastColumn(FORWARD_SHIFT);
         }
 
-        x = this.drawLayer(matrices, provider, text, x, y, color, false, seeThrough, backgroundColor, light);
+        x = this.drawLayer(matrices, provider, text, x, y, z, color, false, seeThrough, backgroundColor, light);
 
         matrices.pop();
 
-        return (int)x + (shadow ? 1 : 0);
+        return (int) x + (shadow ? 1 : 0);
     }
 
     private int drawInternal(MatrixStack matrices, VertexConsumerProvider provider, StringRenderable text, float x, float y, float z, int color, boolean shadow, boolean seeThrough, int backgroundColor, int light) {
-        x /= 2;
-        y /= 2;
-
         matrices.push();
 
         matrices.translate(x, y, z);
@@ -143,34 +137,34 @@ public class AdvancedTextRenderer {
         color = tweakTransparency(color);
 
         if (shadow) {
-            this.drawLayer(matrices, provider, text, x, y, color, true, seeThrough, backgroundColor, light);
+            this.drawLayer(matrices, provider, text, x, y, z, color, true, seeThrough, backgroundColor, light);
             matrices.peek().getModel().addToLastColumn(FORWARD_SHIFT);
         }
 
-        x = this.drawLayer(matrices, provider, text, x, y, color, false, seeThrough, backgroundColor, light);
+        x = this.drawLayer(matrices, provider, text, x, y, z, color, false, seeThrough, backgroundColor, light);
 
         matrices.pop();
 
         return (int) x + (shadow ? 1 : 0);
     }
 
-    private float drawLayer(MatrixStack matrices, VertexConsumerProvider provider, String text, float x, float y, int color, boolean shadow, boolean seeThrough, int underlineColor, int light) {
-        ShadowDrawer shadowDrawer = new ShadowDrawer(matrices, provider, x, y, color, shadow, seeThrough, light);
+    private float drawLayer(MatrixStack matrices, VertexConsumerProvider provider, String text, float x, float y, float z, int color, boolean shadow, boolean seeThrough, int underlineColor, int light) {
+        ShadowDrawer shadowDrawer = new ShadowDrawer(matrices, provider, x, y, z, color, shadow, seeThrough, light);
         TextVisitFactory.visitFormatted(text, Style.EMPTY, shadowDrawer);
         return shadowDrawer.drawLayer(underlineColor, x);
     }
 
-    private float drawLayer(MatrixStack matrices, VertexConsumerProvider provider, StringRenderable text, float x, float y, int color, boolean shadow, boolean seeThrough, int underlineColor, int light) {
-        ShadowDrawer shadowDrawer = new ShadowDrawer(matrices, provider, x, y, color, shadow, seeThrough, light);
+    private float drawLayer(MatrixStack matrices, VertexConsumerProvider provider, StringRenderable text, float x, float y, float z, int color, boolean shadow, boolean seeThrough, int underlineColor, int light) {
+        ShadowDrawer shadowDrawer = new ShadowDrawer(matrices, provider, x, y, z, color, shadow, seeThrough, light);
         TextVisitFactory.visitFormatted(text, Style.EMPTY, shadowDrawer);
         return shadowDrawer.drawLayer(underlineColor, x);
     }
 
-    private void drawGlyph(GlyphRenderer glyphRenderer, boolean bold, boolean italic, float weight, float x, float y, Matrix4f matrix, VertexConsumer vertexConsumer, float red, float green, float blue, float alpha, int light) {
-        glyphRenderer.draw(italic, x, y, matrix, vertexConsumer, red, green, blue, alpha, light);
+    private void drawGlyph(MatrixStack matrices, VertexConsumer consumer, AdvancedGlyphRenderer glyphRenderer, boolean bold, boolean italic, float weight, float x, float y, float z, float red, float green, float blue, float alpha, int light) {
+        glyphRenderer.draw(matrices, consumer, x, y, z, red, green, blue, alpha, light, italic);
 
         if (bold) {
-            glyphRenderer.draw(italic, x + weight, y, matrix, vertexConsumer, red, green, blue, alpha, light);
+            glyphRenderer.draw(matrices, consumer, x + weight, y, z, red, green, blue, alpha, light, italic);
         }
     }
 
@@ -240,10 +234,11 @@ public class AdvancedTextRenderer {
 
         private float x;
         private float y;
+        private float z;
 
-        private List<GlyphRenderer.Rectangle> rectangles;
+        private List<AdvancedGlyphRenderer.Rectangle> rectangles;
 
-        private void addRectangle(GlyphRenderer.Rectangle rectangle) {
+        private void addRectangle(AdvancedGlyphRenderer.Rectangle rectangle) {
             if (this.rectangles == null) {
                 this.rectangles = Lists.newArrayList();
             }
@@ -251,7 +246,7 @@ public class AdvancedTextRenderer {
             this.rectangles.add(rectangle);
         }
 
-        public ShadowDrawer(MatrixStack matrices, VertexConsumerProvider provider, float x, float y, int color, boolean shadow, boolean seeThrough, int light) {
+        public ShadowDrawer(MatrixStack matrices, VertexConsumerProvider provider, float x, float y, float z, int color, boolean shadow, boolean seeThrough, int light) {
             this.provider = provider;
 
             this.matrices = matrices;
@@ -270,6 +265,7 @@ public class AdvancedTextRenderer {
 
             this.x = x;
             this.y = y;
+            this.z = z;
 
             this.rectangles = new ArrayList<>();
         }
@@ -279,7 +275,7 @@ public class AdvancedTextRenderer {
 
             Glyph glyph = fontStorage.getGlyph(code);
 
-            GlyphRenderer glyphRenderer = style.isObfuscated() && code != 32 ? fontStorage.getObfuscatedGlyphRenderer(glyph) : fontStorage.getGlyphRenderer(code);
+            AdvancedGlyphRenderer glyphRenderer = AdvancedGlyphRenderer.of((style.isObfuscated() && code != 32 ? fontStorage.getObfuscatedGlyphRenderer(glyph) : fontStorage.getGlyphRenderer(code)));
 
             boolean isBold = style.isBold();
 
@@ -305,24 +301,22 @@ public class AdvancedTextRenderer {
             float shadowOffset;
             float boldOffset;
 
-            if (!(glyphRenderer instanceof EmptyGlyphRenderer)) {
-                boldOffset = isBold ? glyph.getBoldOffset() : 0.0F;
-                shadowOffset = this.shadow ? glyph.getShadowOffset() : 0.0F;
+            boldOffset = isBold ? glyph.getBoldOffset() : 0.0F;
+            shadowOffset = this.shadow ? glyph.getShadowOffset() : 0.0F;
 
-                VertexConsumer consumer = this.provider.getBuffer(glyphRenderer.method_24045(this.seeThrough));
+            VertexConsumer consumer = this.provider.getBuffer(glyphRenderer.getLayer(this.seeThrough));
 
-                drawGlyph(glyphRenderer, isBold, style.isItalic(), boldOffset, this.x + shadowOffset, this.y + shadowOffset, this.matrices.peek().getModel(), consumer, red, green, blue, alpha, this.light);
-            }
+            drawGlyph(matrices, consumer, glyphRenderer, isBold, style.isItalic(), boldOffset, this.x + shadowOffset, this.y + shadowOffset, this.z, red, green, blue, alpha, this.light);
 
             boldOffset = glyph.getAdvance(isBold);
             shadowOffset = this.shadow ? 1.0F : 0.0F;
 
             if (style.isStrikethrough()) {
-                this.addRectangle(new GlyphRenderer.Rectangle(this.x + shadowOffset - 1.0F, this.y + shadowOffset + 4.5F, this.x + shadowOffset + boldOffset, this.y + shadowOffset + 4.5F - 1.0F, 0.01F, red, green, blue, alpha));
+                this.addRectangle(new AdvancedGlyphRenderer.Rectangle(this.x + shadowOffset - 1.0F, this.y + shadowOffset + 4.5F, this.x + shadowOffset + boldOffset, this.y + shadowOffset + 4.5F - 1.0F, this.z, red, green, blue, alpha));
             }
 
             if (style.isUnderlined()) {
-                this.addRectangle(new GlyphRenderer.Rectangle(this.x + shadowOffset - 1.0F, this.y + shadowOffset + 9.0F, this.x + shadowOffset + boldOffset, this.y + shadowOffset + 9.0F - 1.0F, 0.01F, red, green, blue, alpha));
+                this.addRectangle(new AdvancedGlyphRenderer.Rectangle(this.x + shadowOffset - 1.0F, this.y + shadowOffset + 9.0F, this.x + shadowOffset + boldOffset, this.y + shadowOffset + 9.0F - 1.0F, this.z, red, green, blue, alpha));
             }
 
             this.x += boldOffset;
@@ -336,16 +330,16 @@ public class AdvancedTextRenderer {
                 float g = (underlineColor >> 8 & 255) / 255.0F;
                 float b = (underlineColor & 255) / 255.0F;
 
-                this.addRectangle(new GlyphRenderer.Rectangle(x - 1.0F, this.y + 9.0F, this.x + 1.0F, this.y - 1.0F, 0.01F, r, g, b, a));
+                this.addRectangle(new AdvancedGlyphRenderer.Rectangle(x - 1.0F, this.y + 9.0F, this.x + 1.0F, this.y - 1.0F, 0.01F, r, g, b, a));
             }
 
             if (this.rectangles != null) {
-                GlyphRenderer glyphRenderer = getFontStorage(Style.DEFAULT_FONT_ID).getRectangleRenderer();
+                AdvancedGlyphRenderer glyphRenderer = AdvancedGlyphRenderer.of(getFontStorage(Style.DEFAULT_FONT_ID).getRectangleRenderer());
 
                 VertexConsumer consumer = this.provider.getBuffer(glyphRenderer.method_24045(this.seeThrough));
 
-                for (GlyphRenderer.Rectangle rectangle : rectangles) {
-                    glyphRenderer.drawRectangle(rectangle, this.matrices.peek().getModel(), consumer, this.light);
+                for (AdvancedGlyphRenderer.Rectangle rectangle : rectangles) {
+                    glyphRenderer.drawRectangle(matrices, consumer, rectangle, this.light);
                 }
             }
 
