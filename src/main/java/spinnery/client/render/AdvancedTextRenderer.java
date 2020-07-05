@@ -50,53 +50,53 @@ public class AdvancedTextRenderer {
         return this.fontStorageAccessor.apply(id);
     }
 
-    public int drawWithShadow(MatrixStack matrices, VertexConsumerProvider.Immediate provider, String text, float x, float y, float z, int color) {
+    public int drawWithShadow(MatrixStack matrices, VertexConsumerProvider provider, String text, float x, float y, float z, int color) {
         return this.draw(matrices, provider, text, x, y, z, color, true, this.isRightToLeft());
     }
 
-    public int drawWithShadow(MatrixStack matrices, VertexConsumerProvider.Immediate provider, String text, float x, float y, float z, int color, boolean rightToLeft) {
+    public int drawWithShadow(MatrixStack matrices, VertexConsumerProvider provider, String text, float x, float y, float z, int color, boolean rightToLeft) {
         RenderSystem.enableAlphaTest();
         return this.draw(matrices, provider, text, x, y, z, color, true, rightToLeft);
     }
 
-    public int drawWithShadow(MatrixStack matrices, VertexConsumerProvider.Immediate provider, StringRenderable text, float x, float y, float z, int color) {
+    public int drawWithShadow(MatrixStack matrices, VertexConsumerProvider provider, StringRenderable text, float x, float y, float z, int color) {
         RenderSystem.enableAlphaTest();
         return this.draw(matrices, provider, text, x, y, z, color, true);
     }
 
-    public int draw(MatrixStack matrices, VertexConsumerProvider.Immediate provider, String text, float x, float y, float z, int color) {
+    public int draw(MatrixStack matrices, VertexConsumerProvider provider, String text, float x, float y, float z, int color) {
         RenderSystem.enableAlphaTest();
         return this.draw(matrices, provider, text, x, y, z, color, false, this.isRightToLeft());
     }
 
-    public int draw(MatrixStack matrices, VertexConsumerProvider.Immediate provider, StringRenderable text, float x, float y, float z, int color) {
+    public int draw(MatrixStack matrices, VertexConsumerProvider provider, StringRenderable text, float x, float y, float z, int color) {
         RenderSystem.enableAlphaTest();
         return this.draw(matrices, provider, text, x, y, z, color, false);
     }
 
-    public void drawTrimmed(MatrixStack matrices, VertexConsumerProvider.Immediate provider, StringRenderable text, float x, float y, float z, int maxWidth, int color) {
+    public void drawTrimmed(MatrixStack matrices, VertexConsumerProvider provider, StringRenderable text, float x, float y, float z, int maxWidth, int color) {
         for(Iterator<StringRenderable> nextText = this.wrapLines(text, maxWidth).iterator(); nextText.hasNext(); y += 9) {
             this.draw(matrices, provider, nextText.next(), x, y, z, color, false);
         }
     }
 
-    public int draw(MatrixStack matrices, VertexConsumerProvider.Immediate provider, StringRenderable text, float x, float y, float z, int color, boolean shadow) {
+    public int draw(MatrixStack matrices, VertexConsumerProvider provider, StringRenderable text, float x, float y, float z, int color, boolean shadow) {
         return this.draw(matrices, provider, text, x, y, z, color, shadow, false, 0, 15728880);
     }
 
-    public int draw(MatrixStack matrices, VertexConsumerProvider.Immediate provider, String text, float x, float y, float z, int color, boolean shadow, boolean seeThrough, int backgroundColor, int light) {
+    public int draw(MatrixStack matrices, VertexConsumerProvider provider, String text, float x, float y, float z, int color, boolean shadow, boolean seeThrough, int backgroundColor, int light) {
         return this.draw(matrices, provider, text, x, y, z, color, shadow, seeThrough, backgroundColor, light, this.isRightToLeft());
     }
 
-    public int draw(MatrixStack matrices, VertexConsumerProvider.Immediate provider, String text, float x, float y, float z, int color, boolean shadow, boolean mirror) {
+    public int draw(MatrixStack matrices, VertexConsumerProvider provider, String text, float x, float y, float z, int color, boolean shadow, boolean mirror) {
         return text == null ? 0 : this.draw(matrices, provider, text, x, y, z, color, shadow, false, 0, 15728880, mirror);
     }
 
-    public int draw(MatrixStack matrices, VertexConsumerProvider.Immediate provider, String text, float x, float y, float z, int color, boolean shadow, boolean seeThrough, int backgroundColor, int light, boolean rightToLeft) {
+    public int draw(MatrixStack matrices, VertexConsumerProvider provider, String text, float x, float y, float z, int color, boolean shadow, boolean seeThrough, int backgroundColor, int light, boolean rightToLeft) {
         return this.drawInternal(matrices, provider, text, x, y, z, color, shadow, seeThrough, backgroundColor, light, rightToLeft);
     }
 
-    public int draw(MatrixStack matrices, VertexConsumerProvider.Immediate provider, StringRenderable text, float x, float y, float z, int color, boolean shadow, boolean seeThrough, int backgroundColor, int light) {
+    public int draw(MatrixStack matrices, VertexConsumerProvider provider, StringRenderable text, float x, float y, float z, int color, boolean shadow, boolean seeThrough, int backgroundColor, int light) {
         return this.drawInternal(matrices, provider, text, x, y, z, color, shadow, seeThrough, backgroundColor, light);
     }
 
@@ -104,7 +104,7 @@ public class AdvancedTextRenderer {
         return (color & -67108864) == 0 ? color | -16777216 : color;
     }
 
-    private int drawInternal(MatrixStack matrices, VertexConsumerProvider.Immediate provider, String text, float x, float y, float z, int color, boolean shadow,  boolean seeThrough, int backgroundColor, int light, boolean mirror) {
+    private int drawInternal(MatrixStack matrices, VertexConsumerProvider provider, String text, float x, float y, float z, int color, boolean shadow,  boolean seeThrough, int backgroundColor, int light, boolean mirror) {
         if (mirror) {
             text = this.mirror(text);
         }
@@ -132,7 +132,7 @@ public class AdvancedTextRenderer {
         return (int)x + (shadow ? 1 : 0);
     }
 
-    private int drawInternal(MatrixStack matrices, VertexConsumerProvider.Immediate provider, StringRenderable text, float x, float y, float z, int color, boolean shadow, boolean seeThrough, int backgroundColor, int light) {
+    private int drawInternal(MatrixStack matrices, VertexConsumerProvider provider, StringRenderable text, float x, float y, float z, int color, boolean shadow, boolean seeThrough, int backgroundColor, int light) {
         x /= 2;
         y /= 2;
 
@@ -154,13 +154,13 @@ public class AdvancedTextRenderer {
         return (int) x + (shadow ? 1 : 0);
     }
 
-    private float drawLayer(MatrixStack matrices, VertexConsumerProvider.Immediate provider, String text, float x, float y, int color, boolean shadow, boolean seeThrough, int underlineColor, int light) {
+    private float drawLayer(MatrixStack matrices, VertexConsumerProvider provider, String text, float x, float y, int color, boolean shadow, boolean seeThrough, int underlineColor, int light) {
         ShadowDrawer shadowDrawer = new ShadowDrawer(matrices, provider, x, y, color, shadow, seeThrough, light);
         TextVisitFactory.visitFormatted(text, Style.EMPTY, shadowDrawer);
         return shadowDrawer.drawLayer(underlineColor, x);
     }
 
-    private float drawLayer(MatrixStack matrices, VertexConsumerProvider.Immediate provider, StringRenderable text, float x, float y, int color, boolean shadow, boolean seeThrough, int underlineColor, int light) {
+    private float drawLayer(MatrixStack matrices, VertexConsumerProvider provider, StringRenderable text, float x, float y, int color, boolean shadow, boolean seeThrough, int underlineColor, int light) {
         ShadowDrawer shadowDrawer = new ShadowDrawer(matrices, provider, x, y, color, shadow, seeThrough, light);
         TextVisitFactory.visitFormatted(text, Style.EMPTY, shadowDrawer);
         return shadowDrawer.drawLayer(underlineColor, x);
@@ -222,7 +222,7 @@ public class AdvancedTextRenderer {
 
     @Environment(EnvType.CLIENT)
     class ShadowDrawer implements TextVisitFactory.CharacterVisitor {
-        private final VertexConsumerProvider.Immediate provider;
+        private final VertexConsumerProvider provider;
 
         private final MatrixStack matrices;
 
@@ -251,7 +251,7 @@ public class AdvancedTextRenderer {
             this.rectangles.add(rectangle);
         }
 
-        public ShadowDrawer(MatrixStack matrices, VertexConsumerProvider.Immediate provider, float x, float y, int color, boolean shadow, boolean seeThrough, int light) {
+        public ShadowDrawer(MatrixStack matrices, VertexConsumerProvider provider, float x, float y, int color, boolean shadow, boolean seeThrough, int light) {
             this.provider = provider;
 
             this.matrices = matrices;
