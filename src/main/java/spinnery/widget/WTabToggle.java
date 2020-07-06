@@ -10,6 +10,8 @@ import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
 import spinnery.client.render.BaseRenderer;
 import spinnery.client.render.TextRenderer;
+import spinnery.client.utility.ScissorArea;
+import spinnery.widget.api.Color;
 
 @SuppressWarnings("unchecked")
 @Environment(EnvType.CLIENT)
@@ -39,21 +41,61 @@ public class WTabToggle extends WAbstractToggle {
 		float z = getZ();
 
 		float sX = getWidth();
-		float sY = getHeight() + 4;
+		float sY = getHeight();
 
 		if (getToggleState()) {
 			BaseRenderer.drawPanel(matrices, provider, x, y, z - 1, sX, sY, getStyle().asColor("shadow.off"), getStyle().asColor("background.off"), getStyle().asColor("highlight.off"), getStyle().asColor("outline.off"));
+
+			WTabHolder parent = (WTabHolder) ((WTabHolder.WTab) getParent()).getParent();
+
+			BaseRenderer.drawQuad(matrices, provider, x + 1, y + sY - 4, z + 1, 2, 6, getStyle().asColor("highlight.off"));
+			BaseRenderer.drawQuad(matrices, provider, x + 1 + 2, y + sY - 4, z + 1, sX - 2 - 2, 8, getStyle().asColor("background.off"));
+			BaseRenderer.drawQuad(matrices, provider, x + sX - 3, y + sY - 4, z + 1, 1, 7, getStyle().asColor("shadow.off"));
+			BaseRenderer.drawQuad(matrices, provider, x + sX - 2, y + sY - 4, z + 1, 1, 6, getStyle().asColor("shadow.off"));
+			BaseRenderer.drawQuad(matrices, provider, x + sX - 2, y + sY + 2, z + 1, 1, 1, getStyle().asColor("highlight.off"));
+
+			if (this.getX() == parent.getX()) {
+				BaseRenderer.drawQuad(matrices, provider, x, y + sY - 4, z + 1, 1, 6, getStyle().asColor("outline.off"));
+				BaseRenderer.drawQuad(matrices, provider, x + sX - 1, y + sY - 4, z - 1, 1, 6, getStyle().asColor("outline.on"));
+			} else if (this.getWideX() == parent.getWideX()) {
+				BaseRenderer.drawQuad(matrices, provider, x + sX - 3, y + sY - 4, z + 1, 2, 8, getStyle().asColor("shadow.off"));
+				BaseRenderer.drawQuad(matrices, provider, x, y + sY - 4, z - 1, 1, 5, getStyle().asColor("outline.on"));
+				BaseRenderer.drawQuad(matrices, provider, x + sX - 1, y + sY - 4, z + 1, 1, 8, getStyle().asColor("outline.off"));
+			} else {
+				BaseRenderer.drawQuad(matrices, provider, x, y + sY - 4, z + 1, 1, 5, getStyle().asColor("outline.off"));
+				BaseRenderer.drawQuad(matrices, provider, x + sX -1, y + sY - 4, z - 1, 1, 5, getStyle().asColor("outline.on"));
+			}
 		} else {
 			BaseRenderer.drawPanel(matrices, provider, x, y, z - 1, sX, sY, getStyle().asColor("shadow.on"), getStyle().asColor("background.on"), getStyle().asColor("highlight.on"), getStyle().asColor("outline.on"));
+
+			WTabHolder parent = (WTabHolder) ((WTabHolder.WTab) getParent()).getParent();
+
+			BaseRenderer.drawQuad(matrices, provider, x + 1, y + sY - 4, z - 1, 2, 6, getStyle().asColor("highlight.on"));
+			BaseRenderer.drawQuad(matrices, provider, x + 1 + 2, y + sY - 4, z - 1, sX - 2 - 2, 8, getStyle().asColor("background.on"));
+			BaseRenderer.drawQuad(matrices, provider, x + sX - 3, y + sY - 4, z - 1, 1, 7, getStyle().asColor("shadow.on"));
+			BaseRenderer.drawQuad(matrices, provider, x + sX - 2, y + sY - 4, z - 1, 1, 6, getStyle().asColor("shadow.on"));
+			BaseRenderer.drawQuad(matrices, provider, x + sX - 2, y + sY + 2, z - 1, 1, 1, getStyle().asColor("highlight.on"));
+
+			if (this.getX() == parent.getX()) {
+				BaseRenderer.drawQuad(matrices, provider, x, y + sY - 4, z - 1, 1, 6, getStyle().asColor("outline.on"));
+				BaseRenderer.drawQuad(matrices, provider, x + sX - 1, y + sY - 4, z - 1, 1, 6, getStyle().asColor("outline.on"));
+			} else if (this.getWideX() == parent.getWideX()) {
+				BaseRenderer.drawQuad(matrices, provider, x + sX - 3, y + sY - 4, z - 1, 2, 8, getStyle().asColor("shadow.on"));
+				BaseRenderer.drawQuad(matrices, provider, x, y + sY - 4, z - 1, 1, 5, getStyle().asColor("outline.on"));
+				BaseRenderer.drawQuad(matrices, provider, x + sX - 1, y + sY - 4, z - 1, 1, 8, getStyle().asColor("outline.on"));
+			} else {
+				BaseRenderer.drawQuad(matrices, provider, x, y + sY - 4, z - 1, 1, 5, getStyle().asColor("outline.on"));
+				BaseRenderer.drawQuad(matrices, provider, x + sX -1, y + sY - 4, z - 1, 1, 5, getStyle().asColor("outline.on"));
+			}
 		}
 
 		Item symbol = getSymbol();
 
-		if (symbol != null) {
-			BaseRenderer.getAdvancedItemRenderer().renderGuiItemIcon(matrices, provider, new ItemStack(symbol, 1), (int) x + 4, (int) y + 6, z);
+		if (symbol != null && sX >= 24) {
+			BaseRenderer.getAdvancedItemRenderer().renderGuiItemIcon(matrices, provider, new ItemStack(symbol, 1), (int) x + 4 + ((sX - 24) / 2), (int) y + 6, z + 100F);
 		}
 
-		if (label != null) {
+		if (label != null && sX >= TextRenderer.width(label)) {
 			TextRenderer.pass().shadow(isLabelShadowed()).text(getLabel()).at(x + 8 + (symbol != null ? 16 : 0), y + sY / 2 - 4.5, z)
 					.color(getStyle().asColor("label.color")).shadowColor(getStyle().asColor("label.shadow_color")).render(matrices, provider);
 		}
