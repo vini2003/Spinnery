@@ -14,39 +14,39 @@ import java.util.Set;
  * @since 2.0.0
  */
 public interface WCollection {
-    /**
-     * Returns a Set of widgets that are direct children of this collection.
-     *
-     * @return set of direct child widgets
-     * @author EngiN33R
-     * @since 2.0.0
-     */
-    Set<WAbstractWidget> getWidgets();
+	/**
+	 * Returns a Set of widgets that are direct children of this collection.
+	 *
+	 * @return set of direct child widgets
+	 * @author EngiN33R
+	 * @since 2.0.0
+	 */
+	Set<WAbstractWidget> getWidgets();
 
-    /**
-     * Returns a Set of all widgets contained in this collection, including those in nested collections.
-     * The default implementation of this method does not check for cyclic references, so having the root
-     * collection as a child of any other collection within it will produce a {@link StackOverflowError}.
-     *
-     * @return set of all child widgets
-     * @author EngiN33R
-     * @since 2.0.0
-     */
-    default Set<WAbstractWidget> getAllWidgets() {
-        Set<WAbstractWidget> allWidgets = new LinkedHashSet<>(getWidgets());
-        for (WAbstractWidget widget : getWidgets()) {
-            if (widget instanceof WCollection) {
-                allWidgets.addAll(((WCollection) widget).getAllWidgets());
-            }
-        }
-        return allWidgets;
-    }
+	/**
+	 * Returns a Set of all widgets contained in this collection, including those in nested collections.
+	 * The default implementation of this method does not check for cyclic references, so having the root
+	 * collection as a child of any other collection within it will produce a {@link StackOverflowError}.
+	 *
+	 * @return set of all child widgets
+	 * @author EngiN33R
+	 * @since 2.0.0
+	 */
+	default Set<WAbstractWidget> getAllWidgets() {
+		Set<WAbstractWidget> allWidgets = new LinkedHashSet<>(getWidgets());
+		for (WAbstractWidget widget : getWidgets()) {
+			if (widget instanceof WCollection) {
+				allWidgets.addAll(((WCollection) widget).getAllWidgets());
+			}
+		}
+		return allWidgets;
+	}
 
-    /**
-     * Checks whether the specified widgets are contained within this collection.
-     *
-     * @param widgets widgets to check
-     * @return whether widgets are contained
-     */
-    boolean contains(WAbstractWidget... widgets);
+	/**
+	 * Checks whether the specified widgets are contained within this collection.
+	 *
+	 * @param widgets widgets to check
+	 * @return whether widgets are contained
+	 */
+	boolean contains(WAbstractWidget... widgets);
 }

@@ -12,25 +12,25 @@ import spinnery.client.utility.SpriteSheet;
  */
 @Environment(EnvType.CLIENT)
 public class WSprite extends WAbstractWidget {
-    private SpriteSheet.Sprite sprite;
+	private SpriteSheet.Sprite sprite;
 
-    public SpriteSheet.Sprite getSprite() {
-        return sprite;
-    }
+	public SpriteSheet.Sprite getSprite() {
+		return sprite;
+	}
 
-    public <W extends WSprite> W setSprite(SpriteSheet.Sprite sprite) {
-        this.sprite = sprite;
-        return (W) this;
-    }
+	public <W extends WSprite> W setSprite(SpriteSheet.Sprite sprite) {
+		this.sprite = sprite;
+		return (W) this;
+	}
 
-    @Override
-    public void draw(MatrixStack matrices, VertexConsumerProvider provider) {
-        if (isHidden()) {
-            return;
-        }
+	@Override
+	public void draw(MatrixStack matrices, VertexConsumerProvider provider) {
+		if (isHidden()) {
+			return;
+		}
 
-        getSprite().draw(matrices, provider, getX(), getY(), getZ(), getWidth(), getHeight(), false);
+		getSprite().draw(matrices, provider, getX(), getY(), getZ(), getWidth(), getHeight(), false);
 
-        super.draw(matrices, provider);
-    }
+		super.draw(matrices, provider);
+	}
 }

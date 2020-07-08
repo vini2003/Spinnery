@@ -26,45 +26,45 @@ import java.util.Collection;
  */
 @Environment(EnvType.CLIENT)
 public class ThemeResourceRegistry {
-    public static final ResourceListener RESOURCE_LISTENER = new ResourceListener();
+	public static final ResourceListener RESOURCE_LISTENER = new ResourceListener();
 
-    public static void initialize() {
-        ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(RESOURCE_LISTENER);
-    }
+	public static void initialize() {
+		ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(RESOURCE_LISTENER);
+	}
 
-    public static void clear() {
-        ThemeRegistry.clear();
-    }
+	public static void clear() {
+		ThemeRegistry.clear();
+	}
 
-    public static void load(ResourceManager resourceManager) {
-        Collection<Identifier> themeFiles = resourceManager.findResources("theme", (string) -> string.endsWith(".theme.json5"));
+	public static void load(ResourceManager resourceManager) {
+		Collection<Identifier> themeFiles = resourceManager.findResources("theme", (string) -> string.endsWith(".theme.json5"));
 
-        for (Identifier id : themeFiles) {
-            try {
-                Identifier themeId = new Identifier(id.getNamespace(),
-                        id.getPath().replaceFirst("theme/", "").replaceFirst("\\.theme\\.json5", ""));
-                register(themeId, resourceManager.getResource(id).getInputStream());
-            } catch (IOException e) {
-                Spinnery.LOGGER.warn("[Spinnery] Failed to load theme {}.", id);
-            }
-        }
-    }
+		for (Identifier id : themeFiles) {
+			try {
+				Identifier themeId = new Identifier(id.getNamespace(),
+						id.getPath().replaceFirst("theme/", "").replaceFirst("\\.theme\\.json5", ""));
+				register(themeId, resourceManager.getResource(id).getInputStream());
+			} catch (IOException e) {
+				Spinnery.LOGGER.warn("[Spinnery] Failed to load theme {}.", id);
+			}
+		}
+	}
 
-    public static void register(Identifier id, InputStream inputStream) {
-        try {
-            JsonObject themeDef = Jankson.builder().build().load(inputStream);
-            Theme theme = Theme.of(id, themeDef);
-            ThemeRegistry.register(theme);
-        } catch (IOException e) {
-            Spinnery.LOGGER.log(Level.ERROR, "Could not read theme file", e);
-        } catch (SyntaxError syntaxError) {
-            Spinnery.LOGGER.log(Level.ERROR, "Syntax error in theme file", syntaxError);
-        } finally {
-            try {
-                inputStream.close();
-            } catch (IOException e) {
-                Spinnery.LOGGER.log(Level.ERROR, "Could not close input stream", e);
-            }
-        }
-    }
+	public static void register(Identifier id, InputStream inputStream) {
+		try {
+			JsonObject themeDef = Jankson.builder().build().load(inputStream);
+			Theme theme = Theme.of(id, themeDef);
+			ThemeRegistry.register(theme);
+		} catch (IOException e) {
+			Spinnery.LOGGER.log(Level.ERROR, "Could not read theme file", e);
+		} catch (SyntaxError syntaxError) {
+			Spinnery.LOGGER.log(Level.ERROR, "Syntax error in theme file", syntaxError);
+		} finally {
+			try {
+				inputStream.close();
+			} catch (IOException e) {
+				Spinnery.LOGGER.log(Level.ERROR, "Could not close input stream", e);
+			}
+		}
+	}
 }

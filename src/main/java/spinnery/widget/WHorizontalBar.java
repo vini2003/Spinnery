@@ -10,36 +10,36 @@ import spinnery.client.utility.ScissorArea;
 
 @Environment(EnvType.CLIENT)
 public class WHorizontalBar extends WAbstractBar {
-    @Override
-    public void draw(MatrixStack matrices, VertexConsumerProvider provider) {
-        if (isHidden()) {
-            return;
-        }
+	@Override
+	public void draw(MatrixStack matrices, VertexConsumerProvider provider) {
+		if (isHidden()) {
+			return;
+		}
 
-        float x = getX();
-        float y = getY();
-        float z = getZ();
+		float x = getX();
+		float y = getY();
+		float z = getZ();
 
-        float sX = getWidth();
-        float sY = getHeight();
+		float sX = getWidth();
+		float sY = getHeight();
 
-        float rawHeight = MinecraftClient.getInstance().getWindow().getHeight();
-        float scale = (float) MinecraftClient.getInstance().getWindow().getScaleFactor();
+		float rawHeight = MinecraftClient.getInstance().getWindow().getHeight();
+		float scale = (float) MinecraftClient.getInstance().getWindow().getScaleFactor();
 
-        float sBGX = (int) (((sX / limit.getValue().intValue()) * progress.getValue().intValue()));
+		float sBGX = (int) (((sX / limit.getValue().intValue()) * progress.getValue().intValue()));
 
-        ScissorArea scissorArea = new ScissorArea((int) (x * scale), (int) (rawHeight - ((y + sY) * scale)), (int) (sX * scale), (int) (sY * scale));
+		ScissorArea scissorArea = new ScissorArea((int) (x * scale), (int) (rawHeight - ((y + sY) * scale)), (int) (sX * scale), (int) (sY * scale));
 
-        BaseRenderer.drawTexturedQuad(matrices, provider, getX(), getY(), z, getWidth(), getHeight(), getBackgroundTexture());
+		BaseRenderer.drawTexturedQuad(matrices, provider, getX(), getY(), z, getWidth(), getHeight(), getBackgroundTexture());
 
-        scissorArea.destroy();
+		scissorArea.destroy();
 
-        scissorArea = new ScissorArea((int) (x * scale), (int) (rawHeight - ((y + sY) * scale)), (int) (sBGX * scale), (int) (sY * scale));
+		scissorArea = new ScissorArea((int) (x * scale), (int) (rawHeight - ((y + sY) * scale)), (int) (sBGX * scale), (int) (sY * scale));
 
-        BaseRenderer.drawTexturedQuad(matrices, provider, getX(), getY(), z, getWidth(), getHeight(), getForegroundTexture());
+		BaseRenderer.drawTexturedQuad(matrices, provider, getX(), getY(), z, getWidth(), getHeight(), getForegroundTexture());
 
-        scissorArea.destroy();
+		scissorArea.destroy();
 
-        super.draw(matrices, provider);
-    }
+		super.draw(matrices, provider);
+	}
 }

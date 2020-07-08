@@ -8,11 +8,11 @@ import net.minecraft.item.Item;
 import java.util.Set;
 
 public interface ItemRendererAccessor {
-    Set<Item> spinnery_getWithoutModels();
+	Set<Item> spinnery_getWithoutModels();
 
-    ItemModels spinnery_getModels();
+	ItemModels spinnery_getModels();
 
-    TextureManager spinnery_getTextureManager();
+	TextureManager spinnery_getTextureManager();
 
-    ItemColors spinner_getColorMap();
+	ItemColors spinner_getColorMap();
 }

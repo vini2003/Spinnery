@@ -7,7 +7,7 @@ import net.minecraft.util.Identifier;
 import java.util.function.Function;
 
 public interface TextRendererAccessor {
-    Function<Identifier, FontStorage> spinnery_getStorageAccessor();
+	Function<Identifier, FontStorage> spinnery_getStorageAccessor();
 
-    TextHandler spinnery_getTextHandler();
+	TextHandler spinnery_getTextHandler();
 }

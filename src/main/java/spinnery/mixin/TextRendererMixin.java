@@ -13,20 +13,20 @@ import java.util.function.Function;
 
 @Mixin(TextRenderer.class)
 public class TextRendererMixin implements TextRendererAccessor {
-    @Shadow
-    @Final
-    private Function<Identifier, FontStorage> fontStorageAccessor;
-    @Shadow
-    @Final
-    private TextHandler handler;
+	@Shadow
+	@Final
+	private Function<Identifier, FontStorage> fontStorageAccessor;
+	@Shadow
+	@Final
+	private TextHandler handler;
 
-    @Override
-    public Function<Identifier, FontStorage> spinnery_getStorageAccessor() {
-        return fontStorageAccessor;
-    }
+	@Override
+	public Function<Identifier, FontStorage> spinnery_getStorageAccessor() {
+		return fontStorageAccessor;
+	}
 
-    @Override
-    public TextHandler spinnery_getTextHandler() {
-        return handler;
-    }
+	@Override
+	public TextHandler spinnery_getTextHandler() {
+		return handler;
+	}
 }

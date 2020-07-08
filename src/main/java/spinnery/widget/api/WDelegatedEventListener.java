@@ -8,12 +8,12 @@ import java.util.Collection;
  * (e.g. scrollbar) in order to separate UI parent-child structure from the event processing hierarchy.
  */
 public interface WDelegatedEventListener extends WEventListener {
-    /**
-     * Returns a collection of event delegates to pass events to. The event provider is responsible for using the
-     * result of this method to pass events on; this is usually done automatically by
-     * {@link spinnery.widget.WInterface}, if you are implementing this interface in a widget.
-     *
-     * @return collection of event delegates
-     */
-    Collection<? extends WEventListener> getEventDelegates();
+	/**
+	 * Returns a collection of event delegates to pass events to. The event provider is responsible for using the
+	 * result of this method to pass events on; this is usually done automatically by
+	 * {@link spinnery.widget.WInterface}, if you are implementing this interface in a widget.
+	 *
+	 * @return collection of event delegates
+	 */
+	Collection<? extends WEventListener> getEventDelegates();
 }

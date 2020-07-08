@@ -15,18 +15,18 @@ import spinnery.common.registry.ThemeResourceRegistry;
  */
 @Environment(EnvType.CLIENT)
 public class ResourceListener implements SimpleSynchronousResourceReloadListener {
-    private static final Identifier ID = new Identifier("spinnery", "reload_listener");
+	private static final Identifier ID = new Identifier("spinnery", "reload_listener");
 
-    @Override
-    public void apply(ResourceManager resourceManager) {
-        ThemeResourceRegistry.clear();
-        ThemeResourceRegistry.load(resourceManager);
+	@Override
+	public void apply(ResourceManager resourceManager) {
+		ThemeResourceRegistry.clear();
+		ThemeResourceRegistry.load(resourceManager);
 
-        ConfigurationRegistry.load(resourceManager);
-    }
+		ConfigurationRegistry.load(resourceManager);
+	}
 
-    @Override
-    public Identifier getFabricId() {
-        return ID;
-    }
+	@Override
+	public Identifier getFabricId() {
+		return ID;
+	}
 }
