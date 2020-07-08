@@ -88,7 +88,7 @@ public class AdvancedItemRenderer implements SynchronousResourceReloadListener {
                 boolean isSolid;
 
                 if (renderMode != ModelTransformation.Mode.GUI && !renderMode.method_29998() && stack.getItem() instanceof BlockItem) {
-                    Block block = ((BlockItem)stack.getItem()).getBlock();
+                    Block block = ((BlockItem) stack.getItem()).getBlock();
                     isSolid = !(block instanceof TransparentBlock) && !(block instanceof StainedGlassPaneBlock);
                 } else {
                     isSolid = true;
@@ -165,9 +165,9 @@ public class AdvancedItemRenderer implements SynchronousResourceReloadListener {
                 color = this.colorMap.getColorMultiplier(stack, quad.getColorIndex());
             }
 
-            float r = (float)(color >> 16 & 255) / 255.0F;
-            float g = (float)(color >> 8 & 255) / 255.0F;
-            float b = (float)(color & 255) / 255.0F;
+            float r = (float) (color >> 16 & 255) / 255.0F;
+            float g = (float) (color >> 8 & 255) / 255.0F;
+            float b = (float) (color & 255) / 255.0F;
 
             vertices.quad(entry, quad, r, g, b, light, overlay);
         }
@@ -184,7 +184,7 @@ public class AdvancedItemRenderer implements SynchronousResourceReloadListener {
             baseModel = this.models.getModel(stack);
         }
 
-        ClientWorld clientWorld = world instanceof ClientWorld ? (ClientWorld)world : null;
+        ClientWorld clientWorld = world instanceof ClientWorld ? (ClientWorld) world : null;
         BakedModel overriddenModel = baseModel.getOverrides().apply(baseModel, stack, clientWorld, entity);
         return overriddenModel == null ? this.models.getModelManager().getMissingModel() : overriddenModel;
     }

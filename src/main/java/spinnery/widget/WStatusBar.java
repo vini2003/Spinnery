@@ -1,13 +1,12 @@
 package spinnery.widget;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
 import spinnery.client.utility.SpriteSheet;
-import spinnery.widget.api.*;
+import spinnery.widget.api.Size;
 
 /**
  * Used to render a status bar, such as a health or hunger bar. Visuals are specified using a {@link BarConfig}.
@@ -95,7 +94,8 @@ public class WStatusBar extends WAbstractWidget {
 
     /**
      * Sets the values of the bar.
-     * @param value The current value, for health bars this would be {@link net.minecraft.entity.LivingEntity#getHealth}.
+     *
+     * @param value    The current value, for health bars this would be {@link net.minecraft.entity.LivingEntity#getHealth}.
      * @param maxValue The highest possible value, for health bars this would be {@link LivingEntity#getMaxHealth()}.
      */
     public <W extends WStatusBar> W setValue(int value, int maxValue) {

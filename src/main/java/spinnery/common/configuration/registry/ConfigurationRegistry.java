@@ -14,55 +14,55 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ConfigurationRegistry {
-	private static final Map<String, BiMap<String, ConfigurationHolder<?>>> ENTRIES = new HashMap<>();
+    private static final Map<String, BiMap<String, ConfigurationHolder<?>>> ENTRIES = new HashMap<>();
 
-	private static ArrayList<Class<?>> CLASSES = new ArrayList<>();
+    private static final ArrayList<Class<?>> CLASSES = new ArrayList<>();
 
-	public static void initialize() {
-		// NO-OP
-	}
+    public static void initialize() {
+        // NO-OP
+    }
 
-	public static void register(Class<?> clazz) {
-		try {
-			CLASSES.add(clazz);
+    public static void register(Class<?> clazz) {
+        try {
+            CLASSES.add(clazz);
 
-			for (Field field : clazz.getDeclaredFields()) {
-				if (field.isAnnotationPresent(ConfigurationOption.class) && field.getType() == ConfigurationHolder.class) {
-					ConfigurationOption configuration = field.getAnnotation(ConfigurationOption.class);
+            for (Field field : clazz.getDeclaredFields()) {
+                if (field.isAnnotationPresent(ConfigurationOption.class) && field.getType() == ConfigurationHolder.class) {
+                    ConfigurationOption configuration = field.getAnnotation(ConfigurationOption.class);
 
-					registerOption(configuration.name(), field.getName(), (ConfigurationHolder<?>) field.get(null));
-				}
-			}
-		} catch (Exception exception) {
-			Spinnery.LOGGER.log(Level.ERROR, "Failed to parse class fields!");
-			exception.printStackTrace();
+                    registerOption(configuration.name(), field.getName(), (ConfigurationHolder<?>) field.get(null));
+                }
+            }
+        } catch (Exception exception) {
+            Spinnery.LOGGER.log(Level.ERROR, "Failed to parse class fields!");
+            exception.printStackTrace();
 
-			CLASSES.remove(clazz);
-		}
-	}
+            CLASSES.remove(clazz);
+        }
+    }
 
-	private static void registerOption(String namespace, String path, ConfigurationHolder<?> holder) {
-		ENTRIES.computeIfAbsent(namespace, (key) -> HashBiMap.create());
+    private static void registerOption(String namespace, String path, ConfigurationHolder<?> holder) {
+        ENTRIES.computeIfAbsent(namespace, (key) -> HashBiMap.create());
 
-		ENTRIES.get(namespace).put(path, holder);
+        ENTRIES.get(namespace).put(path, holder);
 
-		holder.setNamespace(namespace);
-		holder.setPath(path);
-	}
+        holder.setNamespace(namespace);
+        holder.setPath(path);
+    }
 
-	public static BiMap<String, ConfigurationHolder<?>> getOptions(String namespace) {
-		return ENTRIES.get(namespace);
-	}
+    public static BiMap<String, ConfigurationHolder<?>> getOptions(String namespace) {
+        return ENTRIES.get(namespace);
+    }
 
-	public static void load(ResourceManager resourceManager) {
-		try {
-			for (Class<?> clazz : CLASSES) {
-				clazz.getMethod("load").invoke(null);
-			}
-		} catch (Exception exception) {
-			Spinnery.LOGGER.log(Level.ERROR, "Failed to load configuration data!");
-			exception.printStackTrace();
-		}
+    public static void load(ResourceManager resourceManager) {
+        try {
+            for (Class<?> clazz : CLASSES) {
+                clazz.getMethod("load").invoke(null);
+            }
+        } catch (Exception exception) {
+            Spinnery.LOGGER.log(Level.ERROR, "Failed to load configuration data!");
+            exception.printStackTrace();
+        }
 
-	}
+    }
 }

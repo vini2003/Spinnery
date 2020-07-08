@@ -9,25 +9,45 @@ import spinnery.access.GlyphRendererAccessor;
 
 @Mixin(GlyphRenderer.class)
 public class GlyphRendererMixin implements GlyphRendererAccessor {
-    @Shadow @Final private float yMax;
+    @Shadow
+    @Final
+    private float yMax;
 
-    @Shadow @Final private float yMin;
+    @Shadow
+    @Final
+    private float yMin;
 
-    @Shadow @Final private float xMax;
+    @Shadow
+    @Final
+    private float xMax;
 
-    @Shadow @Final private float xMin;
+    @Shadow
+    @Final
+    private float xMin;
 
-    @Shadow @Final private float vMax;
+    @Shadow
+    @Final
+    private float vMax;
 
-    @Shadow @Final private float vMin;
+    @Shadow
+    @Final
+    private float vMin;
 
-    @Shadow @Final private float uMax;
+    @Shadow
+    @Final
+    private float uMax;
 
-    @Shadow @Final private float uMin;
+    @Shadow
+    @Final
+    private float uMin;
 
-    @Shadow @Final private RenderLayer field_21693;
+    @Shadow
+    @Final
+    private RenderLayer field_21693;
 
-    @Shadow @Final private RenderLayer field_21692;
+    @Shadow
+    @Final
+    private RenderLayer field_21692;
 
     @Override
     public RenderLayer spinnery_getField_21692() {

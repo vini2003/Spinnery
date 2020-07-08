@@ -14,13 +14,21 @@ import java.util.Set;
 
 @Mixin(ItemRenderer.class)
 public class ItemRendererMixin implements ItemRendererAccessor {
-    @Shadow @Final private static Set<Item> WITHOUT_MODELS;
+    @Shadow
+    @Final
+    private static Set<Item> WITHOUT_MODELS;
 
-    @Shadow @Final private ItemModels models;
+    @Shadow
+    @Final
+    private ItemModels models;
 
-    @Shadow @Final private TextureManager textureManager;
+    @Shadow
+    @Final
+    private TextureManager textureManager;
 
-    @Shadow @Final private ItemColors colorMap;
+    @Shadow
+    @Final
+    private ItemColors colorMap;
 
     @Override
     public Set<Item> spinnery_getWithoutModels() {

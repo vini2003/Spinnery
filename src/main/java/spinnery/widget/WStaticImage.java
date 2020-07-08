@@ -1,6 +1,5 @@
 package spinnery.widget;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -10,37 +9,37 @@ import spinnery.client.render.BaseRenderer;
 
 @Environment(EnvType.CLIENT)
 public class WStaticImage extends WAbstractWidget {
-	protected Identifier texture;
+    protected Identifier texture;
 
-	@Override
-	public void draw(MatrixStack matrices, VertexConsumerProvider provider) {
-		if (isHidden()) {
-			return;
-		}
+    @Override
+    public void draw(MatrixStack matrices, VertexConsumerProvider provider) {
+        if (isHidden()) {
+            return;
+        }
 
-		float x = getX();
-		float y = getY();
-		float z = getZ();
+        float x = getX();
+        float y = getY();
+        float z = getZ();
 
-		float sX = getWidth();
-		float sY = getHeight();
+        float sX = getWidth();
+        float sY = getHeight();
 
-		BaseRenderer.drawTexturedQuad(matrices, provider, x, y, z, sX, sY, getTexture());
+        BaseRenderer.drawTexturedQuad(matrices, provider, x, y, z, sX, sY, getTexture());
 
-		super.draw(matrices, provider);
-	}
+        super.draw(matrices, provider);
+    }
 
-	public Identifier getTexture() {
-		return texture;
-	}
+    public Identifier getTexture() {
+        return texture;
+    }
 
-	public <W extends WStaticImage> W setTexture(Identifier texture) {
-		this.texture = texture;
-		return (W) this;
-	}
+    public <W extends WStaticImage> W setTexture(Identifier texture) {
+        this.texture = texture;
+        return (W) this;
+    }
 
-	@Override
-	public boolean isFocusedMouseListener() {
-		return true;
-	}
+    @Override
+    public boolean isFocusedMouseListener() {
+        return true;
+    }
 }

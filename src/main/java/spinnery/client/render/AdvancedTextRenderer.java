@@ -7,7 +7,10 @@ import com.ibm.icu.text.Bidi;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.font.*;
+import net.minecraft.client.font.FontStorage;
+import net.minecraft.client.font.Glyph;
+import net.minecraft.client.font.TextHandler;
+import net.minecraft.client.font.TextVisitFactory;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
@@ -19,7 +22,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.Language;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Matrix4f;
-import spinnery.client.render.layer.SpinneryLayers;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -75,7 +77,7 @@ public class AdvancedTextRenderer {
     }
 
     public void drawTrimmed(MatrixStack matrices, VertexConsumerProvider provider, StringRenderable text, float x, float y, float z, int maxWidth, int color) {
-        for(Iterator<StringRenderable> nextText = this.wrapLines(text, maxWidth).iterator(); nextText.hasNext(); y += 9) {
+        for (Iterator<StringRenderable> nextText = this.wrapLines(text, maxWidth).iterator(); nextText.hasNext(); y += 9) {
             this.draw(matrices, provider, nextText.next(), x, y, z, color, false);
         }
     }
@@ -104,7 +106,7 @@ public class AdvancedTextRenderer {
         return (color & -67108864) == 0 ? color | -16777216 : color;
     }
 
-    private int drawInternal(MatrixStack matrices, VertexConsumerProvider provider, String text, float x, float y, float z, int color, boolean shadow,  boolean seeThrough, int backgroundColor, int light, boolean mirror) {
+    private int drawInternal(MatrixStack matrices, VertexConsumerProvider provider, String text, float x, float y, float z, int color, boolean shadow, boolean seeThrough, int backgroundColor, int light, boolean mirror) {
         if (mirror) {
             text = this.mirror(text);
         }
@@ -233,8 +235,8 @@ public class AdvancedTextRenderer {
         private final int light;
 
         private float x;
-        private float y;
-        private float z;
+        private final float y;
+        private final float z;
 
         private List<AdvancedGlyphRenderer.Rectangle> rectangles;
 

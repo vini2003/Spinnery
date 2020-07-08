@@ -8,5 +8,6 @@ import java.util.function.Function;
 
 public interface TextRendererAccessor {
     Function<Identifier, FontStorage> spinnery_getStorageAccessor();
+
     TextHandler spinnery_getTextHandler();
 }

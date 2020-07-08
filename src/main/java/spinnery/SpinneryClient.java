@@ -7,12 +7,12 @@ import spinnery.common.registry.ThemeResourceRegistry;
 import spinnery.common.registry.WidgetRegistry;
 
 public class SpinneryClient implements ClientModInitializer {
-	@Override
-	public void onInitializeClient() {
-		NetworkRegistry.initializeClient();
-		WidgetRegistry.initialize();
-		ThemeResourceRegistry.initialize();
+    @Override
+    public void onInitializeClient() {
+        NetworkRegistry.initializeClient();
+        WidgetRegistry.initialize();
+        ThemeResourceRegistry.initialize();
 
-		SpinneryConfigurationScreen.initialize();
-	}
+        SpinneryConfigurationScreen.initialize();
+    }
 }

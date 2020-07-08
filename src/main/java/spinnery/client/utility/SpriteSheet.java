@@ -51,11 +51,11 @@ public class SpriteSheet {
         }
     }
 
-    private Identifier atlasId;
+    private final Identifier atlasId;
     private int startX = 0;
     private int startY = 0;
-    private int sizeX;
-    private int sizeY;
+    private final int sizeX;
+    private final int sizeY;
     private int endX;
     private int endY;
     private int spriteWidth = 16;
@@ -97,6 +97,6 @@ public class SpriteSheet {
         int x = column * spriteWidth + startX;
         int y = row * spriteHeight + startY;
 
-        return new Sprite(atlasId, x / (float)sizeX, y / (float)sizeY, spriteWidth / (float)sizeX, spriteHeight / (float)sizeY);
+        return new Sprite(atlasId, x / (float) sizeX, y / (float) sizeY, spriteWidth / (float) sizeX, spriteHeight / (float) sizeY);
     }
 }

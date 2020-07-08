@@ -7,13 +7,13 @@ import spinnery.common.configuration.registry.ConfigurationRegistry;
 import spinnery.common.registry.NetworkRegistry;
 
 public class Spinnery implements ModInitializer {
-	public static final String LOG_ID = "Spinnery";
-	public static final String MOD_ID = "spinnery";
-	public static Logger LOGGER = LogManager.getLogger(LOG_ID);
+    public static final String LOG_ID = "Spinnery";
+    public static final String MOD_ID = "spinnery";
+    public static Logger LOGGER = LogManager.getLogger(LOG_ID);
 
-	@Override
-	public void onInitialize() {
-		NetworkRegistry.initialize();
-		ConfigurationRegistry.initialize();
-	}
+    @Override
+    public void onInitialize() {
+        NetworkRegistry.initialize();
+        ConfigurationRegistry.initialize();
+    }
 }

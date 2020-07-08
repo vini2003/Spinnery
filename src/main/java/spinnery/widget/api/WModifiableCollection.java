@@ -11,70 +11,70 @@ import java.util.function.Supplier;
  * creating children.
  */
 public interface WModifiableCollection extends WCollection {
-	/**
-	 * Adds the specified widgets to this collection. By convention, widgets added with this method are added as
-	 * direct children, and as such should be contained in the Set returned by {@link #getWidgets()}.
-	 *
-	 * @param widgets widgets to add
-	 */
-	void add(WAbstractWidget... widgets);
+    /**
+     * Adds the specified widgets to this collection. By convention, widgets added with this method are added as
+     * direct children, and as such should be contained in the Set returned by {@link #getWidgets()}.
+     *
+     * @param widgets widgets to add
+     */
+    void add(WAbstractWidget... widgets);
 
-	/**
-	 * Removes the specified widgets from this collection. By convention, if passed widgets that are not direct
-	 * children, this should be a no-op.
-	 *
-	 * @param widgets widgets to remove
-	 */
-	void remove(WAbstractWidget... widgets);
+    /**
+     * Removes the specified widgets from this collection. By convention, if passed widgets that are not direct
+     * children, this should be a no-op.
+     *
+     * @param widgets widgets to remove
+     */
+    void remove(WAbstractWidget... widgets);
 
-	/**
-	 * Convenience method for short-circuiting factory.get().
-	 *
-	 * @param factory widget factory
-	 * @return created widget
-	 */
-	default <W extends WAbstractWidget> W createChild(Supplier<W> factory) {
-		return createChild(factory, null, null);
-	}
+    /**
+     * Convenience method for short-circuiting factory.get().
+     *
+     * @param factory widget factory
+     * @return created widget
+     */
+    default <W extends WAbstractWidget> W createChild(Supplier<W> factory) {
+        return createChild(factory, null, null);
+    }
 
-	/**
-	 * Convenience method for short-circuiting factory.get() and setting the widget's
-	 * position and size.
-	 *
-	 * @param factory  widget factory
-	 * @param position initial widget position
-	 * @param size     initial widget size
-	 * @return created widget
-	 */
-	default <W extends WAbstractWidget> W createChild(Supplier<? extends W> factory, Position position, Size size) {
-		W widget = factory.get();
-		if (position != null) widget.setPosition(position);
-		if (size != null) widget.setSize(size);
+    /**
+     * Convenience method for short-circuiting factory.get() and setting the widget's
+     * position and size.
+     *
+     * @param factory  widget factory
+     * @param position initial widget position
+     * @param size     initial widget size
+     * @return created widget
+     */
+    default <W extends WAbstractWidget> W createChild(Supplier<? extends W> factory, Position position, Size size) {
+        W widget = factory.get();
+        if (position != null) widget.setPosition(position);
+        if (size != null) widget.setSize(size);
 
-		if (this instanceof WAbstractWidget) {
-			widget.setInterface(((WAbstractWidget) this).getInterface());
-		} else if (this instanceof WInterface) {
-			widget.setInterface((WInterface) this);
-		}
+        if (this instanceof WAbstractWidget) {
+            widget.setInterface(((WAbstractWidget) this).getInterface());
+        } else if (this instanceof WInterface) {
+            widget.setInterface((WInterface) this);
+        }
 
-		if (this instanceof WLayoutElement) {
-			widget.setParent((WLayoutElement) this);
-		}
+        if (this instanceof WLayoutElement) {
+            widget.setParent((WLayoutElement) this);
+        }
 
-		add(widget);
+        add(widget);
 
-		return widget;
-	}
+        return widget;
+    }
 
-	/**
-	 * Convenience method for short-circuiting {@code factory.get()} and setting the widget's
-	 * position.
-	 *
-	 * @param factory  widget factory
-	 * @param position initial widget position
-	 * @return created widget
-	 */
-	default <W extends WAbstractWidget> W createChild(Supplier<W> factory, Position position) {
-		return createChild(factory, position, null);
-	}
+    /**
+     * Convenience method for short-circuiting {@code factory.get()} and setting the widget's
+     * position.
+     *
+     * @param factory  widget factory
+     * @param position initial widget position
+     * @return created widget
+     */
+    default <W extends WAbstractWidget> W createChild(Supplier<W> factory, Position position) {
+        return createChild(factory, position, null);
+    }
 }
