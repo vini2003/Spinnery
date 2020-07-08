@@ -89,6 +89,6 @@ public class StackUtilities {
 	 * @return True if one and two match in Item and Tag; False if not.
 	 */
 	public static boolean equalItemAndTag(ItemStack stackA, ItemStack stackB) {
-		return ItemStack.areEqual(stackA, stackB);
+		return ItemStack.areTagsEqual(stackA, stackB) && ItemStack.areItemsEqual(stackA, stackB);
 	}
 }

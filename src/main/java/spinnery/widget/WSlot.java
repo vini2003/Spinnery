@@ -189,12 +189,8 @@ public class WSlot extends WAbstractWidget {
 		BaseRenderer.getAdvancedItemRenderer().renderGuiItemOverlay(matrices, provider, MinecraftClient.getInstance().textRenderer, stackA, x, y, z + 1, stackA.getCount() == 1 ? "" : withSuffix(stackA.getCount()));
 
 		if (isFocused()) {
-//			/provider.draw();
-
 			BaseRenderer.drawQuad(matrices, provider, x + 1, y + 1, z, sX - 2, sY - 2, getStyle().asColor("overlay"));
 		}
-
-
 	}
 
 	@Override

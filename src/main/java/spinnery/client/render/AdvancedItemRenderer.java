@@ -71,7 +71,9 @@ public class AdvancedItemRenderer implements SynchronousResourceReloadListener {
     public void renderItem(MatrixStack matrices, VertexConsumerProvider provider, ItemStack stack, ModelTransformation.Mode renderMode, boolean leftHanded, int light, int overlay, BakedModel model) {
         if (!stack.isEmpty()) {
             matrices.push();
+
             boolean isConcern = renderMode == ModelTransformation.Mode.GUI || renderMode == ModelTransformation.Mode.GROUND || renderMode == ModelTransformation.Mode.FIXED;
+
             if (stack.getItem() == Items.TRIDENT && isConcern) {
                 model = this.models.getModelManager().getModel(new ModelIdentifier("minecraft:trident#inventory"));
             }
@@ -173,16 +175,18 @@ public class AdvancedItemRenderer implements SynchronousResourceReloadListener {
 
     public BakedModel getHeldItemModel(ItemStack stack, World world, LivingEntity entity) {
         Item item = stack.getItem();
-        BakedModel bakedModel2;
+
+        BakedModel baseModel;
+
         if (item == Items.TRIDENT) {
-            bakedModel2 = this.models.getModelManager().getModel(new ModelIdentifier("minecraft:trident_in_hand#inventory"));
+            baseModel = this.models.getModelManager().getModel(new ModelIdentifier("minecraft:trident_in_hand#inventory"));
         } else {
-            bakedModel2 = this.models.getModel(stack);
+            baseModel = this.models.getModel(stack);
         }
 
         ClientWorld clientWorld = world instanceof ClientWorld ? (ClientWorld)world : null;
-        BakedModel bakedModel3 = bakedModel2.getOverrides().apply(bakedModel2, stack, clientWorld, entity);
-        return bakedModel3 == null ? this.models.getModelManager().getMissingModel() : bakedModel3;
+        BakedModel overriddenModel = baseModel.getOverrides().apply(baseModel, stack, clientWorld, entity);
+        return overriddenModel == null ? this.models.getModelManager().getMissingModel() : overriddenModel;
     }
 
     public void renderItem(MatrixStack matrices, VertexConsumerProvider provider, ItemStack stack, ModelTransformation.Mode transformationType, int light, int overlay) {
@@ -219,8 +223,6 @@ public class AdvancedItemRenderer implements SynchronousResourceReloadListener {
         }
 
         this.renderItem(matrices, provider, stack, ModelTransformation.Mode.GUI, false, 0x00f000f0, OverlayTexture.DEFAULT_UV, model);
-
-        provider.draw(SpinneryLayers.getInterface());
 
         if (isSideNotLit) {
             DiffuseLighting.enableGuiDepthLighting();
@@ -280,24 +282,26 @@ public class AdvancedItemRenderer implements SynchronousResourceReloadListener {
             }
 
             if (stack.isDamaged()) {
-                float f = stack.getDamage();
-                float g = stack.getMaxDamage();
-                float h = Math.max(0.0F, (g - f) / g);
+                float damage = stack.getDamage();
+                float maximumDamage = stack.getMaxDamage();
+                float damageColor = Math.max(0.0F, (maximumDamage - damage) / maximumDamage);
 
-                int i = Math.round(13.0F - f * 13.0F / g);
-                int j = MathHelper.hsvToRgb(h / 3.0F, 1.0F, 1.0F);
+                int width = Math.round(13.0F - damage * 13.0F / maximumDamage);
+                int color = MathHelper.hsvToRgb(damageColor / 3.0F, 1.0F, 1.0F);
 
 
                 this.renderGuiQuad(matrices, provider, x + 2, y + 13, z, 13, 2, 0, 0, 0, 255);
-                this.renderGuiQuad(matrices, provider, x + 2, y + 13, z, i, 1, j >> 16 & 255, j >> 8 & 255, j & 255, 255);
+                this.renderGuiQuad(matrices, provider, x + 2, y + 13, z, width, 1, color >> 16 & 255, color >> 8 & 255, color & 255, 255);
 
                 RenderSystem.enableDepthTest();
             }
 
             ClientPlayerEntity clientPlayerEntity = MinecraftClient.getInstance().player;
-            float k = clientPlayerEntity == null ? 0.0F : clientPlayerEntity.getItemCooldownManager().getCooldownProgress(stack.getItem(), MinecraftClient.getInstance().getTickDelta());
-            if (k > 0.0F) {
-                this.renderGuiQuad(matrices, provider, x, y + MathHelper.floor(16.0F * (1.0F - k)), z, 16, MathHelper.ceil(16.0F * k), 255, 255, 255, 127);
+
+            float cooldown = clientPlayerEntity == null ? 0.0F : clientPlayerEntity.getItemCooldownManager().getCooldownProgress(stack.getItem(), MinecraftClient.getInstance().getTickDelta());
+
+            if (cooldown > 0.0F) {
+                this.renderGuiQuad(matrices, provider, x, y + MathHelper.floor(16.0F * (1.0F - cooldown)), z, 16, MathHelper.ceil(16.0F * cooldown), 255, 255, 255, 127);
 
                 RenderSystem.enableDepthTest();
             }

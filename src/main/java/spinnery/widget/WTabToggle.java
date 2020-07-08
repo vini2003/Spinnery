@@ -70,22 +70,23 @@ public class WTabToggle extends WAbstractToggle {
 
 			WTabHolder parent = (WTabHolder) ((WTabHolder.WTab) getParent()).getParent();
 
-			BaseRenderer.drawQuad(matrices, provider, x + 1, y + sY - 4, z - 1, 2, 6, getStyle().asColor("highlight.on"));
-			BaseRenderer.drawQuad(matrices, provider, x + 1 + 2, y + sY - 4, z - 1, sX - 2 - 2, 8, getStyle().asColor("background.on"));
-			BaseRenderer.drawQuad(matrices, provider, x + sX - 3, y + sY - 4, z - 1, 1, 7, getStyle().asColor("shadow.on"));
-			BaseRenderer.drawQuad(matrices, provider, x + sX - 2, y + sY - 4, z - 1, 1, 6, getStyle().asColor("shadow.on"));
-			BaseRenderer.drawQuad(matrices, provider, x + sX - 2, y + sY + 2, z - 1, 1, 1, getStyle().asColor("highlight.on"));
+			BaseRenderer.drawQuad(matrices, provider, x + 1, y + sY - 6, z - 1, 2, 6, getStyle().asColor("highlight.on"));
+			BaseRenderer.drawQuad(matrices, provider, x + 1 + 2, y + sY - 8, z - 1, sX - 2 - 2 - 2, 8, getStyle().asColor("background.on"));
+			BaseRenderer.drawQuad(matrices, provider, x + sX - 3, y + sY - 7, z - 1, 1, 7, getStyle().asColor("shadow.on"));
+			BaseRenderer.drawQuad(matrices, provider, x + sX - 2, y + sY - 6, z - 1, 1, 6, getStyle().asColor("shadow.on"));
 
 			if (this.getX() == parent.getX()) {
+				BaseRenderer.drawQuad(matrices, provider, x + 1, y + sY, z + 5, 1, 1, getStyle().asColor("highlight.on"));
 				BaseRenderer.drawQuad(matrices, provider, x, y + sY - 4, z - 1, 1, 6, getStyle().asColor("outline.on"));
-				BaseRenderer.drawQuad(matrices, provider, x + sX - 1, y + sY - 4, z - 1, 1, 6, getStyle().asColor("outline.on"));
+				BaseRenderer.drawQuad(matrices, provider, x + sX - 1, y + sY - 5, z - 1, 1, 6, getStyle().asColor("outline.on"));
 			} else if (this.getWideX() == parent.getWideX()) {
-				BaseRenderer.drawQuad(matrices, provider, x + sX - 3, y + sY - 4, z - 1, 2, 8, getStyle().asColor("shadow.on"));
+				BaseRenderer.drawQuad(matrices, provider, x + sX - 3, y + sY - 8, z - 1, 2, 8, getStyle().asColor("shadow.on"));
+				BaseRenderer.drawQuad(matrices, provider, x + sX - 2, y + sY, z - 1, 1, 1, getStyle().asColor("shadow.on"));
 				BaseRenderer.drawQuad(matrices, provider, x, y + sY - 4, z - 1, 1, 5, getStyle().asColor("outline.on"));
 				BaseRenderer.drawQuad(matrices, provider, x + sX - 1, y + sY - 4, z - 1, 1, 8, getStyle().asColor("outline.on"));
 			} else {
 				BaseRenderer.drawQuad(matrices, provider, x, y + sY - 4, z - 1, 1, 5, getStyle().asColor("outline.on"));
-				BaseRenderer.drawQuad(matrices, provider, x + sX -1, y + sY - 4, z - 1, 1, 5, getStyle().asColor("outline.on"));
+				BaseRenderer.drawQuad(matrices, provider, x + sX - 1, y + sY - 4, z - 1, 1, 5, getStyle().asColor("outline.on"));
 			}
 		}
 
