@@ -14,7 +14,7 @@ public class WTooltip extends WAbstractWidget implements WModifiableCollection {
 
 
 	@Override
-	public void draw(MatrixStack matrices, VertexConsumerProvider.Immediate provider) {
+	public void draw(MatrixStack matrices, VertexConsumerProvider provider) {
 		if (isHidden()) return;
 
 		float x = position.getX();

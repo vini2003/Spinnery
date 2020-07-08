@@ -1,7 +1,11 @@
 package spinnery.widget.api;
 
+import com.google.common.collect.Lists;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.Text;
+
+import java.util.List;
 
 /**
  * Generic interface representing a layout element.
@@ -13,7 +17,22 @@ public interface WLayoutElement extends WPositioned, WSized, Comparable<WLayoutE
 	/**
 	 * Method called on every frame, where widget rendering happens.
 	 */
-	void draw(MatrixStack matrices, VertexConsumerProvider.Immediate provider);
+	void draw(MatrixStack matrices, VertexConsumerProvider provider);
+
+	default void draw(MatrixStack matrices, VertexConsumerProvider.Immediate provider) {
+		draw(matrices, (VertexConsumerProvider) provider);
+	}
+
+	/**
+	 * Method called every frame, where widget tooltip rendering happens.
+	 */
+	default void drawTooltip(MatrixStack matrices, VertexConsumerProvider provider) {
+		return;
+	}
+
+	default List<Text> getTooltip() {
+		return Lists.newArrayList();
+	}
 
 	/**
 	 * Runs whenever the layout has been changed significantly enough to warrant potential adjustment of

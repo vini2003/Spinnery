@@ -36,7 +36,7 @@ public class WStaticText extends WAbstractWidget {
 	}
 
 	@Override
-	public void draw(MatrixStack matrices, VertexConsumerProvider.Immediate provider) {
+	public void draw(MatrixStack matrices, VertexConsumerProvider provider) {
 		if (isHidden()) {
 			return;
 		}

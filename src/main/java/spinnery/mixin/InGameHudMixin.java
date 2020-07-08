@@ -27,7 +27,7 @@ public class InGameHudMixin implements InGameHudScreen.Accessor {
 
 	@Inject(method = "render(Lnet/minecraft/client/util/math/MatrixStack;F)V", at = @At("RETURN"))
 	public void renderInterfaces(MatrixStack matrices, float f, CallbackInfo callbackInformation) {
-		VertexConsumerProvider.Immediate provider = VertexConsumerProvider.immediate(MinecraftClient.getInstance().getBufferBuilders().getBlockBufferBuilders().get(RenderLayer.getSolid()));
+		VertexConsumerProvider.Immediate provider = MinecraftClient.getInstance().getBufferBuilders().getEffectVertexConsumers();
 
 		hudInterface.draw(matrices, provider);
 

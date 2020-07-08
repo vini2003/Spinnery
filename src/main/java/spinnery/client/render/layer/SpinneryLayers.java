@@ -26,7 +26,26 @@ public class SpinneryLayers extends RenderLayer {
 			.alpha(RenderLayer.ONE_TENTH_ALPHA)
 			.layering(RenderLayer.VIEW_OFFSET_Z_LAYERING).build(false));
 
+	private static final RenderLayer TOOLTIP = of(
+            "blade_tooltip",
+			VertexFormats.POSITION_COLOR_LIGHT, 7, 256,
+			MultiPhaseParameters.builder()
+                .texture(NO_TEXTURE)
+                .cull(ENABLE_CULLING)
+                .lightmap(ENABLE_LIGHTMAP)
+                .shadeModel(SHADE_MODEL)
+                .depthTest(ALWAYS_DEPTH_TEST)
+                .transparency(NO_TRANSPARENCY)
+                .alpha(ONE_TENTH_ALPHA)
+                .layering(VIEW_OFFSET_Z_LAYERING)
+				.build(false));
+
+
 	public static RenderLayer getFlat() {
 		return FLAT;
+	}
+
+	public static RenderLayer getTooltip() {
+		return TOOLTIP;
 	}
 }

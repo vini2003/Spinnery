@@ -34,7 +34,7 @@ public class SpriteSheet {
             this.h = h;
         }
 
-        public void draw(MatrixStack matrices, VertexConsumerProvider.Immediate provider, float x, float y, float z, float sX, float sY, boolean mirror) {
+        public void draw(MatrixStack matrices, VertexConsumerProvider provider, float x, float y, float z, float sX, float sY, boolean mirror) {
             float u1 = this.x;
             float v1 = this.y;
             float u2 = u1 + this.w;

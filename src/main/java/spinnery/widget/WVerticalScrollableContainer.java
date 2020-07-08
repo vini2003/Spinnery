@@ -17,7 +17,6 @@ import java.util.*;
 public class WVerticalScrollableContainer extends WAbstractWidget implements WModifiableCollection, WVerticalScrollable, WDelegatedEventListener {
 	protected Set<WAbstractWidget> widgets = new HashSet<>();
 
-
 	protected WVerticalScrollbar scrollbar;
 
 	protected WVerticalArrowUp verticalArrowUp;
@@ -520,7 +519,7 @@ public class WVerticalScrollableContainer extends WAbstractWidget implements WMo
 	}
 
 	@Override
-	public void draw(MatrixStack matrices, VertexConsumerProvider.Immediate provider) {
+	public void draw(MatrixStack matrices, VertexConsumerProvider provider) {
 		if (isHidden()) {
 			return;
 		}

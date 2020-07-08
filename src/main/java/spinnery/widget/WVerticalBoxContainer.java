@@ -158,7 +158,7 @@ public class WVerticalBoxContainer extends WAbstractWidget implements WModifiabl
 	}
 
 	@Override
-	public void draw(MatrixStack matrices, VertexConsumerProvider.Immediate provider) {
+	public void draw(MatrixStack matrices, VertexConsumerProvider provider) {
 		if (isHidden()) {
 			return;
 		}

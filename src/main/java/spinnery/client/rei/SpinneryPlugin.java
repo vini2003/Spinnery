@@ -26,7 +26,7 @@ public class SpinneryPlugin implements REIPluginV0 {
 
             @Override
             public Rectangle getScreenBounds(BaseContainerScreen<BaseContainer> screen) {
-                screen.tryRecalculatingDimensions();
+                screen.updateDimensions();
                 return new Rectangle(screen.getMinX(), screen.getMinY(), screen.getMaxX() - screen.getMinX(), screen.getMaxY() - screen.getMinY());
             }
 

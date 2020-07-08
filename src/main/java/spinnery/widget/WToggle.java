@@ -11,7 +11,7 @@ import spinnery.client.render.TextRenderer;
 @Environment(EnvType.CLIENT)
 public class WToggle extends WAbstractToggle {
 	@Override
-	public void draw(MatrixStack matrices, VertexConsumerProvider.Immediate provider) {
+	public void draw(MatrixStack matrices, VertexConsumerProvider provider) {
 		if (isHidden()) {
 			return;
 		}

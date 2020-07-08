@@ -11,6 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import org.lwjgl.glfw.GLFW;
 import spinnery.client.render.BaseRenderer;
+import spinnery.client.render.layer.SpinneryLayers;
 import spinnery.common.container.BaseContainer;
 import spinnery.common.utility.MouseUtilities;
 import spinnery.widget.WAbstractWidget;
@@ -18,8 +19,6 @@ import spinnery.widget.WInterface;
 import spinnery.widget.WSlot;
 import spinnery.widget.api.WContextLock;
 import spinnery.widget.api.WInterfaceProvider;
-
-import javax.print.DocFlavor;
 
 public class BaseContainerScreen<T extends BaseContainer> extends HandledScreen<T> implements WInterfaceProvider {
 	protected final WInterface clientInterface;
@@ -31,8 +30,6 @@ public class BaseContainerScreen<T extends BaseContainer> extends HandledScreen<
 	protected int minY = Integer.MAX_VALUE;
 	protected int maxX = Integer.MIN_VALUE;
 	protected int maxY = Integer.MIN_VALUE;
-
-	protected boolean requiresRecalculation = true;
 
 	/**
 	 * Instantiates a BaseContainerScreen.
@@ -63,9 +60,7 @@ public class BaseContainerScreen<T extends BaseContainer> extends HandledScreen<
 
 		ItemStack stackA;
 
-		if (getContainer().getPreviewCursorStack().isEmpty()
-				&& getContainer().getDragSlots(GLFW.GLFW_MOUSE_BUTTON_1).isEmpty()
-				&& getContainer().getDragSlots(GLFW.GLFW_MOUSE_BUTTON_2).isEmpty()) {
+		if (getContainer().getPreviewCursorStack().isEmpty() && getContainer().getDragSlots(GLFW.GLFW_MOUSE_BUTTON_1).isEmpty() && getContainer().getDragSlots(GLFW.GLFW_MOUSE_BUTTON_2).isEmpty()) {
 			stackA = getContainer().getPlayerInventory().getCursorStack();
 		} else {
 			stackA = getContainer().getPreviewCursorStack();
@@ -78,13 +73,15 @@ public class BaseContainerScreen<T extends BaseContainer> extends HandledScreen<
 
 		matrices.pop();
 
-		provider.draw();
+		super.render(matrices, mouseX, mouseY, tickDelta);
 
 		if (getDrawSlot() != null && getContainer().getPlayerInventory().getCursorStack().isEmpty() && !getDrawSlot().getStack().isEmpty()) {
 			this.renderTooltip(matrices, getDrawSlot().getStack(), (int) getTooltipX(), (int) getTooltipY());
 		}
 
-		super.render(matrices, mouseX, mouseY, tickDelta);
+		provider.draw(SpinneryLayers.getFlat());
+		provider.draw(SpinneryLayers.getTooltip());
+		provider.draw();
 	}
 
 	/**
@@ -308,7 +305,7 @@ public class BaseContainerScreen<T extends BaseContainer> extends HandledScreen<
 	 * @param drawSlot WSlot of which the tooltip will be rendered.
 	 */
 	@Environment(EnvType.CLIENT)
-	public <S extends BaseContainerScreen> S setDrawSlot(WSlot drawSlot) {
+	public <S extends BaseContainerScreen<?>> S setDrawSlot(WSlot drawSlot) {
 		this.drawSlot = drawSlot;
 		return (S) this;
 	}
@@ -339,7 +336,7 @@ public class BaseContainerScreen<T extends BaseContainer> extends HandledScreen<
 	 * @param tooltipX Horizontal position at which the tooltip will be drawn.
 	 */
 	@Environment(EnvType.CLIENT)
-	public <S extends BaseContainerScreen> S setTooltipX(float tooltipX) {
+	public <S extends BaseContainerScreen<?>> S setTooltipX(float tooltipX) {
 		this.tooltipX = tooltipX;
 		return (S) this;
 	}
@@ -394,25 +391,24 @@ public class BaseContainerScreen<T extends BaseContainer> extends HandledScreen<
 	protected void init() {
 		super.init();
 
-		tryRecalculatingDimensions();
+		updateDimensions();
 	}
 
-	public void tryRecalculatingDimensions() {
-		if (requiresRecalculation) {
-			for (WAbstractWidget widget : getInterface().getAllWidgets()) {
-				if (widget.getX() < minX) minX = (int) widget.getX();
-				if (widget.getY() < minY) minY = (int) widget.getY();
-				if (widget.getX() + widget.getWidth() > maxX) maxX = (int) (widget.getX() + widget.getWidth());
-				if (widget.getY() + widget.getHeight() > maxY) maxY = (int) (widget.getY() + widget.getHeight());
-			}
-			requiresRecalculation = false;
+	@Override
+	public void init(MinecraftClient client, int width, int height) {
+		super.init(client, width, height);
+
+		updateDimensions();
+	}
+
+	public void updateDimensions() {
+		for (WAbstractWidget widget : getInterface().getAllWidgets()) {
+			if (widget.getX() < minX) minX = (int) widget.getX();
+			if (widget.getY() < minY) minY = (int) widget.getY();
+			if (widget.getX() + widget.getWidth() > maxX) maxX = (int) (widget.getX() + widget.getWidth());
+			if (widget.getY() + widget.getHeight() > maxY) maxY = (int) (widget.getY() + widget.getHeight());
 		}
 	}
-
-	public void setRequiresRecalculation(boolean requiresRecalculation) {
-		this.requiresRecalculation = requiresRecalculation;
-	}
-
 	public int getMinX() {
 		return minX;
 	}

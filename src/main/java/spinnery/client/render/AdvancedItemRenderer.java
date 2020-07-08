@@ -200,11 +200,11 @@ public class AdvancedItemRenderer implements SynchronousResourceReloadListener {
         }
     }
 
-    public void renderGuiItemIcon(MatrixStack matrices, VertexConsumerProvider.Immediate provider, ItemStack stack, float x, float y, float z) {
+    public void renderGuiItemIcon(MatrixStack matrices, VertexConsumerProvider provider, ItemStack stack, float x, float y, float z) {
         this.renderGuiItemModel(matrices, provider, stack, x, y, z, this.getHeldItemModel(stack, null, null));
     }
 
-    protected void renderGuiItemModel(MatrixStack matrices, VertexConsumerProvider.Immediate provider, ItemStack stack, float x, float y, float z, BakedModel model) {
+    protected void renderGuiItemModel(MatrixStack matrices, VertexConsumerProvider provider, ItemStack stack, float x, float y, float z, BakedModel model) {
         matrices.push();
 
         matrices.translate(x, y, z);
@@ -235,14 +235,14 @@ public class AdvancedItemRenderer implements SynchronousResourceReloadListener {
      * Renders an item in a GUI with the player as the attached entity
      * for calculating model overrides.
      */
-    public void renderInGuiWithOverrides(MatrixStack matrices, VertexConsumerProvider.Immediate provider, ItemStack stack, float x, float y, float z) {
+    public void renderInGuiWithOverrides(MatrixStack matrices, VertexConsumerProvider provider, ItemStack stack, float x, float y, float z) {
         this.innerRenderInGui(matrices, provider, MinecraftClient.getInstance().player, stack, x, y, z);
     }
 
     /**
      * Renders an item in a GUI without an attached entity.
      */
-    public void renderInGui(MatrixStack matrices, VertexConsumerProvider.Immediate provider, ItemStack stack, float x, float y, float z) {
+    public void renderInGui(MatrixStack matrices, VertexConsumerProvider provider, ItemStack stack, float x, float y, float z) {
         this.innerRenderInGui(matrices, provider, null, stack, x, y, z);
     }
 
@@ -251,11 +251,11 @@ public class AdvancedItemRenderer implements SynchronousResourceReloadListener {
      *
      * <p>The entity is used to calculate model overrides for the item.
      */
-    public void renderInGuiWithOverrides(MatrixStack matrices, VertexConsumerProvider.Immediate provider, LivingEntity entity, ItemStack stack, float x, float y, float z) {
+    public void renderInGuiWithOverrides(MatrixStack matrices, VertexConsumerProvider provider, LivingEntity entity, ItemStack stack, float x, float y, float z) {
         this.innerRenderInGui(matrices, provider, entity, stack, x, y, z);
     }
 
-    private void innerRenderInGui(MatrixStack matrices, VertexConsumerProvider.Immediate provider, LivingEntity entity, ItemStack itemStack, float x, float y, float z) {
+    private void innerRenderInGui(MatrixStack matrices, VertexConsumerProvider provider, LivingEntity entity, ItemStack itemStack, float x, float y, float z) {
         if (!itemStack.isEmpty()) {
             this.renderGuiItemModel(matrices, provider, itemStack, x, y, z, this.getHeldItemModel(itemStack, null, entity));
         }
@@ -264,7 +264,7 @@ public class AdvancedItemRenderer implements SynchronousResourceReloadListener {
     /**
      * Renders the overlay for items in GUIs, including the damage bar and the item count.
      */
-    public void renderGuiItemOverlay(MatrixStack matrices, VertexConsumerProvider.Immediate provider, net.minecraft.client.font.TextRenderer renderer, ItemStack stack, float x, float y, float z) {
+    public void renderGuiItemOverlay(MatrixStack matrices, VertexConsumerProvider provider, net.minecraft.client.font.TextRenderer renderer, ItemStack stack, float x, float y, float z) {
         this.renderGuiItemOverlay(matrices, provider, renderer, stack, x, y, z, null);
     }
 
@@ -273,7 +273,7 @@ public class AdvancedItemRenderer implements SynchronousResourceReloadListener {
      *
      * @param countLabel a label for the stack; if null, the stack count is drawn instead
      */
-    public void renderGuiItemOverlay(MatrixStack matrices, VertexConsumerProvider.Immediate provider, TextRenderer renderer, ItemStack stack, float x, float y, float z, String countLabel) {
+    public void renderGuiItemOverlay(MatrixStack matrices, VertexConsumerProvider provider, TextRenderer renderer, ItemStack stack, float x, float y, float z, String countLabel) {
         if (!stack.isEmpty()) {
             if (stack.getCount() != 1 || countLabel != null) {
                 String string = countLabel == null ? String.valueOf(stack.getCount()) : countLabel;
@@ -309,7 +309,7 @@ public class AdvancedItemRenderer implements SynchronousResourceReloadListener {
         }
     }
 
-    private void renderGuiQuad(MatrixStack matrices, VertexConsumerProvider.Immediate provider, float x, float y, float z, int width, int height, int red, int green, int blue, int alpha) {
+    private void renderGuiQuad(MatrixStack matrices, VertexConsumerProvider provider, float x, float y, float z, int width, int height, int red, int green, int blue, int alpha) {
         VertexConsumer consumer = provider.getBuffer(SpinneryLayers.getFlat());
 
         consumer.vertex(matrices.peek().getModel(), x, y, z).color(red, green, blue, alpha).light(0x00f000f0).next();

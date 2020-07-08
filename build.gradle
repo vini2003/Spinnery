@@ -21,8 +21,8 @@ if (file("${rootDir}/${System.getenv("CONFIG")}").exists())
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
-archivesBaseName = project.archives_base_name + "-" + project.mod_version + "+" + project.version_meta
-group = project.maven_group
+archivesBaseName = project.mod_name + "-" + project.mod_version + "+" + project.mod_target
+group = project.mod_group
 
 bintray {
 	user = System.getenv("BINTRAY_USER")
@@ -30,14 +30,14 @@ bintray {
 	publications = ['SpinneryPublication']
 	pkg {
 		repo = 'Spinnery'
-		name = archives_base_name
+		name = mod_name
 		userOrg = 'spinnery'
 		licenses = ['LGPL-3.0']
 		vcsUrl = 'https://github.com/vini2003/Spinnery.git'
 		version {
-			name = project.mod_version + "+" + project.version_meta
+			name = project.mod_version + "+" + project.mod_target
 			released  = new Date()
-			vcsTag = project.mod_version + "+" + project.version_meta
+			vcsTag = project.mod_version + "+" + project.mod_target
 		}
 	}
 }
@@ -47,26 +47,26 @@ minecraft {
 
 dependencies {
 	// Minecraft
-	minecraft "com.mojang:minecraft:${project.minecraft_version}"
+	modImplementation "com.mojang:minecraft:${project.minecraft_version}"
 
 	// Yarn
-	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+	modImplementation "net.fabricmc:yarn:${project.yarn_mappings}:v2"
 
 	// Fabric Loader
-	modCompile "net.fabricmc:fabric-loader:${project.loader_version}"
+	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
 	// Fabric API
-	modCompile "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
 	// Jankson
-	modCompile "blue.endless:jankson:1.2.0"
+	modImplementation "blue.endless:jankson:1.2.0"
 	include "blue.endless:jankson:1.2.0"
 
 	// ModMenu
-	modImplementation "io.github.prospector:modmenu:${modmenu_version}"
+	modRuntime "io.github.prospector:modmenu:${modmenu_version}"
 
 	// RoughlyEnoughItems
-	modImplementation ("me.shedaniel:RoughlyEnoughItems:${rei_version}")
+	modRuntime "me.shedaniel:RoughlyEnoughItems:${rei_version}"
 }
 
 processResources {
@@ -105,7 +105,7 @@ publishing {
 		SpinneryPublication(MavenPublication) {
 			groupId 'com.github.vini2003'
 			artifactId 'spinnery'
-			version project.mod_version + "+" + project.version_meta
+			version project.mod_version + "+" + project.mod_target
 
 			artifact(remapJar) {
 				builtBy remapJar

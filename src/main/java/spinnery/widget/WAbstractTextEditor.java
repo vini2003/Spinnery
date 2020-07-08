@@ -617,7 +617,7 @@ public abstract class WAbstractTextEditor extends WAbstractWidget implements WPa
 		return getStyle().asPadding("padding");
 	}
 
-	protected void renderField(MatrixStack matrices, VertexConsumerProvider.Immediate provider) {
+	protected void renderField(MatrixStack matrices, VertexConsumerProvider provider) {
 		float z = getZ();
 
 		Position innerPos = getInnerAnchor();

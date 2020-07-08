@@ -1,5 +1,6 @@
 package spinnery.widget;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -8,11 +9,17 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Tickable;
+import spinnery.client.render.BaseRenderer;
+import spinnery.client.render.TextRenderer;
+import spinnery.client.render.layer.SpinneryLayers;
 import spinnery.common.registry.ThemeRegistry;
 import spinnery.common.registry.WidgetRegistry;
 import spinnery.common.utility.EventUtilities;
+import spinnery.common.utility.MouseUtilities;
 import spinnery.widget.api.*;
 import spinnery.widget.api.listener.*;
+
+import java.util.List;
 
 import static spinnery.common.registry.ThemeRegistry.DEFAULT_THEME;
 
@@ -36,9 +43,9 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 
 	protected Text label = new LiteralText("");
 
-	protected boolean isHidden = false;
-	protected boolean hasFocus = false;
-	protected boolean isHeld = false;
+	protected boolean hidden = false;
+	protected boolean focused = false;
+	protected boolean held = false;
 
 	protected long heldSince = 0;
 
@@ -317,7 +324,47 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 
 	@Override
 	@Environment(EnvType.CLIENT)
-	public void draw(MatrixStack matrices, VertexConsumerProvider.Immediate provider) {
+	public void draw(MatrixStack matrices, VertexConsumerProvider provider) {
+		if (hidden) return;
+		if (focused) drawTooltip(matrices, provider);
+	}
+
+	@Override
+	public void drawTooltip(MatrixStack matrices, VertexConsumerProvider provider) {
+		List<Text> list = getTooltip();
+
+		if (list.isEmpty()) return;
+
+		RenderSystem.pushMatrix();
+		RenderSystem.translatef(0F, 0F, 256F); // Translate above all ItemStacks rendered, which go up to Z 200.
+
+		int maxWidth = 0;
+
+		for (Text text : list) {
+			int newWidth = TextRenderer.width(text);
+			if (newWidth > maxWidth) maxWidth = newWidth;
+		}
+
+		int width = maxWidth;
+
+		int height = list.size() * TextRenderer.height();
+
+		float x = MouseUtilities.mouseX + 8F;
+		float y = MouseUtilities.mouseY - 14F;
+
+		BaseRenderer.drawTooltip(matrices, provider, x, y + 1, width - 1, height - 1, Color.of(0xf0140617), Color.of(0xf0120418), Color.of(0xf0140617), Color.of(0xf0120412), Color.of(0x50270460), Color.of(0x50190333));
+
+		RenderSystem.pushMatrix();
+		RenderSystem.translatef(0F, 0F, 256F); // Translate above the tooltip rendered, which happens at Z 256.
+
+		for (Text text : list) {
+			y += 1;
+			BaseRenderer.getDefaultTextRenderer().drawWithShadow(matrices, text, x, y, 0xFCFCFC); // 0xFCFCFC
+		}
+
+		RenderSystem.popMatrix();
+
+		RenderSystem.popMatrix();
 	}
 
 	// WLayoutElement
@@ -555,7 +602,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 			runnableOnMouseReleased.event(this, mouseX, mouseY, mouseButton);
 		}
 
-		isHeld = false;
+		held = false;
 	}
 
 	/**
@@ -577,7 +624,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 		}
 
 		if (isWithinBounds(mouseX, mouseY)) {
-			isHeld = true;
+			held = true;
 			heldSince = System.currentTimeMillis();
 		}
 	}
@@ -611,9 +658,9 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 			for (WEventListener widget : ((WDelegatedEventListener) this).getEventDelegates()) {
 				if (widget instanceof WAbstractWidget) {
 					WAbstractWidget updateWidget = ((WAbstractWidget) widget);
-					boolean then = updateWidget.hasFocus;
+					boolean then = updateWidget.focused;
 					updateWidget.updateFocus(mouseX, mouseY);
-					boolean now = updateWidget.hasFocus;
+					boolean now = updateWidget.focused;
 
 					if (then && !now) {
 						updateWidget.onFocusReleased();
@@ -661,7 +708,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 				return true;
 			}
 		}
-		return isHidden;
+		return hidden;
 	}
 
 	/**
@@ -671,7 +718,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 	 */
 	@Environment(EnvType.CLIENT)
 	public <W extends WAbstractWidget> W setHidden(boolean isHidden) {
-		this.isHidden = isHidden;
+		this.hidden = isHidden;
 		setFocus(false);
 		return (W) this;
 	}
@@ -684,10 +731,10 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 	@Environment(EnvType.CLIENT)
 	public void setFocus(boolean hasFocus) {
 		if (!isFocused() && hasFocus) {
-			this.hasFocus = hasFocus;
+			this.focused = hasFocus;
 		}
 		if (isFocused() && !hasFocus) {
-			this.hasFocus = hasFocus;
+			this.focused = hasFocus;
 		}
 	}
 
@@ -698,7 +745,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 	 */
 	@Environment(EnvType.CLIENT)
 	public boolean isFocused() {
-		return !isHidden() && hasFocus;
+		return !isHidden() && focused;
 	}
 
 	/**
@@ -708,7 +755,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 	 */
 	@Environment(EnvType.CLIENT)
 	public boolean isHeld() {
-		return isHeld;
+		return held;
 	}
 
 	/**

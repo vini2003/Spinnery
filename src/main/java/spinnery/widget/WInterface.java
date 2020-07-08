@@ -210,7 +210,7 @@ public class WInterface implements WModifiableCollection, WLayoutElement, WThema
 	}
 
 	@Override
-	public void draw(MatrixStack matrices, VertexConsumerProvider.Immediate provider) {
+	public void draw(MatrixStack matrices, VertexConsumerProvider provider) {
 		for (WLayoutElement widget : widgets) {
 			widget.draw(matrices, provider);
 		}
@@ -232,7 +232,7 @@ public class WInterface implements WModifiableCollection, WLayoutElement, WThema
 			BaseContainerScreen<?> screen = (BaseContainerScreen<?>) MinecraftClient.getInstance().currentScreen;
 
 			if (screen != null) {
-				screen.setRequiresRecalculation(true);
+				screen.updateDimensions();
 			}
 		}
 	}

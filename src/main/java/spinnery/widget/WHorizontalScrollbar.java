@@ -18,7 +18,7 @@ public class WHorizontalScrollbar extends WAbstractWidget {
 	}
 
 	@Override
-	public void draw(MatrixStack matrices, VertexConsumerProvider.Immediate provider) {
+	public void draw(MatrixStack matrices, VertexConsumerProvider provider) {
 		if (isHidden()) {
 			return;
 		}
@@ -28,7 +28,7 @@ public class WHorizontalScrollbar extends WAbstractWidget {
 		drawScroller(matrices, provider);
 	}
 
-	public void drawScroller(MatrixStack matrices, VertexConsumerProvider.Immediate provider) {
+	public void drawScroller(MatrixStack matrices, VertexConsumerProvider provider) {
 		BaseRenderer.drawBeveledPanel(matrices, provider, getScrollerX(), getY(), getZ(), getScrollerWidth(), getHeight(), getStyle().asColor("scroller.top_left"), getStyle().asColor("scroller.background"), getStyle().asColor("scroller.bottom_right"));
 	}
 

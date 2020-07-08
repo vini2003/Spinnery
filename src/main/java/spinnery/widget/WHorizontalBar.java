@@ -13,7 +13,7 @@ import spinnery.client.utility.ScissorArea;
 @Environment(EnvType.CLIENT)
 public class WHorizontalBar extends WAbstractBar {
 	@Override
-	public void draw(MatrixStack matrices, VertexConsumerProvider.Immediate provider) {
+	public void draw(MatrixStack matrices, VertexConsumerProvider provider) {
 		if (isHidden()) {
 			return;
 		}

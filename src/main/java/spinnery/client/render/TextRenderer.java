@@ -113,7 +113,7 @@ public class TextRenderer {
 			return this;
 		}
 
-		public void render(MatrixStack matrices, VertexConsumerProvider.Immediate provider) {
+		public void render(MatrixStack matrices, VertexConsumerProvider provider) {
 			matrices.push();
 
 			matrices.scale(scale, scale, 0);

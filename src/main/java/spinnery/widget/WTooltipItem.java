@@ -70,7 +70,7 @@ public class WTooltipItem extends WItem {
 	}
 
 	@Override
-	public void draw(MatrixStack matrices, VertexConsumerProvider.Immediate provider) {
+	public void draw(MatrixStack matrices, VertexConsumerProvider provider) {
 		if (isHidden() || tooltip == null || tooltipText == null) return;
 
 		super.draw(matrices, provider);

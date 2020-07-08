@@ -27,6 +27,8 @@ public class BaseScreen extends Screen implements WInterfaceProvider {
 		getInterface().draw(matrices, provider);
 
 		provider.draw();
+
+		super.render(matrices, mouseX, mouseY, tick);
 	}
 
 	@Override
