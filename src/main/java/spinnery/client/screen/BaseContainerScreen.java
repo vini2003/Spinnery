@@ -57,13 +57,9 @@ public class BaseContainerScreen<T extends BaseContainer> extends HandledScreen<
 	@Override
 	@Environment(EnvType.CLIENT)
 	public void render(MatrixStack matrices, int mouseX, int mouseY, float tickDelta) {
-		VertexConsumerProvider.Immediate provider =  MinecraftClient.getInstance().getBufferBuilders().getEntityVertexConsumers();
+		VertexConsumerProvider.Immediate provider =  MinecraftClient.getInstance().getBufferBuilders().getEffectVertexConsumers();
 
 		clientInterface.draw(matrices, provider);
-
-		if (getDrawSlot() != null && getContainer().getPlayerInventory().getCursorStack().isEmpty() && !getDrawSlot().getStack().isEmpty()) {
-			this.renderTooltip(matrices, getDrawSlot().getStack(), (int) getTooltipX(), (int) getTooltipY());
-		}
 
 		ItemStack stackA;
 
@@ -83,6 +79,10 @@ public class BaseContainerScreen<T extends BaseContainer> extends HandledScreen<
 		matrices.pop();
 
 		provider.draw();
+
+		if (getDrawSlot() != null && getContainer().getPlayerInventory().getCursorStack().isEmpty() && !getDrawSlot().getStack().isEmpty()) {
+			this.renderTooltip(matrices, getDrawSlot().getStack(), (int) getTooltipX(), (int) getTooltipY());
+		}
 
 		super.render(matrices, mouseX, mouseY, tickDelta);
 	}

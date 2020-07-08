@@ -128,11 +128,11 @@ public class WTabHolder extends WAbstractWidget implements WCollection, WDelegat
 		}
 
 		for (WTab tab : tabs) {
-			tab.getToggle().draw(matrices, provider);
+			tab.draw(matrices, provider);
 		}
 
 		for (WTab tab : tabs) {
-			tab.draw(matrices, provider);
+			tab.getToggle().draw(matrices, provider);
 		}
 	}
 

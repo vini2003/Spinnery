@@ -22,7 +22,7 @@ public class BaseScreen extends Screen implements WInterfaceProvider {
 
 	@Override
 	public void render(MatrixStack matrices, int mouseX, int mouseY, float tick) {
-		VertexConsumerProvider.Immediate provider = VertexConsumerProvider.immediate(MinecraftClient.getInstance().getBufferBuilders().getBlockBufferBuilders().get(RenderLayer.getSolid()));
+		VertexConsumerProvider.Immediate provider = MinecraftClient.getInstance().getBufferBuilders().getEffectVertexConsumers();
 
 		getInterface().draw(matrices, provider);
 

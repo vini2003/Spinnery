@@ -1,5 +1,6 @@
 package spinnery.widget;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -16,10 +17,7 @@ import org.apache.logging.log4j.Level;
 import spinnery.Spinnery;
 import spinnery.client.render.BaseRenderer;
 import spinnery.common.container.BaseContainer;
-import spinnery.widget.api.Action;
-import spinnery.widget.api.Position;
-import spinnery.widget.api.Size;
-import spinnery.widget.api.WModifiableCollection;
+import spinnery.widget.api.*;
 
 import java.util.*;
 import java.util.function.BiConsumer;
@@ -187,20 +185,16 @@ public class WSlot extends WAbstractWidget {
 
 		ItemStack stackA = getPreviewStack().isEmpty() ? getStack() : getPreviewStack();
 
-		matrices.push();
-
-		BaseRenderer.getAdvancedItemRenderer().renderInGui(matrices, provider, stackA, (int) ((1 + x) + ((sX - 18) / 2)), (int) ((1 + y) + ((sY - 18) / 2)), z + Z_ITEM_OFFSET);
-
-		matrices.pop();
-		matrices.push();
-
-		BaseRenderer.getAdvancedItemRenderer().renderGuiItemOverlay(matrices, provider, MinecraftClient.getInstance().textRenderer, stackA, x, y, z + Z_ITEM_INFORMATION_OFFSET, stackA.getCount() == 1 ? "" : withSuffix(stackA.getCount()));
-
-		matrices.pop();
+		BaseRenderer.getAdvancedItemRenderer().renderInGui(matrices, provider, stackA, (int) ((1 + x) + ((sX - 18) / 2)), (int) ((1 + y) + ((sY - 18) / 2)), z);
+		BaseRenderer.getAdvancedItemRenderer().renderGuiItemOverlay(matrices, provider, MinecraftClient.getInstance().textRenderer, stackA, x, y, z + 1, stackA.getCount() == 1 ? "" : withSuffix(stackA.getCount()));
 
 		if (isFocused()) {
-			BaseRenderer.drawQuad(matrices, provider, x + 1, y + 1, z + Z_ITEM_INFORMATION_OFFSET + 1, sX - 2, sY - 2, getStyle().asColor("overlay"));
+//			/provider.draw();
+
+			BaseRenderer.drawQuad(matrices, provider, x + 1, y + 1, z, sX - 2, sY - 2, getStyle().asColor("overlay"));
 		}
+
+
 	}
 
 	@Override

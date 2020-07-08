@@ -21,9 +21,19 @@ public class SpinneryLayers extends RenderLayer {
 			.cull(DISABLE_CULLING)
 			.lightmap(ENABLE_LIGHTMAP)
 			.shadeModel(ShadeModel.SMOOTH_SHADE_MODEL)
-			.transparency(Transparency.TRANSLUCENT_TRANSPARENCY).build(false));
+			.transparency(Transparency.TRANSLUCENT_TRANSPARENCY)
+			.alpha(Transparency.ONE_TENTH_ALPHA)
+			.layering(Transparency.VIEW_OFFSET_Z_LAYERING).build(false));
 
 	public static RenderLayer getInterface() {
-		return FLAT;
+		return RenderLayer.of("spinnery", VertexFormats.POSITION_COLOR_LIGHT, 7, 256, RenderLayer.MultiPhaseParameters.builder()
+				.texture(NO_TEXTURE)
+				.cull(RenderPhase.ENABLE_CULLING)
+				.lightmap(ENABLE_LIGHTMAP)
+				.shadeModel(RenderLayer.SHADE_MODEL)
+				.depthTest(RenderLayer.ALWAYS_DEPTH_TEST)
+				.transparency(RenderLayer.TRANSLUCENT_TRANSPARENCY)
+				.alpha(RenderLayer.ONE_TENTH_ALPHA)
+				.layering(RenderLayer.VIEW_OFFSET_Z_LAYERING).build(false));
 	}
 }

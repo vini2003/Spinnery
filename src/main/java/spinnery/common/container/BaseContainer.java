@@ -274,7 +274,6 @@ public class BaseContainer extends ScreenHandler {
 
 		switch (action) {
 			case PICKUP: {
-
 				if (!StackUtilities.equalItemAndTag(stackA, stackB)) {
 					if (button == 0) { // Interact with existing // LMB
 						if (slotA.isOverrideMaximumCount()) {

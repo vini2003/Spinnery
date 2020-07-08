@@ -22,16 +22,12 @@ public class BaseRenderer {
 	}
 
 	public static void drawQuad(MatrixStack matrices, VertexConsumerProvider.Immediate provider, float x, float y, float z, float sX, float sY, int light, Color color) {
-		matrices.push();
-
 		VertexConsumer consumer = provider.getBuffer(SpinneryLayers.getInterface());
 
 		consumer.vertex(matrices.peek().getModel(), x, y, z).color(color.R, color.G, color.B, color.A).light(light).next();
 		consumer.vertex(matrices.peek().getModel(), x, y + sY, z).color(color.R, color.G, color.B, color.A).light(light).next();
 		consumer.vertex(matrices.peek().getModel(), x + sX, y + sY, z).color(color.R, color.G, color.B, color.A).light(light).next();
 		consumer.vertex(matrices.peek().getModel(), x + sX, y, z).color(color.R, color.G, color.B, color.A).light(light).next();
-
-		matrices.pop();
 	}
 
 	public static void drawGradientQuad(MatrixStack matrices, VertexConsumerProvider.Immediate provider, float startX, float startY, float endX, float endY, float z, Color colorStart, Color colorEnd) {
@@ -47,17 +43,12 @@ public class BaseRenderer {
 
 		matrices.push();
 
-		RenderSystem.enableBlend();
-		RenderSystem.defaultBlendFunc();
-
 		VertexConsumer consumer = provider.getBuffer(SpinneryLayers.getInterface());
 
 		consumer.vertex(matrices.peek().getModel(), endX, startY, z + 201).color(colorStart.R, colorStart.G, colorStart.B, colorStart.A).texture(uS, vS).light(light).normal(matrices.peek().getNormal(), 0, 1, 0).next();
 		consumer.vertex(matrices.peek().getModel(), startX, startY, z + 201).color(colorStart.R, colorStart.G, colorStart.B, colorStart.A).texture(uS, vE).light(light).normal(matrices.peek().getNormal(), 0, 1, 0).next();
 		consumer.vertex(matrices.peek().getModel(), startX, endY, z + 201).color(colorEnd.R, colorEnd.G, colorEnd.B, colorEnd.A).texture(uE, vS).light(light).normal(matrices.peek().getNormal(), 0, 1, 0).next();
 		consumer.vertex(matrices.peek().getModel(), endX, endY, z + 201).color(colorEnd.R, colorEnd.G, colorEnd.B, colorEnd.A).texture(uE, vE).light(light).normal(matrices.peek().getNormal(), 0, 1, 0).next();
-
-		RenderSystem.disableBlend();
 
 		if (!textured) RenderSystem.enableTexture();
 
@@ -113,9 +104,6 @@ public class BaseRenderer {
 	public static void drawTexturedQuad(MatrixStack matrices, VertexConsumerProvider.Immediate provider, float x, float y, float z, float sX, float sY, float u0, float v0, float u1, float v1, int light, Color color, Identifier texture) {
 		getTextureManager().bindTexture(texture);
 
-		RenderSystem.enableBlend();
-		RenderSystem.blendFuncSeparate(770, 771, 1, 0);
-
 		VertexConsumer consumer = provider.getBuffer(SpinneryLayers.get(texture));
 
 		matrices.push();
@@ -124,8 +112,6 @@ public class BaseRenderer {
 		consumer.vertex(matrices.peek().getModel(), x + sX, y + sY, z).color(color.R, color.G, color.B, color.A).texture(u1, v1).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(matrices.peek().getNormal(), 0, 0, 0).next();
 		consumer.vertex(matrices.peek().getModel(), x + sX, y, z).color(color.R, color.G, color.B, color.A).texture(u1, v0).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(matrices.peek().getNormal(), 0, 0, 0).next();
 		consumer.vertex(matrices.peek().getModel(), x, y, z).color(color.R, color.G, color.B, color.A).texture(u0, v0).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(matrices.peek().getNormal(), 0, 0, 0).next();
-
-		RenderSystem.disableBlend();
 
 		matrices.pop();
 	}
@@ -145,7 +131,6 @@ public class BaseRenderer {
 	public static AdvancedItemRenderer getAdvancedItemRenderer() {
 		ItemRenderer defaultRenderer = getDefaultItemRenderer();
 
-		AdvancedItemRenderer.setWithoutModels(((ItemRendererAccessor) defaultRenderer).spinnery_getWithoutModels());
 		advancedItemRenderer.setColorMap(((ItemRendererAccessor) defaultRenderer).spinner_getColorMap());
 		advancedItemRenderer.setModels(((ItemRendererAccessor) defaultRenderer).spinnery_getModels());
 		advancedItemRenderer.setTextureManager(((ItemRendererAccessor) defaultRenderer).spinnery_getTextureManager());
