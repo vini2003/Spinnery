@@ -48,6 +48,8 @@ public class WStaticText extends WAbstractWidget {
 		TextRenderer.pass().text(getText()).at(x, y, z).scale(scale).maxWidth(maxWidth)
 				.shadow(getStyle().asBoolean("shadow")).shadowColor(getStyle().asColor("shadowColor"))
 				.color(getStyle().asColor("text")).render(matrices, provider);
+
+		super.draw(matrices, provider);
 	}
 
 	@Override

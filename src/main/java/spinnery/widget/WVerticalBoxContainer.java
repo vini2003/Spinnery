@@ -177,5 +177,7 @@ public class WVerticalBoxContainer extends WAbstractWidget implements WModifiabl
 		}
 
 		area.destroy();
+
+		super.draw(matrices, provider);
 	}
 }

@@ -226,6 +226,8 @@ public class WHorizontalScrollableContainer extends WAbstractWidget implements W
 		area.destroy();
 
 		scrollbar.draw(matrices, provider);
+
+		super.draw(matrices, provider);
 	}
 
 	@Override

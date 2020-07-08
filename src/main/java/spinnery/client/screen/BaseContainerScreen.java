@@ -66,12 +66,8 @@ public class BaseContainerScreen<T extends BaseContainer> extends HandledScreen<
 			stackA = getContainer().getPreviewCursorStack();
 		}
 
-		matrices.push();
-
 		BaseRenderer.getAdvancedItemRenderer().renderInGui(matrices, provider, stackA, mouseX - 8, mouseY - 8, Integer.MAX_VALUE);
 		BaseRenderer.getAdvancedItemRenderer().renderGuiItemOverlay(matrices, provider, BaseRenderer.getDefaultTextRenderer(), stackA, (mouseX - 8), mouseY - 8, Integer.MAX_VALUE);
-
-		matrices.pop();
 
 		super.render(matrices, mouseX, mouseY, tickDelta);
 

@@ -63,6 +63,8 @@ public class WVerticalSlider extends WAbstractSlider {
 		BaseRenderer.drawBeveledPanel(matrices, provider, x - 1, clampedY, z, knobWidth, knobHeight,
 				getStyle().asColor("top_left.foreground"), getStyle().asColor("foreground"),
 				getStyle().asColor("bottom_right.foreground"));
+
+		super.draw(matrices, provider);
 	}
 
 	@Override

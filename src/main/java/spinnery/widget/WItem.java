@@ -26,5 +26,7 @@ public class WItem extends WAbstractWidget {
 		}
 
 		BaseRenderer.getAdvancedItemRenderer().renderInGui(matrices, provider, stack, getX(), getY(), getZ() + Z_ITEM_OFFSET);
+
+		super.draw(matrices, provider);
 	}
 }

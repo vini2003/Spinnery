@@ -47,5 +47,7 @@ public class WTextField extends WAbstractTextEditor {
 		BaseRenderer.drawBeveledPanel(matrices, provider, x, y, z, sX, sY, getStyle().asColor("top_left"), getStyle().asColor("background"), getStyle().asColor("bottom_right"));
 
 		renderField(matrices, provider);
+
+		super.draw(matrices, provider);
 	}
 }

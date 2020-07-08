@@ -1,12 +1,17 @@
 package spinnery.widget;
 
+import com.google.common.collect.Lists;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 import spinnery.client.render.BaseRenderer;
 import spinnery.client.render.TextRenderer;
+
+import java.util.List;
 
 @Environment(EnvType.CLIENT)
 public class WButton extends WAbstractButton {
@@ -27,6 +32,13 @@ public class WButton extends WAbstractButton {
 					.shadow(getStyle().asBoolean("label.shadow")).shadowColor(getStyle().asColor("label.shadow_color"))
 					.color(getStyle().asColor("label.color")).render(matrices, provider);
 		}
+
+		super.draw(matrices, provider);
+	}
+
+	@Override
+	public List<Text> getTooltip() {
+		return Lists.newArrayList(new LiteralText(":concern: is gone :crab:"));
 	}
 
 	@Override

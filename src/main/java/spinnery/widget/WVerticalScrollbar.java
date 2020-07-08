@@ -49,6 +49,8 @@ public class WVerticalScrollbar extends WAbstractWidget {
 		}
 
 		BaseRenderer.drawBeveledPanel(matrices, provider, getX() + 1, getScrollerY() + 1, getZ(), getWidth() - 2, Math.min(getHighY() - getScrollerY(), getScrollerHeight()) - 2, getStyle().asColor("scroller.top_left"), scrollerColor, getStyle().asColor("scroller.bottom_right"));
+
+		super.draw(matrices, provider);
 	}
 
 	@Override

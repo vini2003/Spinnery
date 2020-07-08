@@ -42,6 +42,8 @@ public class WToggle extends WAbstractToggle {
 					.text(getLabel()).at(x + sX + 2, y + sY / 2 - 4.5, z)
 					.color(getStyle().asColor("label.color")).shadowColor(getStyle().asColor("label.shadow_color")).render(matrices, provider);
 		}
+
+		super.draw(matrices, provider);
 	}
 
 	@Override

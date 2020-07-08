@@ -191,6 +191,8 @@ public class WSlot extends WAbstractWidget {
 		if (isFocused()) {
 			BaseRenderer.drawQuad(matrices, provider, x + 1, y + 1, z, sX - 2, sY - 2, getStyle().asColor("overlay"));
 		}
+
+		super.draw(matrices, provider);
 	}
 
 	@Override

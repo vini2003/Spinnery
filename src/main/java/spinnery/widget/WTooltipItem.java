@@ -73,9 +73,9 @@ public class WTooltipItem extends WItem {
 	public void draw(MatrixStack matrices, VertexConsumerProvider provider) {
 		if (isHidden() || tooltip == null || tooltipText == null) return;
 
-		super.draw(matrices, provider);
-
 		tooltip.draw(matrices, provider);
 		tooltipText.draw(matrices, provider);
+
+		super.draw(matrices, provider);
 	}
 }

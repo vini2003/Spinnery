@@ -139,5 +139,7 @@ public class WStatusBar extends WAbstractWidget {
                 sprite.draw(matrices, provider, getX() + x, getY(), getZ() + 1, config.spriteWidth, config.spriteHeight, config.mirror);
             }
         }
+
+        super.draw(matrices, provider);
     }
 }

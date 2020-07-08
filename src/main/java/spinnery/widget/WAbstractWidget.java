@@ -3,6 +3,7 @@ package spinnery.widget;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
@@ -297,8 +298,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 	 */
 	@Environment(EnvType.CLIENT)
 	public void centerX() {
-		setPosition(Position.of(getPosition())
-				.setX(getParent().getX() + getParent().getWidth() / 2 - getWidth() / 2));
+		setPosition(Position.of(getPosition()).setX(getParent().getX() + getParent().getWidth() / 2 - getWidth() / 2));
 	}
 
 	/**
@@ -306,8 +306,7 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 	 */
 	@Environment(EnvType.CLIENT)
 	public void centerY() {
-		setPosition(Position.of(getPosition())
-				.setY(getParent().getY() + getParent().getHeight() / 2 - getHeight() / 2));
+		setPosition(Position.of(getPosition()).setY(getParent().getY() + getParent().getHeight() / 2 - getHeight() / 2));
 	}
 
 	/**
@@ -335,9 +334,6 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 
 		if (list.isEmpty()) return;
 
-		RenderSystem.pushMatrix();
-		RenderSystem.translatef(0F, 0F, 256F); // Translate above all ItemStacks rendered, which go up to Z 200.
-
 		int maxWidth = 0;
 
 		for (Text text : list) {
@@ -349,22 +345,19 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 
 		int height = list.size() * TextRenderer.height();
 
-		float x = MouseUtilities.mouseX + 8F;
+		float x = MouseUtilities.mouseX + (MouseUtilities.mouseX > MinecraftClient.getInstance().getWindow().getScaledWidth() - (width + 8F) ? -width : 8F);
 		float y = MouseUtilities.mouseY - 14F;
+
+		matrices.translate(0, 0, 512);
 
 		BaseRenderer.drawTooltip(matrices, provider, x, y + 1, width - 1, height - 1, Color.of(0xf0140617), Color.of(0xf0120418), Color.of(0xf0140617), Color.of(0xf0120412), Color.of(0x50270460), Color.of(0x50190333));
 
-		RenderSystem.pushMatrix();
-		RenderSystem.translatef(0F, 0F, 256F); // Translate above the tooltip rendered, which happens at Z 256.
-
 		for (Text text : list) {
 			y += 1;
-			BaseRenderer.getDefaultTextRenderer().drawWithShadow(matrices, text, x, y, 0xFCFCFC); // 0xFCFCFC
+					TextRenderer.pass().text(text).at(x, y, 512F).scale(1F).shadow(true).color(Color.of(0xFFFCFCFC)).render(matrices, provider);
 		}
 
-		RenderSystem.popMatrix();
-
-		RenderSystem.popMatrix();
+		matrices.translate(0, 0, -512);
 	}
 
 	// WLayoutElement

@@ -46,6 +46,8 @@ public class WTextArea extends WAbstractTextEditor {
 		if (lineWrap && xOffset != 0) xOffset = 0;
 
 		renderField(matrices, provider);
+
+		super.draw(matrices, provider);
 	}    // Essentially this function checks if a given line is a true "new" line, or if it's wrapped.
 
 	// This is useful e.g. for line numbering

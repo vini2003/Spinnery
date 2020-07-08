@@ -17,7 +17,9 @@ public class WPanel extends WAbstractWidget implements WModifiableCollection, WD
 
 	@Override
 	public void draw(MatrixStack matrices, VertexConsumerProvider provider) {
-		if(isHidden()) { return; }
+		if(isHidden()) {
+			return;
+		}
 
 		float x = getX();
 		float y = getY();
@@ -37,6 +39,8 @@ public class WPanel extends WAbstractWidget implements WModifiableCollection, WD
 		for (WLayoutElement widget : widgets) {
 			widget.draw(matrices, provider);
 		}
+
+		super.draw(matrices, provider);
 	}
 
 	@Override

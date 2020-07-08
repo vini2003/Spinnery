@@ -32,6 +32,8 @@ public class WTexturedButton extends WAbstractWidget {
 		}
 
 		BaseRenderer.drawTexturedQuad(matrices, provider, getX(), getY(), getZ(), getWidth(), getHeight(), getDrawTexture());
+
+		super.draw(matrices, provider);
 	}
 
 	protected Identifier getDrawTexture() {

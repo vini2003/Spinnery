@@ -116,9 +116,6 @@ public class WDraggableContainer extends WAbstractWidget implements WModifiableC
 			return;
 		}
 
-		//RenderSystem.translatef(0, 0, getZ() * 400f);
-  		//matrices.translate(0, 0, getZ() * 400f);
-
 		ScissorArea area = new ScissorArea(this);
 
 		for (WLayoutElement widget : widgets) {
@@ -127,8 +124,7 @@ public class WDraggableContainer extends WAbstractWidget implements WModifiableC
 
 		area.destroy();
 
-		//RenderSystem.translatef(0, 0, getZ() * -400f);
-  		//matrices.translate(0, 0, getZ() * -400f);
+		super.draw(matrices, provider);
 	}
 
 	@Override

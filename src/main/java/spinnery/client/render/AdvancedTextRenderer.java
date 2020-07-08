@@ -304,7 +304,7 @@ public class AdvancedTextRenderer {
             boldOffset = isBold ? glyph.getBoldOffset() : 0.0F;
             shadowOffset = this.shadow ? glyph.getShadowOffset() : 0.0F;
 
-            VertexConsumer consumer = this.provider.getBuffer(glyphRenderer.getLayer(this.seeThrough));
+            VertexConsumer consumer = this.provider.getBuffer(glyphRenderer.getLayer(true));
 
             drawGlyph(matrices, consumer, glyphRenderer, isBold, style.isItalic(), boldOffset, this.x + shadowOffset, this.y + shadowOffset, this.z, red, green, blue, alpha, this.light);
 

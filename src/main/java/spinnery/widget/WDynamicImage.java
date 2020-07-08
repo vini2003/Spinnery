@@ -57,6 +57,8 @@ public class WDynamicImage extends WAbstractWidget {
 		}
 
 		BaseRenderer.drawTexturedQuad(matrices, provider, getX(), getY(), getZ(), getWidth(), getHeight(), getTexture());
+
+		super.draw(matrices, provider);
 	}
 
 	public Identifier getTexture() {

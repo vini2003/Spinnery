@@ -26,6 +26,8 @@ public class WStaticImage extends WAbstractWidget {
 		float sY = getHeight();
 
 		BaseRenderer.drawTexturedQuad(matrices, provider, x, y, z, sX, sY, getTexture());
+
+		super.draw(matrices, provider);
 	}
 
 	public Identifier getTexture() {

@@ -15,7 +15,9 @@ public class WTooltip extends WAbstractWidget implements WModifiableCollection {
 
 	@Override
 	public void draw(MatrixStack matrices, VertexConsumerProvider provider) {
-		if (isHidden()) return;
+		if (isHidden()) {
+			return;
+		}
 
 		float x = position.getX();
 		float y = position.getY();
@@ -46,6 +48,8 @@ public class WTooltip extends WAbstractWidget implements WModifiableCollection {
 		for (WLayoutElement widget : widgets) {
 			widget.draw(matrices, provider);
 		}
+
+		super.draw(matrices, provider);
 	}
 
 	@Override

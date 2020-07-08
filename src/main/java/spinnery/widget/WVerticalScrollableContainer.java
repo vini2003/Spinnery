@@ -572,6 +572,8 @@ public class WVerticalScrollableContainer extends WAbstractWidget implements WMo
 			verticalArrowUp.draw(matrices, provider);
 			verticalArrowDown.draw(matrices, provider);
 		}
+
+		super.draw(matrices, provider);
 	}
 
 	@Override

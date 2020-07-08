@@ -26,7 +26,7 @@ public class BaseRenderer {
 	}
 
 	public static void drawQuad(MatrixStack matrices, VertexConsumerProvider provider, RenderLayer layer, float x, float y, float z, float sX, float sY, int light, Color color) {
-		VertexConsumer consumer = provider.getBuffer(layer); // SpinneryLayers.getFlat()
+		VertexConsumer consumer = provider.getBuffer(layer);
 
 		consumer.vertex(matrices.peek().getModel(), x, y, z).color(color.R, color.G, color.B, color.A).light(light).next();
 		consumer.vertex(matrices.peek().getModel(), x, y + sY, z).color(color.R, color.G, color.B, color.A).light(light).next();

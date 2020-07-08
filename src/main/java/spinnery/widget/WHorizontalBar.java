@@ -41,5 +41,7 @@ public class WHorizontalBar extends WAbstractBar {
 		BaseRenderer.drawTexturedQuad(matrices, provider, getX(), getY(), z, getWidth(), getHeight(), getForegroundTexture());
 
 		scissorArea.destroy();
+
+		super.draw(matrices, provider);
 	}
 }

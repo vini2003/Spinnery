@@ -29,6 +29,8 @@ public class WVerticalArrowDown extends WButton {
 		if (!isLowered()) {
 			BaseRenderer.drawTexturedQuad(matrices, provider, getX(), getY(), getZ(), getWidth(), getHeight(), IMAGE);
 		}
+
+		super.draw(matrices, provider);
 	}
 
 	@Override

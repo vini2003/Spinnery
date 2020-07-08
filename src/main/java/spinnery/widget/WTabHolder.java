@@ -185,6 +185,8 @@ public class WTabHolder extends WAbstractWidget implements WCollection, WDelegat
 		@Override
 		public void draw(MatrixStack matrices, VertexConsumerProvider provider) {
 			body.draw(matrices, provider);
+
+			super.draw(matrices, provider);
 		}
 
 		public int getNumber() {

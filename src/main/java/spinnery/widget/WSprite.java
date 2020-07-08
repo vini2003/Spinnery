@@ -31,5 +31,7 @@ public class WSprite extends WAbstractWidget {
         }
 
         getSprite().draw(matrices, provider, getX(), getY(), getZ(), getWidth(), getHeight(), false);
+
+        super.draw(matrices, provider);
     }
 }
