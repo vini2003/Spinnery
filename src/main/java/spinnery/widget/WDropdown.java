@@ -14,9 +14,9 @@ import java.util.*;
 
 @SuppressWarnings("unchecked")
 @Environment(EnvType.CLIENT)
-public class WDropdown extends WAbstractWidget implements WDrawableCollection, WModifiableCollection, WDelegatedEventListener {
+public class WDropdown extends WAbstractWidget implements WModifiableCollection, WDelegatedEventListener {
 	protected Set<WAbstractWidget> widgets = new HashSet<>();
-	protected List<WLayoutElement> orderedWidgets = new ArrayList<>();
+
 	protected boolean state = false;
 	protected Size dropdownSize;
 	protected WVirtualArea toggle;
@@ -93,7 +93,7 @@ public class WDropdown extends WAbstractWidget implements WDrawableCollection, W
 		}
 
 		if (getState()) {
-			for (WLayoutElement widgetC : getOrderedWidgets()) {
+			for (WLayoutElement widgetC : widgets) {
 				widgetC.draw(matrices, provider);
 			}
 		}
@@ -196,19 +196,6 @@ public class WDropdown extends WAbstractWidget implements WDrawableCollection, W
 		super.onLayoutChange();
 		toggle = new WVirtualArea(Position.of(this), Size.of(getToggleWidth(), getToggleHeight()));
 		updateChildren();
-		recalculateCache();
-	}
-
-	@Override
-	public void recalculateCache() {
-		orderedWidgets = new ArrayList<>(getWidgets());
-		Collections.sort(orderedWidgets);
-		Collections.reverse(orderedWidgets);
-	}
-
-	@Override
-	public List<WLayoutElement> getOrderedWidgets() {
-		return orderedWidgets;
 	}
 
 	@Override

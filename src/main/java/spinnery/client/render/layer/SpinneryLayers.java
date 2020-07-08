@@ -16,24 +16,17 @@ public class SpinneryLayers extends RenderLayer {
 		return of("entity_cutout", VertexFormats.POSITION_COLOR_TEXTURE_LIGHT, 7, 256, true, true, multiPhaseParameters);
 	}
 
-	private static final RenderLayer FLAT = RenderLayer.of("spinnery", VertexFormats.POSITION_COLOR_LIGHT, 7, 256, RenderLayer.MultiPhaseParameters.builder()
+	private static final RenderLayer FLAT = of("spinnery", VertexFormats.POSITION_COLOR_LIGHT, 7, 256, RenderLayer.MultiPhaseParameters.builder()
 			.texture(NO_TEXTURE)
-			.cull(DISABLE_CULLING)
+			.cull(RenderPhase.ENABLE_CULLING)
 			.lightmap(ENABLE_LIGHTMAP)
-			.shadeModel(ShadeModel.SMOOTH_SHADE_MODEL)
-			.transparency(Transparency.TRANSLUCENT_TRANSPARENCY)
-			.alpha(Transparency.ONE_TENTH_ALPHA)
-			.layering(Transparency.VIEW_OFFSET_Z_LAYERING).build(false));
+			.shadeModel(RenderLayer.SHADE_MODEL)
+			.depthTest(RenderLayer.ALWAYS_DEPTH_TEST)
+			.transparency(RenderLayer.TRANSLUCENT_TRANSPARENCY)
+			.alpha(RenderLayer.ONE_TENTH_ALPHA)
+			.layering(RenderLayer.VIEW_OFFSET_Z_LAYERING).build(false));
 
-	public static RenderLayer getInterface() {
-		return RenderLayer.of("spinnery", VertexFormats.POSITION_COLOR_LIGHT, 7, 256, RenderLayer.MultiPhaseParameters.builder()
-				.texture(NO_TEXTURE)
-				.cull(RenderPhase.ENABLE_CULLING)
-				.lightmap(ENABLE_LIGHTMAP)
-				.shadeModel(RenderLayer.SHADE_MODEL)
-				.depthTest(RenderLayer.ALWAYS_DEPTH_TEST)
-				.transparency(RenderLayer.TRANSLUCENT_TRANSPARENCY)
-				.alpha(RenderLayer.ONE_TENTH_ALPHA)
-				.layering(RenderLayer.VIEW_OFFSET_Z_LAYERING).build(false));
+	public static RenderLayer getFlat() {
+		return FLAT;
 	}
 }

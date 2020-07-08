@@ -22,7 +22,7 @@ public class BaseRenderer {
 	}
 
 	public static void drawQuad(MatrixStack matrices, VertexConsumerProvider.Immediate provider, float x, float y, float z, float sX, float sY, int light, Color color) {
-		VertexConsumer consumer = provider.getBuffer(SpinneryLayers.getInterface());
+		VertexConsumer consumer = provider.getBuffer(SpinneryLayers.getFlat());
 
 		consumer.vertex(matrices.peek().getModel(), x, y, z).color(color.R, color.G, color.B, color.A).light(light).next();
 		consumer.vertex(matrices.peek().getModel(), x, y + sY, z).color(color.R, color.G, color.B, color.A).light(light).next();
@@ -43,7 +43,7 @@ public class BaseRenderer {
 
 		matrices.push();
 
-		VertexConsumer consumer = provider.getBuffer(SpinneryLayers.getInterface());
+		VertexConsumer consumer = provider.getBuffer(SpinneryLayers.getFlat());
 
 		consumer.vertex(matrices.peek().getModel(), endX, startY, z + 201).color(colorStart.R, colorStart.G, colorStart.B, colorStart.A).texture(uS, vS).light(light).normal(matrices.peek().getNormal(), 0, 1, 0).next();
 		consumer.vertex(matrices.peek().getModel(), startX, startY, z + 201).color(colorStart.R, colorStart.G, colorStart.B, colorStart.A).texture(uS, vE).light(light).normal(matrices.peek().getNormal(), 0, 1, 0).next();

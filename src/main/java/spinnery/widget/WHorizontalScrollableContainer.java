@@ -12,9 +12,9 @@ import java.util.*;
 // TODO: Add smoothing.
 @SuppressWarnings("unchecked")
 @Deprecated // Will be fixed soon!
-public class WHorizontalScrollableContainer extends WAbstractWidget implements WDrawableCollection, WModifiableCollection, WHorizontalScrollable, WDelegatedEventListener {
+public class WHorizontalScrollableContainer extends WAbstractWidget implements WModifiableCollection, WHorizontalScrollable, WDelegatedEventListener {
 	protected Set<WAbstractWidget> widgets = new HashSet<>();
-	protected List<WLayoutElement> orderedWidgets = new ArrayList<>();
+
 
 	protected WHorizontalScrollbar scrollbar;
 
@@ -153,7 +153,6 @@ public class WHorizontalScrollableContainer extends WAbstractWidget implements W
 		super.onLayoutChange();
 		scrollToStart();
 		updateScrollbar();
-		recalculateCache();
 	}
 
 	@Override
@@ -175,13 +174,6 @@ public class WHorizontalScrollableContainer extends WAbstractWidget implements W
 		scrollbar.setSize(Size.of(scrollBarWidth, scrollBarHeight));
 	}
 
-	@Override
-	public void recalculateCache() {
-		orderedWidgets = new ArrayList<>(getWidgets());
-		Collections.sort(orderedWidgets);
-		Collections.reverse(orderedWidgets);
-	}
-
 	public void updateChildren() {
 		for (WAbstractWidget w : getWidgets()) {
 			w.getPosition().setOffsetX(-xOffset);
@@ -201,14 +193,8 @@ public class WHorizontalScrollableContainer extends WAbstractWidget implements W
 	}
 
 	@Override
-	public List<WLayoutElement> getOrderedWidgets() {
-		return orderedWidgets;
-	}
-
-	@Override
 	public void remove(WAbstractWidget... widgetArray) {
 		widgets.removeAll(Arrays.asList(widgetArray));
-		onLayoutChange();
 		onLayoutChange();
 	}
 
@@ -233,7 +219,7 @@ public class WHorizontalScrollableContainer extends WAbstractWidget implements W
 
 		ScissorArea area = new ScissorArea(this);
 
-		for (WLayoutElement widget : getOrderedWidgets()) {
+		for (WLayoutElement widget : widgets) {
 			widget.draw(matrices, provider);
 		}
 

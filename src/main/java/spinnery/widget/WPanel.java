@@ -1,6 +1,5 @@
 package spinnery.widget;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -12,9 +11,9 @@ import spinnery.widget.api.*;
 import java.util.*;
 
 @Environment(EnvType.CLIENT)
-public class WPanel extends WAbstractWidget implements WModifiableCollection, WDrawableCollection, WDelegatedEventListener {
-	protected Set<WAbstractWidget> heldWidgets = new LinkedHashSet<>();
-	protected List<WLayoutElement> orderedWidgets = new ArrayList<>();
+public class WPanel extends WAbstractWidget implements WModifiableCollection, WDelegatedEventListener {
+	protected Set<WAbstractWidget> widgets = new LinkedHashSet<>();
+
 
 	@Override
 	public void draw(MatrixStack matrices, VertexConsumerProvider.Immediate provider) {
@@ -35,48 +34,30 @@ public class WPanel extends WAbstractWidget implements WModifiableCollection, WD
 					.color(getStyle().asColor("label.color")).shadowColor(getStyle().asColor("label.shadow_color")).render(matrices, provider);
 		}
 
-		for (WLayoutElement widget : getOrderedWidgets()) {
+		for (WLayoutElement widget : widgets) {
 			widget.draw(matrices, provider);
 		}
 	}
 
 	@Override
 	public void add(WAbstractWidget... widgets) {
-		heldWidgets.addAll(Arrays.asList(widgets));
+		this.widgets.addAll(Arrays.asList(widgets));
 		onLayoutChange();
 	}
 
 	@Override
-	public void onLayoutChange() {
-		super.onLayoutChange();
-		recalculateCache();
-	}
-
-	@Override
-	public void recalculateCache() {
-		orderedWidgets = new ArrayList<>(getWidgets());
-		Collections.sort(orderedWidgets);
-		Collections.reverse(orderedWidgets);
-	}
-
-	@Override
-	public List<WLayoutElement> getOrderedWidgets() {
-		return orderedWidgets;
-	}
-
-	@Override
 	public Set<WAbstractWidget> getWidgets() {
-		return heldWidgets;
+		return widgets;
 	}
 
 	@Override
 	public boolean contains(WAbstractWidget... widgets) {
-		return heldWidgets.containsAll(Arrays.asList(widgets));
+		return this.widgets.containsAll(Arrays.asList(widgets));
 	}
 
 	@Override
 	public void remove(WAbstractWidget... widgets) {
-		heldWidgets.removeAll(Arrays.asList(widgets));
+		this.widgets.removeAll(Arrays.asList(widgets));
 		onLayoutChange();
 	}
 

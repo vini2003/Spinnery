@@ -20,10 +20,9 @@ import spinnery.widget.api.*;
 
 import java.util.*;
 
-public class WInterface implements WDrawableCollection, WModifiableCollection, WLayoutElement, WThemable {
+public class WInterface implements WModifiableCollection, WLayoutElement, WThemable {
 	protected BaseContainer linkedContainer;
 	protected Set<WAbstractWidget> widgets = new LinkedHashSet<>();
-	protected List<WLayoutElement> orderedWidgets = new ArrayList<>();
 	protected Map<Class<? extends WAbstractWidget>, WAbstractWidget> cachedWidgets = new HashMap<>();
 	protected boolean isClientside;
 	protected Identifier theme;
@@ -86,13 +85,6 @@ public class WInterface implements WDrawableCollection, WModifiableCollection, W
 	}
 
 	@Override
-	public void recalculateCache() {
-		orderedWidgets = new ArrayList<>(getWidgets());
-		Collections.sort(orderedWidgets);
-		Collections.reverse(orderedWidgets);
-	}
-
-	@Override
 	public Set<WAbstractWidget> getWidgets() {
 		return widgets;
 	}
@@ -100,11 +92,6 @@ public class WInterface implements WDrawableCollection, WModifiableCollection, W
 	@Override
 	public boolean contains(WAbstractWidget... widgets) {
 		return this.widgets.containsAll(Arrays.asList(widgets));
-	}
-
-	@Override
-	public List<WLayoutElement> getOrderedWidgets() {
-		return orderedWidgets;
 	}
 
 	@Override
@@ -224,7 +211,7 @@ public class WInterface implements WDrawableCollection, WModifiableCollection, W
 
 	@Override
 	public void draw(MatrixStack matrices, VertexConsumerProvider.Immediate provider) {
-		for (WLayoutElement widget : getOrderedWidgets()) {
+		for (WLayoutElement widget : widgets) {
 			widget.draw(matrices, provider);
 		}
 	}
@@ -241,8 +228,6 @@ public class WInterface implements WDrawableCollection, WModifiableCollection, W
 
 	@Override
 	public void onLayoutChange() {
-		recalculateCache();
-
 		if (linkedContainer != null && FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
 			BaseContainerScreen<?> screen = (BaseContainerScreen<?>) MinecraftClient.getInstance().currentScreen;
 

@@ -10,9 +10,9 @@ import spinnery.widget.api.*;
 
 import java.util.*;
 
-public class WVerticalBoxContainer extends WAbstractWidget implements WDrawableCollection, WModifiableCollection, WDelegatedEventListener {
+public class WVerticalBoxContainer extends WAbstractWidget implements WModifiableCollection, WDelegatedEventListener {
 	protected Set<WAbstractWidget> widgets = new HashSet<>();
-	protected List<WLayoutElement> orderedWidgets = new ArrayList<>();
+
 
 	public float topBottomPadding = 0;
 	public boolean topBottomOverride = false;
@@ -100,23 +100,10 @@ public class WVerticalBoxContainer extends WAbstractWidget implements WDrawableC
 	}
 
 	@Override
-	public void recalculateCache() {
-		orderedWidgets = new ArrayList<>(getWidgets());
-		Collections.sort(orderedWidgets);
-		Collections.reverse(orderedWidgets);
-	}
-
-	@Override
-	public List<WLayoutElement> getOrderedWidgets() {
-		return orderedWidgets;
-	}
-
-	@Override
 	public void add(WAbstractWidget... widgets) {
 		this.widgets.addAll(Arrays.asList(widgets));
 
 		updateContents();
-		recalculateCache();
 	}
 
 	@Override
@@ -124,7 +111,6 @@ public class WVerticalBoxContainer extends WAbstractWidget implements WDrawableC
 		this.widgets.removeAll(Arrays.asList(widgets));
 
 		updateContents();
-		recalculateCache();
 	}
 
 	@Override

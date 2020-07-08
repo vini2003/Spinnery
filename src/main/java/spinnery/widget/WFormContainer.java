@@ -10,9 +10,9 @@ import spinnery.widget.api.*;
 
 import java.util.*;
 
-public class WFormContainer extends WAbstractWidget implements WDrawableCollection, WModifiableCollection, WDelegatedEventListener {
+public class WFormContainer extends WAbstractWidget implements WModifiableCollection, WDelegatedEventListener {
 	protected Set<WAbstractWidget> widgets = new HashSet<>();
-	protected List<WLayoutElement> orderedWidgets = new ArrayList<>();
+
 
 	protected Map<WAbstractWidget, WAbstractWidget> widgetMap = new LinkedHashMap<>();
 
@@ -121,18 +121,6 @@ public class WFormContainer extends WAbstractWidget implements WDrawableCollecti
 	}
 
 	@Override
-	public void recalculateCache() {
-		orderedWidgets = new ArrayList<>(getWidgets());
-		Collections.sort(orderedWidgets);
-		Collections.reverse(orderedWidgets);
-	}
-
-	@Override
-	public List<WLayoutElement> getOrderedWidgets() {
-		return orderedWidgets;
-	}
-
-	@Override
 	@Deprecated
 	public void add(WAbstractWidget... widgets) {
 		if (widgets.length != 2) {
@@ -147,7 +135,6 @@ public class WFormContainer extends WAbstractWidget implements WDrawableCollecti
 		widgetMap.put(left, right);
 
 		updateContents();
-		recalculateCache();
 
 		return (W) this;
 	}
@@ -167,7 +154,6 @@ public class WFormContainer extends WAbstractWidget implements WDrawableCollecti
 		widgetMap.remove(left, right);
 
 		updateContents();
-		recalculateCache();
 
 		return (W) this;
 	}

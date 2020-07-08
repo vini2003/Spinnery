@@ -310,7 +310,7 @@ public class AdvancedItemRenderer implements SynchronousResourceReloadListener {
     }
 
     private void renderGuiQuad(MatrixStack matrices, VertexConsumerProvider.Immediate provider, float x, float y, float z, int width, int height, int red, int green, int blue, int alpha) {
-        VertexConsumer consumer = provider.getBuffer(SpinneryLayers.getInterface());
+        VertexConsumer consumer = provider.getBuffer(SpinneryLayers.getFlat());
 
         consumer.vertex(matrices.peek().getModel(), x, y, z).color(red, green, blue, alpha).light(0x00f000f0).next();
         consumer.vertex(matrices.peek().getModel(), x, y + height, z).color(red, green, blue, alpha).light(0x00f000f0).next();

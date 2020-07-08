@@ -136,7 +136,7 @@ public class WTabHolder extends WAbstractWidget implements WCollection, WDelegat
 		}
 	}
 
-	public class WTab extends WAbstractWidget implements WDrawableCollection, WModifiableCollection, WDelegatedEventListener {
+	public class WTab extends WAbstractWidget implements WModifiableCollection, WDelegatedEventListener {
 		protected int number;
 		protected WTabToggle toggle;
 		protected WPanel body = new WPanel();
@@ -171,16 +171,7 @@ public class WTabHolder extends WAbstractWidget implements WCollection, WDelegat
 		public void onLayoutChange() {
 			super.onLayoutChange();
 			body.setSize(WTabHolder.this.getSize().add(0, -24));
-			recalculateCache();
 		}
-
-		@Override
-		public void recalculateCache() {
-			body.recalculateCache();
-		}
-
-		@Override
-		public List<WLayoutElement> getOrderedWidgets() { return body.getOrderedWidgets(); }
 
 		@Override
 		public boolean contains(WAbstractWidget... widgets) { return body.contains(widgets); }

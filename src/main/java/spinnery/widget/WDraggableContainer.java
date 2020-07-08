@@ -13,9 +13,9 @@ import java.util.*;
 
 // TODO: Add smoothing.
 @Environment(EnvType.CLIENT)
-public class WDraggableContainer extends WAbstractWidget implements WDrawableCollection, WModifiableCollection, WVerticalScrollable, WHorizontalScrollable {
+public class WDraggableContainer extends WAbstractWidget implements WModifiableCollection, WVerticalScrollable, WHorizontalScrollable {
 	protected Set<WAbstractWidget> widgets = new LinkedHashSet<>();
-	protected List<WLayoutElement> orderedWidgets = new ArrayList<>();
+
 
 	protected boolean dragging = false;
 	protected float scrollKineticDeltaX = 0;
@@ -75,11 +75,6 @@ public class WDraggableContainer extends WAbstractWidget implements WDrawableCol
 		return getStartAnchorX() - (getUnderlyingWidth() - getVisibleWidth());
 	}
 
-	@Override
-	public void onLayoutChange() {
-		super.onLayoutChange();
-		recalculateCache();
-	}
 
 	@Override
 	public float getEndAnchorY() {
@@ -88,20 +83,8 @@ public class WDraggableContainer extends WAbstractWidget implements WDrawableCol
 	}
 
 	@Override
-	public void recalculateCache() {
-		orderedWidgets = new ArrayList<>(getWidgets());
-		Collections.sort(orderedWidgets);
-		Collections.reverse(orderedWidgets);
-	}
-
-	@Override
 	public float getStartOffsetX() {
 		return xOffset;
-	}
-
-	@Override
-	public List<WLayoutElement> getOrderedWidgets() {
-		return orderedWidgets;
 	}
 
 	@Override
@@ -138,7 +121,7 @@ public class WDraggableContainer extends WAbstractWidget implements WDrawableCol
 
 		ScissorArea area = new ScissorArea(this);
 
-		for (WLayoutElement widget : getOrderedWidgets()) {
+		for (WLayoutElement widget : widgets) {
 			widget.draw(matrices, provider);
 		}
 

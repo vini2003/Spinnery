@@ -14,9 +14,9 @@ import spinnery.widget.api.*;
 import java.util.*;
 
 @SuppressWarnings({"UnusedReturnValue", "unchecked"})
-public class WVerticalScrollableContainer extends WAbstractWidget implements WDrawableCollection, WModifiableCollection, WVerticalScrollable, WDelegatedEventListener {
+public class WVerticalScrollableContainer extends WAbstractWidget implements WModifiableCollection, WVerticalScrollable, WDelegatedEventListener {
 	protected Set<WAbstractWidget> widgets = new HashSet<>();
-	protected List<WLayoutElement> orderedWidgets = new ArrayList<>();
+
 
 	protected WVerticalScrollbar scrollbar;
 
@@ -352,11 +352,6 @@ public class WVerticalScrollableContainer extends WAbstractWidget implements WDr
 	}
 
 	@Override
-	public List<WLayoutElement> getOrderedWidgets() {
-		return orderedWidgets;
-	}
-
-	@Override
 	public boolean contains(WAbstractWidget... widgetArray) {
 		return widgets.containsAll(Arrays.asList(widgetArray));
 	}
@@ -446,15 +441,6 @@ public class WVerticalScrollableContainer extends WAbstractWidget implements WDr
 		super.onLayoutChange();
 
 		updateScrollbar();
-		recalculateCache();
-	}
-
-	@Override
-	public void recalculateCache() {
-		orderedWidgets = new ArrayList<>(getWidgets());
-
-		Collections.sort(orderedWidgets);
-		Collections.reverse(orderedWidgets);
 	}
 
 	@Override

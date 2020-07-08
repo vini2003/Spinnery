@@ -1,19 +1,17 @@
 package spinnery.widget;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import spinnery.client.render.BaseRenderer;
 import spinnery.widget.api.Color;
-import spinnery.widget.api.WDrawableCollection;
 import spinnery.widget.api.WLayoutElement;
 import spinnery.widget.api.WModifiableCollection;
 
 import java.util.*;
 
-public class WTooltip extends WAbstractWidget implements WDrawableCollection, WModifiableCollection {
+public class WTooltip extends WAbstractWidget implements WModifiableCollection {
 	protected Set<WAbstractWidget> widgets = new LinkedHashSet<>();
-	protected List<WLayoutElement> orderedWidgets = new ArrayList<>();
+
 
 	@Override
 	public void draw(MatrixStack matrices, VertexConsumerProvider.Immediate provider) {
@@ -45,7 +43,7 @@ public class WTooltip extends WAbstractWidget implements WDrawableCollection, WM
 		BaseRenderer.drawGradientQuad(matrices, provider, x - 3, y - 3, x + width + 3, y - 3 + 1, z, colorStart, colorStart); // top outline
 		BaseRenderer.drawGradientQuad(matrices, provider, x - 3, y + height + 2, x + width + 3, y + height + 3, z, colorEnd, colorEnd); // bottom outline
 
-		for (WLayoutElement widget : getOrderedWidgets()) {
+		for (WLayoutElement widget : widgets) {
 			widget.draw(matrices, provider);
 		}
 	}
@@ -64,24 +62,6 @@ public class WTooltip extends WAbstractWidget implements WDrawableCollection, WM
 	public void add(WAbstractWidget... widgets) {
 		this.widgets.addAll(Arrays.asList(widgets));
 		onLayoutChange();
-	}
-
-	@Override
-	public void onLayoutChange() {
-		super.onLayoutChange();
-		recalculateCache();
-	}
-
-	@Override
-	public void recalculateCache() {
-		orderedWidgets = new ArrayList<>(getWidgets());
-		Collections.sort(orderedWidgets);
-		Collections.reverse(orderedWidgets);
-	}
-
-	@Override
-	public List<WLayoutElement> getOrderedWidgets() {
-		return orderedWidgets;
 	}
 
 	@Override
