@@ -41,7 +41,7 @@ public class WButton extends WAbstractButton {
 
 	@Override
 	public List<Text> getTooltip() {
-		return Lists.newArrayList(new LiteralText(":concern: is gone :crab:"));
+		return Lists.newArrayList();
 	}
 
 	@Override

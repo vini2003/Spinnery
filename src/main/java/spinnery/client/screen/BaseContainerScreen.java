@@ -75,6 +75,12 @@ public class BaseContainerScreen<T extends BaseContainer> extends HandledScreen<
 			this.renderTooltip(matrices, getDrawSlot().getStack(), (int) getTooltipX(), (int) getTooltipY());
 		}
 
+		for (WAbstractWidget widget : clientInterface.getAllWidgets()) {
+			if (widget.isFocused()) {
+				widget.drawTooltip(matrices, provider);
+			}
+		}
+
 		provider.draw(SpinneryLayers.getFlat());
 		provider.draw(SpinneryLayers.getTooltip());
 		provider.draw();

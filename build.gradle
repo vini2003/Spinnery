@@ -1,5 +1,5 @@
 plugins {
-	id 'fabric-loom' version '0.4-SNAPSHOT'
+	id 'fabric-loom' version '0.2.7-SNAPSHOT'
 	id 'maven-publish'
 	id "com.jfrog.bintray" version "1.8.4"
 }
@@ -14,9 +14,6 @@ repositories {
 		url = "https://maven.blamejared.com"
 	}
 }
-
-if (file("${rootDir}/${System.getenv("CONFIG")}").exists())
-	apply from: "${rootDir}/${System.getenv("CONFIG")}"
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
@@ -36,7 +33,6 @@ bintray {
 		vcsUrl = 'https://github.com/vini2003/Spinnery.git'
 		version {
 			name = project.mod_version + "+" + project.mod_target
-			released  = new Date()
 			vcsTag = project.mod_version + "+" + project.mod_target
 		}
 	}
@@ -47,10 +43,10 @@ minecraft {
 
 dependencies {
 	// Minecraft
-	modImplementation "com.mojang:minecraft:${project.minecraft_version}"
+	minecraft "com.mojang:minecraft:${project.minecraft_version}"
 
 	// Yarn
-	modImplementation "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
 
 	// Fabric Loader
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
@@ -59,14 +55,14 @@ dependencies {
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
 	// Jankson
-	modImplementation "blue.endless:jankson:1.2.0"
-	include "blue.endless:jankson:1.2.0"
+	modImplementation "blue.endless:jankson:${jankson_version}"
+	include "blue.endless:jankson:${jankson_version}"
 
 	// ModMenu
-	modRuntime "io.github.prospector:modmenu:${modmenu_version}"
+	modCompileOnly "io.github.prospector:modmenu:${modmenu_version}"
 
 	// RoughlyEnoughItems
-	modRuntime "me.shedaniel:RoughlyEnoughItems:${rei_version}"
+	modCompileOnly "me.shedaniel:RoughlyEnoughItems:${rei_version}"
 }
 
 processResources {
@@ -110,9 +106,11 @@ publishing {
 			artifact(remapJar) {
 				builtBy remapJar
 			}
+
 			artifact(sourcesJar) {
 				builtBy remapSourcesJar
 			}
+
 			artifact javadocJar
 		}
 	}
