@@ -219,13 +219,13 @@ public class WFormContainer extends WAbstractWidget implements WModifiableCollec
 			return;
 		}
 
-		ScissorArea area = new ScissorArea(this);
+		ScissorArea area = new ScissorArea(provider, this);
 
 		for (WAbstractWidget widget : widgets) {
 			widget.draw(matrices, provider);
 		}
 
-		area.destroy();
+		area.destroy(provider);
 
 		if (hasBorder()) {
 			BaseRenderer.drawQuad(matrices, provider, getX(), getY(), getZ(), getWidth(), outerBorderWidth, getStyle().asColor("border"));

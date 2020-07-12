@@ -59,7 +59,6 @@ public class AdvancedItemRenderer implements SynchronousResourceReloadListener {
 	public ItemModels getModels() {
 		return this.models;
 	}
-
 	private void renderBakedItemModel(BakedModel model, ItemStack stack, int light, int overlay, MatrixStack matrices, VertexConsumer vertices) {
 		for (Direction direction : Direction.values()) {
 			this.renderBakedItemQuads(matrices, vertices, model.getQuads(null, direction, random), stack, light, overlay);
@@ -125,7 +124,7 @@ public class AdvancedItemRenderer implements SynchronousResourceReloadListener {
 				this.renderBakedItemModel(model, stack, light, overlay, matrices, consumer);
 
 				if (provider instanceof VertexConsumerProvider.Immediate) {
-					((VertexConsumerProvider.Immediate) provider).draw(layer);
+					((VertexConsumerProvider.Immediate) provider).draw();
 				}
 			}
 

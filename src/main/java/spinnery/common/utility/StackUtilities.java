@@ -2,7 +2,7 @@ package spinnery.common.utility;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
-import spinnery.common.container.BaseContainer;
+import spinnery.common.handler.BaseScreenHandler;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -16,7 +16,7 @@ public class StackUtilities {
 	 * instead, why not?
 	 * In fact, it is the best idea I have had up to this
 	 * very day.
-	 * What {@link BaseContainer} does,
+	 * What {@link BaseScreenHandler} does,
 	 * is chain a {@link MutablePair#apply(Consumer, Consumer)},
 	 * right afterwards, which applies the ItemStack to
 	 * whichever method the Consumer is linked to. In that

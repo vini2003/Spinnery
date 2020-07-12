@@ -1,6 +1,7 @@
 package spinnery.client.utility;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.render.VertexConsumerProvider;
 import spinnery.widget.api.WLayoutElement;
 
 import static org.lwjgl.opengl.GL11.*;
@@ -17,7 +18,11 @@ public class ScissorArea {
 	private int top;
 	private int bottom;
 
-	public ScissorArea(int x, int y, int width, int height) {
+	public ScissorArea(VertexConsumerProvider provider, int x, int y, int width, int height) {
+		if (provider instanceof VertexConsumerProvider.Immediate) {
+			((VertexConsumerProvider.Immediate) provider).draw();
+		}
+
 		lastObject++;
 		if (lastObject < max) {
 			index = lastObject;
@@ -41,8 +46,8 @@ public class ScissorArea {
 		}
 	}
 
-	public ScissorArea(WLayoutElement element) {
-		this((int) (element.getX() * MinecraftClient.getInstance().getWindow().getScaleFactor()),
+	public ScissorArea(VertexConsumerProvider provider, WLayoutElement element) {
+		this(provider, (int) (element.getX() * MinecraftClient.getInstance().getWindow().getScaleFactor()),
 				(int) (MinecraftClient.getInstance().getWindow().getHeight() - ((element.getY() + element.getHeight()) * MinecraftClient.getInstance().getWindow().getScaleFactor())),
 				(int) (element.getWidth() * MinecraftClient.getInstance().getWindow().getScaleFactor()),
 				(int) (element.getHeight() * MinecraftClient.getInstance().getWindow().getScaleFactor()));
@@ -61,7 +66,11 @@ public class ScissorArea {
 		glScissor(left, top, right - left + 1, bottom - top + 1);
 	}
 
-	public void destroy() {
+	public void destroy(VertexConsumerProvider provider) {
+		if (provider instanceof VertexConsumerProvider.Immediate) {
+			((VertexConsumerProvider.Immediate) provider).draw();
+		}
+
 		glDisable(GL_SCISSOR_TEST);
 
 		objects[index] = null;

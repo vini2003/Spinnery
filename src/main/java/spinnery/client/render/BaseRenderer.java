@@ -54,20 +54,12 @@ public class BaseRenderer {
 	}
 
 	public static void drawGradientQuad(MatrixStack matrices, VertexConsumerProvider provider, RenderLayer layer, float startX, float startY, float endX, float endY, float z, float uS, float vS, float uE, float vE, int light, Color colorStart, Color colorEnd, boolean textured) {
-		if (!textured) RenderSystem.disableTexture();
-
-		matrices.push();
-
 		VertexConsumer consumer = provider.getBuffer(layer);
 
 		consumer.vertex(matrices.peek().getModel(), endX, startY, z + 201).color(colorStart.R, colorStart.G, colorStart.B, colorStart.A).texture(uS, vS).light(light).normal(matrices.peek().getNormal(), 0, 1, 0).next();
 		consumer.vertex(matrices.peek().getModel(), startX, startY, z + 201).color(colorStart.R, colorStart.G, colorStart.B, colorStart.A).texture(uS, vE).light(light).normal(matrices.peek().getNormal(), 0, 1, 0).next();
 		consumer.vertex(matrices.peek().getModel(), startX, endY, z + 201).color(colorEnd.R, colorEnd.G, colorEnd.B, colorEnd.A).texture(uE, vS).light(light).normal(matrices.peek().getNormal(), 0, 1, 0).next();
 		consumer.vertex(matrices.peek().getModel(), endX, endY, z + 201).color(colorEnd.R, colorEnd.G, colorEnd.B, colorEnd.A).texture(uE, vE).light(light).normal(matrices.peek().getNormal(), 0, 1, 0).next();
-
-		if (!textured) RenderSystem.enableTexture();
-
-		matrices.pop();
 	}
 
 	public static void drawTooltip(MatrixStack matrices, VertexConsumerProvider provider, float x, float y, float width, float height, Color shadowStart, Color shadowEnd, Color backgroundStart, Color backgroundEnd, Color outlineStart, Color outlineEnd) {
@@ -134,7 +126,7 @@ public class BaseRenderer {
 	}
 
 	public static void drawTexturedQuad(MatrixStack matrices, VertexConsumerProvider provider, float x, float y, float z, float sX, float sY, Identifier texture) {
-		drawTexturedQuad(matrices, provider, SpinneryLayers.getText(texture), x, y, z, sX, sY, 0, 0, 1, 1, 0x00f000f0, Color.DEFAULT, texture);
+		drawTexturedQuad(matrices, provider, SpinneryLayers.get(texture), x, y, z, sX, sY, 0, 0, 1, 1, 0x00f000f0, Color.DEFAULT, texture);
 	}
 
 	public static void drawTexturedQuad(MatrixStack matrices, VertexConsumerProvider provider, RenderLayer layer, float x, float y, float z, float sX, float sY, Color color, Identifier texture) {
@@ -142,7 +134,7 @@ public class BaseRenderer {
 	}
 
 	public static void drawTexturedQuad(MatrixStack matrices, VertexConsumerProvider provider, float x, float y, float z, float sX, float sY, Color color, Identifier texture) {
-		drawTexturedQuad(matrices, provider, SpinneryLayers.getText(texture), x, y, z, sX, sY, 0, 0, 1, 1, 0x00f000f0, color, texture);
+		drawTexturedQuad(matrices, provider, SpinneryLayers.get(texture), x, y, z, sX, sY, 0, 0, 1, 1, 0x00f000f0, color, texture);
 	}
 
 	public static void drawTexturedQuad(MatrixStack matrices, VertexConsumerProvider provider, RenderLayer layer, float x, float y, float z, float sX, float sY, int light, Color color, Identifier texture) {
@@ -150,7 +142,7 @@ public class BaseRenderer {
 	}
 
 	public static void drawTexturedQuad(MatrixStack matrices, VertexConsumerProvider provider, float x, float y, float z, float sX, float sY, int light, Color color, Identifier texture) {
-		drawTexturedQuad(matrices, provider, SpinneryLayers.getText(texture), x, y, z, sX, sY, 0, 0, 1, 1, light, color, texture);
+		drawTexturedQuad(matrices, provider, SpinneryLayers.get(texture), x, y, z, sX, sY, 0, 0, 1, 1, light, color, texture);
 	}
 
 	public static void drawTexturedQuad(MatrixStack matrices, VertexConsumerProvider provider, float x, float y, float z, float sX, float sY, float u0, float v0, float u1, float v1, int light, Color color, Identifier texture) {
@@ -162,14 +154,10 @@ public class BaseRenderer {
 
 		VertexConsumer consumer = provider.getBuffer(layer);
 
-		matrices.push();
-
 		consumer.vertex(matrices.peek().getModel(), x, y + sY, z).color(color.R, color.G, color.B, color.A).texture(u0, v1).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(matrices.peek().getNormal(), 0, 0, 0).next();
 		consumer.vertex(matrices.peek().getModel(), x + sX, y + sY, z).color(color.R, color.G, color.B, color.A).texture(u1, v1).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(matrices.peek().getNormal(), 0, 0, 0).next();
 		consumer.vertex(matrices.peek().getModel(), x + sX, y, z).color(color.R, color.G, color.B, color.A).texture(u1, v0).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(matrices.peek().getNormal(), 0, 0, 0).next();
 		consumer.vertex(matrices.peek().getModel(), x, y, z).color(color.R, color.G, color.B, color.A).texture(u0, v0).overlay(OverlayTexture.DEFAULT_UV).light(light).normal(matrices.peek().getNormal(), 0, 0, 0).next();
-
-		matrices.pop();
 	}
 
 	@Deprecated

@@ -547,13 +547,13 @@ public class WVerticalScrollableContainer extends WAbstractWidget implements WMo
 			lastScrollY = 0;
 		}
 
-		ScissorArea area = new ScissorArea(this);
+		ScissorArea area = new ScissorArea(provider, this);
 
 		for (WAbstractWidget widget : getWidgets()) {
 			widget.draw(matrices, provider);
 		}
 
-		area.destroy();
+		area.destroy(provider);
 
 		if (hasFade()) {
 			Color fadeOut = getStyle().asColor("background");

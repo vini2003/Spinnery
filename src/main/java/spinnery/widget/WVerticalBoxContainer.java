@@ -165,7 +165,7 @@ public class WVerticalBoxContainer extends WAbstractWidget implements WModifiabl
 			return;
 		}
 
-		ScissorArea area = new ScissorArea(this);
+		ScissorArea area = new ScissorArea(provider, this);
 
 		for (WAbstractWidget widget : widgets) {
 			widget.draw(matrices, provider);
@@ -178,7 +178,7 @@ public class WVerticalBoxContainer extends WAbstractWidget implements WModifiabl
 			BaseRenderer.drawQuad(matrices, provider, getWideX() - 1, getY(), getZ(), outerBorderWidth, getHeight(), getStyle().asColor("border"));
 		}
 
-		area.destroy();
+		area.destroy(provider);
 
 		super.draw(matrices, provider);
 	}

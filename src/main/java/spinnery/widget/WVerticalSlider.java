@@ -26,8 +26,7 @@ public class WVerticalSlider extends WAbstractSlider {
 
 		if (isProgressVisible()) {
 			Position tPos = getProgressTextAnchor();
-			TextRenderer.pass().shadow(isLabelShadowed()).text(getFormattedProgress()).at(tPos.getX(), tPos.getY(), tPos.getZ())
-					.color(getStyle().asColor("label.color")).shadowColor(getStyle().asColor("label.shadow_color")).render(matrices, provider);
+			TextRenderer.pass().shadow(isLabelShadowed()).text(getFormattedProgress()).at(tPos.getX(), tPos.getY(), tPos.getZ()).color(getStyle().asColor("label.color")).shadowColor(getStyle().asColor("label.shadow_color")).render(matrices, provider);
 		}
 
 		BaseRenderer.drawQuad(matrices, provider, x, y, z, sX, 1, getStyle().asColor("top_left.background"));
@@ -47,10 +46,8 @@ public class WVerticalSlider extends WAbstractSlider {
 		float percentComplete = getPercentComplete();
 		float percentLeft = 1 - percentComplete;
 
-		BaseRenderer.drawQuad(matrices, provider, innerX, innerY + innerHeight * percentLeft, z, innerWidth, innerHeight * percentComplete,
-				getStyle().asColor("background.on"));
-		BaseRenderer.drawQuad(matrices, provider, innerX, innerY, z, innerWidth, innerHeight * percentLeft,
-				getStyle().asColor("background.off"));
+		BaseRenderer.drawQuad(matrices, provider, innerX, innerY + innerHeight * percentLeft, z, innerWidth, innerHeight * percentComplete, getStyle().asColor("background.on"));
+		BaseRenderer.drawQuad(matrices, provider, innerX, innerY, z, innerWidth, innerHeight * percentLeft, getStyle().asColor("background.off"));
 
 		Size knobSize = getKnobSize();
 

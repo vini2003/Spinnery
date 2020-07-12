@@ -57,22 +57,18 @@ public class AdvancedTextRenderer {
 	}
 
 	public int drawWithShadow(MatrixStack matrices, VertexConsumerProvider provider, String text, float x, float y, float z, int color, boolean rightToLeft) {
-		RenderSystem.enableAlphaTest();
 		return this.draw(matrices, provider, text, x, y, z, color, true, rightToLeft);
 	}
 
 	public int drawWithShadow(MatrixStack matrices, VertexConsumerProvider provider, StringRenderable text, float x, float y, float z, int color) {
-		RenderSystem.enableAlphaTest();
 		return this.draw(matrices, provider, text, x, y, z, color, true);
 	}
 
 	public int draw(MatrixStack matrices, VertexConsumerProvider provider, String text, float x, float y, float z, int color) {
-		RenderSystem.enableAlphaTest();
 		return this.draw(matrices, provider, text, x, y, z, color, false, this.isRightToLeft());
 	}
 
 	public int draw(MatrixStack matrices, VertexConsumerProvider provider, StringRenderable text, float x, float y, float z, int color) {
-		RenderSystem.enableAlphaTest();
 		return this.draw(matrices, provider, text, x, y, z, color, false);
 	}
 

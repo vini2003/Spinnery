@@ -53,7 +53,7 @@ public class WTabToggle extends WAbstractToggle {
 
 			if (this.getX() == parent.getX()) {
 				BaseRenderer.drawQuad(matrices, provider, x, y + sY - 4, z + 1, 1, 6, getStyle().asColor("outline.off"));
-				BaseRenderer.drawQuad(matrices, provider, x + sX - 1, y + sY - 4, z - 1, 1, 6, getStyle().asColor("outline.on"));
+				BaseRenderer.drawQuad(matrices, provider, x + sX - 1, y + sY - 4, z - 1, 1, 5, getStyle().asColor("outline.on")); // 6 -> 5 @ < getStyle()
 			} else if (this.getWideX() == parent.getWideX()) {
 				BaseRenderer.drawQuad(matrices, provider, x + sX - 3, y + sY - 4, z + 1, 2, 8, getStyle().asColor("shadow.off"));
 				BaseRenderer.drawQuad(matrices, provider, x, y + sY - 4, z - 1, 1, 5, getStyle().asColor("outline.on"));

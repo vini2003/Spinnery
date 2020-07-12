@@ -5,8 +5,8 @@ import me.shedaniel.rei.api.DisplayHelper;
 import me.shedaniel.rei.api.plugins.REIPluginV0;
 import net.minecraft.util.Identifier;
 import spinnery.Spinnery;
-import spinnery.client.screen.BaseContainerScreen;
-import spinnery.common.container.BaseContainer;
+import spinnery.client.screen.BaseHandledScreen;
+import spinnery.common.handler.BaseScreenHandler;
 
 public class SpinneryPlugin implements REIPluginV0 {
 	private static final Identifier IDENTIFIER = new Identifier(Spinnery.MOD_ID, "rei_plugin");
@@ -18,14 +18,14 @@ public class SpinneryPlugin implements REIPluginV0 {
 
 	@Override
 	public void registerBounds(DisplayHelper displayHelper) {
-		displayHelper.registerHandler(new DisplayHelper.DisplayBoundsProvider<BaseContainerScreen<BaseContainer>>() {
+		displayHelper.registerHandler(new DisplayHelper.DisplayBoundsProvider<BaseHandledScreen<BaseScreenHandler>>() {
 			@Override
 			public Class<?> getBaseSupportedClass() {
-				return BaseContainerScreen.class;
+				return BaseHandledScreen.class;
 			}
 
 			@Override
-			public Rectangle getScreenBounds(BaseContainerScreen<BaseContainer> screen) {
+			public Rectangle getScreenBounds(BaseHandledScreen<BaseScreenHandler> screen) {
 				screen.updateDimensions();
 				return new Rectangle(screen.getMinX(), screen.getMinY(), screen.getMaxX() - screen.getMinX(), screen.getMaxY() - screen.getMinY());
 			}

@@ -8,8 +8,8 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
-import spinnery.client.screen.BaseContainerScreen;
-import spinnery.common.container.BaseContainer;
+import spinnery.client.screen.BaseHandledScreen;
+import spinnery.common.handler.BaseScreenHandler;
 import spinnery.common.registry.NetworkRegistry;
 import spinnery.common.utility.EventUtilities;
 import spinnery.widget.api.WLayoutElement;
@@ -20,7 +20,7 @@ import spinnery.widget.api.WThemable;
 import java.util.*;
 
 public class WInterface implements WModifiableCollection, WLayoutElement, WThemable {
-	protected BaseContainer linkedContainer;
+	protected BaseScreenHandler handler;
 	protected Set<WAbstractWidget> widgets = new LinkedHashSet<>();
 	protected Map<Class<? extends WAbstractWidget>, WAbstractWidget> cachedWidgets = new HashMap<>();
 	protected boolean isClientside;
@@ -35,20 +35,29 @@ public class WInterface implements WModifiableCollection, WLayoutElement, WThema
 		return (W) this;
 	}
 
-	public WInterface(BaseContainer linkedContainer) {
-		setContainer(linkedContainer);
-		if (getContainer().getWorld().isClient()) {
+	public WInterface(BaseScreenHandler handler) {
+		setHandler(handler);
+		if (getHandler().getWorld().isClient()) {
 			setClientside(true);
 		}
 	}
 
-	public BaseContainer getContainer() {
-		return linkedContainer;
+	public BaseScreenHandler getHandler() {
+		return handler;
 	}
 
-	public <W extends WInterface> W setContainer(BaseContainer linkedContainer) {
-		this.linkedContainer = linkedContainer;
+	public <W extends WInterface> W setHandler(BaseScreenHandler handler) {
+		this.handler = handler;
 		return (W) this;
+	}
+
+	@Deprecated
+	public BaseScreenHandler getContainer() {
+		return getHandler();
+	}
+
+	public <W extends WInterface> W setContainer(BaseScreenHandler handler) {
+		return setHandler(handler);
 	}
 
 	public boolean isClient() {
@@ -227,8 +236,8 @@ public class WInterface implements WModifiableCollection, WLayoutElement, WThema
 
 	@Override
 	public void onLayoutChange() {
-		if (linkedContainer != null && FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
-			BaseContainerScreen<?> screen = (BaseContainerScreen<?>) MinecraftClient.getInstance().currentScreen;
+		if (handler != null && FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
+			BaseHandledScreen<?> screen = (BaseHandledScreen<?>) MinecraftClient.getInstance().currentScreen;
 
 			if (screen != null) {
 				screen.updateDimensions();

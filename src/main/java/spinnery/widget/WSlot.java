@@ -15,7 +15,7 @@ import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.Level;
 import spinnery.Spinnery;
 import spinnery.client.render.BaseRenderer;
-import spinnery.common.container.BaseContainer;
+import spinnery.common.handler.BaseScreenHandler;
 import spinnery.widget.api.Action;
 import spinnery.widget.api.Position;
 import spinnery.widget.api.Size;
@@ -74,8 +74,8 @@ public class WSlot extends WAbstractWidget {
 
 	@Environment(EnvType.CLIENT)
 	public static Collection<WSlot> addPlayerInventory(Position position, Size size, WModifiableCollection parent) {
-		Collection<WSlot> set = addArray(position, size, parent, 9, BaseContainer.PLAYER_INVENTORY, 9, 3);
-		set.addAll(addArray(position.add(0, size.getHeight() * 3 + 4, 0), size, parent, 0, BaseContainer.PLAYER_INVENTORY, 9, 1));
+		Collection<WSlot> set = addArray(position, size, parent, 9, BaseScreenHandler.PLAYER_INVENTORY, 9, 3);
+		set.addAll(addArray(position.add(0, size.getHeight() * 3 + 4, 0), size, parent, 0, BaseScreenHandler.PLAYER_INVENTORY, 9, 1));
 		return set;
 	}
 
@@ -93,8 +93,8 @@ public class WSlot extends WAbstractWidget {
 	}
 
 	public static Collection<WSlot> addHeadlessPlayerInventory(WInterface linkedInterface) {
-		Collection<WSlot> set = addHeadlessArray(linkedInterface, 0, BaseContainer.PLAYER_INVENTORY, 9, 1);
-		set.addAll(addHeadlessArray(linkedInterface, 9, BaseContainer.PLAYER_INVENTORY, 9, 3));
+		Collection<WSlot> set = addHeadlessArray(linkedInterface, 0, BaseScreenHandler.PLAYER_INVENTORY, 9, 1);
+		set.addAll(addHeadlessArray(linkedInterface, 9, BaseScreenHandler.PLAYER_INVENTORY, 9, 3));
 		return set;
 	}
 
@@ -193,7 +193,7 @@ public class WSlot extends WAbstractWidget {
 		if (isFocused()) {
 			BaseRenderer.drawQuad(matrices, provider, x + 1, y + 1, z, sX - 2, sY - 2, getStyle().asColor("overlay"));
 		}
-
+		
 		super.draw(matrices, provider);
 	}
 
@@ -202,28 +202,28 @@ public class WSlot extends WAbstractWidget {
 	public void onMouseReleased(float mouseX, float mouseY, int button) {
 		if (button == MIDDLE || isLocked()) return;
 
-		PlayerEntity player = getInterface().getContainer().getPlayerInventory().player;
-		BaseContainer container = getInterface().getContainer();
+		PlayerEntity player = getInterface().getHandler().getPlayerInventory().player;
+		BaseScreenHandler handler = getInterface().getHandler();
 
-		int[] slotNumbers = container.getDragSlots(button).stream().mapToInt(WSlot::getSlotNumber).toArray();
-		int[] inventoryNumbers = container.getDragSlots(button).stream().mapToInt(WSlot::getInventoryNumber).toArray();
+		int[] slotNumbers = handler.getDragSlots(button).stream().mapToInt(WSlot::getSlotNumber).toArray();
+		int[] inventoryNumbers = handler.getDragSlots(button).stream().mapToInt(WSlot::getInventoryNumber).toArray();
 
-		boolean isDragging = container.isDragging() && nanoInterval() > nanoDelay();
+		boolean isDragging = handler.isDragging() && nanoInterval() > nanoDelay();
 		boolean isCursorEmpty = player.inventory.getCursorStack().isEmpty();
 
 		if (!skipRelease && !Screen.hasShiftDown()) {
 			if (isDragging) {
-				container.onSlotDrag(slotNumbers, inventoryNumbers, Action.of(button, true));
-				INSTANCE.sendToServer(SLOT_DRAG_PACKET, createSlotDragPacket(container.syncId, slotNumbers, inventoryNumbers, Action.of(button, true)));
+				handler.onSlotDrag(slotNumbers, inventoryNumbers, Action.of(button, true));
+				INSTANCE.sendToServer(SLOT_DRAG_PACKET, createSlotDragPacket(handler.syncId, slotNumbers, inventoryNumbers, Action.of(button, true)));
 			} else if (!isFocused()) {
 				return;
 			} else if ((button == LEFT || button == RIGHT) && !isCursorEmpty) {
-				container.onSlotAction(slotNumber, inventoryNumber, button, PICKUP, player);
-				INSTANCE.sendToServer(SLOT_CLICK_PACKET, createSlotClickPacket(container.syncId, slotNumber, inventoryNumber, button, PICKUP));
+				handler.onSlotAction(slotNumber, inventoryNumber, button, PICKUP, player);
+				INSTANCE.sendToServer(SLOT_CLICK_PACKET, createSlotClickPacket(handler.syncId, slotNumber, inventoryNumber, button, PICKUP));
 			}
 		}
 
-		container.flush();
+		handler.flush();
 
 		skipRelease = false;
 
@@ -235,32 +235,32 @@ public class WSlot extends WAbstractWidget {
 	public void onMouseClicked(float mouseX, float mouseY, int button) {
 		if (!isFocused() || isLocked()) return;
 
-		PlayerEntity player = getInterface().getContainer().getPlayerInventory().player;
-		BaseContainer container = getInterface().getContainer();
+		PlayerEntity player = getInterface().getHandler().getPlayerInventory().player;
+		BaseScreenHandler handler = getInterface().getHandler();
 
 		boolean isCursorEmpty = player.inventory.getCursorStack().isEmpty();
 
 		if (nanoInterval() < nanoDelay() * 1.25f && button == LEFT) {
 			skipRelease = true;
-			container.onSlotAction(slotNumber, inventoryNumber, button, PICKUP_ALL, player);
-			INSTANCE.sendToServer(SLOT_CLICK_PACKET, createSlotClickPacket(container.syncId, slotNumber, inventoryNumber, button, PICKUP_ALL));
+			handler.onSlotAction(slotNumber, inventoryNumber, button, PICKUP_ALL, player);
+			INSTANCE.sendToServer(SLOT_CLICK_PACKET, createSlotClickPacket(handler.syncId, slotNumber, inventoryNumber, button, PICKUP_ALL));
 		} else {
 			nanoUpdate();
 
 			if (Screen.hasShiftDown()) {
 				if (button == LEFT) {
 					getInterface().getCachedWidgets().put(getClass(), this);
-					container.onSlotAction(slotNumber, inventoryNumber, button, QUICK_MOVE, player);
-					INSTANCE.sendToServer(SLOT_CLICK_PACKET, createSlotClickPacket(container.syncId, slotNumber, inventoryNumber, button, QUICK_MOVE));
+					handler.onSlotAction(slotNumber, inventoryNumber, button, QUICK_MOVE, player);
+					INSTANCE.sendToServer(SLOT_CLICK_PACKET, createSlotClickPacket(handler.syncId, slotNumber, inventoryNumber, button, QUICK_MOVE));
 				}
 			} else {
 				if ((button == LEFT || button == RIGHT) && isCursorEmpty) {
 					skipRelease = true;
-					container.onSlotAction(slotNumber, inventoryNumber, button, PICKUP, player);
-					INSTANCE.sendToServer(SLOT_CLICK_PACKET, createSlotClickPacket(container.syncId, slotNumber, inventoryNumber, button, PICKUP));
+					handler.onSlotAction(slotNumber, inventoryNumber, button, PICKUP, player);
+					INSTANCE.sendToServer(SLOT_CLICK_PACKET, createSlotClickPacket(handler.syncId, slotNumber, inventoryNumber, button, PICKUP));
 				} else if (button == MIDDLE) {
-					container.onSlotAction(slotNumber, inventoryNumber, button, CLONE, player);
-					INSTANCE.sendToServer(SLOT_CLICK_PACKET, createSlotClickPacket(container.syncId, slotNumber, inventoryNumber, button, CLONE));
+					handler.onSlotAction(slotNumber, inventoryNumber, button, CLONE, player);
+					INSTANCE.sendToServer(SLOT_CLICK_PACKET, createSlotClickPacket(handler.syncId, slotNumber, inventoryNumber, button, CLONE));
 				}
 			}
 		}
@@ -273,31 +273,31 @@ public class WSlot extends WAbstractWidget {
 	public void onMouseDragged(float mouseX, float mouseY, int button, double deltaX, double deltaY) {
 		if (!isFocused() || button == MIDDLE || isLocked()) return;
 
-		PlayerEntity player = getInterface().getContainer().getPlayerInventory().player;
-		BaseContainer container = getInterface().getContainer();
+		PlayerEntity player = getInterface().getHandler().getPlayerInventory().player;
+		BaseScreenHandler handler = getInterface().getHandler();
 
 		boolean isCached = getInterface().getCachedWidgets().get(getClass()) == this;
 
-		int[] slotNumbers = container.getDragSlots(button).stream().mapToInt(WSlot::getSlotNumber).toArray();
-		int[] inventoryNumbers = container.getDragSlots(button).stream().mapToInt(WSlot::getInventoryNumber).toArray();
+		int[] slotNumbers = handler.getDragSlots(button).stream().mapToInt(WSlot::getSlotNumber).toArray();
+		int[] inventoryNumbers = handler.getDragSlots(button).stream().mapToInt(WSlot::getInventoryNumber).toArray();
 
 		if (Screen.hasShiftDown()) {
 			if (button == LEFT && !isCached) {
 				getInterface().getCachedWidgets().put(getClass(), this);
-				container.onSlotAction(slotNumber, inventoryNumber, button, QUICK_MOVE, player);
-				INSTANCE.sendToServer(SLOT_CLICK_PACKET, createSlotClickPacket(container.syncId, slotNumber, inventoryNumber, button, QUICK_MOVE));
+				handler.onSlotAction(slotNumber, inventoryNumber, button, QUICK_MOVE, player);
+				INSTANCE.sendToServer(SLOT_CLICK_PACKET, createSlotClickPacket(handler.syncId, slotNumber, inventoryNumber, button, QUICK_MOVE));
 			}
 		} else {
 			if ((button == LEFT || button == RIGHT) && nanoInterval() > nanoDelay() / 1.5f) {
-				if (!container.getDragSlots(button).isEmpty()) {
-					ItemStack stackA = container.getDragSlots(button).iterator().next().getStack();
+				if (!handler.getDragSlots(button).isEmpty()) {
+					ItemStack stackA = handler.getDragSlots(button).iterator().next().getStack();
 					ItemStack stackB = getStack();
 
 					if ((stackA.getItem() != stackB.getItem() || stackA.getTag() != stackB.getTag())) return;
 				}
 
-				container.getDragSlots(button).add(this);
-				container.onSlotDrag(slotNumbers, inventoryNumbers, Action.of(button, false));
+				handler.getDragSlots(button).add(this);
+				handler.onSlotDrag(slotNumbers, inventoryNumbers, Action.of(button, false));
 			}
 		}
 
@@ -354,8 +354,8 @@ public class WSlot extends WAbstractWidget {
 	}
 
 	public ItemStack getPreviewStack() {
-		getInterface().getContainer().getPreviewStacks().putIfAbsent(getInventoryNumber(), new HashMap<>());
-		return getInterface().getContainer().getPreviewStacks().get(getInventoryNumber()).getOrDefault(getSlotNumber(), ItemStack.EMPTY);
+		getInterface().getHandler().getPreviewStacks().putIfAbsent(getInventoryNumber(), new HashMap<>());
+		return getInterface().getHandler().getPreviewStacks().get(getInventoryNumber()).getOrDefault(getSlotNumber(), ItemStack.EMPTY);
 	}
 
 	public ItemStack getStack() {
@@ -386,7 +386,7 @@ public class WSlot extends WAbstractWidget {
 	}
 
 	public Inventory getLinkedInventory() {
-		return getInterface().getContainer().getInventories().get(inventoryNumber);
+		return getInterface().getHandler().getInventories().get(inventoryNumber);
 	}
 
 	public <W extends WSlot> W setStack(ItemStack stack) {
@@ -417,8 +417,8 @@ public class WSlot extends WAbstractWidget {
 	}
 
 	public <W extends WSlot> W setPreviewStack(ItemStack previewStack) {
-		getInterface().getContainer().getPreviewStacks().putIfAbsent(getInventoryNumber(), new HashMap<>());
-		getInterface().getContainer().getPreviewStacks().get(getInventoryNumber()).put(getSlotNumber(), previewStack);
+		getInterface().getHandler().getPreviewStacks().putIfAbsent(getInventoryNumber(), new HashMap<>());
+		getInterface().getHandler().getPreviewStacks().get(getInventoryNumber()).put(getSlotNumber(), previewStack);
 		return (W) this;
 	}
 

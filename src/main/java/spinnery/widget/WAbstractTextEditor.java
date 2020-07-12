@@ -642,7 +642,7 @@ public abstract class WAbstractTextEditor extends WAbstractWidget implements WPa
 		int rawHeight = MinecraftClient.getInstance().getWindow().getHeight();
 
 
-		ScissorArea area = new ScissorArea((int) ((innerX - 1) * glScale), (int) (rawHeight - ((innerY - 2) * glScale + innerHeight * glScale)), (int) (innerWidth * glScale), (int) (innerHeight * glScale));
+		ScissorArea area = new ScissorArea(provider, (int) ((innerX - 1) * glScale), (int) (rawHeight - ((innerY - 2) * glScale + innerHeight * glScale)), (int) (innerWidth * glScale), (int) (innerHeight * glScale));
 
 		float lineOffset = getLineOffset();
 		float cH = getTextHeight();
@@ -674,7 +674,7 @@ public abstract class WAbstractTextEditor extends WAbstractWidget implements WPa
 		}
 		RenderSystem.popMatrix();
 
-		area.destroy();
+		area.destroy(provider);
 	}
 
 	public boolean isEmpty() {

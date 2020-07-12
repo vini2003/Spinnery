@@ -219,13 +219,13 @@ public class WHorizontalScrollableContainer extends WAbstractWidget implements W
 			return;
 		}
 
-		ScissorArea area = new ScissorArea(this);
+		ScissorArea area = new ScissorArea(provider, this);
 
 		for (WLayoutElement widget : widgets) {
 			widget.draw(matrices, provider);
 		}
 
-		area.destroy();
+		area.destroy(provider);
 
 		scrollbar.draw(matrices, provider);
 

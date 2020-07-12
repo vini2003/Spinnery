@@ -117,13 +117,13 @@ public class WDraggableContainer extends WAbstractWidget implements WModifiableC
 			return;
 		}
 
-		ScissorArea area = new ScissorArea(this);
+		ScissorArea area = new ScissorArea(provider, this);
 
 		for (WLayoutElement widget : widgets) {
 			widget.draw(matrices, provider);
 		}
 
-		area.destroy();
+		area.destroy(provider);
 
 		super.draw(matrices, provider);
 	}
