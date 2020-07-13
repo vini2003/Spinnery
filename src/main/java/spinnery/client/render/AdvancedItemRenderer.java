@@ -148,8 +148,8 @@ public class AdvancedItemRenderer implements SynchronousResourceReloadListener {
 		return glint ? VertexConsumers.dual(vertexConsumers.getBuffer(solid ? RenderLayer.getGlint() : RenderLayer.getEntityGlint()), vertexConsumers.getBuffer(layer)) : vertexConsumers.getBuffer(layer);
 	}
 
-	public static VertexConsumer getDirectAndEntityGlintVertexConsumer(VertexConsumerProvider vertexConsumerProvider, RenderLayer renderLayer, boolean bl, boolean bl2) {
-		return bl2 ? VertexConsumers.dual(vertexConsumerProvider.getBuffer(bl ? RenderLayer.getGlintDirect() : RenderLayer.getEntityGlintDirect()), vertexConsumerProvider.getBuffer(renderLayer)) : vertexConsumerProvider.getBuffer(renderLayer);
+	public static VertexConsumer getDirectAndEntityGlintVertexConsumer(VertexConsumerProvider provider, RenderLayer layer, boolean bl, boolean glint) {
+		return glint ? VertexConsumers.dual(provider.getBuffer(bl ? RenderLayer.getGlintDirect() : RenderLayer.getEntityGlintDirect()), provider.getBuffer(layer)) : provider.getBuffer(layer);
 	}
 
 	private void renderBakedItemQuads(MatrixStack matrices, VertexConsumer vertices, List<BakedQuad> quads, ItemStack stack, int light, int overlay) {

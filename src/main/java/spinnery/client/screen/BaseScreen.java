@@ -23,7 +23,7 @@ public class BaseScreen extends Screen implements WInterfaceProvider {
 	public void render(MatrixStack matrices, int mouseX, int mouseY, float tick) {
 		this.fillGradient(matrices, 0, 0, this.width, this.height, -1072689136, -804253680);
 
-		VertexConsumerProvider.Immediate provider = MinecraftClient.getInstance().getBufferBuilders().getEffectVertexConsumers();
+		VertexConsumerProvider.Immediate provider = MinecraftClient.getInstance().getBufferBuilders().getEntityVertexConsumers();
 
 		getInterface().draw(matrices, provider);
 

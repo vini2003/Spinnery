@@ -187,11 +187,11 @@ public class WSlot extends WAbstractWidget {
 
 		ItemStack stackA = getPreviewStack().isEmpty() ? getStack() : getPreviewStack();
 
-		BaseRenderer.getAdvancedItemRenderer().renderInGui(matrices, provider, stackA, (int) ((1 + x) + ((sX - 18) / 2)), (int) ((1 + y) + ((sY - 18) / 2)), z);
+		BaseRenderer.getAdvancedItemRenderer().renderInGui(matrices, provider, stackA, ((x + 1) + ((sX - 18) / 2)), ((y + 1) + ((sY - 18) / 2)), z);
 		BaseRenderer.getAdvancedItemRenderer().renderGuiItemOverlay(matrices, provider, MinecraftClient.getInstance().textRenderer, stackA, x, y, z + 1, stackA.getCount() == 1 ? "" : withSuffix(stackA.getCount()));
 
 		if (isFocused()) {
-			BaseRenderer.drawQuad(matrices, provider, x + 1, y + 1, z, sX - 2, sY - 2, getStyle().asColor("overlay"));
+			BaseRenderer.drawQuad(matrices, provider, x + 1, y + 1, z + 1, sX - 2, sY - 2, getStyle().asColor("overlay"));
 		}
 		
 		super.draw(matrices, provider);

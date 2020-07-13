@@ -4,6 +4,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
+import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
@@ -63,7 +64,7 @@ public class BaseHandledScreen<T extends BaseScreenHandler> extends HandledScree
 	public void render(MatrixStack matrices, int mouseX, int mouseY, float tickDelta) {
 		this.fillGradient(matrices, 0, 0, this.width, this.height, -1072689136, -804253680);
 
-		VertexConsumerProvider.Immediate provider = MinecraftClient.getInstance().getBufferBuilders().getEffectVertexConsumers();
+		VertexConsumerProvider.Immediate provider = MinecraftClient.getInstance().getBufferBuilders().getEntityVertexConsumers();
 
 		clientInterface.draw(matrices, provider);
 
@@ -80,10 +81,6 @@ public class BaseHandledScreen<T extends BaseScreenHandler> extends HandledScree
 
 		super.render(matrices, mouseX, mouseY, tickDelta);
 
-		if (getDrawSlot() != null && getHandler().getPlayerInventory().getCursorStack().isEmpty() && !getDrawSlot().getStack().isEmpty()) {
-			this.renderTooltip(matrices, getDrawSlot().getStack(), (int) getTooltipX(), (int) getTooltipY());
-		}
-
 		for (WAbstractWidget widget : clientInterface.getAllWidgets()) {
 			if (widget.isFocused()) {
 				widget.drawTooltip(matrices, provider);
@@ -93,6 +90,10 @@ public class BaseHandledScreen<T extends BaseScreenHandler> extends HandledScree
 		provider.draw(SpinneryLayers.getFlat());
 		provider.draw(SpinneryLayers.getTooltip());
 		provider.draw();
+
+		if (getDrawSlot() != null && getHandler().getPlayerInventory().getCursorStack().isEmpty() && !getDrawSlot().getStack().isEmpty()) {
+			this.renderTooltip(matrices, getDrawSlot().getStack(), (int) getTooltipX(), (int) getTooltipY());
+		}
 	}
 
 	/**

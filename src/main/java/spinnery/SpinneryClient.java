@@ -2,6 +2,7 @@ package spinnery;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.block.entity.AbstractFurnaceBlockEntity;
 import spinnery.client.integration.SpinneryConfigurationScreen;
 import spinnery.common.registry.NetworkRegistry;
 import spinnery.common.registry.ThemeResourceRegistry;
