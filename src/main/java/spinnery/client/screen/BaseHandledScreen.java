@@ -370,7 +370,7 @@ public class BaseHandledScreen<T extends BaseScreenHandler> extends HandledScree
 	 * @param tooltipY Vertical position at which the tooltip will be drawn.
 	 */
 	@Environment(EnvType.CLIENT)
-	public <S extends BaseHandledScreen> S setTooltipY(float tooltipY) {
+	public <S extends BaseHandledScreen<?>> S setTooltipY(float tooltipY) {
 		this.tooltipY = tooltipY;
 		return (S) this;
 	}
@@ -399,11 +399,8 @@ public class BaseHandledScreen<T extends BaseScreenHandler> extends HandledScree
 	 */
 	@Environment(EnvType.CLIENT)
 	public void updateTooltip(float mouseX, float mouseY) {
-		setDrawSlot(null);
 		for (WAbstractWidget widgetA : getInterface().getAllWidgets()) {
 			if (widgetA.isFocused() && widgetA instanceof WSlot) {
-				setDrawSlot((WSlot) widgetA);
-
 				setTooltipX(mouseX);
 				setTooltipY(mouseY);
 			}

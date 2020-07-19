@@ -15,6 +15,8 @@ import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.Level;
 import spinnery.Spinnery;
 import spinnery.client.render.BaseRenderer;
+import spinnery.client.screen.BaseContainerScreen;
+import spinnery.client.screen.BaseHandledScreen;
 import spinnery.common.handler.BaseScreenHandler;
 import spinnery.widget.api.Action;
 import spinnery.widget.api.Position;
@@ -163,6 +165,30 @@ public class WSlot extends WAbstractWidget {
 
 	public int getMaxCount() {
 		return maximumCount;
+	}
+
+	@Override
+	public void onFocusGained() {
+		super.onFocusGained();
+		if (Spinnery.ENVIRONMENT == EnvType.CLIENT) {
+			setFocusedInScreen();
+		}
+	}
+
+	@Override
+	public void onFocusReleased() {
+		super.onFocusReleased();
+		if (Spinnery.ENVIRONMENT == EnvType.CLIENT) {
+			setUnfocusedInScreen();
+		}
+	}
+
+	public void setFocusedInScreen() {
+		((BaseHandledScreen<?>) MinecraftClient.getInstance().currentScreen).setDrawSlot(this);
+	}
+
+	public void setUnfocusedInScreen() {
+		((BaseHandledScreen<?>) MinecraftClient.getInstance().currentScreen).setDrawSlot(null);
 	}
 
 	@Override

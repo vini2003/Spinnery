@@ -291,9 +291,11 @@ public class WVerticalScrollableContainer extends WAbstractWidget implements WMo
 
 	public void updateChildrenFocus() {
 		for (WAbstractWidget widget : getAllWidgets()) {
-			if (widget.isWithinBounds(MouseUtilities.mouseX, MouseUtilities.mouseY)) {
+			boolean hadFocus = widget.isFocused();
+			widget.updateFocus(MouseUtilities.mouseX, MouseUtilities.mouseY);
+			if (widget.isFocused() && !hadFocus) {
 				widget.onFocusGained();
-			} else {
+			} else if (!widget.isFocused() && hadFocus) {
 				widget.onFocusReleased();
 			}
 		}
