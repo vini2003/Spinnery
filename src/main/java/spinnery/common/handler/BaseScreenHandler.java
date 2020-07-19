@@ -344,7 +344,9 @@ public class BaseScreenHandler extends ScreenHandler {
 							int maxB = stackC.isEmpty() || slotB.getInventoryNumber() == PLAYER_INVENTORY ? stackA.getMaxCount() : slotB.getMaxCount();
 							slotA.consume(action, Action.Subtype.FROM_SLOT_TO_SLOT_CUSTOM_FULL_STACK);
 							StackUtilities.merge(slotA::getStack, slotB::getStack, slotA::getMaxCount, () -> maxB).apply(slotA::setStack, slotB::setStack);
-							break;
+							if (slotA.getStack().isEmpty()) {
+								break;
+							}
 						}
 					}
 				}

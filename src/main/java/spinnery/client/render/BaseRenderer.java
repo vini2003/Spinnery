@@ -56,10 +56,10 @@ public class BaseRenderer {
 	public static void drawGradientQuad(MatrixStack matrices, VertexConsumerProvider provider, RenderLayer layer, float startX, float startY, float endX, float endY, float z, float uS, float vS, float uE, float vE, int light, Color colorStart, Color colorEnd, boolean textured) {
 		VertexConsumer consumer = provider.getBuffer(layer);
 
-		consumer.vertex(matrices.peek().getModel(), endX, startY, z + 201).color(colorStart.R, colorStart.G, colorStart.B, colorStart.A).texture(uS, vS).light(light).normal(matrices.peek().getNormal(), 0, 1, 0).next();
-		consumer.vertex(matrices.peek().getModel(), startX, startY, z + 201).color(colorStart.R, colorStart.G, colorStart.B, colorStart.A).texture(uS, vE).light(light).normal(matrices.peek().getNormal(), 0, 1, 0).next();
-		consumer.vertex(matrices.peek().getModel(), startX, endY, z + 201).color(colorEnd.R, colorEnd.G, colorEnd.B, colorEnd.A).texture(uE, vS).light(light).normal(matrices.peek().getNormal(), 0, 1, 0).next();
-		consumer.vertex(matrices.peek().getModel(), endX, endY, z + 201).color(colorEnd.R, colorEnd.G, colorEnd.B, colorEnd.A).texture(uE, vE).light(light).normal(matrices.peek().getNormal(), 0, 1, 0).next();
+		consumer.vertex(matrices.peek().getModel(), endX, startY, z).color(colorStart.R, colorStart.G, colorStart.B, colorStart.A).texture(uS, vS).light(light).normal(matrices.peek().getNormal(), 0, 1, 0).next();
+		consumer.vertex(matrices.peek().getModel(), startX, startY, z).color(colorStart.R, colorStart.G, colorStart.B, colorStart.A).texture(uS, vE).light(light).normal(matrices.peek().getNormal(), 0, 1, 0).next();
+		consumer.vertex(matrices.peek().getModel(), startX, endY, z).color(colorEnd.R, colorEnd.G, colorEnd.B, colorEnd.A).texture(uE, vS).light(light).normal(matrices.peek().getNormal(), 0, 1, 0).next();
+		consumer.vertex(matrices.peek().getModel(), endX, endY, z).color(colorEnd.R, colorEnd.G, colorEnd.B, colorEnd.A).texture(uE, vE).light(light).normal(matrices.peek().getNormal(), 0, 1, 0).next();
 	}
 
 	public static void drawTooltip(MatrixStack matrices, VertexConsumerProvider provider, float x, float y, float width, float height, Color shadowStart, Color shadowEnd, Color backgroundStart, Color backgroundEnd, Color outlineStart, Color outlineEnd) {

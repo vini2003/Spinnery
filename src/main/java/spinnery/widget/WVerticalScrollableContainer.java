@@ -392,6 +392,9 @@ public class WVerticalScrollableContainer extends WAbstractWidget implements WMo
 		widgets.addAll(Arrays.asList(widgetArray));
 
 		onLayoutChange();
+
+		updateChildren();
+		updateChildrenFocus();
 	}
 
 	@Override

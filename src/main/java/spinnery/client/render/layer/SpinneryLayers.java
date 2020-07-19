@@ -18,13 +18,13 @@ public class SpinneryLayers extends RenderLayer {
 
 	private static final RenderLayer FLAT = of("spinnery", VertexFormats.POSITION_COLOR_LIGHT, 7, 256, RenderLayer.MultiPhaseParameters.builder()
 			.texture(NO_TEXTURE)
-			.cull(RenderPhase.ENABLE_CULLING)
+			.cull(ENABLE_CULLING)
 			.lightmap(ENABLE_LIGHTMAP)
-			.shadeModel(RenderLayer.SHADE_MODEL)
-			.depthTest(RenderLayer.ALWAYS_DEPTH_TEST)
-			.transparency(RenderLayer.TRANSLUCENT_TRANSPARENCY)
-			.alpha(RenderLayer.ONE_TENTH_ALPHA)
-			.layering(RenderLayer.VIEW_OFFSET_Z_LAYERING).build(false));
+			.shadeModel(SMOOTH_SHADE_MODEL)
+			.depthTest(ALWAYS_DEPTH_TEST)
+			.transparency(TRANSLUCENT_TRANSPARENCY)
+			.alpha(ONE_TENTH_ALPHA)
+			.layering(VIEW_OFFSET_Z_LAYERING).build(false));
 
 	private static final RenderLayer TOOLTIP = of(
 			"blade_tooltip",
@@ -33,7 +33,7 @@ public class SpinneryLayers extends RenderLayer {
 					.texture(NO_TEXTURE)
 					.cull(ENABLE_CULLING)
 					.lightmap(ENABLE_LIGHTMAP)
-					.shadeModel(SHADE_MODEL)
+					.shadeModel(SMOOTH_SHADE_MODEL)
 					.depthTest(ALWAYS_DEPTH_TEST)
 					.transparency(NO_TRANSPARENCY)
 					.alpha(ONE_TENTH_ALPHA)
