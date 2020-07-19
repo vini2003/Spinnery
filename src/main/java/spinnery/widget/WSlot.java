@@ -167,30 +167,39 @@ public class WSlot extends WAbstractWidget {
 		return maximumCount;
 	}
 
-	@Override
-	public void onFocusGained() {
-		super.onFocusGained();
-		if (Spinnery.ENVIRONMENT == EnvType.CLIENT) {
-			setFocusedInScreen();
-		}
-	}
-
-	@Override
-	public void onFocusReleased() {
-		super.onFocusReleased();
-		if (Spinnery.ENVIRONMENT == EnvType.CLIENT) {
-			setUnfocusedInScreen();
-		}
-	}
-
 	public void setFocusedInScreen() {
 		Screen screen = MinecraftClient.getInstance().currentScreen;
-		if (screen != null) ((BaseHandledScreen<?>) screen).setDrawSlot(this);
+		if (screen != null) {
+			BaseHandledScreen<?> handledScreen = ((BaseHandledScreen<?>) screen);
+			if (handledScreen.getDrawSlot() != this) {
+				handledScreen.setDrawSlot(this);
+			}
+		}
 	}
 
 	public void setUnfocusedInScreen() {
 		Screen screen = MinecraftClient.getInstance().currentScreen;
-		if (screen != null) ((BaseHandledScreen<?>) screen).setDrawSlot(null);
+		if (screen != null) {
+			BaseHandledScreen<?> handledScreen = ((BaseHandledScreen<?>) screen);
+			if (handledScreen.getDrawSlot() == this) {
+				handledScreen.setDrawSlot(null);
+			}
+		}
+	}
+
+	@Override
+	public boolean updateFocus(float positionX, float positionY) {
+		boolean value = super.updateFocus(positionX, positionY);
+		if (isFocused()) {
+			if (Spinnery.ENVIRONMENT == EnvType.CLIENT) {
+				setFocusedInScreen();
+			}
+		} else {
+			if (Spinnery.ENVIRONMENT == EnvType.CLIENT) {
+				setUnfocusedInScreen();
+			}
+		}
+		return value;
 	}
 
 	@Override
