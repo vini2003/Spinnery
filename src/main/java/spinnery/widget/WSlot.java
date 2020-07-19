@@ -184,11 +184,13 @@ public class WSlot extends WAbstractWidget {
 	}
 
 	public void setFocusedInScreen() {
-		((BaseHandledScreen<?>) MinecraftClient.getInstance().currentScreen).setDrawSlot(this);
+		Screen screen = MinecraftClient.getInstance().currentScreen;
+		if (screen != null) ((BaseHandledScreen<?>) screen).setDrawSlot(this);
 	}
 
 	public void setUnfocusedInScreen() {
-		((BaseHandledScreen<?>) MinecraftClient.getInstance().currentScreen).setDrawSlot(null);
+		Screen screen = MinecraftClient.getInstance().currentScreen;
+		if (screen != null) ((BaseHandledScreen<?>) screen).setDrawSlot(null);
 	}
 
 	@Override
