@@ -75,7 +75,11 @@ public abstract class WAbstractWidget implements Tickable, WLayoutElement, WThem
 	 * @return The interface attached to this widget.
 	 */
 	public WInterface getInterface() {
-		return linkedInterface == null && parent instanceof WAbstractWidget ? ((WAbstractWidget) parent).getInterface() : linkedInterface;
+		if (parent instanceof WAbstractWidget) {
+			return ((WAbstractWidget) parent).getInterface();
+		} else {
+			return linkedInterface;
+		}
 	}
 
 	/**

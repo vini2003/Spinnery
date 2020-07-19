@@ -277,6 +277,8 @@ public class WVerticalScrollableContainer extends WAbstractWidget implements WMo
 
 			updateChildren();
 		}
+
+		updateChildrenFocus();
 	}
 
 	public void updateChildren() {
@@ -289,7 +291,7 @@ public class WVerticalScrollableContainer extends WAbstractWidget implements WMo
 
 	public void updateChildrenFocus() {
 		for (WAbstractWidget widget : getAllWidgets()) {
-			if (widget.isWithinBounds(lastScrollX, lastScrollY)) {
+			if (widget.isWithinBounds(MouseUtilities.mouseX, MouseUtilities.mouseY)) {
 				widget.onFocusGained();
 			} else {
 				widget.onFocusReleased();

@@ -29,8 +29,8 @@ public class TextRenderer {
 	}
 
 	public static class RenderPass {
-		private StringRenderable text;
-		private StringRenderable shadowText;
+		private String text;
+		private String shadowText;
 
 		private float x;
 		private float y;
@@ -46,28 +46,22 @@ public class TextRenderer {
 		private int maxWidth = Integer.MIN_VALUE;
 
 		public RenderPass text(String text) {
-			this.text = StringRenderable.plain(text);
-			this.shadowText = this.text;
+			this.text = text;
+			this.shadowText = text.replaceAll("§[0-9a-f]", "");
 			return this;
 		}
 
 		public RenderPass text(char c) {
-			this.text = StringRenderable.plain(String.valueOf(c));
+			this.text = String.valueOf(c);
 			this.shadowText = text;
 			return this;
 		}
 
 		public RenderPass text(Text text) {
-			this.text = text;
-			this.shadowText = this.text;
+			this.text = text.getString();
+			this.shadowText = this.text.replaceAll("§[0-9a-f]", "");
 			return this;
 		}
-        
-        public RenderPass text(StringRenderable text) {
-            this.text = text;
-            this.shadowText = this.text;
-            return this;
-        }
 
 		public RenderPass at(Position position) {
 			return at(position.getX(), position.getY(), position.getZ());
@@ -124,12 +118,12 @@ public class TextRenderer {
 
 			if (maxWidth != Integer.MIN_VALUE) {
 				if (shadow)
-					BaseRenderer.getAdvancedTextRenderer().drawTrimmed(matrices, provider, shadowText, x + 1, y + 1, z, maxWidth, shadowColor);
-				BaseRenderer.getAdvancedTextRenderer().drawTrimmed(matrices, provider, text, x, y, z, maxWidth, color);
+					BaseRenderer.getAdvancedTextRenderer().drawTrimmed(matrices, provider, StringRenderable.plain(shadowText), x + 1, y + 1, z, maxWidth, shadowColor);
+				BaseRenderer.getAdvancedTextRenderer().drawTrimmed(matrices, provider, StringRenderable.plain(text), x, y, z, maxWidth, color);
 			} else {
 				if (shadow)
-					BaseRenderer.getAdvancedTextRenderer().draw(matrices, provider, shadowText, x + 1, y + 1, z, shadowColor);
-				BaseRenderer.getAdvancedTextRenderer().draw(matrices, provider, text, x, y, z, color);
+					BaseRenderer.getAdvancedTextRenderer().draw(matrices, provider, StringRenderable.plain(shadowText), x + 1, y + 1, z, shadowColor);
+				BaseRenderer.getAdvancedTextRenderer().draw(matrices, provider, StringRenderable.plain(text), x, y, z, color);
 			}
 
 			matrices.pop();
