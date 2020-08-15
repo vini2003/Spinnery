@@ -237,9 +237,9 @@ public class WInterface implements WModifiableCollection, WLayoutElement, WThema
 	@Override
 	public void onLayoutChange() {
 		if (handler != null && FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
-			BaseHandledScreen<?> screen = (BaseHandledScreen<?>) MinecraftClient.getInstance().currentScreen;
+			if (MinecraftClient.getInstance().currentScreen instanceof BaseHandledScreen<?>) {
+				BaseHandledScreen<?> screen = (BaseHandledScreen<?>) MinecraftClient.getInstance().currentScreen;
 
-			if (screen != null) {
 				screen.updateDimensions();
 			}
 		}
