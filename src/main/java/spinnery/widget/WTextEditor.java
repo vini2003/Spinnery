@@ -5,6 +5,8 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import org.lwjgl.glfw.GLFW;
+import spinnery.Spinnery;
+import spinnery.client.texture.PartitionedTexture;
 import spinnery.client.utilities.Drawings;
 import spinnery.client.utilities.Texts;
 
@@ -12,7 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Environment(EnvType.CLIENT)
-public class WTextArea extends WAbstractTextEditor {
+public class WTextEditor extends WAbstractTextEditor {
+	private final PartitionedTexture texture = new PartitionedTexture(Spinnery.identifier("textures/widget/text_background.png"), 18F, 18F, 0.05555555555555555556F, 0.05555555555555555556F, 0.05555555555555555556F, 0.05555555555555555556F);
+
 	// Keep track of which lines are "wrapped" and which are hard newlines
 	protected final List<Boolean> newLine = new ArrayList<>();
 	protected boolean lineWrap;
@@ -22,7 +26,7 @@ public class WTextArea extends WAbstractTextEditor {
 	}
 
 	@SuppressWarnings("unchecked")
-	public <W extends WTextArea> W setLineWrap(boolean lineWrap) {
+	public <W extends WTextEditor> W setLineWrap(boolean lineWrap) {
 		this.lineWrap = lineWrap;
 		return (W) this;
 	}
@@ -39,7 +43,7 @@ public class WTextArea extends WAbstractTextEditor {
 		float sX = getWidth();
 		float sY = getHeight();
 
-		Drawings.drawBeveledPanel(matrices, provider, x, y, sX, sY, getStyle().asColor("top_left"), getStyle().asColor("background"), getStyle().asColor("bottom_right"));
+		texture.draw(matrices, provider, x, y, sX, sY);
 
 		if (lineWrap && xOffset != 0) xOffset = 0;
 
@@ -67,7 +71,7 @@ public class WTextArea extends WAbstractTextEditor {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public WTextArea setText(String text) {
+	public WTextEditor setText(String text) {
 		if (lineWrap) {
 			lines.clear();
 			newLine.clear();

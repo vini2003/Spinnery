@@ -3,18 +3,17 @@ package spinnery.widget;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
-import spinnery.client.utilities.Drawings;
 
 public class WVerticalArrowUp extends WButton {
 	public static final Identifier IMAGE = new Identifier("spinnery", "textures/vertical_arrow_up.png");
 
-	WVerticalScrollableContainer scrollable;
+	WVerticalList scrollable;
 
-	public WVerticalScrollableContainer getScrollable() {
+	public WVerticalList getScrollable() {
 		return scrollable;
 	}
 
-	public <W extends WVerticalArrowUp> W setScrollable(WVerticalScrollableContainer scrollable) {
+	public <W extends WVerticalArrowUp> W setScrollable(WVerticalList scrollable) {
 		this.scrollable = scrollable;
 		return (W) this;
 	}

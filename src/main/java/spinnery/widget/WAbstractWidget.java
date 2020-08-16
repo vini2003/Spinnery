@@ -484,6 +484,12 @@ public abstract class WAbstractWidget implements Tickable, WDrawableElement, WTh
 	public void tick() {
 	}
 
+	public void onAdded(WInterfaceProvider provider, WCollection parent) {
+	}
+
+	public void onRemoved(WInterfaceProvider provider, WCollection parent) {
+	}
+
 	/*
 
 	 */

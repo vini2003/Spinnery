@@ -5,8 +5,8 @@ import org.apache.commons.lang3.mutable.Mutable;
 import java.util.function.Supplier;
 
 public abstract class WAbstractBar extends WAbstractWidget {
-	protected Supplier<Number> limitSupplier;
-	protected Supplier<Number> progressSupplier;
+	private Supplier<Number> limitSupplier;
+	private Supplier<Number> progressSupplier;
 
 	public Supplier<Number> getLimitSupplier() {
 		return limitSupplier;

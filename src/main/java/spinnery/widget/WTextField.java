@@ -4,10 +4,14 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
+import spinnery.Spinnery;
+import spinnery.client.texture.PartitionedTexture;
 import spinnery.client.utilities.Drawings;
 
 @Environment(EnvType.CLIENT)
 public class WTextField extends WAbstractTextEditor {
+	private final PartitionedTexture texture = new PartitionedTexture(Spinnery.identifier("textures/widget/text_background.png"), 18F, 18F, 0.05555555555555555556F, 0.05555555555555555556F, 0.05555555555555555556F, 0.05555555555555555556F);
+
 	protected Integer fixedLength;
 
 	public Integer getFixedLength() {
@@ -42,7 +46,7 @@ public class WTextField extends WAbstractTextEditor {
 		float sX = getWidth();
 		float sY = getHeight();
 
-		Drawings.drawBeveledPanel(matrices, provider, x, y, sX, sY, getStyle().asColor("top_left"), getStyle().asColor("background"), getStyle().asColor("bottom_right"));
+		texture.draw(matrices, provider, x, y, sX, sY);
 
 		renderField(matrices, provider);
 	}

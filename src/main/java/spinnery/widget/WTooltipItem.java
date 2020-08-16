@@ -7,7 +7,7 @@ import spinnery.widget.api.Size;
 
 public class WTooltipItem extends WItem {
 	WTooltip tooltip;
-	WStaticText tooltipText;
+	WText tooltipText;
 
 	@Override
 	public void onFocusGained() {
@@ -42,7 +42,7 @@ public class WTooltipItem extends WItem {
 		if (tooltip == null)
 			tooltip = getInterface().createChild(WTooltip::new, Position.of(this), Size.of(this)).setHidden(true);
 		if (tooltipText == null)
-			tooltipText = getInterface().createChild(WStaticText::new, Position.of(tooltip).add(0, 0), Size.of(this)).setHidden(true);
+			tooltipText = getInterface().createChild(WText::new, Position.of(tooltip).add(0, 0), Size.of(this)).setHidden(true);
 	}
 
 	public void updateText() {

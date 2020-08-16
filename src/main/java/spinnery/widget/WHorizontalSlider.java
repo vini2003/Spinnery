@@ -4,13 +4,20 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
+import spinnery.Spinnery;
+import spinnery.client.texture.PartitionedTexture;
 import spinnery.client.utilities.Drawings;
 import spinnery.client.utilities.Texts;
+import spinnery.common.utilities.Positions;
 import spinnery.widget.api.Position;
 import spinnery.widget.api.Size;
 
 @Environment(EnvType.CLIENT)
 public class WHorizontalSlider extends WAbstractSlider {
+	private final PartitionedTexture textureScrollbar = new PartitionedTexture(Spinnery.identifier("textures/widget/slider.png"), 18F, 18F, 0.11111111111111111111F, 0.11111111111111111111F, 0.11111111111111111111F, 0.16666666666666666667F);
+	private final PartitionedTexture textureScroller = new PartitionedTexture(Spinnery.identifier("textures/widget/knob.png"), 18F, 18F, 0.11111111111111111111F, 0.11111111111111111111F, 0.11111111111111111111F, 0.11111111111111111111F);
+	private final PartitionedTexture textureScrollerFocus = new PartitionedTexture(Spinnery.identifier("textures/widget/knob_focus.png"), 18F, 18F, 0.11111111111111111111F, 0.11111111111111111111F, 0.11111111111111111111F, 0.11111111111111111111F);
+
 	@Override
 	public void draw(MatrixStack matrices, VertexConsumerProvider provider) {
 		if (isHidden()) {
@@ -19,22 +26,11 @@ public class WHorizontalSlider extends WAbstractSlider {
 
 		float x = getX();
 		float y = getY();
-		float z = getZ();
-
-		float sX = getWidth();
-		float sY = getHeight();
 
 		if (isProgressVisible()) {
-			Position tPos = getProgressTextAnchor();
-			Texts.pass().shadow(isLabelShadowed()).text(getFormattedProgress()).at(tPos.getX(), tPos.getY(), tPos.getZ())
-					.color(getStyle().asColor("label.color")).shadowColor(getStyle().asColor("label.shadow_color")).render(matrices, provider);
+			Position textAnchor = getProgressTextAnchor();
+			Texts.pass().shadow(isLabelShadowed()).text(getFormattedProgress()).at(textAnchor.getX(), textAnchor.getY()).color(getStyle().asColor("label.color")).render(matrices, provider);
 		}
-
-		Drawings.drawQuad(matrices, provider, x, y, z, (sX), 1, getStyle().asColor("top_left.background"));
-		Drawings.drawQuad(matrices, provider, x, y, z, 1, sY, getStyle().asColor("top_left.background"));
-
-		Drawings.drawQuad(matrices, provider, x, y + sY, z, (sX), 1, getStyle().asColor("bottom_right.background"));
-		Drawings.drawQuad(matrices, provider, x + (sX), y, z, 1, sY + 1, getStyle().asColor("bottom_right.background"));
 
 		Position innerAnchor = getInnerAnchor();
 
@@ -45,12 +41,8 @@ public class WHorizontalSlider extends WAbstractSlider {
 		float innerWidth = innerSize.getWidth();
 		float innerHeight = innerSize.getHeight();
 		float percentComplete = getPercentComplete();
-		float percentLeft = 1 - percentComplete;
 
-		Drawings.drawQuad(matrices, provider, innerX, innerY, z, innerWidth * percentComplete, innerHeight,
-				getStyle().asColor("background.on"));
-		Drawings.drawQuad(matrices, provider, innerX + innerWidth * percentComplete, innerY, z, innerWidth * percentLeft, innerHeight,
-				getStyle().asColor("background.off"));
+		textureScrollbar.draw(matrices, provider, innerX, innerY, innerWidth * percentComplete, innerHeight);
 
 		Size knobSize = getKnobSize();
 
@@ -59,17 +51,17 @@ public class WHorizontalSlider extends WAbstractSlider {
 		float knobX = (x + (innerWidth - knobWidth / 2f) * percentComplete);
 		float clampedX = Math.min(x + innerWidth - knobWidth / 2f, Math.max(x, knobX));
 
-		Drawings.drawBeveledPanel(matrices, provider, clampedX, y - 1, z, knobWidth, knobHeight,
-				getStyle().asColor("top_left.foreground"), getStyle().asColor("foreground"),
-				getStyle().asColor("bottom_right.foreground"));
-
-		super.draw(matrices, provider);
+		if (Positions.getMouseX() > knobX && Positions.getMouseX() < knobX + knobWidth && isWithinBounds(Positions.getMouseX(), Positions.getMouseY())) {
+			textureScrollerFocus.draw(matrices, provider, clampedX, y - 1, knobWidth, knobHeight);
+		} else {
+			textureScroller.draw(matrices, provider, clampedX, y - 1, knobWidth, knobHeight);
+		}
 	}
 
 	@Override
 	public Position getProgressTextAnchor() {
 		String formatted = getFormattedProgress();
-		return Position.of(this).add((getWidth() + 5) / 2 - Texts.width(formatted) / 2, getHeight() + 4, 0);
+		return Position.of(this).add((getWidth() + 5) / 2 - Texts.width(formatted) / 2F, getHeight() + 4);
 	}
 
 	@Override
@@ -81,6 +73,6 @@ public class WHorizontalSlider extends WAbstractSlider {
 	protected void updatePosition(float mouseX, float mouseY) {
 		float innerWidth = getInnerSize().getWidth();
 		float percentComplete = Math.max(0, (mouseX - getInnerAnchor().getX()) / innerWidth);
-		setProgress(minimum + percentComplete * (maximum - minimum));
+		setProgress(getMinimum() + percentComplete * (getMaximum() - getMinimum()));
 	}
 }

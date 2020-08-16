@@ -10,6 +10,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerType;
+import net.minecraft.screen.slot.Slot;
 import net.minecraft.util.Identifier;
 import spinnery.common.utilities.Networks;
 import spinnery.widget.WAbstractWidget;
@@ -33,6 +34,14 @@ public abstract class BaseScreenHandler extends ScreenHandler {
 
 	public WInterface getInterface() {
 		return serverInterface;
+	}
+
+	public PlayerEntity getPlayer() {
+		return player;
+	}
+
+	public boolean isClient() {
+		return client;
 	}
 
 	public void handlePacket(Identifier id, PacketByteBuf buf) {
@@ -105,6 +114,21 @@ public abstract class BaseScreenHandler extends ScreenHandler {
 			handledScreen.backgroundWidth = rectangle.getWidth();
 			handledScreen.backgroundHeight = rectangle.getHeight();
 		}
+	}
+
+	@Override
+	public Slot addSlot(Slot slot) {
+		return super.addSlot(slot);
+	}
+
+	public void removeSlot(Slot slot) {
+		int id = slot.id;
+		slots.remove(slot);
+		slots.forEach((it) -> {
+			if (it.id >= id) {
+				--it.id;
+			}
+		});
 	}
 
 	public abstract void initialize(int width, int height);

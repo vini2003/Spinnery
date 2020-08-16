@@ -48,8 +48,6 @@ public class WVerticalScrollbar extends WAbstractWidget {
 		}
 
 		Drawings.drawBeveledPanel(matrices, provider, getX() + 1, getScrollerY() + 1, getWidth() - 2, Math.min(getHighY() - getScrollerY(), getScrollerHeight()) - 2, getStyle().asColor("scroller.top_left"), scrollerColor, getStyle().asColor("scroller.bottom_right"));
-
-		super.draw(matrices, provider);
 	}
 
 	@Override
@@ -63,14 +61,14 @@ public class WVerticalScrollbar extends WAbstractWidget {
 					dragging = false;
 
 					if (mouseY > getScrollerY()) {
-						if (((WVerticalScrollableContainer) scrollable).hasSmoothing()) {
-							((WVerticalScrollableContainer) scrollable).kineticScrollDelta -= 3.5;
+						if (((WVerticalList) scrollable).hasSmoothing()) {
+							((WVerticalList) scrollable).kineticScrollDelta -= 3.5;
 						} else {
 							scrollable.scroll(0, -50);
 						}
 					} else {
-						if (((WVerticalScrollableContainer) scrollable).hasSmoothing()) {
-							((WVerticalScrollableContainer) scrollable).kineticScrollDelta += 3.5;
+						if (((WVerticalList) scrollable).hasSmoothing()) {
+							((WVerticalList) scrollable).kineticScrollDelta += 3.5;
 						} else {
 							scrollable.scroll(0, +50);
 						}

@@ -4,6 +4,8 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
+import spinnery.Spinnery;
+import spinnery.client.texture.PartitionedTexture;
 import spinnery.client.utilities.Drawings;
 import spinnery.client.utilities.Texts;
 import spinnery.widget.api.WDelegatedEventListener;
@@ -11,15 +13,13 @@ import spinnery.widget.api.WDrawableElement;
 import spinnery.widget.api.WEventListener;
 import spinnery.widget.api.WModifiableCollection;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.*;
 
 @Environment(EnvType.CLIENT)
 public class WPanel extends WAbstractWidget implements WModifiableCollection, WDelegatedEventListener {
-	protected Set<WAbstractWidget> widgets = new LinkedHashSet<>();
+	private final Set<WAbstractWidget> widgets = new HashSet<>();
 
+	private final PartitionedTexture texture = new PartitionedTexture(Spinnery.identifier("textures/widget/panel.png"), 18F, 18F, 0.25F, 0.25F, 0.25F, 0.25F);
 
 	@Override
 	public void draw(MatrixStack matrices, VertexConsumerProvider provider) {
@@ -29,24 +29,19 @@ public class WPanel extends WAbstractWidget implements WModifiableCollection, WD
 
 		float x = getX();
 		float y = getY();
-		float z = getZ();
 
 		float sX = getWidth();
 		float sY = getHeight();
 
-		Drawings.drawPanel(matrices, provider, x, y, z, sX, sY, getStyle().asColor("shadow"), getStyle().asColor("background"), getStyle().asColor("highlight"), getStyle().asColor("outline"));
+		texture.draw(matrices, provider, x, y, sX, sY);
 
 		if (hasLabel()) {
-			Texts.pass().shadow(isLabelShadowed())
-					.text(getLabel()).at(x + 8, y + 6, z)
-					.color(getStyle().asColor("label.color")).shadowColor(getStyle().asColor("label.shadow_color")).render(matrices, provider);
+			Texts.pass().shadow(isLabelShadowed()).text(getLabel()).at(x + 8, y + 6).color(getStyle().asColor("label.color")).render(matrices, provider);
 		}
 
 		for (WDrawableElement widget : widgets) {
 			widget.draw(matrices, provider);
 		}
-
-		super.draw(matrices, provider);
 	}
 
 	@Override

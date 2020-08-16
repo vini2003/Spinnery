@@ -16,7 +16,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @SuppressWarnings({"UnusedReturnValue", "unchecked"})
-public class WVerticalScrollableContainer extends WAbstractWidget implements WModifiableCollection, WVerticalScrollable, WDelegatedEventListener {
+public class WVerticalList extends WAbstractWidget implements WModifiableCollection, WVerticalScrollable, WDelegatedEventListener {
 	protected Set<WAbstractWidget> widgets = new HashSet<>();
 
 	protected WVerticalScrollbar scrollbar;
@@ -54,7 +54,7 @@ public class WVerticalScrollableContainer extends WAbstractWidget implements WMo
 
 	protected boolean hasArrows = SpinneryConfigurationScreen.arrows.getValue();
 
-	public WVerticalScrollableContainer() {
+	public WVerticalList() {
 		scrollbar = new WVerticalScrollbar().setScrollable(this).setParent(this);
 	}
 
@@ -62,7 +62,7 @@ public class WVerticalScrollableContainer extends WAbstractWidget implements WMo
 		return !scrollbar.isHidden();
 	}
 
-	public <W extends WVerticalScrollableContainer> W setScrollbarVisible(boolean visible) {
+	public <W extends WVerticalList> W setScrollbarVisible(boolean visible) {
 		scrollbar.setHidden(!visible);
 		return (W) this;
 	}
@@ -83,12 +83,12 @@ public class WVerticalScrollableContainer extends WAbstractWidget implements WMo
 		return verticalArrowDown;
 	}
 
-	public <W extends WVerticalScrollableContainer> W setVerticalArrowDown(WVerticalArrowDown verticalArrowDown) {
+	public <W extends WVerticalList> W setVerticalArrowDown(WVerticalArrowDown verticalArrowDown) {
 		this.verticalArrowDown = verticalArrowDown;
 		return (W) this;
 	}
 
-	public <W extends WVerticalScrollableContainer> W setScrollbar(WVerticalScrollbar scrollbar) {
+	public <W extends WVerticalList> W setScrollbar(WVerticalScrollbar scrollbar) {
 		this.scrollbar = scrollbar;
 		return (W) this;
 	}
@@ -97,7 +97,7 @@ public class WVerticalScrollableContainer extends WAbstractWidget implements WMo
 		return scrollbarWidth;
 	}
 
-	public <W extends WVerticalScrollableContainer> W setScrollbarWidth(float scrollbarWidth) {
+	public <W extends WVerticalList> W setScrollbarWidth(float scrollbarWidth) {
 		this.scrollbarWidth = scrollbarWidth;
 		return (W) this;
 	}
@@ -106,7 +106,7 @@ public class WVerticalScrollableContainer extends WAbstractWidget implements WMo
 		return divisionSpace;
 	}
 
-	public <W extends WVerticalScrollableContainer> W setDivisionSpace(float divisionSpace) {
+	public <W extends WVerticalList> W setDivisionSpace(float divisionSpace) {
 		this.divisionSpace = divisionSpace;
 		return (W) this;
 	}
@@ -115,7 +115,7 @@ public class WVerticalScrollableContainer extends WAbstractWidget implements WMo
 		return borderSpace;
 	}
 
-	public <W extends WVerticalScrollableContainer> W setBorderSpace(int borderSpace) {
+	public <W extends WVerticalList> W setBorderSpace(int borderSpace) {
 		this.borderSpace = borderSpace;
 		return (W) this;
 	}
@@ -124,7 +124,7 @@ public class WVerticalScrollableContainer extends WAbstractWidget implements WMo
 		return fadeSpace;
 	}
 
-	public <W extends WVerticalScrollableContainer> W setFadeSpace(int fadeSpace) {
+	public <W extends WVerticalList> W setFadeSpace(int fadeSpace) {
 		this.fadeSpace = fadeSpace;
 		return (W) this;
 	}
@@ -133,7 +133,7 @@ public class WVerticalScrollableContainer extends WAbstractWidget implements WMo
 		return lastScrollX;
 	}
 
-	public <W extends WVerticalScrollableContainer> W setLastScrollX(float lastScrollX) {
+	public <W extends WVerticalList> W setLastScrollX(float lastScrollX) {
 		this.lastScrollX = lastScrollX;
 		return (W) this;
 	}
@@ -142,7 +142,7 @@ public class WVerticalScrollableContainer extends WAbstractWidget implements WMo
 		return lastScrollY;
 	}
 
-	public <W extends WVerticalScrollableContainer> W setLastScrollY(float lastScrollY) {
+	public <W extends WVerticalList> W setLastScrollY(float lastScrollY) {
 		this.lastScrollY = lastScrollY;
 		return (W) this;
 	}
@@ -151,7 +151,7 @@ public class WVerticalScrollableContainer extends WAbstractWidget implements WMo
 		return lastDragScrollY;
 	}
 
-	public <W extends WVerticalScrollableContainer> W setLastDragScrollY(float lastDragScrollY) {
+	public <W extends WVerticalList> W setLastDragScrollY(float lastDragScrollY) {
 		this.lastDragScrollY = lastDragScrollY;
 		return (W) this;
 	}
@@ -160,7 +160,7 @@ public class WVerticalScrollableContainer extends WAbstractWidget implements WMo
 		return lastDragScrollMilliseconds;
 	}
 
-	public <W extends WVerticalScrollableContainer> W setLastDragScrollMilliseconds(long lastDragScrollMilliseconds) {
+	public <W extends WVerticalList> W setLastDragScrollMilliseconds(long lastDragScrollMilliseconds) {
 		this.lastDragScrollMilliseconds = lastDragScrollMilliseconds;
 		return (W) this;
 	}
@@ -169,7 +169,7 @@ public class WVerticalScrollableContainer extends WAbstractWidget implements WMo
 		return offsetY;
 	}
 
-	public <W extends WVerticalScrollableContainer> W setOffsetY(float offsetY) {
+	public <W extends WVerticalList> W setOffsetY(float offsetY) {
 		this.offsetY = offsetY;
 		return (W) this;
 	}
@@ -178,7 +178,7 @@ public class WVerticalScrollableContainer extends WAbstractWidget implements WMo
 		return kineticScrollDelta;
 	}
 
-	public <W extends WVerticalScrollableContainer> W setKineticScrollDelta(float kineticScrollDelta) {
+	public <W extends WVerticalList> W setKineticScrollDelta(float kineticScrollDelta) {
 		this.kineticScrollDelta = kineticScrollDelta;
 		return (W) this;
 	}
@@ -187,7 +187,7 @@ public class WVerticalScrollableContainer extends WAbstractWidget implements WMo
 		return kineticReductionCoefficient;
 	}
 
-	public <W extends WVerticalScrollableContainer> W setKineticReductionCoefficient(float kineticReductionCoefficient) {
+	public <W extends WVerticalList> W setKineticReductionCoefficient(float kineticReductionCoefficient) {
 		this.kineticReductionCoefficient = kineticReductionCoefficient;
 		return (W) this;
 	}
@@ -196,7 +196,7 @@ public class WVerticalScrollableContainer extends WAbstractWidget implements WMo
 		return kineticAccelerationCoefficient;
 	}
 
-	public <W extends WVerticalScrollableContainer> W setKineticAccelerationCoefficient(float kineticAccelerationCoefficient) {
+	public <W extends WVerticalList> W setKineticAccelerationCoefficient(float kineticAccelerationCoefficient) {
 		this.kineticAccelerationCoefficient = kineticAccelerationCoefficient;
 		return (W) this;
 	}
@@ -205,7 +205,7 @@ public class WVerticalScrollableContainer extends WAbstractWidget implements WMo
 		return dragScrollAccelerationCoefficient;
 	}
 
-	public <W extends WVerticalScrollableContainer> W setDragScrollAccelerationCoefficient(float dragScrollAccelerationCoefficient) {
+	public <W extends WVerticalList> W setDragScrollAccelerationCoefficient(float dragScrollAccelerationCoefficient) {
 		this.dragScrollAccelerationCoefficient = dragScrollAccelerationCoefficient;
 		return (W) this;
 	}
@@ -214,7 +214,7 @@ public class WVerticalScrollableContainer extends WAbstractWidget implements WMo
 		return isDragScrolling;
 	}
 
-	public <W extends WVerticalScrollableContainer> W setDragScrolling(boolean dragScrolling) {
+	public <W extends WVerticalList> W setDragScrolling(boolean dragScrolling) {
 		isDragScrolling = dragScrolling;
 		return (W) this;
 	}
@@ -223,7 +223,7 @@ public class WVerticalScrollableContainer extends WAbstractWidget implements WMo
 		return hasFade;
 	}
 
-	public <W extends WVerticalScrollableContainer> W setHasFade(boolean hasFade) {
+	public <W extends WVerticalList> W setHasFade(boolean hasFade) {
 		this.hasFade = hasFade;
 		return (W) this;
 	}
@@ -232,7 +232,7 @@ public class WVerticalScrollableContainer extends WAbstractWidget implements WMo
 		return hasSmoothing;
 	}
 
-	public <W extends WVerticalScrollableContainer> W setHasSmoothing(boolean hasSmoothing) {
+	public <W extends WVerticalList> W setHasSmoothing(boolean hasSmoothing) {
 		this.hasSmoothing = hasSmoothing;
 		return (W) this;
 	}
@@ -241,7 +241,7 @@ public class WVerticalScrollableContainer extends WAbstractWidget implements WMo
 		return hasArrows;
 	}
 
-	public <W extends WVerticalScrollableContainer> W setHasArrows(boolean hasArrows) {
+	public <W extends WVerticalList> W setHasArrows(boolean hasArrows) {
 		this.hasArrows = hasArrows;
 		return (W) this;
 	}

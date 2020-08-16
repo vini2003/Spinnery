@@ -1,11 +1,9 @@
 package spinnery.debug;
 
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.Items;
 import net.minecraft.text.Text;
 import spinnery.client.screen.BaseHandledScreen;
-import spinnery.client.screen.BaseScreen;
 import spinnery.widget.*;
 import spinnery.widget.api.Position;
 import spinnery.widget.api.Size;
@@ -20,10 +18,10 @@ public class DebugHandledScreen extends BaseHandledScreen<DebugScreenHandler> {
 
 		panel.center();
 
-		panel.createChild(WStaticText::new, Position.of(panel, 7, 7, 0)).setText("Hi there!");
-		panel.createChild(WStaticText::new, Position.of(panel, 7, 18, 0)).setText("07/11/2020 11:01:47PM");
+		panel.createChild(WText::new, Position.of(panel, 7, 7, 0)).setText("Hi there!");
+		panel.createChild(WText::new, Position.of(panel, 7, 18, 0)).setText("07/11/2020 11:01:47PM");
 
-		WVerticalScrollableContainer scrollableContainer = panel.createChild(WVerticalScrollableContainer::new, Position.of(panel, 7, 7, 0), Size.of(64, 96));
+		WVerticalList scrollableContainer = panel.createChild(WVerticalList::new, Position.of(panel, 7, 7, 0), Size.of(64, 96));
 
 		for (int k = 0; k < 32; ++k) {
 			scrollableContainer.addRow(new WKibbyImage().setSize(Size.of(18, 18)));

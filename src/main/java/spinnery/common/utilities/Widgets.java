@@ -34,7 +34,7 @@ public class Widgets {
 		register(new Identifier("spinnery", "panel"), WPanel.class);
 		register(new Identifier("spinnery", "slot"), WSlot.class);
 		register(new Identifier("spinnery", "static_image"), WTexture.class);
-		register(new Identifier("spinnery", "static_text"), WStaticText.class);
+		register(new Identifier("spinnery", "static_text"), WText.class);
 		register(new Identifier("spinnery", "tab_holder"), WTabHolder.class);
 		register(new Identifier("spinnery", "tab_toggle"), WTabToggle.class);
 		register(new Identifier("spinnery", "toggle"), WToggle.class);
@@ -43,9 +43,9 @@ public class Widgets {
 		register(new Identifier("spinnery", "vertical_bar"), WVerticalBar.class);
 		register(new Identifier("spinnery", "horizontal_bar"), WHorizontalBar.class);
 		register(new Identifier("spinnery", "vertical_scrollbar"), WVerticalScrollbar.class);
-		register(new Identifier("spinnery", "vertical_scrollable_container"), WVerticalScrollableContainer.class);
+		register(new Identifier("spinnery", "vertical_scrollable_container"), WVerticalList.class);
 		register(new Identifier("spinnery", "textured_button"), WTexturedButton.class);
-		register(new Identifier("spinnery", "text_area"), WTextArea.class);
+		register(new Identifier("spinnery", "text_area"), WTextEditor.class);
 		register(new Identifier("spinnery", "text_field"), WTextField.class);
 		register(new Identifier("spinnery", "item"), WItem.class);
 		register(new Identifier("spinnery", "horizontal_box_container"), WHorizontalBoxContainer.class);

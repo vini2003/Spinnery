@@ -6,9 +6,6 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import spinnery.client.utilities.Sprites;
 
-
-  Specifically useful for rendering icons and other bits from the Minecraft resources.
- */
 @Environment(EnvType.CLIENT)
 public class WSprite extends WAbstractWidget {
 	private Sprites.Sprite sprite;
@@ -29,7 +26,5 @@ public class WSprite extends WAbstractWidget {
 		}
 
 		getSprite().draw(matrices, provider, getX(), getY(), getWidth(), getHeight(), false);
-
-		super.draw(matrices, provider);
 	}
 }

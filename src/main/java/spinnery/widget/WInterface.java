@@ -19,25 +19,13 @@ import java.util.*;
 
 public class WInterface implements WModifiableCollection, WDrawableElement, WThemable {
 	protected BaseScreenHandler handler;
+
 	protected Set<WAbstractWidget> widgets = new LinkedHashSet<>();
-	protected Map<Class<? extends WAbstractWidget>, WAbstractWidget> cachedWidgets = new HashMap<>();
-	protected boolean isClientside;
+
 	protected Identifier theme;
-
-	public WInterface() {
-		setClientside(true);
-	}
-
-	public <W extends WInterface> W setClientside(Boolean clientside) {
-		isClientside = clientside;
-		return (W) this;
-	}
 
 	public WInterface(BaseScreenHandler handler) {
 		setHandler(handler);
-		if (getHandler().getWorld().isClient()) {
-			setClientside(true);
-		}
 	}
 
 	public BaseScreenHandler getHandler() {
@@ -58,14 +46,6 @@ public class WInterface implements WModifiableCollection, WDrawableElement, WThe
 		return setHandler(handler);
 	}
 
-	public boolean isClient() {
-		return isClientside;
-	}
-
-	public Map<Class<? extends WAbstractWidget>, WAbstractWidget> getCachedWidgets() {
-		return cachedWidgets;
-	}
-
 	@Override
 	public Identifier getTheme() {
 		return theme;
@@ -78,10 +58,6 @@ public class WInterface implements WModifiableCollection, WDrawableElement, WThe
 
 	public <W extends WInterface> W setTheme(String theme) {
 		return setTheme(new Identifier(theme));
-	}
-
-	public boolean isServer() {
-		return !isClientside;
 	}
 
 	@Override

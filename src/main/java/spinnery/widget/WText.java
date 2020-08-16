@@ -9,19 +9,19 @@ import net.minecraft.text.Text;
 import spinnery.client.utilities.Texts;
 
 @Environment(EnvType.CLIENT)
-public class WStaticText extends WAbstractWidget {
+public class WText extends WAbstractWidget {
 	protected Text text = new LiteralText("");
 
 	protected float scale = 1.0F;
 
-	protected int maxWidth = Integer.MIN_VALUE;
+	protected int maximumWidth = Integer.MIN_VALUE;
 
-	public int getMaxWidth() {
-		return maxWidth;
+	public int getMaximumWidth() {
+		return maximumWidth;
 	}
 
-	public <W extends WStaticText> W setMaxWidth(int maxWidth) {
-		this.maxWidth = maxWidth;
+	public <W extends WText> W setMaximumWidth(int maximumWidth) {
+		this.maximumWidth = maximumWidth;
 		return (W) this;
 	}
 
@@ -29,7 +29,7 @@ public class WStaticText extends WAbstractWidget {
 		return scale;
 	}
 
-	public WStaticText setScale(float scale) {
+	public WText setScale(float scale) {
 		this.scale = scale;
 		return this;
 	}
@@ -43,9 +43,7 @@ public class WStaticText extends WAbstractWidget {
 		float x = getX();
 		float y = getY();
 
-		Texts.pass().text(getText()).at(x, y).scale(scale).maxWidth(maxWidth)
-				.shadow(getStyle().asBoolean("shadow"))
-				.color(getStyle().asColor("text")).render(matrices, provider);
+		Texts.pass().text(getText()).at(x, y).scale(scale).maxWidth(maximumWidth).shadow(getStyle().asBoolean("shadow")).color(getStyle().asColor("text")).render(matrices, provider);
 	}
 
 	@Override
@@ -62,12 +60,12 @@ public class WStaticText extends WAbstractWidget {
 		return text;
 	}
 
-	public <W extends WStaticText> W setText(Text text) {
+	public <W extends WText> W setText(Text text) {
 		this.text = text;
 		return (W) this;
 	}
 
-	public <W extends WStaticText> W setText(String text) {
+	public <W extends WText> W setText(String text) {
 		this.text = new LiteralText(text);
 		return (W) this;
 	}
