@@ -21,7 +21,7 @@ import java.util.*;
 public class WInterface implements WModifiableCollection, WEventListener, WDrawableElement, WThemable {
 	private BaseScreenHandler handler;
 
-	private final Set<WAbstractWidget> widgets = new LinkedHashSet<>();
+	private final ArrayList<WAbstractWidget> widgets = new ArrayList<>();
 
 	private Identifier theme;
 
@@ -33,7 +33,7 @@ public class WInterface implements WModifiableCollection, WEventListener, WDrawa
 	}
 
 	@Override
-	public Set<WAbstractWidget> getWidgets() {
+	public ArrayList<WAbstractWidget> getWidgets() {
 		return widgets;
 	}
 

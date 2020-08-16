@@ -283,7 +283,7 @@ public abstract class WAbstractWidget implements Tickable, WDrawableElement, WTh
 	}
 
 	public boolean isWithinBounds(float positionX, float positionY) {
-		return isWithinBounds(positionX, positionY);
+		return getX() > positionX && positionX < getWideX() && getY() > positionY && positionY < getHighY();
 	}
 
 	/*

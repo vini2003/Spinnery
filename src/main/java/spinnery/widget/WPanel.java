@@ -19,10 +19,10 @@ import java.util.*;
 public class WPanel extends WAbstractWidget implements WModifiableCollection {
 	private final PartitionedTexture texture = new PartitionedTexture(Spinnery.identifier("textures/widget/panel.png"), 18F, 18F, 0.25F, 0.25F, 0.25F, 0.25F);
 
-	private final Set<WAbstractWidget> widgets = new HashSet<>();
+	private final ArrayList<WAbstractWidget> widgets = new ArrayList<>();
 
 	@Override
-	public Set<WAbstractWidget> getWidgets() {
+	public ArrayList<WAbstractWidget> getWidgets() {
 		return widgets;
 	}
 

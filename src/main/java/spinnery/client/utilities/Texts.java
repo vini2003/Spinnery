@@ -2,7 +2,7 @@ package spinnery.client.utilities;
 
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.StringRenderable;
+import net.minecraft.text.StringVisitable;
 import net.minecraft.text.Text;
 import spinnery.widget.api.Color;
 import spinnery.widget.api.Position;
@@ -102,12 +102,12 @@ public class Texts {
 
 			if (maxWidth == Integer.MIN_VALUE) {
 				if (shadow) {
-					Drawings.getTextRenderer().drawWithShadow(matrices, StringRenderable.plain(text), x, y, maxWidth);
+					Drawings.getTextRenderer().drawWithShadow(matrices, text, x, y, maxWidth);
 				} else {
-					Drawings.getTextRenderer().drawTrimmed(StringRenderable.plain(text), x, y, maxWidth, color);
+					Drawings.getTextRenderer().drawTrimmed(StringVisitable.plain(text), x, y, maxWidth, color);
 				}
 			} else {
-				Drawings.getTextRenderer().drawTrimmed(StringRenderable.plain(text), x, y, maxWidth, color);
+				Drawings.getTextRenderer().drawTrimmed(StringVisitable.plain(text), x, y, maxWidth, color);
 			}
 
 			matrices.pop();

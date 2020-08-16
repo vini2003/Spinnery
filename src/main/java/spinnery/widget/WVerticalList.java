@@ -9,14 +9,11 @@ import spinnery.client.utilities.Scissors;
 import spinnery.common.utilities.Positions;
 import spinnery.widget.api.*;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @SuppressWarnings({"UnusedReturnValue", "unchecked"})
 public class WVerticalList extends WAbstractWidget implements WModifiableCollection, WVerticalScrollable {
-	private final Set<WAbstractWidget> widgets = new HashSet<>();
+	private final ArrayList<WAbstractWidget> widgets = new ArrayList<>();
 
 	private WVerticalScrollbar scrollbar;
 
@@ -59,7 +56,7 @@ public class WVerticalList extends WAbstractWidget implements WModifiableCollect
 	}
 
 	@Override
-	public Set<WAbstractWidget> getWidgets() {
+	public ArrayList<WAbstractWidget> getWidgets() {
 		return widgets;
 	}
 

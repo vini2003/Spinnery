@@ -3,6 +3,7 @@ package spinnery.debug;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.ScreenHandlerType;
+import net.minecraft.screen.slot.Slot;
 import spinnery.common.screenhandler.BaseScreenHandler;
 import spinnery.widget.*;
 import spinnery.widget.api.Position;
@@ -19,20 +20,20 @@ public class DebugScreenHandler extends BaseScreenHandler {
 
 		WPanel panel = mainInterface.createChild(WPanel::new, Position.ORIGIN, Size.of(192, 128));
 
-		panel.center();
-
 		panel.createChild(WText::new, Position.of(panel, 7, 7)).setText("Hi there!");
 		panel.createChild(WText::new, Position.of(panel, 7, 18)).setText("07/11/2020 11:01:47PM");
 
-		WVerticalList scrollableContainer = panel.createChild(WVerticalList::new, Position.of(panel, 7, 7), Size.of(64, 96));
+		WSlot slot = panel.createChild(() -> new WSlot(new Slot(getPlayer().inventory, 0, 0, 0)), Position.of(panel, 27, 7), Size.of(18, 18));
 
-		for (int k = 0; k < 32; ++k) {
-			scrollableContainer.addRow(new WTexture().setSize(Size.of(18, 18)));
-		}
+		//WVerticalList scrollableContainer = panel.createChild(WVerticalList::new, Position.of(panel, 7, 7), Size.of(64, 96));
+//
+		//for (int k = 0; k < 32; ++k) {
+		//	scrollableContainer.addRow(new WTexture().setSize(Size.of(18, 18)));
+		//}
 	}
 
 	@Override
 	public boolean canUse(PlayerEntity player) {
-		return false;
+		return true;
 	}
 }

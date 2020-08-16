@@ -85,6 +85,13 @@ public class WSlot extends WAbstractWidget {
 	}
 
 	@Override
+	public void onLayoutChange() {
+		super.onLayoutChange();
+
+		updateSlotPosition();
+	}
+
+	@Override
 	public void draw(MatrixStack matrices, VertexConsumerProvider provider) {
 		if (isHidden()) {
 			return;

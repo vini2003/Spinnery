@@ -99,7 +99,7 @@ public class BaseHandledScreen<T extends BaseScreenHandler> extends HandledScree
 	@Override
 	@Environment(EnvType.CLIENT)
 	public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
-		getInterface().onMouseClicked((float) mouseX, (float) mouseY, mouseButton);
+		handler.getInterface().onMouseClicked((float) mouseX, (float) mouseY, mouseButton);
 
 		return super.mouseClicked(mouseX, mouseY, mouseButton);
 	}
@@ -107,7 +107,7 @@ public class BaseHandledScreen<T extends BaseScreenHandler> extends HandledScree
 	@Override
 	@Environment(EnvType.CLIENT)
 	public boolean mouseReleased(double mouseX, double mouseY, int mouseButton) {
-		getInterface().onMouseReleased((float) mouseX, (float) mouseY, mouseButton);
+		handler.getInterface().onMouseReleased((float) mouseX, (float) mouseY, mouseButton);
 
 		return super.mouseReleased(mouseX, mouseY, mouseButton);
 	}
@@ -115,7 +115,7 @@ public class BaseHandledScreen<T extends BaseScreenHandler> extends HandledScree
 	@Override
 	@Environment(EnvType.CLIENT)
 	public void mouseMoved(double mouseX, double mouseY) {
-		getInterface().onMouseMoved((float) mouseX, (float) mouseY);
+		handler.getInterface().onMouseMoved((float) mouseX, (float) mouseY);
 
 		Positions.setMouseX((float) mouseX);
 		Positions.setMouseY((float) mouseY);
@@ -126,7 +126,7 @@ public class BaseHandledScreen<T extends BaseScreenHandler> extends HandledScree
 	@Override
 	@Environment(EnvType.CLIENT)
 	public boolean mouseDragged(double mouseX, double mouseY, int mouseButton, double deltaX, double deltaY) {
-		getInterface().onMouseDragged((float) mouseX, (float) mouseY, mouseButton, deltaX, deltaY);
+		handler.getInterface().onMouseDragged((float) mouseX, (float) mouseY, mouseButton, deltaX, deltaY);
 
 		return super.mouseDragged(mouseX, mouseY, mouseButton, deltaX, deltaY);
 	}
@@ -134,7 +134,7 @@ public class BaseHandledScreen<T extends BaseScreenHandler> extends HandledScree
 	@Override
 	@Environment(EnvType.CLIENT)
 	public boolean mouseScrolled(double mouseX, double mouseY, double deltaY) {
-		getInterface().onMouseScrolled((float) mouseX, (float) mouseY, deltaY);
+		handler.getInterface().onMouseScrolled((float) mouseX, (float) mouseY, deltaY);
 
 		return super.mouseScrolled(mouseX, mouseY, deltaY);
 	}
@@ -142,7 +142,7 @@ public class BaseHandledScreen<T extends BaseScreenHandler> extends HandledScree
 	@Override
 	@Environment(EnvType.CLIENT)
 	public boolean keyPressed(int keyCode, int character, int keyModifier) {
-		getInterface().onKeyPressed(keyCode, character, keyModifier);
+		handler.getInterface().onKeyPressed(keyCode, character, keyModifier);
 		
 		return super.keyPressed(keyCode, character, keyModifier);
 	}
@@ -150,7 +150,7 @@ public class BaseHandledScreen<T extends BaseScreenHandler> extends HandledScree
 	@Override
 	@Environment(EnvType.CLIENT)
 	public boolean keyReleased(int character, int keyCode, int keyModifier) {
-		getInterface().onKeyReleased(character, keyCode, keyModifier);
+		handler.getInterface().onKeyReleased(character, keyCode, keyModifier);
 
 		return super.keyReleased(character, keyCode, keyModifier);
 	}
@@ -158,7 +158,7 @@ public class BaseHandledScreen<T extends BaseScreenHandler> extends HandledScree
 	@Override
 	@Environment(EnvType.CLIENT)
 	public boolean charTyped(char character, int keyCode) {
-		getInterface().onCharTyped(character, keyCode);
+		handler.getInterface().onCharTyped(character, keyCode);
 
 		return super.charTyped(character, keyCode);
 	}
@@ -171,7 +171,7 @@ public class BaseHandledScreen<T extends BaseScreenHandler> extends HandledScree
 
 	@Override
 	public void tick() {
-		getInterface().tick();
+		handler.getInterface().tick();
 
 		super.tick();
 	}

@@ -9,10 +9,8 @@ repositories {
 		name = "Fabric"
 		url = "https://maven.fabricmc.net/"
 	}
-	maven {
-		name = "Jared"
-		url = "https://maven.blamejared.com"
-	}
+
+	jcenter()
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_8
@@ -63,7 +61,8 @@ dependencies {
 	modCompileOnly "io.github.prospector:modmenu:${modmenu_version}"
 
 	// RoughlyEnoughItems
-	modCompileOnly "me.shedaniel:RoughlyEnoughItems:${rei_version}"
+	modImplementation "me.shedaniel:RoughlyEnoughItems-api:${rei_version}"
+	modImplementation "me.shedaniel.cloth:basic-math:${basic_math_version}"
 }
 
 processResources {
