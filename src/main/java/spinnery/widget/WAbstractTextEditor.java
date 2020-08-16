@@ -13,6 +13,9 @@ import org.lwjgl.glfw.GLFW;
 import spinnery.client.utilities.Drawings;
 import spinnery.client.utilities.Texts;
 import spinnery.client.utilities.Scissors;
+import spinnery.common.utilities.miscellaneous.Padding;
+import spinnery.common.utilities.miscellaneous.Position;
+import spinnery.common.utilities.miscellaneous.Size;
 import spinnery.widget.api.*;
 
 import java.util.ArrayList;

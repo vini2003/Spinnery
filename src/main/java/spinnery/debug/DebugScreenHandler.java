@@ -1,13 +1,11 @@
 package spinnery.debug;
 
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.screen.slot.Slot;
 import spinnery.common.screenhandler.BaseScreenHandler;
 import spinnery.widget.*;
-import spinnery.widget.api.Position;
-import spinnery.widget.api.Size;
+import spinnery.common.utilities.miscellaneous.Position;
+import spinnery.common.utilities.miscellaneous.Size;
 
 public class DebugScreenHandler extends BaseScreenHandler {
 	public DebugScreenHandler(int syncId, PlayerEntity player) {
@@ -20,10 +18,11 @@ public class DebugScreenHandler extends BaseScreenHandler {
 
 		WPanel panel = mainInterface.createChild(WPanel::new, Position.ORIGIN, Size.of(192, 128));
 
-		panel.createChild(WText::new, Position.of(panel, 7, 7)).setText("Hi there!");
-		panel.createChild(WText::new, Position.of(panel, 7, 18)).setText("07/11/2020 11:01:47PM");
+		WText textA = panel.createChild(WText::new, Position.of(panel, 7, 7)).setText("Hi there!");
+		WText textB = panel.createChild(WText::new, Position.of(panel, 7, 18)).setText("07/11/2020 11:01:47PM");
 
-		WSlot slot = panel.createChild(() -> new WSlot(new Slot(getPlayer().inventory, 0, 0, 0)), Position.of(panel, 27, 7), Size.of(18, 18));
+		WSlot slot = panel.createChild(() -> new WSlot(new Slot(getPlayer().inventory, 0, 0, 0)), Position.of(textB, 0, 9), Size.of(18, 18));
+
 
 		//WVerticalList scrollableContainer = panel.createChild(WVerticalList::new, Position.of(panel, 7, 7), Size.of(64, 96));
 //

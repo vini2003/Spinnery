@@ -13,8 +13,8 @@ import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.Level;
 import spinnery.Spinnery;
-import spinnery.widget.api.Style;
-import spinnery.widget.api.Theme;
+import spinnery.common.utilities.miscellaneous.Style;
+import spinnery.common.utilities.miscellaneous.Theme;
 
 import java.io.IOException;
 import java.io.InputStream;

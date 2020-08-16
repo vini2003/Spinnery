@@ -27,6 +27,8 @@ public class WSlot extends WAbstractWidget {
 	public void onAdded(WInterface linkedInterface, WCollection parent) {
 		super.onAdded(linkedInterface, parent);
 
+		updateSlotPosition();
+
 		if (linkedInterface.getHandler() != null) {
 			(linkedInterface.getHandler()).addSlot(backendSlot);
 		}
@@ -35,6 +37,8 @@ public class WSlot extends WAbstractWidget {
 	@Override
 	public void onRemoved(WInterface linkedInterface, WCollection parent) {
 		super.onRemoved(linkedInterface, parent);
+
+		updateSlotPosition();
 
 		if (linkedInterface.getHandler() != null) {
 			(linkedInterface.getHandler()).removeSlot(backendSlot);
@@ -66,29 +70,6 @@ public class WSlot extends WAbstractWidget {
 			backendSlot.x = getSlotX();
 			backendSlot.y = getSlotY();
 		}
-
-		if (getInterface().getHandler().isClient()) {
-			updateSlotPositionDelegate();
-		}
-	}
-
-	@Environment(EnvType.CLIENT)
-	public void updateSlotPositionDelegate() {
-		Screen screen = MinecraftClient.getInstance().currentScreen;
-
-		if (screen instanceof HandledScreen<?>) {
-			HandledScreen<?> handledScreen = (HandledScreen<?>) screen;
-
-			backendSlot.x = backendSlot.x - handledScreen.x;
-			backendSlot.y = backendSlot.y - handledScreen.y;
-		}
-	}
-
-	@Override
-	public void onLayoutChange() {
-		super.onLayoutChange();
-
-		updateSlotPosition();
 	}
 
 	@Override

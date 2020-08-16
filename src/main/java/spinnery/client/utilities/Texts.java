@@ -4,8 +4,8 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.StringVisitable;
 import net.minecraft.text.Text;
-import spinnery.widget.api.Color;
-import spinnery.widget.api.Position;
+import spinnery.common.utilities.miscellaneous.Color;
+import spinnery.common.utilities.miscellaneous.Position;
 
 public class Texts {
 	public static RenderPass pass() {

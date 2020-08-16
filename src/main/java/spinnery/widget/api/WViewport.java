@@ -1,5 +1,7 @@
 package spinnery.widget.api;
 
+import spinnery.common.utilities.miscellaneous.Size;
+
 public interface WViewport {
 	Size getUnderlyingSize();
 

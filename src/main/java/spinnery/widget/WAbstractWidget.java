@@ -1,6 +1,8 @@
 package spinnery.widget;
 
 import net.fabricmc.api.EnvType;
+import net.fabricmc.fabric.api.event.Event;
+import net.fabricmc.fabric.api.event.EventFactory;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -9,6 +11,9 @@ import spinnery.Spinnery;
 import spinnery.common.utilities.Themes;
 import spinnery.common.utilities.Widgets;
 import spinnery.common.utilities.Positions;
+import spinnery.common.utilities.miscellaneous.Position;
+import spinnery.common.utilities.miscellaneous.Size;
+import spinnery.common.utilities.miscellaneous.Style;
 import spinnery.widget.api.*;
 
 import java.util.Objects;
@@ -337,6 +342,198 @@ public abstract class WAbstractWidget implements Tickable, WDrawableElement, WTh
 
 	public boolean shouldSynchronize(Identifier packetId) {
 		return false;
+	}
+
+	/*
+
+	 */
+
+	/*
+		Events
+	 */
+
+	public interface NoArgumentConsumer {
+		void accept();
+	}
+
+	public interface SingleArgumentConsumer<T> {
+		void accept(T t);
+	}
+
+	public interface DoubleArgumentConsumer<T, U> {
+		void accept(T t, U u);
+	}
+
+	public interface TripleArgumentConsumer<T, U, V> {
+		void accept(T t, U u, V v);
+	}
+
+	public interface QuadrupleArgumentConsumer<T, U, V, W> {
+		void accept(T t, U u, V v, W w);
+	}
+
+	public interface QuintupleArgumentConsumer<T, U, V, W, X> {
+		void accept(T t, U u, V v, W w, X x);
+	}
+
+	private final Event<TripleArgumentConsumer<Integer, Integer, Integer>> keyPressEvent = EventFactory.createArrayBacked(TripleArgumentConsumer.class, (listeners) -> (keyCode, scanCode, keyModifiers) -> {
+		for (TripleArgumentConsumer<Integer, Integer, Integer> listener : listeners) {
+			listener.accept(keyCode, scanCode, keyModifiers);
+		}
+	});
+
+	public Event<TripleArgumentConsumer<Integer, Integer, Integer>> getKeyPressEvent() {
+		return keyPressEvent;
+	}
+
+	@Override
+	public void onKeyPressed(int keyCode, int scanCode, int keyModifiers) {
+		WEventListener.super.onKeyReleased(keyCode, scanCode, keyModifiers);
+		keyPressEvent.invoker().accept(keyCode, scanCode, keyModifiers);
+	}
+
+	private final Event<TripleArgumentConsumer<Integer, Integer, Integer>> keyReleaseEvent = EventFactory.createArrayBacked(TripleArgumentConsumer.class, (listeners) -> (keyCode, scanCode, keyModifiers) -> {
+		for (TripleArgumentConsumer<Integer, Integer, Integer> listener : listeners) {
+			listener.accept(keyCode, scanCode, keyModifiers);
+		}
+	});
+
+	public Event<TripleArgumentConsumer<Integer, Integer, Integer>> getKeyReleaseEvent() {
+		return keyReleaseEvent;
+	}
+
+	@Override
+	public void onKeyReleased(int keyCode, int scanCode, int keyModifiers) {
+		WEventListener.super.onKeyReleased(keyCode, scanCode, keyModifiers);
+		keyReleaseEvent.invoker().accept(keyCode, scanCode, keyModifiers);
+	}
+
+	private final Event<DoubleArgumentConsumer<Character, Integer>> charTypeEvent = EventFactory.createArrayBacked(DoubleArgumentConsumer.class, (listeners) -> (character, keyCode) -> {
+		for (DoubleArgumentConsumer<Character, Integer> listener : listeners) {
+			listener.accept(character, keyCode);
+		}
+	});
+
+	public Event<DoubleArgumentConsumer<Character, Integer>> getCharTypeEvent() {
+		return charTypeEvent;
+	}
+
+	@Override
+	public void onCharTyped(char character, int keyCode) {
+		WEventListener.super.onCharTyped(character, keyCode);
+		charTypeEvent.invoker().accept(character, keyCode);
+	}
+
+	private final Event<TripleArgumentConsumer<Float, Float, Integer>> mouseReleaseEvent = EventFactory.createArrayBacked(TripleArgumentConsumer.class, (listeners) -> (x, y, button) -> {
+		for (TripleArgumentConsumer<Float, Float, Integer> listener : listeners) {
+			listener.accept(x, y, button);
+		}
+	});
+
+	public Event<TripleArgumentConsumer<Float, Float, Integer>> getMouseReleaseEvent() {
+		return mouseReleaseEvent;
+	}
+
+	@Override
+	public void onMouseReleased(float x, float y, int button) {
+		WEventListener.super.onMouseReleased(x, y, button);
+		mouseReleaseEvent.invoker().accept(x, y, button);
+	}
+
+	private final Event<TripleArgumentConsumer<Float, Float, Integer>> mouseClickEvent = EventFactory.createArrayBacked(TripleArgumentConsumer.class, (listeners) -> (x, y, button) -> {
+		for (TripleArgumentConsumer<Float, Float, Integer> listener : listeners) {
+			listener.accept(x, y, button);
+		}
+	});
+
+	public Event<TripleArgumentConsumer<Float, Float, Integer>> getMouseClickEvent() {
+		return mouseClickEvent;
+	}
+
+	@Override
+	public void onMouseClicked(float x, float y, int button) {
+		WEventListener.super.onMouseClicked(x, y, button);
+		mouseClickEvent.invoker().accept(x, y, button);
+	}
+
+	private final Event<QuintupleArgumentConsumer<Float, Float, Integer, Double, Double>> mouseDragEvent = EventFactory.createArrayBacked(QuintupleArgumentConsumer.class, (listeners) -> (x, y, button, deltaX, deltaY) -> {
+		for (QuintupleArgumentConsumer<Float, Float, Integer, Double, Double> listener : listeners) {
+			listener.accept(x, y, button, deltaX, deltaY);
+		}
+	});
+
+	public Event<QuintupleArgumentConsumer<Float, Float, Integer, Double, Double>> getMouseDragEvent() {
+		return mouseDragEvent;
+	}
+
+	@Override
+	public void onMouseDragged(float x, float y, int button, double deltaX, double deltaY) {
+		WEventListener.super.onMouseDragged(x, y, button, deltaX, deltaY);
+		mouseDragEvent.invoker().accept(x, y, button, deltaX, deltaY);
+	}
+
+	private final Event<DoubleArgumentConsumer<Float, Float>> mouseMoveEvent = EventFactory.createArrayBacked(DoubleArgumentConsumer.class, (listeners) -> (x, y) -> {
+		for (DoubleArgumentConsumer<Float, Float> listener : listeners) {
+			listener.accept(x, y);
+		}
+	});
+
+	public Event<DoubleArgumentConsumer<Float, Float>> getMouseMoveEvent() {
+		return mouseMoveEvent;
+	}
+
+	@Override
+	public void onMouseMoved(float x, float y) {
+		WEventListener.super.onMouseMoved(x, y);
+		mouseMoveEvent.invoker().accept(x, y);
+	}
+
+	private final Event<TripleArgumentConsumer<Float, Float, Double>> mouseScrollEvent = EventFactory.createArrayBacked(TripleArgumentConsumer.class, (listeners) -> (x, y, deltaY) -> {
+		for (TripleArgumentConsumer<Float, Float, Double> listener : listeners) {
+			listener.accept(x, y, deltaY);
+		}
+	});
+
+	public Event<TripleArgumentConsumer<Float, Float, Double>> getMouseScrollEvent() {
+		return mouseScrollEvent;
+	}
+
+	@Override
+	public void onMouseScrolled(float x, float y, double deltaY) {
+		WEventListener.super.onMouseScrolled(x, y, deltaY);
+		mouseScrollEvent.invoker().accept(x, y, deltaY);
+	}
+
+	private final Event<NoArgumentConsumer> focusGainEvent = EventFactory.createArrayBacked(NoArgumentConsumer.class, (listeners) -> () -> {
+		for (NoArgumentConsumer listener : listeners) {
+			listener.accept();
+		}
+	});
+
+	public Event<NoArgumentConsumer> getFocusGainEvent() {
+		return focusGainEvent;
+	}
+
+	@Override
+	public void onFocusGained() {
+		WEventListener.super.onFocusGained();
+		focusGainEvent.invoker().accept();
+	}
+
+	private final Event<NoArgumentConsumer> focusReleaseEvent = EventFactory.createArrayBacked(NoArgumentConsumer.class, (listeners) -> () -> {
+		for (NoArgumentConsumer listener : listeners) {
+			listener.accept();
+		}
+	});
+
+	public Event<NoArgumentConsumer> getFocusReleaseEvent() {
+		return focusReleaseEvent;
+	}
+
+	@Override
+	public void onFocusReleased() {
+		WEventListener.super.onFocusReleased();
+		focusReleaseEvent.invoker().accept();
 	}
 
 	/*

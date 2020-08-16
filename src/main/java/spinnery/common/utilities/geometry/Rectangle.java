@@ -1,7 +1,7 @@
 package spinnery.common.utilities.geometry;
 
-import spinnery.widget.api.Position;
-import spinnery.widget.api.Size;
+import spinnery.common.utilities.miscellaneous.Position;
+import spinnery.common.utilities.miscellaneous.Size;
 
 class Rectangle {
 	public static Rectangle empty() {

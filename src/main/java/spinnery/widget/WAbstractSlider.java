@@ -3,9 +3,9 @@ package spinnery.widget;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import org.lwjgl.glfw.GLFW;
-import spinnery.widget.api.Padding;
-import spinnery.widget.api.Position;
-import spinnery.widget.api.Size;
+import spinnery.common.utilities.miscellaneous.Padding;
+import spinnery.common.utilities.miscellaneous.Position;
+import spinnery.common.utilities.miscellaneous.Size;
 import spinnery.widget.api.WPadded;
 
 @Environment(EnvType.CLIENT)

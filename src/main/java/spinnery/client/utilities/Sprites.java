@@ -3,7 +3,7 @@ package spinnery.client.utilities;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
-import spinnery.widget.api.Color;
+import spinnery.common.utilities.miscellaneous.Color;
 
 public class Sprites {
 	public static final Sprites MINECRAFT_ICONS = new Sprites(new Identifier("minecraft:textures/gui/icons.png"), 256, 256).crop(16, 0, 162, 54).setDimensions(9, 9);

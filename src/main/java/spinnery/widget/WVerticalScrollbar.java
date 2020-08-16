@@ -4,7 +4,7 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import spinnery.client.utilities.Drawings;
 import spinnery.common.utilities.Positions;
-import spinnery.widget.api.Color;
+import spinnery.common.utilities.miscellaneous.Color;
 import spinnery.widget.api.WVerticalScrollable;
 
 public class WVerticalScrollbar extends WAbstractWidget {

@@ -1,12 +1,14 @@
 package spinnery.widget;
 
-import com.google.common.collect.ImmutableSet;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import org.lwjgl.glfw.GLFW;
 import spinnery.client.utilities.Drawings;
 import spinnery.client.utilities.Scissors;
 import spinnery.common.utilities.Positions;
+import spinnery.common.utilities.miscellaneous.Color;
+import spinnery.common.utilities.miscellaneous.Position;
+import spinnery.common.utilities.miscellaneous.Size;
 import spinnery.widget.api.*;
 
 import java.util.*;

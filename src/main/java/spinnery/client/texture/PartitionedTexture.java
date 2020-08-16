@@ -6,7 +6,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import spinnery.client.utilities.Drawings;
 import spinnery.client.utilities.Layers;
-import spinnery.widget.api.Color;
+import spinnery.common.utilities.miscellaneous.Color;
 
 public class PartitionedTexture {
 	private final Identifier texture;

@@ -1,10 +1,8 @@
-package spinnery.widget.api;
+package spinnery.common.utilities.miscellaneous;
 
-import blue.endless.jankson.JsonElement;
-import spinnery.common.utilities.Janksons;
+import spinnery.widget.api.WPositioned;
 
 import java.util.Objects;
-import java.util.function.Supplier;
 
 public class Position implements WPositioned {
 	public static final Position ORIGIN = Position.of(0, 0);

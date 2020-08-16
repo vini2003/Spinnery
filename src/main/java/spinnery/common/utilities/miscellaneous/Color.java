@@ -1,7 +1,4 @@
-package spinnery.widget.api;
-
-import blue.endless.jankson.JsonElement;
-import blue.endless.jankson.JsonPrimitive;
+package spinnery.common.utilities.miscellaneous;
 
 
 public class Color {

@@ -4,9 +4,8 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.LivingEntity;
 import spinnery.client.utilities.Sprites;
-import spinnery.widget.api.Size;
+import spinnery.common.utilities.miscellaneous.Size;
 
 @Environment(EnvType.CLIENT)
 public class WStatusBar extends WAbstractWidget {

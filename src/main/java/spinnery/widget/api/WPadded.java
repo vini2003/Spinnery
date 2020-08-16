@@ -1,5 +1,9 @@
 package spinnery.widget.api;
 
+import spinnery.common.utilities.miscellaneous.Padding;
+import spinnery.common.utilities.miscellaneous.Position;
+import spinnery.common.utilities.miscellaneous.Size;
+
 public interface WPadded extends WInnerSized {
 	@Override
 	default Size getInnerSize() {

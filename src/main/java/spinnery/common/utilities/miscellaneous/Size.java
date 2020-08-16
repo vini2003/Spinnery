@@ -1,10 +1,8 @@
-package spinnery.widget.api;
+package spinnery.common.utilities.miscellaneous;
 
-import blue.endless.jankson.JsonElement;
-import spinnery.common.utilities.Janksons;
+import spinnery.widget.api.WSized;
 
 import java.util.Objects;
-import java.util.function.Supplier;
 
 public class Size implements WSized {
 	protected float width;

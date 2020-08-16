@@ -6,11 +6,10 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import spinnery.Spinnery;
 import spinnery.client.texture.PartitionedTexture;
-import spinnery.client.utilities.Drawings;
 import spinnery.client.utilities.Texts;
 import spinnery.common.utilities.Positions;
-import spinnery.widget.api.Position;
-import spinnery.widget.api.Size;
+import spinnery.common.utilities.miscellaneous.Position;
+import spinnery.common.utilities.miscellaneous.Size;
 
 @Environment(EnvType.CLIENT)
 public class WHorizontalSlider extends WAbstractSlider {
