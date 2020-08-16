@@ -6,16 +6,12 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
-import org.lwjgl.glfw.GLFW;
-import spinnery.common.utilities.Networks;
 import spinnery.common.utilities.Positions;
-import spinnery.widget.WAbstractWidget;
-import spinnery.widget.WInterface;
-import spinnery.widget.api.WInterfaceProvider;
+import spinnery.widget.implementation.WAbstractWidget;
+import spinnery.widget.implementation.WInterface;
 
-public abstract class BaseScreen extends Screen implements WInterfaceProvider {
+public abstract class BaseScreen extends Screen {
 	protected final WInterface screenInterface = new WInterface();
 
 	public BaseScreen(Text title) {
@@ -51,7 +47,6 @@ public abstract class BaseScreen extends Screen implements WInterfaceProvider {
 		super.render(matrices, mouseX, mouseY, tickDelta);
 	}
 
-	@Override
 	public WInterface getInterface() {
 		return screenInterface;
 	}

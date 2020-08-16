@@ -3,9 +3,12 @@ package spinnery.debug;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.screen.slot.Slot;
 import spinnery.common.screenhandler.BaseScreenHandler;
-import spinnery.widget.*;
 import spinnery.common.utilities.miscellaneous.Position;
 import spinnery.common.utilities.miscellaneous.Size;
+import spinnery.widget.implementation.WInterface;
+import spinnery.widget.implementation.WPanel;
+import spinnery.widget.implementation.WSlot;
+import spinnery.widget.implementation.WText;
 
 public class DebugScreenHandler extends BaseScreenHandler {
 	public DebugScreenHandler(int syncId, PlayerEntity player) {

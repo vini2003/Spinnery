@@ -1,6 +1,6 @@
 package spinnery.common.utilities.miscellaneous;
 
-import spinnery.widget.api.WSized;
+import spinnery.widget.declaration.size.WSized;
 
 import java.util.Objects;
 

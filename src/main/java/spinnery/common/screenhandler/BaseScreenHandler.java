@@ -13,8 +13,8 @@ import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.util.Identifier;
 import spinnery.common.utilities.Networks;
-import spinnery.widget.WAbstractWidget;
-import spinnery.widget.WInterface;
+import spinnery.widget.implementation.WAbstractWidget;
+import spinnery.widget.implementation.WInterface;
 
 public abstract class BaseScreenHandler extends ScreenHandler {
 	protected final WInterface serverInterface;
@@ -111,7 +111,7 @@ public abstract class BaseScreenHandler extends ScreenHandler {
 		Screen screen = MinecraftClient.getInstance().currentScreen;
 
 		if (screen instanceof HandledScreen) {
-			HandledScreen handledScreen = (HandledScreen) screen;
+			HandledScreen<?> handledScreen = (HandledScreen<?>) screen;
 			handledScreen.x = rectangle.getMinX();
 			handledScreen.y = rectangle.getMinY();
 

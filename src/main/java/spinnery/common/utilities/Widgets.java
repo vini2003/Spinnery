@@ -3,7 +3,7 @@ package spinnery.common.utilities;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import net.minecraft.util.Identifier;
-import spinnery.widget.*;
+import spinnery.widget.implementation.*;
 
 public class Widgets {
 	private static final BiMap<Identifier, Class<? extends WAbstractWidget>> widgetMap = HashBiMap.create();

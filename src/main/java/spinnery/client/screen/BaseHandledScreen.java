@@ -8,42 +8,17 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
-import org.lwjgl.glfw.GLFW;
-import spinnery.client.utilities.Drawings;
-import spinnery.client.utilities.Layers;
 import spinnery.common.screenhandler.BaseScreenHandler;
 import spinnery.common.utilities.Networks;
 import spinnery.common.utilities.Positions;
-import spinnery.widget.WAbstractWidget;
-import spinnery.widget.WInterface;
-import spinnery.widget.WSlot;
-import spinnery.widget.api.WContextLock;
-import spinnery.widget.api.WInterfaceProvider;
+import spinnery.widget.implementation.WAbstractWidget;
+import spinnery.widget.implementation.WInterface;
+import spinnery.widget.implementation.WSlot;
 
-public class BaseHandledScreen<T extends BaseScreenHandler> extends HandledScreen<T> implements WInterfaceProvider {
-	protected final WInterface clientInterface;
-	protected float tooltipX = 0;
-	protected float tooltipY = 0;
-	protected WSlot drawSlot;
-
-	protected int minX = Integer.MAX_VALUE;
-	protected int minY = Integer.MAX_VALUE;
-	protected int maxX = Integer.MIN_VALUE;
-	protected int maxY = Integer.MIN_VALUE;
-
-
-	@Environment(EnvType.CLIENT)
-	public BaseHandledScreen(Text name, T handler, PlayerEntity player) {
-		super(handler, player.inventory, name);
-		clientInterface = new WInterface(handler);
-	}
-
-	@Environment(EnvType.CLIENT)
-	public BaseHandledScreen(T handler, PlayerInventory playerInventory, Text name) {
-		super(handler, playerInventory, name);
-		clientInterface = new WInterface(handler);
+public class BaseHandledScreen<T extends BaseScreenHandler> extends HandledScreen<T> {
+	public BaseHandledScreen(T handler, PlayerInventory inventory, Text title) {
+		super(handler, inventory, title);
 	}
 
 	public void init() {
@@ -51,11 +26,15 @@ public class BaseHandledScreen<T extends BaseScreenHandler> extends HandledScree
 
 		handler.getInterface().getWidgets().clear();
 		handler.slots.clear();
+
 		this.backgroundWidth = width;
 		this.backgroundHeight = height;
+
 		handler.initialize(width, height);
+
 		handler.onLayoutChange();
 		handler.getInterface().getAllWidgets().forEach(WAbstractWidget::onLayoutChange);
+
 		Networks.toServer(Networks.INITIALIZE, Networks.ofInitialize(handler.syncId, width, height));
 	}
 
@@ -179,11 +158,5 @@ public class BaseHandledScreen<T extends BaseScreenHandler> extends HandledScree
 	@Environment(EnvType.CLIENT)
 	public T getHandler() {
 		return super.handler;
-	}
-
-	@Override
-	@Environment(EnvType.CLIENT)
-	public WInterface getInterface() {
-		return clientInterface;
 	}
 }

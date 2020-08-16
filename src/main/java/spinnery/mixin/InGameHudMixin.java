@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import spinnery.client.screen.InGameHudScreen;
-import spinnery.widget.WInterface;
+import spinnery.widget.implementation.WInterface;
 
 @Mixin(InGameHud.class)
 public class InGameHudMixin implements InGameHudScreen.Accessor {

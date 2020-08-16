@@ -1,6 +1,6 @@
 package spinnery.common.utilities.miscellaneous;
 
-import spinnery.widget.api.WPositioned;
+import spinnery.widget.declaration.position.WPositioned;
 
 import java.util.Objects;
 
