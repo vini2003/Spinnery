@@ -1,23 +1,17 @@
 package spinnery.widget;
 
 import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Tickable;
 import spinnery.Spinnery;
-import spinnery.client.utilities.Drawings;
-import spinnery.client.utilities.Texts;
 import spinnery.common.utilities.Themes;
 import spinnery.common.utilities.Widgets;
 import spinnery.common.utilities.Positions;
 import spinnery.widget.api.*;
 
-import java.util.List;
+import java.util.Objects;
 
 import static spinnery.common.utilities.Themes.DEFAULT_THEME;
 
@@ -194,9 +188,7 @@ public abstract class WAbstractWidget implements Tickable, WDrawableElement, WTh
 	}
 
 	public void center() {
-		setPosition(Position.of(getPosition())
-				.setX(getParent().getX() + getParent().getWidth() / 2 - getWidth() / 2)
-				.setY(getParent().getY() + getParent().getHeight() / 2 - getHeight() / 2));
+		setPosition(Position.of(getPosition()).setX(getParent().getX() + getParent().getWidth() / 2 - getWidth() / 2).setY(getParent().getY() + getParent().getHeight() / 2 - getHeight() / 2));
 	}
 
 	public void centerX() {
@@ -258,138 +250,6 @@ public abstract class WAbstractWidget implements Tickable, WDrawableElement, WTh
 
 	public <W extends WAbstractWidget> W setWidth(float width) {
 		return setSize(Size.of(size).setWidth(width));
-	}
-
-	/*
-
-	 */
-
-	/*
-		Events
-	 */
-
-	@Override
-	public void onKeyPressed(int keyCode, int character, int keyModifier) {
-		if (this instanceof WDelegatedEventListener) {
-			for (WEventListener widget : ((WDelegatedEventListener) this).getEventDelegates()) {
-				widget.onKeyPressed(keyCode, character, keyModifier);
-			}
-		}
-	}
-
-	@Override
-	public void onKeyReleased(int keyCode, int character, int keyModifier) {
-		if (this instanceof WDelegatedEventListener) {
-			for (WEventListener widget : ((WDelegatedEventListener) this).getEventDelegates()) {
-				widget.onKeyReleased(keyCode, character, keyModifier);
-			}
-		}
-	}
-
-	@Override
-	public void onCharTyped(char character, int keyCode) {
-		if (this instanceof WDelegatedEventListener) {
-			for (WEventListener widget : ((WDelegatedEventListener) this).getEventDelegates()) {
-				widget.onCharTyped(character, keyCode);
-			}
-		}
-	}
-
-	@Override
-	public void onFocusGained() {
-		if (this instanceof WDelegatedEventListener) {
-			for (WEventListener widget : ((WDelegatedEventListener) this).getEventDelegates()) {
-				if (((WAbstractWidget) widget).isFocused()) {
-					widget.onFocusGained();
-				}
-			}
-		}
-	}
-
-
-	@Override
-	public void onFocusReleased() {
-		if (this instanceof WDelegatedEventListener) {
-			for (WEventListener widget : ((WDelegatedEventListener) this).getEventDelegates()) {
-				if (!((WAbstractWidget) widget).isFocused()) {
-					widget.onFocusReleased();
-				}
-			}
-		}
-	}
-
-	@Override
-	public void onMouseReleased(float mouseX, float mouseY, int mouseButton) {
-		if (this instanceof WDelegatedEventListener) {
-			for (WEventListener widget : ((WDelegatedEventListener) this).getEventDelegates()) {
-				widget.onMouseReleased(mouseX, mouseY, mouseButton);
-			}
-		}
-
-		held = false;
-	}
-
-	@Override
-	public void onMouseClicked(float mouseX, float mouseY, int mouseButton) {
-		if (this instanceof WDelegatedEventListener) {
-			for (WEventListener widget : ((WDelegatedEventListener) this).getEventDelegates()) {
-				widget.onMouseClicked(mouseX, mouseY, mouseButton);
-			}
-		}
-
-		if (isWithinBounds(mouseX, mouseY)) {
-			held = true;
-			heldSince = System.currentTimeMillis();
-		}
-	}
-
-	@Override
-	public void onMouseDragged(float mouseX, float mouseY, int mouseButton, double deltaX, double deltaY) {
-		if (this instanceof WDelegatedEventListener) {
-			for (WEventListener widget : ((WDelegatedEventListener) this).getEventDelegates()) {
-				widget.onMouseDragged(mouseX, mouseY, mouseButton, deltaX, deltaY);
-			}
-		}
-	}
-
-	@Override
-	public void onMouseMoved(float mouseX, float mouseY) {
-		if (this instanceof WDelegatedEventListener) {
-			for (WEventListener widget : ((WDelegatedEventListener) this).getEventDelegates()) {
-				if (widget instanceof WAbstractWidget) {
-					WAbstractWidget updateWidget = ((WAbstractWidget) widget);
-					boolean then = updateWidget.focused;
-					updateWidget.updateFocus(mouseX, mouseY);
-					boolean now = updateWidget.focused;
-
-					if (then && !now) {
-						updateWidget.onFocusReleased();
-					} else if (!then && now) {
-						updateWidget.onFocusGained();
-					}
-
-				}
-				widget.onMouseMoved(mouseX, mouseY);
-			}
-		}
-	}
-
-	@Override
-	public void onMouseScrolled(float mouseX, float mouseY, double deltaY) {
-		if (this instanceof WDelegatedEventListener) {
-			for (WEventListener widget : ((WDelegatedEventListener) this).getEventDelegates()) {
-				widget.onMouseScrolled(mouseX, mouseY, deltaY);
-			}
-		}
-	}
-
-	@Override
-	public void onDrawTooltip(float mouseX, float mouseY) {
-		if (this instanceof WDelegatedEventListener) {
-			for (WEventListener widget : ((WDelegatedEventListener) this).getEventDelegates()) {
-				widget.onDrawTooltip(mouseX, mouseY);
-			}
-		}
 	}
 
 	/*
@@ -468,6 +328,22 @@ public abstract class WAbstractWidget implements Tickable, WDrawableElement, WTh
 	}
 
 	/*
+
+	 */
+
+	/*
+		Network
+	 */
+
+	public boolean shouldSynchronize(Identifier packetId) {
+		return false;
+	}
+
+	/*
+
+	 */
+
+	/*
 		Miscellaneous
 	 */
 
@@ -484,10 +360,14 @@ public abstract class WAbstractWidget implements Tickable, WDrawableElement, WTh
 	public void tick() {
 	}
 
-	public void onAdded(WInterfaceProvider provider, WCollection parent) {
+	public void onAdded(WInterface linkedInterface, WCollection parent) {
 	}
 
-	public void onRemoved(WInterfaceProvider provider, WCollection parent) {
+	public void onRemoved(WInterface linkedInterface, WCollection parent) {
+	}
+
+	public int hash() {
+		return Objects.hash(getClass().getName() + "_" + getX() + "_" + getY() + "_" + getWidth() + "_" + getHeight());
 	}
 
 	/*

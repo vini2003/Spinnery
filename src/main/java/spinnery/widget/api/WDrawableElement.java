@@ -7,22 +7,13 @@ import net.minecraft.text.Text;
 
 import java.util.List;
 
-public interface WDrawableElement extends WPositioned, WSized, Comparable<WDrawableElement> {
+public interface WDrawableElement extends WPositioned, WSized {
 	void draw(MatrixStack matrices, VertexConsumerProvider provider);
-
-	default void drawTooltip(MatrixStack matrices, VertexConsumerProvider provider) {
-		return;
-	}
 
 	default List<Text> getTooltip() {
 		return Lists.newArrayList();
 	}
 
 	default void onLayoutChange() {
-	}
-
-	@Override
-	default int compareTo(WDrawableElement element) {
-		return Float.compare(element.getZ());
 	}
 }

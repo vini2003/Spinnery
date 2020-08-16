@@ -8,8 +8,6 @@ import net.minecraft.entity.LivingEntity;
 import spinnery.client.utilities.Sprites;
 import spinnery.widget.api.Size;
 
-
- /
 @Environment(EnvType.CLIENT)
 public class WStatusBar extends WAbstractWidget {
 	private static final Sprites ICONS = Sprites.MINECRAFT_ICONS;
@@ -88,10 +86,6 @@ public class WStatusBar extends WAbstractWidget {
 		return value;
 	}
 
-
-
-	  @param maxValue The highest possible value, for health bars this would be {@link LivingEntity#getMaxHealth()}.
-	 */
 	public <W extends WStatusBar> W setValue(int value, int maxValue) {
 		this.maxValue = maxValue;
 		this.value = Math.min(value, maxValue);
@@ -133,7 +127,5 @@ public class WStatusBar extends WAbstractWidget {
 				sprite.draw(matrices, provider, getX() + x, getY() + 1, config.spriteWidth, config.spriteHeight, config.mirror);
 			}
 		}
-
-		super.draw(matrices, provider);
 	}
 }

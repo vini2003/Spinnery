@@ -32,6 +32,10 @@ public abstract class BaseScreenHandler extends ScreenHandler {
 		serverInterface = new WInterface(this);
 	}
 
+	public Rectangle getRectangle() {
+		return rectangle;
+	}
+
 	public WInterface getInterface() {
 		return serverInterface;
 	}
@@ -48,7 +52,7 @@ public abstract class BaseScreenHandler extends ScreenHandler {
 		int hash = buf.readInt();
 
 		getInterface().getAllWidgets().forEach((widget) -> {
-			if (widget.getHash() == hash) {
+			if (widget.hash() == hash) {
 				if (Networks.MOUSE_MOVE.equals(id)) {
 					widget.onMouseMoved(buf.readFloat(), buf.readFloat());
 				} else if (Networks.MOUSE_CLICK.equals(id)) {

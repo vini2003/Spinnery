@@ -62,13 +62,13 @@ public class WVerticalScrollbar extends WAbstractWidget {
 
 					if (mouseY > getScrollerY()) {
 						if (((WVerticalList) scrollable).hasSmoothing()) {
-							((WVerticalList) scrollable).kineticScrollDelta -= 3.5;
+							((WVerticalList) scrollable).setKineticScrollDelta((float) (((WVerticalList) scrollable).getKineticScrollDelta() - 3.5));
 						} else {
 							scrollable.scroll(0, -50);
 						}
 					} else {
 						if (((WVerticalList) scrollable).hasSmoothing()) {
-							((WVerticalList) scrollable).kineticScrollDelta += 3.5;
+							((WVerticalList) scrollable).setKineticScrollDelta((float) (((WVerticalList) scrollable).getKineticScrollDelta() + 3.5));
 						} else {
 							scrollable.scroll(0, +50);
 						}

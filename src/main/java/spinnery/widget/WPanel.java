@@ -16,10 +16,15 @@ import spinnery.widget.api.WModifiableCollection;
 import java.util.*;
 
 @Environment(EnvType.CLIENT)
-public class WPanel extends WAbstractWidget implements WModifiableCollection, WDelegatedEventListener {
+public class WPanel extends WAbstractWidget implements WModifiableCollection {
+	private final PartitionedTexture texture = new PartitionedTexture(Spinnery.identifier("textures/widget/panel.png"), 18F, 18F, 0.25F, 0.25F, 0.25F, 0.25F);
+
 	private final Set<WAbstractWidget> widgets = new HashSet<>();
 
-	private final PartitionedTexture texture = new PartitionedTexture(Spinnery.identifier("textures/widget/panel.png"), 18F, 18F, 0.25F, 0.25F, 0.25F, 0.25F);
+	@Override
+	public Set<WAbstractWidget> getWidgets() {
+		return widgets;
+	}
 
 	@Override
 	public void draw(MatrixStack matrices, VertexConsumerProvider provider) {
@@ -42,32 +47,5 @@ public class WPanel extends WAbstractWidget implements WModifiableCollection, WD
 		for (WDrawableElement widget : widgets) {
 			widget.draw(matrices, provider);
 		}
-	}
-
-	@Override
-	public void add(WAbstractWidget... widgets) {
-		this.widgets.addAll(Arrays.asList(widgets));
-		onLayoutChange();
-	}
-
-	@Override
-	public Set<WAbstractWidget> getWidgets() {
-		return widgets;
-	}
-
-	@Override
-	public boolean contains(WAbstractWidget... widgets) {
-		return this.widgets.containsAll(Arrays.asList(widgets));
-	}
-
-	@Override
-	public void remove(WAbstractWidget... widgets) {
-		this.widgets.removeAll(Arrays.asList(widgets));
-		onLayoutChange();
-	}
-
-	@Override
-	public Collection<? extends WEventListener> getEventDelegates() {
-		return getWidgets();
 	}
 }

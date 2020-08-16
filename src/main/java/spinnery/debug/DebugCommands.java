@@ -30,7 +30,7 @@ public class DebugCommands {
 
 		@Override
 		public ScreenHandler createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity player) {
-			return new DebugScreenHandler(syncId, playerInventory);
+			return new DebugScreenHandler(syncId, player);
 		}
 	};
 

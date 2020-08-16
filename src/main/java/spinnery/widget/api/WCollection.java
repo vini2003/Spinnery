@@ -18,6 +18,4 @@ public interface WCollection {
 		}
 		return allWidgets;
 	}
-
-	boolean contains(WAbstractWidget... widgets);
 }

@@ -2,6 +2,7 @@ package spinnery.common.utilities;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
+import org.apache.commons.lang3.tuple.MutablePair;
 import spinnery.common.screenhandler.BaseScreenHandler;
 
 import java.util.function.Consumer;
@@ -10,25 +11,9 @@ import java.util.function.Supplier;
 public class Stacks {
 	public static final CompoundTag TAG_EMPTY = new CompoundTag();
 
-
-	  You may be wondering why use Suppliers. I ask you,
-	  In fact, it is the best idea I have had up to this
-	  What {@link BaseScreenHandler} does,
-	  right afterwards, which applies the ItemStack to
-	  case, a method to set something's ItemStack.
-	  WSlot code breaks, it's either my fault, or my fault.
-	 *
-	  @param supplierB Destination ItemStack supplier
-	  @param sB        Max. count of stackB supplier
-
 	public static MutablePair<ItemStack, ItemStack> merge(Supplier<ItemStack> supplierA, Supplier<ItemStack> supplierB, Supplier<Integer> sA, Supplier<Integer> sB) {
 		return merge(supplierA.get(), supplierB.get(), sA.get(), sB.get());
 	}
-
-
-
-	  @param stackB Destination ItemStack
-	  @param maxB   Max. count of stackB
 
 	public static MutablePair<ItemStack, ItemStack> merge(ItemStack stackA, ItemStack stackB, int maxA, int maxB) {
 		if (equalItemAndTag(stackA, stackB)) {
@@ -67,10 +52,6 @@ public class Stacks {
 
 		return MutablePair.of(stackA, stackB);
 	}
-
-
-
-	  @param stackB Stack two.
 
 	public static boolean equalItemAndTag(ItemStack stackA, ItemStack stackB) {
 		return ItemStack.areTagsEqual(stackA, stackB) && ItemStack.areItemsEqual(stackA, stackB);

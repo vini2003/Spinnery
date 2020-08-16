@@ -18,8 +18,6 @@ import spinnery.widget.api.WInterfaceProvider;
 public abstract class BaseScreen extends Screen implements WInterfaceProvider {
 	protected final WInterface screenInterface = new WInterface();
 
-	private boolean isPauseScreen = false;
-
 	public BaseScreen(Text title) {
 		super(title);
 	}

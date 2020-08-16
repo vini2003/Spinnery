@@ -98,14 +98,6 @@ public class BaseHandledScreen<T extends BaseScreenHandler> extends HandledScree
 
 	@Override
 	@Environment(EnvType.CLIENT)
-	protected void drawMouseoverTooltip(MatrixStack matrices, int mouseX, int mouseY) {
-		getInterface().onDrawMouseoverTooltip(mouseX, mouseY);
-
-		super.drawMouseoverTooltip(matrices, mouseX, mouseY);
-	}
-
-	@Override
-	@Environment(EnvType.CLIENT)
 	public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
 		getInterface().onMouseClicked((float) mouseX, (float) mouseY, mouseButton);
 

@@ -20,10 +20,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
 
-
-  assortments Spinnery makes use of,
-  Style manipulation.
- */
 @Environment(EnvType.CLIENT)
 public class Themes {
 	public static final Identifier DEFAULT_THEME = new Identifier("spinnery", "default");

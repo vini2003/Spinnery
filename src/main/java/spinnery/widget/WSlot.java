@@ -24,20 +24,20 @@ public class WSlot extends WAbstractWidget {
 	}
 
 	@Override
-	public void onAdded(WInterfaceProvider provider, WCollection parent) {
-		super.onAdded(provider, parent);
+	public void onAdded(WInterface linkedInterface, WCollection parent) {
+		super.onAdded(linkedInterface, parent);
 
-		if (provider instanceof BaseScreenHandler) {
-			((BaseScreenHandler) provider).addSlot(backendSlot);
+		if (linkedInterface.getHandler() != null) {
+			(linkedInterface.getHandler()).addSlot(backendSlot);
 		}
 	}
 
 	@Override
-	public void onRemoved(WInterfaceProvider provider, WCollection parent) {
-		super.onRemoved(provider, parent);
+	public void onRemoved(WInterface linkedInterface, WCollection parent) {
+		super.onRemoved(linkedInterface, parent);
 
-		if (provider instanceof BaseScreenHandler) {
-			((BaseScreenHandler) provider).removeSlot(backendSlot);
+		if (linkedInterface.getHandler() != null) {
+			(linkedInterface.getHandler()).removeSlot(backendSlot);
 		}
 	}
 

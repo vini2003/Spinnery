@@ -26,8 +26,7 @@ public class SpinneryRoughlyEnoughItemsPlugin implements REIPluginV0 {
 
 			@Override
 			public Rectangle getScreenBounds(BaseHandledScreen<BaseScreenHandler> screen) {
-				screen.updateDimensions();
-				return new Rectangle(screen.getMinX(), screen.getMinY(), screen.getMaxX() - screen.getMinX(), screen.getMaxY() - screen.getMinY());
+				return screen.getHandler().getRectangle();
 			}
 
 			@Override

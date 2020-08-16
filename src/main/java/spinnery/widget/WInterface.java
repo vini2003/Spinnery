@@ -12,20 +12,29 @@ import spinnery.client.screen.BaseHandledScreen;
 import spinnery.common.utilities.Networks;
 import spinnery.common.screenhandler.BaseScreenHandler;
 import spinnery.widget.api.WDrawableElement;
+import spinnery.widget.api.WEventListener;
 import spinnery.widget.api.WModifiableCollection;
 import spinnery.widget.api.WThemable;
 
 import java.util.*;
 
-public class WInterface implements WModifiableCollection, WDrawableElement, WThemable {
-	protected BaseScreenHandler handler;
+public class WInterface implements WModifiableCollection, WEventListener, WDrawableElement, WThemable {
+	private BaseScreenHandler handler;
 
-	protected Set<WAbstractWidget> widgets = new LinkedHashSet<>();
+	private final Set<WAbstractWidget> widgets = new LinkedHashSet<>();
 
-	protected Identifier theme;
+	private Identifier theme;
+
+	public WInterface() {
+	}
 
 	public WInterface(BaseScreenHandler handler) {
 		setHandler(handler);
+	}
+
+	@Override
+	public Set<WAbstractWidget> getWidgets() {
+		return widgets;
 	}
 
 	public BaseScreenHandler getHandler() {
@@ -60,131 +69,6 @@ public class WInterface implements WModifiableCollection, WDrawableElement, WThe
 		return setTheme(new Identifier(theme));
 	}
 
-	@Override
-	public void add(WAbstractWidget... widgets) {
-		this.widgets.addAll(Arrays.asList(widgets));
-		onLayoutChange();
-	}
-
-	@Override
-	public Set<WAbstractWidget> getWidgets() {
-		return widgets;
-	}
-
-	@Override
-	public boolean contains(WAbstractWidget... widgets) {
-		return this.widgets.containsAll(Arrays.asList(widgets));
-	}
-
-	@Override
-	public void remove(WAbstractWidget... widgets) {
-		this.widgets.removeAll(Arrays.asList(widgets));
-		onLayoutChange();
-	}
-
-	public void onMouseClicked(float mouseX, float mouseY, int mouseButton) {
-		for (WAbstractWidget widget : getWidgets()) {
-			if (!EventUtilities.canReceiveMouse(widget)) continue;
-			widget.onMouseClicked(mouseX, mouseY, mouseButton);
-			if (widget instanceof WNetworked) {
-				ClientSidePacketRegistry.INSTANCE.sendToServer(Networks.SYNCED_WIDGET_PACKET,
-						Networks.createMouseClickPacket(((WNetworked) widget), mouseX, mouseY, mouseButton));
-			}
-		}
-	}
-
-	public void onMouseReleased(float mouseX, float mouseY, int mouseButton) {
-		for (WAbstractWidget widget : getWidgets()) {
-			if (!EventUtilities.canReceiveMouse(widget)) continue;
-			widget.onMouseReleased(mouseX, mouseY, mouseButton);
-			if (widget instanceof WNetworked) {
-				ClientSidePacketRegistry.INSTANCE.sendToServer(Networks.SYNCED_WIDGET_PACKET,
-						Networks.createMouseReleasePacket(((WNetworked) widget), mouseX, mouseY, mouseButton));
-			}
-		}
-	}
-
-	public boolean onMouseDragged(float mouseX, float mouseY, int mouseButton, double deltaX, double deltaY) {
-		for (WAbstractWidget widget : getWidgets()) {
-			if (!EventUtilities.canReceiveMouse(widget)) continue;
-			widget.onMouseDragged(mouseX, mouseY, mouseButton, deltaX, deltaY);
-			if (widget instanceof WNetworked) {
-				ClientSidePacketRegistry.INSTANCE.sendToServer(Networks.SYNCED_WIDGET_PACKET,
-						Networks.createMouseDragPacket(((WNetworked) widget), mouseX, mouseY, mouseButton, deltaX, deltaY));
-			}
-		}
-		return false;
-	}
-
-	public void onMouseScrolled(float mouseX, float mouseY, double deltaY) {
-		for (WAbstractWidget widget : getWidgets()) {
-			if (!EventUtilities.canReceiveMouse(widget)) continue;
-			widget.onMouseScrolled(mouseX, mouseY, deltaY);
-			if (widget instanceof WNetworked) {
-				ClientSidePacketRegistry.INSTANCE.sendToServer(Networks.SYNCED_WIDGET_PACKET,
-						Networks.createMouseScrollPacket(((WNetworked) widget), mouseX, mouseY, deltaY));
-			}
-		}
-	}
-
-	public void onMouseMoved(float mouseX, float mouseY) {
-		for (WAbstractWidget widget : getWidgets()) {
-			widget.updateFocus(mouseX, mouseY);
-			if (!EventUtilities.canReceiveMouse(widget)) continue;
-			widget.onMouseMoved(mouseX, mouseY);
-			if (widget instanceof WNetworked) {
-				ClientSidePacketRegistry.INSTANCE.sendToServer(Networks.SYNCED_WIDGET_PACKET,
-						Networks.createFocusPacket(((WNetworked) widget), widget.isFocused()));
-			}
-		}
-	}
-
-	public void onKeyReleased(int keyCode, int character, int keyModifier) {
-		for (WAbstractWidget widget : getWidgets()) {
-			if (!EventUtilities.canReceiveKeyboard(widget)) continue;
-			widget.onKeyReleased(keyCode, character, keyModifier);
-			if (widget instanceof WNetworked) {
-				ClientSidePacketRegistry.INSTANCE.sendToServer(Networks.SYNCED_WIDGET_PACKET,
-						Networks.createKeyReleasePacket(((WNetworked) widget), character, keyCode, keyModifier));
-			}
-		}
-	}
-
-	public void onKeyPressed(int keyCode, int character, int keyModifier) {
-		for (WAbstractWidget widget : getWidgets()) {
-			if (!EventUtilities.canReceiveKeyboard(widget)) continue;
-			widget.onKeyPressed(keyCode, character, keyModifier);
-			if (widget instanceof WNetworked) {
-				ClientSidePacketRegistry.INSTANCE.sendToServer(Networks.SYNCED_WIDGET_PACKET,
-						Networks.createKeyPressPacket(((WNetworked) widget), character, keyCode, keyModifier));
-			}
-		}
-	}
-
-	public void onCharTyped(char character, int keyCode) {
-		for (WAbstractWidget widget : getWidgets()) {
-			if (!EventUtilities.canReceiveKeyboard(widget)) continue;
-			widget.onCharTyped(character, keyCode);
-			if (widget instanceof WNetworked) {
-				ClientSidePacketRegistry.INSTANCE.sendToServer(Networks.SYNCED_WIDGET_PACKET,
-						Networks.createCharTypePacket(((WNetworked) widget), character, keyCode));
-			}
-		}
-	}
-
-	public void onDrawMouseoverTooltip(float mouseX, float mouseY) {
-		for (WAbstractWidget widget : getWidgets()) {
-			widget.onDrawTooltip(mouseX, mouseY);
-		}
-	}
-
-	public void onAlign() {
-		for (WAbstractWidget widget : getWidgets()) {
-			widget.align();
-			widget.onAlign();
-		}
-	}
-
 	public void tick() {
 		for (WAbstractWidget widget : getAllWidgets()) {
 			widget.tick();
@@ -198,65 +82,14 @@ public class WInterface implements WModifiableCollection, WDrawableElement, WThe
 		}
 	}
 
-	public <W extends WSlot> W getSlot(int inventoryNumber, int slotNumber) {
-		Optional<WAbstractWidget> slot = getAllWidgets().stream().filter(widget -> widget instanceof WSlot && ((WSlot) widget).inventoryNumber == inventoryNumber && ((WSlot) widget).slotNumber == slotNumber).findFirst();
-
-		if (slot.isPresent()) {
-			return (W) slot.get();
-		} else {
-			return null;
-		}
-	}
-
 	@Override
 	public void onLayoutChange() {
 		if (handler != null && FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
 			if (MinecraftClient.getInstance().currentScreen instanceof BaseHandledScreen<?>) {
 				BaseHandledScreen<?> screen = (BaseHandledScreen<?>) MinecraftClient.getInstance().currentScreen;
 
-				screen.updateDimensions();
+				screen.getHandler().onLayoutChange();
 			}
 		}
-	}
-
-	@Override
-	@Environment(EnvType.CLIENT)
-	public float getX() {
-		return 0;
-	}
-
-	@Override
-	@Environment(EnvType.CLIENT)
-	public float getY() {
-		return 0;
-	}
-
-	@Override
-	@Environment(EnvType.CLIENT)
-	public float getZ() {
-		return 0;
-	}
-
-	@Override
-	@Environment(EnvType.CLIENT)
-	public float getWidth() {
-		return MinecraftClient.getInstance().getWindow().getScaledWidth();
-	}
-
-	@Override
-	@Environment(EnvType.CLIENT)
-	public float getHeight() {
-		return MinecraftClient.getInstance().getWindow().getScaledHeight();
-	}
-
-
-	@Deprecated
-	public boolean isBlurred() {
-		return false;
-	}
-
-	@Deprecated
-	public <W extends WInterface> W setBlurred(boolean isBlurred) {
-		return (W) this;
 	}
 }

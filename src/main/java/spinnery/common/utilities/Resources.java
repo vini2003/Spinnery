@@ -5,11 +5,7 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
-import spinnery.common.configuration.registry.ConfigurationRegistry;
 
-
-  a resource listener for
- /
 @Environment(EnvType.CLIENT)
 public class Resources implements SimpleSynchronousResourceReloadListener {
 	private static final Identifier ID = new Identifier("spinnery", "reload_listener");

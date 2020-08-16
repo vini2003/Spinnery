@@ -6,35 +6,31 @@ import spinnery.widget.WInterface;
 import java.util.function.Supplier;
 
 
-  Modifiable collections provide a factory for creating child widgets, and expose convenience methods for
- /
 public interface WModifiableCollection extends WCollection {
+	default void add(WAbstractWidget widget) {
+		getWidgets().add(widget);
 
-	  direct children, and as such should be contained in the Set returned by {@link #getWidgets()}.
-	 *
+		if (this instanceof WAbstractWidget) {
+			widget.onAdded(((WAbstractWidget) this).getInterface(), this);
 
-	void add(WAbstractWidget... widgets);
+			((WAbstractWidget) this).onLayoutChange();
+		}
+	}
 
+	default void remove(WAbstractWidget widget) {
+		getWidgets().remove(widget);
 
-	  children, this should be a no-op.
-	 *
+		if (this instanceof WAbstractWidget) {
+			widget.onRemoved(((WAbstractWidget) this).getInterface(), this);
 
-	void remove(WAbstractWidget... widgets);
+			((WAbstractWidget) this).onLayoutChange();
+		}
+	}
 
-
-
-	  @return created widget
-	 */
 	default <W extends WAbstractWidget> W createChild(Supplier<W> factory) {
 		return createChild(factory, null, null);
 	}
 
-
-	  position and size.
-	 *
-	  @param position initial widget position
-	  @return created widget
-	 */
 	default <W extends WAbstractWidget> W createChild(Supplier<? extends W> factory, Position position, Size size) {
 		W widget = factory.get();
 		if (position != null) widget.setPosition(position);
@@ -54,11 +50,6 @@ public interface WModifiableCollection extends WCollection {
 
 		return widget;
 	}
-
-
-	  position.
-	 *
-	  @param position initial widget position
 
 	default <W extends WAbstractWidget> W createChild(Supplier<W> factory, Position position) {
 		return createChild(factory, position, null);

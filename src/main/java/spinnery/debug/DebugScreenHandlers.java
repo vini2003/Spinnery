@@ -9,6 +9,6 @@ public class DebugScreenHandlers {
 	}
 
 	public static final ScreenHandlerType<DebugScreenHandler> DEBUG = ScreenHandlerRegistry.registerExtended(new Identifier("spinnery", "debug"), ((syncId, playerInventory, packetByteBuf) -> {
-		return new DebugScreenHandler(syncId, playerInventory);
+		return new DebugScreenHandler(syncId, playerInventory.player);
 	}));
 }

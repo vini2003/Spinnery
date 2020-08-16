@@ -31,7 +31,7 @@ public class WVerticalArrowDown extends WButton {
 	public void onMouseClicked(float mouseX, float mouseY, int mouseButton) {
 		if (isWithinBounds(mouseX, mouseY)) {
 			if (scrollable.hasSmoothing()) {
-				scrollable.kineticScrollDelta -= 2.5;
+				scrollable.setKineticScrollDelta(scrollable.getKineticScrollDelta() - 2.5F);
 			} else {
 				scrollable.scroll(0, -25);
 			}
@@ -44,7 +44,7 @@ public class WVerticalArrowDown extends WButton {
 	public void tick() {
 		if (isHeld() && System.currentTimeMillis() - isHeldSince() > 500) {
 			if (scrollable.hasSmoothing()) {
-				scrollable.kineticScrollDelta -= 0.4;
+				scrollable.setKineticScrollDelta(scrollable.getKineticScrollDelta() - 0.4F);
 			} else {
 				scrollable.scroll(0, -0.25);
 			}

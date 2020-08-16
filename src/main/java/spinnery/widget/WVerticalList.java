@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableSet;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import org.lwjgl.glfw.GLFW;
-import spinnery.client.integration.SpinneryConfigurationScreen;
 import spinnery.client.utilities.Drawings;
 import spinnery.client.utilities.Scissors;
 import spinnery.common.utilities.Positions;
@@ -16,46 +15,358 @@ import java.util.HashSet;
 import java.util.Set;
 
 @SuppressWarnings({"UnusedReturnValue", "unchecked"})
-public class WVerticalList extends WAbstractWidget implements WModifiableCollection, WVerticalScrollable, WDelegatedEventListener {
-	protected Set<WAbstractWidget> widgets = new HashSet<>();
+public class WVerticalList extends WAbstractWidget implements WModifiableCollection, WVerticalScrollable {
+	private final Set<WAbstractWidget> widgets = new HashSet<>();
 
-	protected WVerticalScrollbar scrollbar;
+	private WVerticalScrollbar scrollbar;
 
-	protected WVerticalArrowUp verticalArrowUp;
-	protected WVerticalArrowDown verticalArrowDown;
+	private WVerticalArrowUp verticalArrowUp;
+	private WVerticalArrowDown verticalArrowDown;
 
-	protected float scrollbarWidth = 12;
+	private float scrollbarWidth = 12;
 
-	protected float divisionSpace = 2;
-	protected int borderSpace = 0;
-	protected int fadeSpace = 12;
+	private float divisionSpace = 2;
+	private int borderSpace = 0;
+	private int fadeSpace = 12;
 
-	protected float lastScrollX = 0;
-	protected float lastScrollY = 0;
+	private float lastScrollX = 0;
+	private float lastScrollY = 0;
 
-	protected float lastDragScrollY = 0;
+	private float lastDragScrollY = 0;
 
-	protected long lastDragScrollMilliseconds = 0;
+	private long lastDragScrollMilliseconds = 0;
 
-	protected float offsetY = 0;
+	private float offsetY = 0;
 
-	protected float kineticScrollDelta = 0;
+	private float kineticScrollDelta = 0;
 
-	protected float kineticReductionCoefficient = SpinneryConfigurationScreen.kineticReductionCoefficient.getValue();
-	protected float kineticAccelerationCoefficient = SpinneryConfigurationScreen.kineticAccelerationCoefficient.getValue();
+	private float kineticReductionCoefficient = 1.1F;
 
-	protected float dragScrollAccelerationCoefficient = SpinneryConfigurationScreen.dragScrollAccelerationCoefficient.getValue();
+	private float kineticAccelerationCoefficient = 1.5F;
 
-	protected boolean isDragScrolling = false;
+	private float dragScrollAccelerationCoefficient = 0.0005F;
 
-	protected boolean hasFade = SpinneryConfigurationScreen.fading.getValue();
+	private boolean isDragScrolling = false;
 
-	protected boolean hasSmoothing = SpinneryConfigurationScreen.smoothing.getValue();
+	private boolean hasFade = true;
 
-	protected boolean hasArrows = SpinneryConfigurationScreen.arrows.getValue();
+	private boolean hasSmoothing = true;
+
+	private boolean hasArrows = true;
 
 	public WVerticalList() {
 		scrollbar = new WVerticalScrollbar().setScrollable(this).setParent(this);
+	}
+
+	@Override
+	public Set<WAbstractWidget> getWidgets() {
+		return widgets;
+	}
+
+	private float getBottomWidgetY() {
+		return (float) getWidgets().stream().mapToDouble(widget -> widget.getY() + widget.getHeight()).max().orElse(0);
+	}
+
+	protected float getBottomWidgetOffsetY() {
+		return (float) getWidgets().stream().mapToDouble(widget -> widget.getOffsetY() + widget.getHeight() + getDivisionSpace()).max().orElse(0);
+	}
+
+	@Override
+	public void scroll(double deltaX, double deltaY) {
+		if (getWidgets().isEmpty()) {
+			return;
+		}
+
+		if (getUnderlyingHeight() <= getVisibleHeight()) {
+			scrollToStart();
+			return;
+		}
+
+		float bottomY = getBottomWidgetOffsetY();
+
+		boolean hitTop = offsetY < -getDivisionSpace();
+		boolean hitBottom = bottomY < getHeight();
+
+		if ((!hitTop && deltaY > 0) || (!hitBottom && deltaY < 0)) {
+			offsetY = (float) Math.min(Math.max(0, offsetY - deltaY), bottomY - getHeight() + 1);
+
+			kineticScrollDelta = offsetY - deltaY >= bottomY + (2 * getDivisionSpace()) ? 0 : kineticScrollDelta;
+
+			updateChildren();
+		}
+	}
+
+	public void updateChildren() {
+		for (WAbstractWidget widget : getWidgets()) {
+			widget.getPosition().setY(-offsetY + widget.getOffsetY() + getY());
+			boolean startContained = isWithinBounds(widget.getX(), widget.getY()) || isWithinBounds(widget.getX() + widget.getWidth(), widget.getY() + widget.getHeight());
+			widget.setHidden(!startContained);
+		}
+	}
+
+	public void scrollToStart() {
+		offsetY = 0;
+		updateChildren();
+	}
+
+	public void scrollToEnd() {
+		offsetY = getBottomWidgetY();
+		updateChildren();
+	}
+
+	public void updateScrollbar() {
+		float scrollBarWidth = getScrollbarWidth();
+		float scrollBarHeight = getHeight();
+
+		float scrollBarOffsetX = getWidth() - scrollBarWidth - getBorderSpace();
+		float scrollBarOffsetY = getBorderSpace();
+
+		if (hasArrows) {
+			scrollBarOffsetY += scrollbarWidth - 1;
+			scrollBarHeight -= scrollbarWidth * 2;
+
+			scrollBarHeight = Math.abs(scrollBarHeight);
+
+			if (verticalArrowUp == null)
+				verticalArrowUp = new WVerticalArrowUp().setScrollable(this).setPosition(Position.of(this, scrollBarOffsetX, 0)).setSize(Size.of(scrollBarWidth));
+			else
+				verticalArrowUp.setPosition(Position.of(this, scrollBarOffsetX, 0)).setSize(Size.of(scrollBarWidth));
+			if (verticalArrowDown == null)
+				verticalArrowDown = new WVerticalArrowDown().setScrollable(this).setPosition(Position.of(this, scrollBarOffsetX, scrollBarHeight + scrollbarWidth - 2)).setSize(Size.of(scrollBarWidth));
+			else
+				verticalArrowDown.setPosition(Position.of(this, scrollBarOffsetX, scrollBarHeight + scrollBarWidth - 2)).setSize(Size.of(scrollBarWidth));
+		} else {
+			verticalArrowUp = null;
+			verticalArrowDown = null;
+		}
+
+		scrollbar.setPosition(Position.of(this, scrollBarOffsetX, scrollBarOffsetY));
+		scrollbar.setSize(Size.of(scrollBarWidth, scrollBarHeight - (2 * getBorderSpace())));
+	}
+
+	@Override
+	public Size getUnderlyingSize() {
+		return Size.of(getVisibleWidth(), getBottomWidgetOffsetY());
+	}
+
+	public void addRow(WAbstractWidget... widgetArray) {
+		float maxY = 0;
+		float maxX = 0;
+
+		for (WAbstractWidget widget : getWidgets()) {
+			if (widget.getOffsetY() > maxY) {
+				maxY = widget.getOffsetY() + widget.getHeight();
+			}
+		}
+
+		for (WAbstractWidget widget : widgetArray) {
+			this.add(widget);
+			widget.setParent(this);
+			widget.setInterface(getInterface());
+			widget.setPosition(Position.of(this));
+
+			widget.getPosition().setOffsetX(maxX + getDivisionSpace());
+			widget.getPosition().setOffsetY(maxY + getDivisionSpace());
+
+			maxX += widget.getWidth() + getDivisionSpace();
+		}
+
+		widgets.addAll(Arrays.asList(widgetArray));
+
+		onLayoutChange();
+
+		updateChildren();
+	}
+
+	@Override
+	public void remove(WAbstractWidget widget) {
+		getWidgets().remove(widget);
+
+		widget.onRemoved(this.getInterface(), this);
+		
+		if (widgets.stream().noneMatch(widgetB -> widget != widgetB && widget.getY() == widgetB.getY())) {
+			for (WAbstractWidget widgetC : widgets) {
+				if (widgetC.getOffsetY() > widget.getOffsetY()) {
+					widgetC.getPosition().setOffsetY(widgetC.getOffsetY() - widgetC.getHeight() - getDivisionSpace());
+				}
+			}
+		}
+
+		float bottomY = getBottomWidgetOffsetY();
+
+		if (offsetY + getHeight() > bottomY) {
+			offsetY = bottomY - getHeight();
+		}
+
+		updateChildren();
+
+		onLayoutChange();
+	}
+
+	@Override
+	public Size getVisibleSize() {
+		return Size.of(getWidth() - (!scrollbar.isHidden() ? scrollbar.getWidth() : 0), getHeight());
+	}
+
+	@Override
+	public float getStartAnchorY() {
+		return getY();
+	}
+
+	@Override
+	public float getEndAnchorY() {
+		if (getVisibleHeight() > getUnderlyingHeight()) return getStartAnchorY();
+		return getStartAnchorY() - (getUnderlyingHeight() - getVisibleHeight());
+	}
+
+	@Override
+	public float getStartOffsetY() {
+		return offsetY;
+	}
+
+	@Override
+	public void onLayoutChange() {
+		super.onLayoutChange();
+
+		updateScrollbar();
+	}
+
+	@Override
+	public boolean updateFocus(float positionX, float positionY) {
+		setFocus(isWithinBounds(positionX, positionY) && getWidgets().stream().noneMatch((WAbstractWidget::isFocused)));
+
+		return isFocused();
+	}
+
+	@Override
+	public void onKeyPressed(int keyCode, int character, int keyModifier) {
+		if (isWithinBounds(Positions.mouseX, Positions.mouseY)) {
+			if (keyCode == GLFW.GLFW_KEY_UP) {
+				if (hasSmoothing()) {
+					kineticScrollDelta += 0.75;
+				} else {
+					scroll(0, 2.5);
+				}
+			} else if (keyCode == GLFW.GLFW_KEY_DOWN) {
+				if (hasSmoothing()) {
+					kineticScrollDelta -= 0.75;
+				} else {
+					scroll(0, -2.5);
+				}
+			}
+		}
+
+		super.onKeyPressed(keyCode, character, keyModifier);
+	}
+
+	@Override
+	public void onMouseClicked(float mouseX, float mouseY, int mouseButton) {
+		if (isWithinBounds(mouseX, mouseY)) {
+			if (mouseButton == 2) {
+				isDragScrolling = true;
+
+				lastDragScrollY = mouseY;
+				lastDragScrollMilliseconds = System.currentTimeMillis();
+
+				Positions.enableDragCursor();
+			}
+		}
+
+		super.onMouseClicked(mouseX, mouseY, mouseButton);
+	}
+
+	@Override
+	public void onMouseReleased(float mouseX, float mouseY, int mouseButton) {
+		if (mouseButton == 2) {
+			isDragScrolling = false;
+
+			lastDragScrollY = 0;
+			lastDragScrollMilliseconds = 0;
+
+			Positions.enableArrowCursor();
+		}
+
+		super.onMouseReleased(mouseX, mouseY, mouseButton);
+	}
+
+	@Override
+	public void onMouseScrolled(float mouseX, float mouseY, double deltaY) {
+		if (isWithinBounds(mouseX, mouseY)) {
+			if (hasSmoothing()) {
+				kineticScrollDelta += deltaY;
+				scroll(0, deltaY);
+			} else {
+				scroll(0, deltaY * 5);
+			}
+
+
+			lastScrollX = mouseX;
+			lastScrollY = mouseY;
+		}
+
+		super.onMouseScrolled(mouseX, mouseY, deltaY);
+	}
+
+	@Override
+	public void draw(MatrixStack matrices, VertexConsumerProvider provider) {
+		if (isHidden()) {
+			return;
+		}
+
+		if (isDragScrolling()) {
+			scroll(0, Math.pow(5, Math.abs(((Positions.mouseY - lastDragScrollY) / 100))) * ((System.currentTimeMillis() - lastDragScrollMilliseconds) * dragScrollAccelerationCoefficient) * (lastDragScrollY - Positions.mouseY > 0 ? 1 : -1));
+		}
+
+		if (kineticScrollDelta > 0.05 || kineticScrollDelta < -0.05) {
+			kineticScrollDelta = kineticScrollDelta / getKineticReductionCoefficient();
+
+			scroll(0, kineticScrollDelta * kineticReductionCoefficient * getKineticAccelerationCoefficient());
+		} else {
+			kineticScrollDelta = 0;
+
+			lastScrollX = 0;
+			lastScrollY = 0;
+		}
+
+		Scissors area = new Scissors(provider, this);
+
+		for (WAbstractWidget widget : getWidgets()) {
+			widget.draw(matrices, provider);
+		}
+
+		area.destroy(provider);
+
+		if (hasFade()) {
+			Color fadeOut = getStyle().asColor("background");
+			fadeOut = Color.of("0x00" + Integer.toHexString((int) (fadeOut.R * 255)) + Integer.toHexString((int) (fadeOut.G * 255)) + Integer.toHexString((int) (fadeOut.B * 255)));
+
+			if (offsetY > 1) {
+				Drawings.drawGradientQuad(matrices, provider, getX(), getY() - 1, getWideX() - getScrollbarWidth(), getY() + getFadeSpace() - 6, getStyle().asColor("background"), fadeOut);
+				Drawings.drawGradientQuad(matrices, provider, getX(), getY() - 1, getWideX() - getScrollbarWidth(), getY() + getFadeSpace() - 3, getStyle().asColor("background"), fadeOut);
+				Drawings.drawGradientQuad(matrices, provider, getX(), getY() - 1, getWideX() - getScrollbarWidth(), getY() + getFadeSpace(), getStyle().asColor("background"), fadeOut);
+			}
+
+			if (getBottomWidgetY() > getHighY()) {
+				Drawings.drawGradientQuad(matrices, provider, getX(), getHighY() - getFadeSpace() + 6, getWideX() - getScrollbarWidth(), getHighY() + 1, fadeOut, getStyle().asColor("background"));
+				Drawings.drawGradientQuad(matrices, provider, getX(), getHighY() - getFadeSpace() + 3, getWideX() - getScrollbarWidth(), getHighY() + 1, fadeOut, getStyle().asColor("background"));
+				Drawings.drawGradientQuad(matrices, provider, getX(), getHighY() - getFadeSpace(), getWideX() - getScrollbarWidth(), getHighY() + 1, fadeOut, getStyle().asColor("background"));
+			}
+		}
+
+		scrollbar.draw(matrices, provider);
+
+		if (hasArrows()) {
+			verticalArrowUp.draw(matrices, provider);
+			verticalArrowDown.draw(matrices, provider);
+		}
+	}
+
+	@Override
+	public void tick() {
+		if (hasArrows) {
+			verticalArrowUp.tick();
+			verticalArrowDown.tick();
+		}
 	}
 
 	public boolean isScrollbarVisible() {
@@ -244,356 +555,5 @@ public class WVerticalList extends WAbstractWidget implements WModifiableCollect
 	public <W extends WVerticalList> W setHasArrows(boolean hasArrows) {
 		this.hasArrows = hasArrows;
 		return (W) this;
-	}
-
-	protected float getBottomWidgetY() {
-		return (float) getWidgets().stream().mapToDouble(widget -> widget.getY() + widget.getHeight()).max().orElse(0);
-	}
-
-	protected float getBottomWidgetOffsetY() {
-		return (float) getWidgets().stream().mapToDouble(widget -> widget.getOffsetY() + widget.getHeight() + getDivisionSpace()).max().orElse(0);
-	}
-
-	@Override
-	public void scroll(double deltaX, double deltaY) {
-		if (getWidgets().isEmpty()) {
-			return;
-		}
-
-		if (getUnderlyingHeight() <= getVisibleHeight()) {
-			scrollToStart();
-			return;
-		}
-
-		float bottomY = getBottomWidgetOffsetY();
-
-		boolean hitTop = offsetY < -getDivisionSpace();
-		boolean hitBottom = bottomY < getHeight();
-
-		if ((!hitTop && deltaY > 0) || (!hitBottom && deltaY < 0)) {
-			offsetY = (float) Math.min(Math.max(0, offsetY - deltaY), bottomY - getHeight() + 1);
-
-			kineticScrollDelta = offsetY - deltaY >= bottomY + (2 * getDivisionSpace()) ? 0 : kineticScrollDelta;
-
-			updateChildren();
-		}
-
-		updateChildrenFocus();
-	}
-
-	public void updateChildren() {
-		for (WAbstractWidget widget : getWidgets()) {
-			widget.getPosition().setY(-offsetY + widget.getOffsetY() + getY());
-			boolean startContained = isWithinBounds(widget.getX(), widget.getY(), 1) || isWithinBounds(widget.getX() + widget.getWidth(), widget.getY() + widget.getHeight(), 1);
-			widget.setHidden(!startContained);
-		}
-	}
-
-	public void updateChildrenFocus() {
-		for (WAbstractWidget widget : getAllWidgets()) {
-			boolean hadFocus = widget.isFocused();
-			widget.updateFocus(Positions.mouseX, Positions.mouseY);
-			if (widget.isFocused() && !hadFocus) {
-				widget.onFocusGained();
-			} else if (!widget.isFocused() && hadFocus) {
-				widget.onFocusReleased();
-			}
-		}
-	}
-
-	public void scrollToStart() {
-		offsetY = 0;
-		updateChildren();
-	}
-
-	public void scrollToEnd() {
-		offsetY = getBottomWidgetY();
-		updateChildren();
-	}
-
-	public void updateScrollbar() {
-		float scrollBarWidth = getScrollbarWidth();
-		float scrollBarHeight = getHeight();
-
-		float scrollBarOffsetX = getWidth() - scrollBarWidth - getBorderSpace();
-		float scrollBarOffsetY = getBorderSpace();
-
-		if (hasArrows) {
-			scrollBarOffsetY += scrollbarWidth - 1;
-			scrollBarHeight -= scrollbarWidth * 2;
-
-			scrollBarHeight = Math.abs(scrollBarHeight);
-
-			if (verticalArrowUp == null)
-				verticalArrowUp = new WVerticalArrowUp().setScrollable(this).setPosition(Position.of(this, scrollBarOffsetX, 0, 0)).setSize(Size.of(scrollBarWidth));
-			else
-				verticalArrowUp.setPosition(Position.of(this, scrollBarOffsetX, 0, 0)).setSize(Size.of(scrollBarWidth));
-			if (verticalArrowDown == null)
-				verticalArrowDown = new WVerticalArrowDown().setScrollable(this).setPosition(Position.of(this, scrollBarOffsetX, scrollBarHeight + scrollbarWidth - 2, 0)).setSize(Size.of(scrollBarWidth));
-			else
-				verticalArrowDown.setPosition(Position.of(this, scrollBarOffsetX, scrollBarHeight + scrollBarWidth - 2, 0)).setSize(Size.of(scrollBarWidth));
-		} else {
-			verticalArrowUp = null;
-			verticalArrowDown = null;
-		}
-
-		scrollbar.setPosition(Position.of(this, scrollBarOffsetX, scrollBarOffsetY, 0));
-		scrollbar.setSize(Size.of(scrollBarWidth, scrollBarHeight - (2 * getBorderSpace())));
-	}
-
-	@Override
-	public Collection<? extends WEventListener> getEventDelegates() {
-		if (hasArrows) {
-			return ImmutableSet.<WAbstractWidget>builder().addAll(widgets).add(scrollbar).add(verticalArrowUp).add(verticalArrowDown).build();
-		} else {
-			return ImmutableSet.<WAbstractWidget>builder().addAll(widgets).add(scrollbar).build();
-		}
-	}
-
-	@Override
-	public Size getUnderlyingSize() {
-		return Size.of(getVisibleWidth(), getBottomWidgetOffsetY());
-	}
-
-	@Override
-	public Set<WAbstractWidget> getWidgets() {
-		return widgets;
-	}
-
-	@Override
-	public boolean contains(WAbstractWidget... widgetArray) {
-		return widgets.containsAll(Arrays.asList(widgetArray));
-	}
-
-	@Override
-	public void add(WAbstractWidget... widgetArray) {
-		widgets.addAll(Arrays.asList(widgetArray));
-
-		onLayoutChange();
-	}
-
-	public void addRow(WAbstractWidget... widgetArray) {
-		float maxY = 0;
-		float maxX = 0;
-
-		for (WAbstractWidget widget : getWidgets()) {
-			if (widget.getOffsetY() > maxY) {
-				maxY = widget.getOffsetY() + widget.getHeight();
-			}
-		}
-
-		for (WAbstractWidget widget : widgetArray) {
-			widget.setParent(this);
-			widget.setInterface(getInterface());
-			widget.setPosition(Position.of(this));
-
-			widget.getPosition().setOffsetX(maxX + getDivisionSpace());
-			widget.getPosition().setOffsetY(maxY + getDivisionSpace());
-
-			maxX += widget.getWidth() + getDivisionSpace();
-		}
-
-		widgets.addAll(Arrays.asList(widgetArray));
-
-		onLayoutChange();
-
-		updateChildren();
-		updateChildrenFocus();
-	}
-
-	@Override
-	public void remove(WAbstractWidget... widgetArray) {
-		widgets.removeAll(Arrays.asList(widgetArray));
-
-		for (WAbstractWidget widgetA : widgetArray) {
-			if (widgets.stream().noneMatch(widgetB -> widgetA != widgetB && widgetA.getY() == widgetB.getY())) {
-				for (WAbstractWidget widgetC : widgets) {
-					if (widgetC.getOffsetY() > widgetA.getOffsetY()) {
-						widgetC.getPosition().setOffsetY(widgetC.getOffsetY() - widgetC.getHeight() - getDivisionSpace());
-					}
-				}
-			}
-
-			float bottomY = getBottomWidgetOffsetY();
-
-			if (offsetY + getHeight() > bottomY) {
-				offsetY = bottomY - getHeight();
-			}
-
-			updateChildren();
-			updateChildrenFocus();
-		}
-
-		onLayoutChange();
-	}
-
-	@Override
-	public Size getVisibleSize() {
-		return Size.of(getWidth() - (!scrollbar.isHidden() ? scrollbar.getWidth() : 0), getHeight());
-	}
-
-	@Override
-	public float getStartAnchorY() {
-		return getY();
-	}
-
-	@Override
-	public float getEndAnchorY() {
-		if (getVisibleHeight() > getUnderlyingHeight()) return getStartAnchorY();
-		return getStartAnchorY() - (getUnderlyingHeight() - getVisibleHeight());
-	}
-
-	@Override
-	public float getStartOffsetY() {
-		return offsetY;
-	}
-
-	@Override
-	public void onLayoutChange() {
-		super.onLayoutChange();
-
-		updateScrollbar();
-	}
-
-	@Override
-	public boolean updateFocus(float positionX, float positionY) {
-		setFocus(isWithinBounds(positionX, positionY) && getWidgets().stream().noneMatch((WAbstractWidget::isFocused)));
-
-		return isFocused();
-	}
-
-	@Override
-	public void onKeyPressed(int keyCode, int character, int keyModifier) {
-		if (isWithinBounds(Positions.mouseX, Positions.mouseY)) {
-			if (keyCode == GLFW.GLFW_KEY_UP) {
-				if (hasSmoothing()) {
-					kineticScrollDelta += 0.75;
-				} else {
-					scroll(0, 2.5);
-				}
-			} else if (keyCode == GLFW.GLFW_KEY_DOWN) {
-				if (hasSmoothing()) {
-					kineticScrollDelta -= 0.75;
-				} else {
-					scroll(0, -2.5);
-				}
-			}
-		}
-
-		super.onKeyPressed(keyCode, character, keyModifier);
-	}
-
-	@Override
-	public void onMouseClicked(float mouseX, float mouseY, int mouseButton) {
-		if (isWithinBounds(mouseX, mouseY)) {
-			if (mouseButton == 2) {
-				isDragScrolling = true;
-
-				lastDragScrollY = mouseY;
-				lastDragScrollMilliseconds = System.currentTimeMillis();
-
-				Positions.enableDragCursor();
-			}
-		}
-
-		super.onMouseClicked(mouseX, mouseY, mouseButton);
-	}
-
-	@Override
-	public void onMouseReleased(float mouseX, float mouseY, int mouseButton) {
-		if (mouseButton == 2) {
-			isDragScrolling = false;
-
-			lastDragScrollY = 0;
-			lastDragScrollMilliseconds = 0;
-
-			Positions.enableArrowCursor();
-		}
-
-		super.onMouseReleased(mouseX, mouseY, mouseButton);
-	}
-
-	@Override
-	public void onMouseScrolled(float mouseX, float mouseY, double deltaY) {
-		if (isWithinBounds(mouseX, mouseY)) {
-			if (hasSmoothing()) {
-				kineticScrollDelta += deltaY;
-				scroll(0, deltaY);
-			} else {
-				scroll(0, deltaY * 5);
-			}
-
-
-			lastScrollX = mouseX;
-			lastScrollY = mouseY;
-		}
-
-		super.onMouseScrolled(mouseX, mouseY, deltaY);
-	}
-
-	@Override
-	public void draw(MatrixStack matrices, VertexConsumerProvider provider) {
-		if (isHidden()) {
-			return;
-		}
-
-		if (isDragScrolling()) {
-			scroll(0, Math.pow(5, Math.abs(((Positions.mouseY - lastDragScrollY) / 100))) * ((System.currentTimeMillis() - lastDragScrollMilliseconds) * dragScrollAccelerationCoefficient) * (lastDragScrollY - Positions.mouseY > 0 ? 1 : -1));
-		}
-
-		if (kineticScrollDelta > 0.05 || kineticScrollDelta < -0.05) {
-			kineticScrollDelta = kineticScrollDelta / getKineticReductionCoefficient();
-
-			scroll(0, kineticScrollDelta * kineticReductionCoefficient * getKineticAccelerationCoefficient());
-
-			updateChildrenFocus();
-		} else {
-			kineticScrollDelta = 0;
-
-			lastScrollX = 0;
-			lastScrollY = 0;
-		}
-
-		Scissors area = new Scissors(provider, this);
-
-		for (WAbstractWidget widget : getWidgets()) {
-			widget.draw(matrices, provider);
-		}
-
-		area.destroy(provider);
-
-		if (hasFade()) {
-			Color fadeOut = getStyle().asColor("background");
-			fadeOut = Color.of("0x00" + Integer.toHexString((int) (fadeOut.R * 255)) + Integer.toHexString((int) (fadeOut.G * 255)) + Integer.toHexString((int) (fadeOut.B * 255)));
-
-			if (offsetY > 1) {
-				Drawings.drawGradientQuad(matrices, provider, getX(), getY() - 1, getWideX() - getScrollbarWidth(), getY() + getFadeSpace() - 6, getStyle().asColor("background"), fadeOut);
-				Drawings.drawGradientQuad(matrices, provider, getX(), getY() - 1, getWideX() - getScrollbarWidth(), getY() + getFadeSpace() - 3, getStyle().asColor("background"), fadeOut);
-				Drawings.drawGradientQuad(matrices, provider, getX(), getY() - 1, getWideX() - getScrollbarWidth(), getY() + getFadeSpace(), getStyle().asColor("background"), fadeOut);
-			}
-
-			if (getBottomWidgetY() > getHighY()) {
-				Drawings.drawGradientQuad(matrices, provider, getX(), getHighY() - getFadeSpace() + 6, getWideX() - getScrollbarWidth(), getHighY() + 1, fadeOut, getStyle().asColor("background"));
-				Drawings.drawGradientQuad(matrices, provider, getX(), getHighY() - getFadeSpace() + 3, getWideX() - getScrollbarWidth(), getHighY() + 1, fadeOut, getStyle().asColor("background"));
-				Drawings.drawGradientQuad(matrices, provider, getX(), getHighY() - getFadeSpace(), getWideX() - getScrollbarWidth(), getHighY() + 1, fadeOut, getStyle().asColor("background"));
-			}
-		}
-
-		scrollbar.draw(matrices, provider);
-
-		if (hasArrows()) {
-			verticalArrowUp.draw(matrices, provider);
-			verticalArrowDown.draw(matrices, provider);
-		}
-
-		super.draw(matrices, provider);
-	}
-
-	@Override
-	public void tick() {
-		if (hasArrows) {
-			verticalArrowUp.tick();
-			verticalArrowDown.tick();
-		}
 	}
 }
