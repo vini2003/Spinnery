@@ -5,9 +5,9 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import org.lwjgl.glfw.GLFW;
 import spinnery.client.integration.SpinneryConfigurationScreen;
-import spinnery.client.render.BaseRenderer;
-import spinnery.client.utility.ScissorArea;
-import spinnery.common.utility.MouseUtilities;
+import spinnery.client.utilities.Drawings;
+import spinnery.client.utilities.Scissors;
+import spinnery.common.utilities.Positions;
 import spinnery.widget.api.*;
 
 import java.util.Arrays;
@@ -292,7 +292,7 @@ public class WVerticalScrollableContainer extends WAbstractWidget implements WMo
 	public void updateChildrenFocus() {
 		for (WAbstractWidget widget : getAllWidgets()) {
 			boolean hadFocus = widget.isFocused();
-			widget.updateFocus(MouseUtilities.mouseX, MouseUtilities.mouseY);
+			widget.updateFocus(Positions.mouseX, Positions.mouseY);
 			if (widget.isFocused() && !hadFocus) {
 				widget.onFocusGained();
 			} else if (!widget.isFocused() && hadFocus) {
@@ -464,7 +464,7 @@ public class WVerticalScrollableContainer extends WAbstractWidget implements WMo
 
 	@Override
 	public void onKeyPressed(int keyCode, int character, int keyModifier) {
-		if (isWithinBounds(MouseUtilities.mouseX, MouseUtilities.mouseY)) {
+		if (isWithinBounds(Positions.mouseX, Positions.mouseY)) {
 			if (keyCode == GLFW.GLFW_KEY_UP) {
 				if (hasSmoothing()) {
 					kineticScrollDelta += 0.75;
@@ -492,7 +492,7 @@ public class WVerticalScrollableContainer extends WAbstractWidget implements WMo
 				lastDragScrollY = mouseY;
 				lastDragScrollMilliseconds = System.currentTimeMillis();
 
-				MouseUtilities.enableDragCursor();
+				Positions.enableDragCursor();
 			}
 		}
 
@@ -507,7 +507,7 @@ public class WVerticalScrollableContainer extends WAbstractWidget implements WMo
 			lastDragScrollY = 0;
 			lastDragScrollMilliseconds = 0;
 
-			MouseUtilities.enableArrowCursor();
+			Positions.enableArrowCursor();
 		}
 
 		super.onMouseReleased(mouseX, mouseY, mouseButton);
@@ -538,7 +538,7 @@ public class WVerticalScrollableContainer extends WAbstractWidget implements WMo
 		}
 
 		if (isDragScrolling()) {
-			scroll(0, Math.pow(5, Math.abs(((MouseUtilities.mouseY - lastDragScrollY) / 100))) * ((System.currentTimeMillis() - lastDragScrollMilliseconds) * dragScrollAccelerationCoefficient) * (lastDragScrollY - MouseUtilities.mouseY > 0 ? 1 : -1));
+			scroll(0, Math.pow(5, Math.abs(((Positions.mouseY - lastDragScrollY) / 100))) * ((System.currentTimeMillis() - lastDragScrollMilliseconds) * dragScrollAccelerationCoefficient) * (lastDragScrollY - Positions.mouseY > 0 ? 1 : -1));
 		}
 
 		if (kineticScrollDelta > 0.05 || kineticScrollDelta < -0.05) {
@@ -554,7 +554,7 @@ public class WVerticalScrollableContainer extends WAbstractWidget implements WMo
 			lastScrollY = 0;
 		}
 
-		ScissorArea area = new ScissorArea(provider, this);
+		Scissors area = new Scissors(provider, this);
 
 		for (WAbstractWidget widget : getWidgets()) {
 			widget.draw(matrices, provider);
@@ -567,15 +567,15 @@ public class WVerticalScrollableContainer extends WAbstractWidget implements WMo
 			fadeOut = Color.of("0x00" + Integer.toHexString((int) (fadeOut.R * 255)) + Integer.toHexString((int) (fadeOut.G * 255)) + Integer.toHexString((int) (fadeOut.B * 255)));
 
 			if (offsetY > 1) {
-				BaseRenderer.drawGradientQuad(matrices, provider, getX(), getY() - 1, getWideX() - getScrollbarWidth(), getY() + getFadeSpace() - 6, getZ(), getStyle().asColor("background"), fadeOut);
-				BaseRenderer.drawGradientQuad(matrices, provider, getX(), getY() - 1, getWideX() - getScrollbarWidth(), getY() + getFadeSpace() - 3, getZ(), getStyle().asColor("background"), fadeOut);
-				BaseRenderer.drawGradientQuad(matrices, provider, getX(), getY() - 1, getWideX() - getScrollbarWidth(), getY() + getFadeSpace(), getZ(), getStyle().asColor("background"), fadeOut);
+				Drawings.drawGradientQuad(matrices, provider, getX(), getY() - 1, getWideX() - getScrollbarWidth(), getY() + getFadeSpace() - 6, getZ(), getStyle().asColor("background"), fadeOut);
+				Drawings.drawGradientQuad(matrices, provider, getX(), getY() - 1, getWideX() - getScrollbarWidth(), getY() + getFadeSpace() - 3, getZ(), getStyle().asColor("background"), fadeOut);
+				Drawings.drawGradientQuad(matrices, provider, getX(), getY() - 1, getWideX() - getScrollbarWidth(), getY() + getFadeSpace(), getZ(), getStyle().asColor("background"), fadeOut);
 			}
 
 			if (getBottomWidgetY() > getHighY()) {
-				BaseRenderer.drawGradientQuad(matrices, provider, getX(), getHighY() - getFadeSpace() + 6, getWideX() - getScrollbarWidth(), getHighY() + 1, getZ(), fadeOut, getStyle().asColor("background"));
-				BaseRenderer.drawGradientQuad(matrices, provider, getX(), getHighY() - getFadeSpace() + 3, getWideX() - getScrollbarWidth(), getHighY() + 1, getZ(), fadeOut, getStyle().asColor("background"));
-				BaseRenderer.drawGradientQuad(matrices, provider, getX(), getHighY() - getFadeSpace(), getWideX() - getScrollbarWidth(), getHighY() + 1, getZ(), fadeOut, getStyle().asColor("background"));
+				Drawings.drawGradientQuad(matrices, provider, getX(), getHighY() - getFadeSpace() + 6, getWideX() - getScrollbarWidth(), getHighY() + 1, getZ(), fadeOut, getStyle().asColor("background"));
+				Drawings.drawGradientQuad(matrices, provider, getX(), getHighY() - getFadeSpace() + 3, getWideX() - getScrollbarWidth(), getHighY() + 1, getZ(), fadeOut, getStyle().asColor("background"));
+				Drawings.drawGradientQuad(matrices, provider, getX(), getHighY() - getFadeSpace(), getWideX() - getScrollbarWidth(), getHighY() + 1, getZ(), fadeOut, getStyle().asColor("background"));
 			}
 		}
 

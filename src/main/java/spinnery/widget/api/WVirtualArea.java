@@ -6,9 +6,8 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 
-/**
- * Utility class representing a virtual layout element that has a parent, position and size, but no drawing
- * logic.
+
+  logic.
  */
 @Environment(EnvType.CLIENT)
 public class WVirtualArea implements WLayoutElement {

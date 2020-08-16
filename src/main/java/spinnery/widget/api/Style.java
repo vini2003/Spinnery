@@ -5,7 +5,7 @@ import blue.endless.jankson.JsonElement;
 import blue.endless.jankson.JsonPrimitive;
 import net.minecraft.util.Identifier;
 import spinnery.Spinnery;
-import spinnery.common.utility.JanksonUtilities;
+import spinnery.common.utilities.Janksons;
 import spinnery.widget.WAbstractWidget;
 
 import java.util.HashMap;
@@ -13,9 +13,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
-/**
- * A class that holds the style data for a widget.
- * It is usually attached to a theme.
+
+  It is usually attached to a theme.
  */
 @SuppressWarnings("unused")
 public class Style {
@@ -45,112 +44,89 @@ public class Style {
 		jsonSerializers.put(vClass, serializer);
 	}
 
-	/**
-	 * Asserts whether this Style contains a given property.
-	 *
-	 * @param property Key to be checked for.
-	 * @return True if the key exists; false if not.
+
+
+	  @return True if the key exists; false if not.
 	 */
 	public boolean contains(String property) {
 		return properties.get(property) != null;
 	}
 
-	/**
-	 * Retrieves a property as a JsonElement.
-	 *
-	 * @param key Property to be retrieved.
-	 * @return JsonElement of the given property.
+
+
+	  @return JsonElement of the given property.
 	 */
 	protected JsonElement getElement(String key) {
 		return properties.get(key);
 	}
 
-	/**
-	 * Retrieves a given property as a Boolean.
-	 *
-	 * @param property Property to be retrieved.
-	 * @return Property as a Boolean; defaulting to false if conversion fails.
+
+
+	  @return Property as a Boolean; defaulting to false if conversion fails.
 	 */
 	public boolean asBoolean(String property) {
-		return JanksonUtilities.asBoolean(getElement(property)).orElse(false);
+		return Janksons.asBoolean(getElement(property)).orElse(false);
 	}
 
-	/**
-	 * Retrieves a given property as a Number.
-	 *
-	 * @param property Property to be retrieved.
-	 * @return Property as a Number; defaulting to zero if conversion fails.
+
+
+	  @return Property as a Number; defaulting to zero if conversion fails.
 	 */
 	protected Number asNumber(String property) {
-		return JanksonUtilities.asNumber(getElement(property)).orElse(0);
+		return Janksons.asNumber(getElement(property)).orElse(0);
 	}
 
-	/**
-	 * Retrieves a given property as an int.
-	 *
-	 * @param property Property to be retrieved.
-	 * @return Property as an int; defaulting to zero if conversion fails.
+
+
+	  @return Property as an int; defaulting to zero if conversion fails.
 	 */
 	public int asInt(String property) {
 		return asNumber(property).intValue();
 	}
 
-	/**
-	 * Retrieves a given property as a long.
-	 *
-	 * @param property Property to be retrieved.
-	 * @return Property as a long; defaulting to zero if conversion fails.
+
+
+	  @return Property as a long; defaulting to zero if conversion fails.
 	 */
 	public long asLong(String property) {
 		return asNumber(property).longValue();
 	}
 
-	/**
-	 * Retrieves a given property as a float.
-	 *
-	 * @param property Property to be retrieved.
-	 * @return Property as a float; defaulting to zero if conversion fails.
+
+
+	  @return Property as a float; defaulting to zero if conversion fails.
 	 */
 	public float asFloat(String property) {
 		return asNumber(property).floatValue();
 	}
 
-	/**
-	 * Retrieves a given property as a double.
-	 *
-	 * @param property Property to be retrieved.
-	 * @return Property as a double; defaulting to zero if conversion fails.
+
+
+	  @return Property as a double; defaulting to zero if conversion fails.
 	 */
 	public double asDouble(String property) {
 		return asNumber(property).doubleValue();
 	}
 
-	/**
-	 * Retrieves a given property as a Color.
-	 *
-	 * @param property Property to be retrieved.
-	 * @return Property as a Color; defaulting to black if conversion fails.
+
+
+	  @return Property as a Color; defaulting to black if conversion fails.
 	 */
 	public Color asColor(String property) {
 		return asColor(property, Color.of("0xff000000"));
 	}
 
-	/**
-	 * Retrieves a given property as a Color.
-	 *
-	 * @param property     Property to be retrieved.
-	 * @param defaultColor Default color in case conversion fails.
-	 * @return Property as a color; defaulting to defaultColor if conversion fails.
-	 */
+
+
+	  @param defaultColor Default color in case conversion fails.
+
 	public Color asColor(String property, Color defaultColor) {
-		return JanksonUtilities.asNumber(getElement(property)).map(Color::of).orElse(defaultColor);
+		return Janksons.asNumber(getElement(property)).map(Color::of).orElse(defaultColor);
 	}
 
-	/**
-	 * Retrieves a given property as a Size.
-	 *
-	 * @param property Property to be retrieved.
-	 * @return Property as a Size; defaulting to 0, 0 if conversion fails.
+
+
+	  @return Property as a Size; defaulting to 0, 0 if conversion fails.
 	 */
 	public Size asSize(String property) {
 		JsonElement el = getElement(property);
@@ -159,15 +135,13 @@ public class Style {
 		return Size.of(array.getInt(0, 0), array.getInt(1, 0));
 	}
 
-	/**
-	 * Retrieves a given property as a Padding.
-	 *
-	 * @param property Property to be retrieved.
-	 * @return Property as a Padding, defaulting to 0 if conversion fails, starting clockwise from the top.
+
+
+	  @return Property as a Padding, defaulting to 0 if conversion fails, starting clockwise from the top.
 	 */
 	public Padding asPadding(String property) {
 		JsonElement el = getElement(property);
-		Optional<Number> singleValue = JanksonUtilities.asNumber(el);
+		Optional<Number> singleValue = Janksons.asNumber(el);
 		if (singleValue.isPresent()) {
 			int intValue = singleValue.get().intValue();
 			Size size = Size.of(intValue, intValue);
@@ -187,11 +161,9 @@ public class Style {
 		return Padding.of(0);
 	}
 
-	/**
-	 * Retrieves a given property as a Position.
-	 *
-	 * @param property Property to be retrieved.
-	 * @return Property as a Position, defaulting to 0, 0 if conversion fails.
+
+
+	  @return Property as a Position, defaulting to 0, 0 if conversion fails.
 	 */
 	public Position asPosition(String property) {
 		JsonElement el = getElement(property);
@@ -200,13 +172,10 @@ public class Style {
 		return Position.of(array.getInt(0, 0), array.getInt(1, 0), array.getInt(2, 0));
 	}
 
-	/**
-	 * Retrieves a given property as an anchored Position - based on the anchor's position.
-	 *
-	 * @param property Property to be retrieved.
-	 * @param anchor   Property as an anchored Position, defaulting to the anchor's position if conversion fails.
-	 * @return
-	 */
+
+
+	  @param anchor   Property as an anchored Position, defaulting to the anchor's position if conversion fails.
+
 	public Position asAnchoredPosition(String property, WAbstractWidget anchor) {
 		JsonElement el = getElement(property);
 		if (!(el instanceof JsonArray)) return Position.of(anchor);
@@ -214,31 +183,25 @@ public class Style {
 		return Position.of(anchor, array.getInt(0, 0), array.getInt(1, 0), array.getInt(2, 0));
 	}
 
-	/**
-	 * Returns a given property as an Identifier.
-	 *
-	 * @param property Property to be retrieved.
-	 * @return Property as an Identifier, defaulting to an empty one if conversion fails.
+
+
+	  @return Property as an Identifier, defaulting to an empty one if conversion fails.
 	 */
 	public Identifier asIdentifier(String property) {
 		return new Identifier(asString(property));
 	}
 
-	/**
-	 * Returns a given property as a String.
-	 *
-	 * @param property Property to be retrieved.
-	 * @return Property as a String, defaulting to an empty one if conversion fails.
+
+
+	  @return Property as a String, defaulting to an empty one if conversion fails.
 	 */
 	public String asString(String property) {
-		return JanksonUtilities.asString(getElement(property)).orElse("");
+		return Janksons.asString(getElement(property)).orElse("");
 	}
 
-	/**
-	 * Overrides a property with a given value.
-	 *
-	 * @param property Property to be overriden.
-	 * @param value    Value for property to be associated with.
+
+
+	  @param value    Value for property to be associated with.
 	 */
 	public <T> Style override(String property, T value) {
 		Function<T, JsonElement> ser = getSerializer(value);
@@ -251,11 +214,9 @@ public class Style {
 		return this;
 	}
 
-	/**
-	 * Retrieves a serializer for a given value.
-	 *
-	 * @param value Value to look find a serializer for.
-	 * @return Serializer for the value; defaulting to null if search fails.
+
+
+	  @return Serializer for the value; defaulting to null if search fails.
 	 */
 	@SuppressWarnings("unchecked")
 	protected static <T> Function<T, JsonElement> getSerializer(T value) {
@@ -267,11 +228,9 @@ public class Style {
 		return null;
 	}
 
-	/**
-	 * Method called to merge properties of two styles.
-	 *
-	 * @param other Style to merge into this style.
-	 * @return Style containing both styles.
+
+
+	  @return Style containing both styles.
 	 */
 	public Style mergeFrom(Style other) {
 		this.properties.putAll(other.properties);

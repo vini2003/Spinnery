@@ -3,7 +3,7 @@ package spinnery.widget;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
-import spinnery.client.render.BaseRenderer;
+import spinnery.client.utilities.Drawings;
 
 public class WVerticalArrowUp extends WButton {
 	public static final Identifier IMAGE = new Identifier("spinnery", "textures/vertical_arrow_up.png");
@@ -26,7 +26,7 @@ public class WVerticalArrowUp extends WButton {
 		}
 
 		if (!isLowered()) {
-			BaseRenderer.drawTexturedQuad(matrices, provider, getX(), getY(), getZ(), getWidth(), getHeight(), IMAGE);
+			Drawings.drawTexturedQuad(matrices, provider, getX(), getY(), getZ(), getWidth(), getHeight(), IMAGE);
 		}
 
 		super.draw(matrices, provider);

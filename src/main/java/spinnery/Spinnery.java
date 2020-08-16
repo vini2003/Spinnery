@@ -3,10 +3,10 @@ package spinnery;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import spinnery.common.configuration.registry.ConfigurationRegistry;
-import spinnery.common.registry.NetworkRegistry;
+import spinnery.common.utilities.Networks;
 import spinnery.debug.DebugCommands;
 import spinnery.debug.DebugScreenHandlers;
 
@@ -17,10 +17,13 @@ public class Spinnery implements ModInitializer {
 
 	public static final EnvType ENVIRONMENT = FabricLoader.getInstance().getEnvironmentType();
 
+	public static Identifier identifier(String path) {
+		return new Identifier(MOD_ID, path);
+	}
+
 	@Override
 	public void onInitialize() {
-		NetworkRegistry.initialize();
-		ConfigurationRegistry.initialize();
+		Networks.initialize();
 
 		if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
 			DebugScreenHandlers.initialize();

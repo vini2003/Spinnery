@@ -5,8 +5,8 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import org.lwjgl.glfw.GLFW;
-import spinnery.client.render.BaseRenderer;
-import spinnery.client.render.TextRenderer;
+import spinnery.client.utilities.Drawings;
+import spinnery.client.utilities.Texts;
 import spinnery.widget.api.*;
 
 import java.util.Arrays;
@@ -76,18 +76,18 @@ public class WDropdown extends WAbstractWidget implements WModifiableCollection,
 		float sX = getWidth();
 		float sY = getHeight();
 
-		BaseRenderer.drawPanel(matrices, provider, x, y, z, sX, sY + 1.75f,
+		Drawings.drawPanel(matrices, provider, x, y, z, sX, sY + 1.75f,
 				getStyle().asColor("shadow"), getStyle().asColor("background"),
 				getStyle().asColor("highlight"), getStyle().asColor("outline"));
 
 		if (hasLabel()) {
-			TextRenderer.pass().shadow(isLabelShadowed())
+			Texts.pass().shadow(isLabelShadowed())
 					.text(getLabel()).at(x + 8, y + 6, z)
 					.color(getStyle().asColor("label.color")).shadowColor(getStyle().asColor("label.shadow_color")).render(matrices, provider);
 
 			if (getState()) {
-				BaseRenderer.drawQuad(matrices, provider, x, y + 16, z, sX, 1, getStyle().asColor("outline"));
-				BaseRenderer.drawQuad(matrices, provider, x + 1, y + 17, z, sX - 2, 0.75f, getStyle().asColor("shadow"));
+				Drawings.drawQuad(matrices, provider, x, y + 16, z, sX, 1, getStyle().asColor("outline"));
+				Drawings.drawQuad(matrices, provider, x + 1, y + 17, z, sX - 2, 0.75f, getStyle().asColor("shadow"));
 			}
 		}
 

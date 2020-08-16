@@ -1,14 +1,13 @@
 package spinnery.widget.api;
 
 import blue.endless.jankson.JsonElement;
-import spinnery.common.utility.JanksonUtilities;
+import spinnery.common.utilities.Janksons;
 
 import java.util.Objects;
 import java.util.function.Supplier;
 
-/**
- * Data class representing a position offset relative to an anchor. By default, the anchor is ORIGIN,
- * a position with all 0 coordinates.
+
+  a position with all 0 coordinates.
  */
 public class Position implements WPositioned, JanksonSerializable {
 	public static final Position ORIGIN = Position.of(0, 0, 0);
@@ -39,37 +38,28 @@ public class Position implements WPositioned, JanksonSerializable {
 		return new Position(ORIGIN);
 	}
 
-	/**
-	 * Creates a position with the given "absolute" (relative to ORIGIN) coordinates.
-	 *
-	 * @param x absolute x
-	 * @param y absolute y
-	 * @param z absolute z
-	 */
+
+
+	  @param y absolute y
+
 	public static Position of(float x, float y, float z) {
 		return new Position(ORIGIN).set(x, y, z);
 	}
 
-	/**
-	 * Creates a position with the given supplier-based coordinates.
-	 *
-	 * @param xSupplier supplier of x
-	 * @param ySupplier supplier of y
-	 * @param zSupplier supplier of z
-	 */
+
+
+	  @param ySupplier supplier of y
+
 	public static Position of(Supplier<Float> xSupplier, Supplier<Float> ySupplier, Supplier<Float> zSupplier) {
 		Position position = new Position(ORIGIN).set(xSupplier, ySupplier, zSupplier);
 		position.onLayoutChange();
 		return position;
 	}
 
-	/**
-	 * Sets new coordinates of this position object relative to its anchor.
-	 *
-	 * @param x relative x
-	 * @param y relative y
-	 * @param z relative z
-	 */
+
+
+	  @param y relative y
+
 	public Position set(float x, float y, float z) {
 		setRelativeX(x);
 		setRelativeY(y);
@@ -77,13 +67,10 @@ public class Position implements WPositioned, JanksonSerializable {
 		return this;
 	}
 
-	/**
-	 * Sets new coordinate suppliers of this position object.
-	 *
-	 * @param xSupplier supplier of x
-	 * @param ySupplier supplier of y
-	 * @param zSupplier supplier of z
-	 */
+
+
+	  @param ySupplier supplier of y
+
 	public Position set(Supplier<Float> xSupplier, Supplier<Float> ySupplier, Supplier<Float> zSupplier) {
 		setXSupplier(xSupplier);
 		setYSupplier(ySupplier);
@@ -91,45 +78,34 @@ public class Position implements WPositioned, JanksonSerializable {
 		return this;
 	}
 
-	/**
-	 * Creates a position with the given coordinates relative to anchor.
-	 *
-	 * @param anchor anchor
-	 * @param x      relative x
-	 * @param y      relative y
-	 * @param z      relative z
+
+
+	  @param x      relative x
+	  @param z      relative z
 	 */
 	public static Position of(WPositioned anchor, float x, float y, float z) {
 		return new Position(anchor).set(x, y, z);
 	}
 
-	/**
-	 * Creates a position with the given coordinates relative to anchor and 0 Z offset.
-	 *
-	 * @param anchor anchor
-	 * @param x      relative x
-	 * @param y      relative y
-	 */
+
+
+	  @param x      relative x
+
 	public static Position of(WPositioned anchor, float x, float y) {
 		return new Position(anchor).set(x, y, 0);
 	}
 
-	/**
-	 * Creates a position equivalent to the top-right corner of the given layout element (anchor + element width).
-	 *
-	 * @param source layout element
-	 */
+
+
+
 	public static Position ofTopRight(WLayoutElement source) {
 		return Position.of(source).add(source.getWidth(), 0, 0);
 	}
 
-	/**
-	 * Copies this position object and increments its coordinates by the given parameters.
-	 *
-	 * @param x increment relative x
-	 * @param y increment relative y
-	 * @param z increment relative z
-	 * @return new position object
+
+
+	  @param y increment relative y
+	  @return new position object
 	 */
 	public Position add(float x, float y, float z) {
 		Position newPos = Position.of(this);
@@ -137,41 +113,32 @@ public class Position implements WPositioned, JanksonSerializable {
 		return newPos;
 	}
 
-	/**
-	 * Creates a copy of the given positioned element's position.
-	 *
-	 * @param source positioned element
-	 * @return equivalent position
+
+
+	  @return equivalent position
 	 */
 	public static Position of(WPositioned source) {
 		return new Position(source);
 	}
 
-	/**
-	 * Creates a position equivalent to the bottom-left corner of the given layout element (anchor + element height).
-	 *
-	 * @param source layout element
-	 */
+
+
+
 	public static Position ofBottomLeft(WLayoutElement source) {
 		return Position.of(source).add(0, source.getHeight(), 0);
 	}
 
-	/**
-	 * Creates a position equivalent to the bottom-right corner of the given layout element (anchor + element size).
-	 *
-	 * @param source layout element
-	 */
+
+
+
 	public static Position ofBottomRight(WLayoutElement source) {
 		return Position.of(source).add(source.getWidth(), source.getHeight(), 0);
 	}
 
-	/**
-	 * Sets new offset coordiantes of this position object.
-	 *
-	 * @param x offset x
-	 * @param y offset y
-	 * @param z offset z
-	 * @return same position object
+
+
+	  @param y offset y
+	  @return same position object
 	 */
 	public Position setOffset(float x, float y, float z) {
 		setOffsetX(x);
@@ -189,72 +156,59 @@ public class Position implements WPositioned, JanksonSerializable {
 		return this;
 	}
 
-	/**
-	 * Gets the absolute X coordinate, which is calculated as the sum of the anchor's coordinate, this
-	 * position's relative coordiate, and this position's offset coordiante.
+
+	  position's relative coordiate, and this position's offset coordiante.
 	 *
-	 * @return absolute coordinate
-	 */
+
 	public float getX() {
 		return anchor == null ? 0 : xSupplier == null ? anchor.getX() + x + offsetX : xSupplied;
 	}
 
-	/**
-	 * Gets the absolute Y coordinate, which is calculated as the sum of the anchor's coordinate, this
-	 * position's relative coordiate, and this position's offset coordiante.
+
+	  position's relative coordiate, and this position's offset coordiante.
 	 *
-	 * @return absolute coordinate
-	 */
+
 	public float getY() {
 		return anchor == null ? 0 : ySupplier == null ? anchor.getY() + y + offsetY : ySupplied;
 	}
 
-	/**
-	 * Gets the absolute Y coordinate, which is calculated as the sum of the anchor's coordinate, this
-	 * position's relative coordiate, and this position's offset coordiante.
+
+	  position's relative coordiate, and this position's offset coordiante.
 	 *
-	 * @return absolute coordinate
-	 */
+
 	public float getZ() {
 		return anchor == null ? 0 : zSupplier == null ? anchor.getZ() + z + offsetZ : zSupplied;
 	}
 
-	/**
-	 * Changes this position objects's relative Z coordinate in such a way that its absolute X coordinate will be
-	 * equal to the parameter.
+
+	  equal to the parameter.
 	 *
-	 * @param z absolute coordinate
-	 * @return same position object
+	  @return same position object
 	 */
 	public Position setZ(float z) {
 		return setRelativeZ(z - anchor.getZ() - offsetZ);
 	}
 
-	/**
-	 * Changes this position objects's relative Y coordinate in such a way that its absolute X coordinate will be
-	 * equal to the parameter.
+
+	  equal to the parameter.
 	 *
-	 * @param y absolute coordinate
-	 * @return same position object
+	  @return same position object
 	 */
 	public Position setY(float y) {
 		return setRelativeY(y - anchor.getY() - offsetY);
 	}
 
-	/**
-	 * Changes this position objects's relative X coordinate in such a way that its absolute X coordinate will be
-	 * equal to the parameter.
+
+	  equal to the parameter.
 	 *
-	 * @param x absolute coordinate
-	 * @return same position object
+	  @return same position object
 	 */
 	public Position setX(float x) {
 		return setRelativeX(x - anchor.getX() - offsetX);
 	}
 
-	/**
-	 * Updates this position's supplied coordinates.
-	 */
+
+
 	public Position onLayoutChange() {
 		if (this.xSupplier != null) this.xSupplied = xSupplier.get();
 		if (this.ySupplier != null) this.ySupplied = ySupplier.get();
@@ -357,6 +311,6 @@ public class Position implements WPositioned, JanksonSerializable {
 
 	@Override
 	public JsonElement toJson() {
-		return JanksonUtilities.arrayOfPrimitives(x, y, z);
+		return Janksons.arrayOfPrimitives(x, y, z);
 	}
 }

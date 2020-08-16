@@ -4,8 +4,8 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
-import spinnery.client.render.BaseRenderer;
-import spinnery.client.render.TextRenderer;
+import spinnery.client.utilities.Drawings;
+import spinnery.client.utilities.Texts;
 import spinnery.widget.api.Position;
 import spinnery.widget.api.Size;
 
@@ -26,15 +26,15 @@ public class WHorizontalSlider extends WAbstractSlider {
 
 		if (isProgressVisible()) {
 			Position tPos = getProgressTextAnchor();
-			TextRenderer.pass().shadow(isLabelShadowed()).text(getFormattedProgress()).at(tPos.getX(), tPos.getY(), tPos.getZ())
+			Texts.pass().shadow(isLabelShadowed()).text(getFormattedProgress()).at(tPos.getX(), tPos.getY(), tPos.getZ())
 					.color(getStyle().asColor("label.color")).shadowColor(getStyle().asColor("label.shadow_color")).render(matrices, provider);
 		}
 
-		BaseRenderer.drawQuad(matrices, provider, x, y, z, (sX), 1, getStyle().asColor("top_left.background"));
-		BaseRenderer.drawQuad(matrices, provider, x, y, z, 1, sY, getStyle().asColor("top_left.background"));
+		Drawings.drawQuad(matrices, provider, x, y, z, (sX), 1, getStyle().asColor("top_left.background"));
+		Drawings.drawQuad(matrices, provider, x, y, z, 1, sY, getStyle().asColor("top_left.background"));
 
-		BaseRenderer.drawQuad(matrices, provider, x, y + sY, z, (sX), 1, getStyle().asColor("bottom_right.background"));
-		BaseRenderer.drawQuad(matrices, provider, x + (sX), y, z, 1, sY + 1, getStyle().asColor("bottom_right.background"));
+		Drawings.drawQuad(matrices, provider, x, y + sY, z, (sX), 1, getStyle().asColor("bottom_right.background"));
+		Drawings.drawQuad(matrices, provider, x + (sX), y, z, 1, sY + 1, getStyle().asColor("bottom_right.background"));
 
 		Position innerAnchor = getInnerAnchor();
 
@@ -47,9 +47,9 @@ public class WHorizontalSlider extends WAbstractSlider {
 		float percentComplete = getPercentComplete();
 		float percentLeft = 1 - percentComplete;
 
-		BaseRenderer.drawQuad(matrices, provider, innerX, innerY, z, innerWidth * percentComplete, innerHeight,
+		Drawings.drawQuad(matrices, provider, innerX, innerY, z, innerWidth * percentComplete, innerHeight,
 				getStyle().asColor("background.on"));
-		BaseRenderer.drawQuad(matrices, provider, innerX + innerWidth * percentComplete, innerY, z, innerWidth * percentLeft, innerHeight,
+		Drawings.drawQuad(matrices, provider, innerX + innerWidth * percentComplete, innerY, z, innerWidth * percentLeft, innerHeight,
 				getStyle().asColor("background.off"));
 
 		Size knobSize = getKnobSize();
@@ -59,7 +59,7 @@ public class WHorizontalSlider extends WAbstractSlider {
 		float knobX = (x + (innerWidth - knobWidth / 2f) * percentComplete);
 		float clampedX = Math.min(x + innerWidth - knobWidth / 2f, Math.max(x, knobX));
 
-		BaseRenderer.drawBeveledPanel(matrices, provider, clampedX, y - 1, z, knobWidth, knobHeight,
+		Drawings.drawBeveledPanel(matrices, provider, clampedX, y - 1, z, knobWidth, knobHeight,
 				getStyle().asColor("top_left.foreground"), getStyle().asColor("foreground"),
 				getStyle().asColor("bottom_right.foreground"));
 
@@ -69,7 +69,7 @@ public class WHorizontalSlider extends WAbstractSlider {
 	@Override
 	public Position getProgressTextAnchor() {
 		String formatted = getFormattedProgress();
-		return Position.of(this).add((getWidth() + 5) / 2 - TextRenderer.width(formatted) / 2, getHeight() + 4, 0);
+		return Position.of(this).add((getWidth() + 5) / 2 - Texts.width(formatted) / 2, getHeight() + 4, 0);
 	}
 
 	@Override

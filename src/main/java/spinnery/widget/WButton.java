@@ -5,10 +5,9 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
-import spinnery.client.render.BaseRenderer;
-import spinnery.client.render.TextRenderer;
+import spinnery.client.utilities.Drawings;
+import spinnery.client.utilities.Texts;
 
 import java.util.List;
 
@@ -23,13 +22,13 @@ public class WButton extends WAbstractButton {
 		matrices.push();
 
 		if (isLowered()) {
-			BaseRenderer.drawBeveledPanel(matrices, provider, getX(), getY(), getZ(), getWidth(), getHeight(), getStyle().asColor("top_left.on"), getStyle().asColor("background.on"), getStyle().asColor("bottom_right.on"));
+			Drawings.drawBeveledPanel(matrices, provider, getX(), getY(), getZ(), getWidth(), getHeight(), getStyle().asColor("top_left.on"), getStyle().asColor("background.on"), getStyle().asColor("bottom_right.on"));
 		} else {
-			BaseRenderer.drawBeveledPanel(matrices, provider, getX(), getY(), getZ(), getWidth(), getHeight(), getStyle().asColor("top_left.off"), getStyle().asColor("background.off"), getStyle().asColor("bottom_right.off"));
+			Drawings.drawBeveledPanel(matrices, provider, getX(), getY(), getZ(), getWidth(), getHeight(), getStyle().asColor("top_left.off"), getStyle().asColor("background.off"), getStyle().asColor("bottom_right.off"));
 		}
 
 		if (hasLabel()) {
-			TextRenderer.pass().text(getLabel()).at(getX() + (getWidth() / 2 - TextRenderer.width(getLabel()) / 2), getY() + (getHeight() / 2 - 4), getZ())
+			Texts.pass().text(getLabel()).at(getX() + (getWidth() / 2 - Texts.width(getLabel()) / 2), getY() + (getHeight() / 2 - 4), getZ())
 					.shadow(getStyle().asBoolean("label.shadow")).shadowColor(getStyle().asColor("label.shadow_color"))
 					.color(getStyle().asColor("label.color")).render(matrices, provider);
 		}

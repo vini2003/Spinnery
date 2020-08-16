@@ -6,7 +6,7 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
-import spinnery.client.render.TextRenderer;
+import spinnery.client.utilities.Texts;
 
 @Environment(EnvType.CLIENT)
 public class WStaticText extends WAbstractWidget {
@@ -44,7 +44,7 @@ public class WStaticText extends WAbstractWidget {
 		float y = getY();
 		float z = getZ();
 
-		TextRenderer.pass().text(getText()).at(x, y, z).scale(scale).maxWidth(maxWidth)
+		Texts.pass().text(getText()).at(x, y, z).scale(scale).maxWidth(maxWidth)
 				.shadow(getStyle().asBoolean("shadow")).shadowColor(getStyle().asColor("shadowColor"))
 				.color(getStyle().asColor("text")).render(matrices, provider);
 
@@ -53,12 +53,12 @@ public class WStaticText extends WAbstractWidget {
 
 	@Override
 	public float getHeight() {
-		return TextRenderer.height();
+		return Texts.height();
 	}
 
 	@Override
 	public float getWidth() {
-		return TextRenderer.width(text);
+		return Texts.width(text);
 	}
 
 	public Text getText() {

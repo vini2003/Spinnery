@@ -2,7 +2,7 @@ package spinnery.debug;
 
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.ScreenHandlerType;
-import spinnery.common.handler.BaseScreenHandler;
+import spinnery.common.screenhandler.BaseScreenHandler;
 import spinnery.widget.WSlot;
 
 public class DebugScreenHandler extends BaseScreenHandler {

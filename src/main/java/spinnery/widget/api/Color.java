@@ -3,11 +3,9 @@ package spinnery.widget.api;
 import blue.endless.jankson.JsonElement;
 import blue.endless.jankson.JsonPrimitive;
 
-/**
- * Data object representing a color. Components may be accessed via the fields
- * A, R, G, B; the color int may be accessed via the fields
- * RGB and ARGB.
- */
+
+  A, R, G, B; the color int may be accessed via the fields
+ /
 public class Color implements JanksonSerializable {
 	public static final Color DEFAULT = Color.of(0xffffffff);
 

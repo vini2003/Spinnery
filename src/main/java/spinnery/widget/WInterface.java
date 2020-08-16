@@ -9,9 +9,8 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import spinnery.client.screen.BaseHandledScreen;
-import spinnery.common.handler.BaseScreenHandler;
-import spinnery.common.registry.NetworkRegistry;
-import spinnery.common.utility.EventUtilities;
+import spinnery.common.utilities.Networks;
+import spinnery.common.screenhandler.BaseScreenHandler;
 import spinnery.widget.api.WLayoutElement;
 import spinnery.widget.api.WModifiableCollection;
 import spinnery.widget.api.WNetworked;
@@ -113,8 +112,8 @@ public class WInterface implements WModifiableCollection, WLayoutElement, WThema
 			if (!EventUtilities.canReceiveMouse(widget)) continue;
 			widget.onMouseClicked(mouseX, mouseY, mouseButton);
 			if (widget instanceof WNetworked) {
-				ClientSidePacketRegistry.INSTANCE.sendToServer(NetworkRegistry.SYNCED_WIDGET_PACKET,
-						NetworkRegistry.createMouseClickPacket(((WNetworked) widget), mouseX, mouseY, mouseButton));
+				ClientSidePacketRegistry.INSTANCE.sendToServer(Networks.SYNCED_WIDGET_PACKET,
+						Networks.createMouseClickPacket(((WNetworked) widget), mouseX, mouseY, mouseButton));
 			}
 		}
 	}
@@ -124,8 +123,8 @@ public class WInterface implements WModifiableCollection, WLayoutElement, WThema
 			if (!EventUtilities.canReceiveMouse(widget)) continue;
 			widget.onMouseReleased(mouseX, mouseY, mouseButton);
 			if (widget instanceof WNetworked) {
-				ClientSidePacketRegistry.INSTANCE.sendToServer(NetworkRegistry.SYNCED_WIDGET_PACKET,
-						NetworkRegistry.createMouseReleasePacket(((WNetworked) widget), mouseX, mouseY, mouseButton));
+				ClientSidePacketRegistry.INSTANCE.sendToServer(Networks.SYNCED_WIDGET_PACKET,
+						Networks.createMouseReleasePacket(((WNetworked) widget), mouseX, mouseY, mouseButton));
 			}
 		}
 	}
@@ -135,8 +134,8 @@ public class WInterface implements WModifiableCollection, WLayoutElement, WThema
 			if (!EventUtilities.canReceiveMouse(widget)) continue;
 			widget.onMouseDragged(mouseX, mouseY, mouseButton, deltaX, deltaY);
 			if (widget instanceof WNetworked) {
-				ClientSidePacketRegistry.INSTANCE.sendToServer(NetworkRegistry.SYNCED_WIDGET_PACKET,
-						NetworkRegistry.createMouseDragPacket(((WNetworked) widget), mouseX, mouseY, mouseButton, deltaX, deltaY));
+				ClientSidePacketRegistry.INSTANCE.sendToServer(Networks.SYNCED_WIDGET_PACKET,
+						Networks.createMouseDragPacket(((WNetworked) widget), mouseX, mouseY, mouseButton, deltaX, deltaY));
 			}
 		}
 		return false;
@@ -147,8 +146,8 @@ public class WInterface implements WModifiableCollection, WLayoutElement, WThema
 			if (!EventUtilities.canReceiveMouse(widget)) continue;
 			widget.onMouseScrolled(mouseX, mouseY, deltaY);
 			if (widget instanceof WNetworked) {
-				ClientSidePacketRegistry.INSTANCE.sendToServer(NetworkRegistry.SYNCED_WIDGET_PACKET,
-						NetworkRegistry.createMouseScrollPacket(((WNetworked) widget), mouseX, mouseY, deltaY));
+				ClientSidePacketRegistry.INSTANCE.sendToServer(Networks.SYNCED_WIDGET_PACKET,
+						Networks.createMouseScrollPacket(((WNetworked) widget), mouseX, mouseY, deltaY));
 			}
 		}
 	}
@@ -159,8 +158,8 @@ public class WInterface implements WModifiableCollection, WLayoutElement, WThema
 			if (!EventUtilities.canReceiveMouse(widget)) continue;
 			widget.onMouseMoved(mouseX, mouseY);
 			if (widget instanceof WNetworked) {
-				ClientSidePacketRegistry.INSTANCE.sendToServer(NetworkRegistry.SYNCED_WIDGET_PACKET,
-						NetworkRegistry.createFocusPacket(((WNetworked) widget), widget.isFocused()));
+				ClientSidePacketRegistry.INSTANCE.sendToServer(Networks.SYNCED_WIDGET_PACKET,
+						Networks.createFocusPacket(((WNetworked) widget), widget.isFocused()));
 			}
 		}
 	}
@@ -170,8 +169,8 @@ public class WInterface implements WModifiableCollection, WLayoutElement, WThema
 			if (!EventUtilities.canReceiveKeyboard(widget)) continue;
 			widget.onKeyReleased(keyCode, character, keyModifier);
 			if (widget instanceof WNetworked) {
-				ClientSidePacketRegistry.INSTANCE.sendToServer(NetworkRegistry.SYNCED_WIDGET_PACKET,
-						NetworkRegistry.createKeyReleasePacket(((WNetworked) widget), character, keyCode, keyModifier));
+				ClientSidePacketRegistry.INSTANCE.sendToServer(Networks.SYNCED_WIDGET_PACKET,
+						Networks.createKeyReleasePacket(((WNetworked) widget), character, keyCode, keyModifier));
 			}
 		}
 	}
@@ -181,8 +180,8 @@ public class WInterface implements WModifiableCollection, WLayoutElement, WThema
 			if (!EventUtilities.canReceiveKeyboard(widget)) continue;
 			widget.onKeyPressed(keyCode, character, keyModifier);
 			if (widget instanceof WNetworked) {
-				ClientSidePacketRegistry.INSTANCE.sendToServer(NetworkRegistry.SYNCED_WIDGET_PACKET,
-						NetworkRegistry.createKeyPressPacket(((WNetworked) widget), character, keyCode, keyModifier));
+				ClientSidePacketRegistry.INSTANCE.sendToServer(Networks.SYNCED_WIDGET_PACKET,
+						Networks.createKeyPressPacket(((WNetworked) widget), character, keyCode, keyModifier));
 			}
 		}
 	}
@@ -192,8 +191,8 @@ public class WInterface implements WModifiableCollection, WLayoutElement, WThema
 			if (!EventUtilities.canReceiveKeyboard(widget)) continue;
 			widget.onCharTyped(character, keyCode);
 			if (widget instanceof WNetworked) {
-				ClientSidePacketRegistry.INSTANCE.sendToServer(NetworkRegistry.SYNCED_WIDGET_PACKET,
-						NetworkRegistry.createCharTypePacket(((WNetworked) widget), character, keyCode));
+				ClientSidePacketRegistry.INSTANCE.sendToServer(Networks.SYNCED_WIDGET_PACKET,
+						Networks.createCharTypePacket(((WNetworked) widget), character, keyCode));
 			}
 		}
 	}

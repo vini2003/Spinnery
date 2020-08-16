@@ -11,9 +11,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import spinnery.client.screen.InGameHudScreen;
 import spinnery.widget.WInterface;
 
-/**
- * Injections into InGameHudScreen to
- * allow for addition of Spinner widgets.
+
+  allow for addition of Spinner widgets.
  */
 @Mixin(InGameHud.class)
 public class InGameHudMixin implements InGameHudScreen.Accessor {

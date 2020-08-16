@@ -1,8 +1,7 @@
 package spinnery.widget.api;
 
-/**
- * An enumeration of common actions used by Spinnery.
- */
+
+ /
 public enum Action {
 	PICKUP,
 	PICKUP_ALL,

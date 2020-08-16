@@ -4,8 +4,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
-import spinnery.client.utility.ScissorArea;
-import spinnery.common.utility.MutablePair;
+import spinnery.client.utilities.Scissors;
 import spinnery.widget.api.*;
 
 import java.util.Arrays;
@@ -117,7 +116,7 @@ public class WDraggableContainer extends WAbstractWidget implements WModifiableC
 			return;
 		}
 
-		ScissorArea area = new ScissorArea(provider, this);
+		Scissors area = new Scissors(provider, this);
 
 		for (WLayoutElement widget : widgets) {
 			widget.draw(matrices, provider);

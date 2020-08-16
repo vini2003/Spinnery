@@ -1,14 +1,13 @@
 package spinnery.widget.api;
 
 import blue.endless.jankson.JsonElement;
-import spinnery.common.utility.JanksonUtilities;
+import spinnery.common.utilities.Janksons;
 
 import java.util.Objects;
 import java.util.function.Supplier;
 
-/**
- * Data class representing a width/height pair.
- */
+
+ /
 public class Size implements WSized, JanksonSerializable {
 	protected float width;
 	protected float height;
@@ -47,21 +46,17 @@ public class Size implements WSized, JanksonSerializable {
 		return new Size(sideSupplier, sideSupplier);
 	}
 
-	/**
-	 * Creates a copy of this Size object, incrementing its width and height by the supplied parameters.
-	 *
-	 * @return Size copy with incremented fields
-	 */
+
+
+
 	public Size add(float width, float height) {
 		Size newSize = Size.of(this);
 		return newSize.setWidth(newSize.getWidth() + width).setHeight(newSize.getHeight() + height);
 	}
 
-	/**
-	 * Creates a new Size equivalent to that of the given WSized parameter.
-	 *
-	 * @return Size copy equivalent to given element
-	 */
+
+
+
 	public static Size of(WSized widget) {
 		return new Size(widget.getWidth(), widget.getHeight());
 	}
@@ -145,6 +140,6 @@ public class Size implements WSized, JanksonSerializable {
 
 	@Override
 	public JsonElement toJson() {
-		return JanksonUtilities.arrayOfPrimitives(width, height);
+		return Janksons.arrayOfPrimitives(width, height);
 	}
 }

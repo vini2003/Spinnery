@@ -4,7 +4,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
-import spinnery.client.render.BaseRenderer;
+import spinnery.client.utilities.Drawings;
 
 @Environment(EnvType.CLIENT)
 public class WTextField extends WAbstractTextEditor {
@@ -43,7 +43,7 @@ public class WTextField extends WAbstractTextEditor {
 		float sX = getWidth();
 		float sY = getHeight();
 
-		BaseRenderer.drawBeveledPanel(matrices, provider, x, y, z, sX, sY, getStyle().asColor("top_left"), getStyle().asColor("background"), getStyle().asColor("bottom_right"));
+		Drawings.drawBeveledPanel(matrices, provider, x, y, z, sX, sY, getStyle().asColor("top_left"), getStyle().asColor("background"), getStyle().asColor("bottom_right"));
 
 		renderField(matrices, provider);
 

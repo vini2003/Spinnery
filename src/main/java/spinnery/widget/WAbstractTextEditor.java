@@ -10,9 +10,9 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Pair;
 import org.lwjgl.glfw.GLFW;
-import spinnery.client.render.BaseRenderer;
-import spinnery.client.render.TextRenderer;
-import spinnery.client.utility.ScissorArea;
+import spinnery.client.utilities.Drawings;
+import spinnery.client.utilities.Texts;
+import spinnery.client.utilities.Scissors;
 import spinnery.widget.api.*;
 
 import java.util.ArrayList;
@@ -21,17 +21,12 @@ import java.util.List;
 import java.util.Objects;
 
 
-/**
- * 7:13PM, 3/25/2020
- * Engineer, you shall pay dearly
- * for not commenting this.
- * <p>
- * 10:52PM, 4/8/2020
- * I will not be commenting this in the name
- * of my sanity.
- * 7:53AM, 6/8/2020
- * I am forced to sit through this and
- * add input filters. I am suffering.
+
+  Engineer, you shall pay dearly
+  <p>
+  I will not be commenting this in the name
+  7:53AM, 6/8/2020
+  add input filters. I am suffering.
  */
 @SuppressWarnings("unchecked")
 @Environment(EnvType.CLIENT)
@@ -80,7 +75,7 @@ public abstract class WAbstractTextEditor extends WAbstractWidget implements WPa
 	}
 
 	protected int getXOffsetStep() {
-		return (int) (TextRenderer.width('m') * scale);
+		return (int) (Texts.width('m') * scale);
 	}
 
 	protected Cursor getCursorFromMouse(float mouseX, float mouseY) {
@@ -119,7 +114,7 @@ public abstract class WAbstractTextEditor extends WAbstractWidget implements WPa
 		if (lineIndex > lines.size() - 1) {
 			return 0;
 		}
-		return (int) (TextRenderer.width(lines.get(lineIndex)) * scale);
+		return (int) (Texts.width(lines.get(lineIndex)) * scale);
 	}
 
 	protected String getTextSegment(Cursor start, Cursor end) {
@@ -293,12 +288,11 @@ public abstract class WAbstractTextEditor extends WAbstractWidget implements WPa
 	}
 
 	protected int getTextHeight() {
-		return Math.round(TextRenderer.height() * scale);
+		return Math.round(Texts.height() * scale);
 	}
 
-	/**
-	 * When injecting custom key action handling logic, you should overload this function
-	 * and not {@link #onKeyPressed(int, int, int)}!
+
+	  and not {@link #onKeyPressed(int, int, int)}!
 	 */
 	// TODO: Comment selection expansion/contraction logic
 	// *******************
@@ -631,7 +625,7 @@ public abstract class WAbstractTextEditor extends WAbstractWidget implements WPa
 		float innerHeight = innerSize.getHeight();
 
 		if (isEmpty() && !active) {
-			TextRenderer.pass().text(getLabel()).at(innerX, innerY, z).scale(scale)
+			Texts.pass().text(getLabel()).at(innerX, innerY, z).scale(scale)
 					.shadow(getStyle().asBoolean("label.shadow")).shadowColor(getStyle().asColor("label.shadow_color"))
 					.color(getStyle().asColor("label.color"))
 					.render(matrices, provider);
@@ -642,7 +636,7 @@ public abstract class WAbstractTextEditor extends WAbstractWidget implements WPa
 		int rawHeight = MinecraftClient.getInstance().getWindow().getHeight();
 
 
-		ScissorArea area = new ScissorArea(provider, (int) ((innerX - 1) * glScale), (int) (rawHeight - ((innerY - 2) * glScale + innerHeight * glScale)), (int) (innerWidth * glScale), (int) (innerHeight * glScale));
+		Scissors area = new Scissors(provider, (int) ((innerX - 1) * glScale), (int) (rawHeight - ((innerY - 2) * glScale + innerHeight * glScale)), (int) (innerWidth * glScale), (int) (innerHeight * glScale));
 
 		float lineOffset = getLineOffset();
 		float cH = getTextHeight();
@@ -656,7 +650,7 @@ public abstract class WAbstractTextEditor extends WAbstractWidget implements WPa
 			if (i < 0 || !isLineVisible(i) || i > lines.size() - 1) continue;
 			float adjustedI = i - lineOffset;
 			String line = lines.get(i);
-			TextRenderer.pass().text(line).at(innerX, innerY + (cH + 2) * adjustedI, z).scale(scale)
+			Texts.pass().text(line).at(innerX, innerY + (cH + 2) * adjustedI, z).scale(scale)
 					.shadow(getStyle().asBoolean("text.shadow")).shadowColor(getStyle().asColor("text.shadow_color"))
 					.color(getStyle().asColor("text.color"))
 					.render(matrices, provider);
@@ -664,12 +658,12 @@ public abstract class WAbstractTextEditor extends WAbstractWidget implements WPa
 			Pair<Integer, Integer> selectedChars = getSelectedChars(i);
 			if (selectedChars != null) {
 				float selW = getXOffset(i, selectedChars.getRight()) - getXOffset(i, selectedChars.getLeft());
-				BaseRenderer.drawQuad(matrices, provider, innerX + getXOffset(i, selectedChars.getLeft()),
+				Drawings.drawQuad(matrices, provider, innerX + getXOffset(i, selectedChars.getLeft()),
 						innerY + (cH + 2) * adjustedI, z, selW, cH + 1, getStyle().asColor("highlight"));
 			}
 		}
 		if (active && cursorTick > 10) {
-			BaseRenderer.drawQuad(matrices, provider, cursorX, cursorY, z, 1, cH + 2,
+			Drawings.drawQuad(matrices, provider, cursorX, cursorY, z, 1, cH + 2,
 					getStyle().asColor("cursor"));
 		}
 		RenderSystem.popMatrix();
@@ -689,7 +683,7 @@ public abstract class WAbstractTextEditor extends WAbstractWidget implements WPa
 		if (charIndex < 0 || lines.isEmpty() || lineIndex > lines.size() - 1) return 0;
 		String line = lines.get(lineIndex);
 		int endIndex = Math.min(charIndex, line.length());
-		return TextRenderer.width(line.substring(0, endIndex)) * scale;
+		return Texts.width(line.substring(0, endIndex)) * scale;
 	}
 
 	protected int getVisibleLines() {

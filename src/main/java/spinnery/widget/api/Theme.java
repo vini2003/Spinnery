@@ -8,15 +8,14 @@ import com.google.common.collect.ImmutableMap;
 import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.Level;
 import spinnery.Spinnery;
-import spinnery.common.registry.ThemeRegistry;
-import spinnery.common.utility.JanksonUtilities;
+import spinnery.common.utilities.Themes;
+import spinnery.common.utilities.Janksons;
 
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * A class that holds the data used by Spinnery for widget themes.
- * Most importantly, this contains Styles for all widgets in the theme.
+
+  Most importantly, this contains Styles for all widgets in the theme.
  */
 public class Theme {
 	protected final Identifier id;
@@ -39,7 +38,7 @@ public class Theme {
 	private static void processRefs(Map<String, JsonElement> style, Map<String, JsonElement> refs) {
 		for (String property : style.keySet()) {
 			JsonElement el = style.get(property);
-			String strValue = JanksonUtilities.asString(el).orElse("");
+			String strValue = Janksons.asString(el).orElse("");
 
 			// Look up variables
 			if (strValue.startsWith("$") && !strValue.startsWith("$$")) {
@@ -70,7 +69,7 @@ public class Theme {
 	public static Theme of(Identifier themeId, JsonObject themeDef) {
 		// Add parent logic
 		JsonElement parentProp = themeDef.get("parent");
-		Identifier parent = JanksonUtilities.asString(parentProp).map(Identifier::new).orElse(null);
+		Identifier parent = Janksons.asString(parentProp).map(Identifier::new).orElse(null);
 
 		// Generic validation
 		JsonObject themeProps = themeDef.getObject("theme");
@@ -116,7 +115,7 @@ public class Theme {
 			JsonElement protoArray = widgetProps.remove("$extend");
 			if (protoArray instanceof JsonArray) {
 				for (JsonElement el : (JsonArray) protoArray) {
-					String protoName = JanksonUtilities.asString(el).orElse("");
+					String protoName = Janksons.asString(el).orElse("");
 					JsonObject protoObj = prototypes.get(protoName);
 					if (!protoName.isEmpty() && protoObj != null) {
 						properties.putAll(protoObj);
@@ -132,25 +131,21 @@ public class Theme {
 		return new Theme(themeId, parent, styles);
 	}
 
-	/**
-	 * Retrieves the Identifier of this theme.
-	 *
-	 * @return The Identifier of this theme.
-	 */
+
+
+
 	public Identifier getId() {
 		return id;
 	}
 
-	/**
-	 * Retrieves the Style for a give widget.
-	 *
-	 * @param widgetId Identifier of the widget, which must have been registered via WidgetRegistry.
-	 * @return Style of the given widget.
+
+
+	  @return Style of the given widget.
 	 */
 	public Style getStyle(Identifier widgetId) {
 		Style style = styles.get(widgetId);
 		if (parent != null) {
-			Style baseStyle = ThemeRegistry.getStyle(parent, widgetId);
+			Style baseStyle = Themes.getStyle(parent, widgetId);
 			if (style == null) return baseStyle;
 			style = Style.of(baseStyle).mergeFrom(style);
 		}

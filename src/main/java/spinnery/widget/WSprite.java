@@ -4,21 +4,20 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
-import spinnery.client.utility.SpriteSheet;
+import spinnery.client.utilities.Sprites;
 
-/**
- * Allows you to render a sprite that's been packed into a texture atlas.
- * Specifically useful for rendering icons and other bits from the Minecraft resources.
+
+  Specifically useful for rendering icons and other bits from the Minecraft resources.
  */
 @Environment(EnvType.CLIENT)
 public class WSprite extends WAbstractWidget {
-	private SpriteSheet.Sprite sprite;
+	private Sprites.Sprite sprite;
 
-	public SpriteSheet.Sprite getSprite() {
+	public Sprites.Sprite getSprite() {
 		return sprite;
 	}
 
-	public <W extends WSprite> W setSprite(SpriteSheet.Sprite sprite) {
+	public <W extends WSprite> W setSprite(Sprites.Sprite sprite) {
 		this.sprite = sprite;
 		return (W) this;
 	}

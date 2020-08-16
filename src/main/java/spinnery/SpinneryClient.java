@@ -2,21 +2,17 @@ package spinnery;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.block.entity.AbstractFurnaceBlockEntity;
 import spinnery.client.integration.SpinneryConfigurationScreen;
-import spinnery.common.registry.NetworkRegistry;
-import spinnery.common.registry.ThemeResourceRegistry;
-import spinnery.common.registry.WidgetRegistry;
-import spinnery.debug.DebugHandledScreen;
+import spinnery.common.utilities.Networks;
+import spinnery.common.utilities.Widgets;
 import spinnery.debug.DebugHandledScreens;
-import spinnery.debug.DebugScreenHandlers;
 
 public class SpinneryClient implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
-		NetworkRegistry.initializeClient();
-		WidgetRegistry.initialize();
-		ThemeResourceRegistry.initialize();
+		Networks.initializeClient();
+		Widgets.initialize();
+		ThemeResources.initialize();
 
 		SpinneryConfigurationScreen.initialize();
 

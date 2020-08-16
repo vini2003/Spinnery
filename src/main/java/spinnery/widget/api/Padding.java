@@ -1,13 +1,12 @@
 package spinnery.widget.api;
 
 import blue.endless.jankson.JsonElement;
-import spinnery.common.utility.JanksonUtilities;
+import spinnery.common.utilities.Janksons;
 
 import java.util.Objects;
 
-/**
- * Contains four directional dimensions, meant to be used like CSS padding (4-valued representations
- * are ordered clockwise from the top).
+
+  are ordered clockwise from the top).
  */
 public class Padding implements JanksonSerializable {
 	protected final float top;
@@ -78,6 +77,6 @@ public class Padding implements JanksonSerializable {
 
 	@Override
 	public JsonElement toJson() {
-		return JanksonUtilities.arrayOfPrimitives(top, right, bottom, left);
+		return Janksons.arrayOfPrimitives(top, right, bottom, left);
 	}
 }

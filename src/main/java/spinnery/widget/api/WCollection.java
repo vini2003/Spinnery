@@ -5,33 +5,23 @@ import spinnery.widget.WAbstractWidget;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-/**
- * Generic interface representing a collection of widgets. This interface does not presume the ability to
- * add or remove widgets from the collection, and simply provides accessors to the collection's children.
+
+  add or remove widgets from the collection, and simply provides accessors to the collection's children.
  *
- * @author EngiN33R
- * @see WModifiableCollection
- * @since 2.0.0
- */
+  @see WModifiableCollection
+ /
 public interface WCollection {
-	/**
-	 * Returns a Set of widgets that are direct children of this collection.
-	 *
-	 * @return set of direct child widgets
-	 * @author EngiN33R
-	 * @since 2.0.0
-	 */
+
+
+	  @author EngiN33R
+
 	Set<WAbstractWidget> getWidgets();
 
-	/**
-	 * Returns a Set of all widgets contained in this collection, including those in nested collections.
-	 * The default implementation of this method does not check for cyclic references, so having the root
-	 * collection as a child of any other collection within it will produce a {@link StackOverflowError}.
-	 *
-	 * @return set of all child widgets
-	 * @author EngiN33R
-	 * @since 2.0.0
-	 */
+
+	  The default implementation of this method does not check for cyclic references, so having the root
+
+	  @author EngiN33R
+
 	default Set<WAbstractWidget> getAllWidgets() {
 		Set<WAbstractWidget> allWidgets = new LinkedHashSet<>(getWidgets());
 		for (WAbstractWidget widget : getWidgets()) {
@@ -42,11 +32,9 @@ public interface WCollection {
 		return allWidgets;
 	}
 
-	/**
-	 * Checks whether the specified widgets are contained within this collection.
-	 *
-	 * @param widgets widgets to check
-	 * @return whether widgets are contained
+
+
+	  @return whether widgets are contained
 	 */
 	boolean contains(WAbstractWidget... widgets);
 }

@@ -5,7 +5,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
-import spinnery.client.render.BaseRenderer;
+import spinnery.client.utilities.Drawings;
 
 @Environment(EnvType.CLIENT)
 public class WStaticImage extends WAbstractWidget {
@@ -24,7 +24,7 @@ public class WStaticImage extends WAbstractWidget {
 		float sX = getWidth();
 		float sY = getHeight();
 
-		BaseRenderer.drawTexturedQuad(matrices, provider, x, y, z, sX, sY, getTexture());
+		Drawings.drawTexturedQuad(matrices, provider, x, y, z, sX, sY, getTexture());
 
 		super.draw(matrices, provider);
 	}

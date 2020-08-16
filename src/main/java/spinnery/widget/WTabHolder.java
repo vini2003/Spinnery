@@ -7,7 +7,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.text.Text;
-import spinnery.client.render.TextRenderer;
+import spinnery.client.utilities.Texts;
 import spinnery.widget.api.*;
 
 import java.util.*;
@@ -73,7 +73,7 @@ public class WTabHolder extends WAbstractWidget implements WCollection, WDelegat
 			if (mode == Mode.OCCUPY_PARTIAL) {
 				tabSize = 0;
 				tabSize += tab.getToggle().symbol != null ? 18 : 0;
-				tabSize += tab.getToggle().label != null ? TextRenderer.width(tab.getToggle().label) : 0;
+				tabSize += tab.getToggle().label != null ? Texts.width(tab.getToggle().label) : 0;
 
 				if (tab.getToggle().getLabel() != null && tab.getToggle().getSymbol() != null) {
 					tabSize += 11;

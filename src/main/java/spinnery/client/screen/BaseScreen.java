@@ -1,52 +1,61 @@
 package spinnery.client.screen;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 import org.lwjgl.glfw.GLFW;
-import spinnery.common.utility.MouseUtilities;
+import spinnery.common.utilities.Networks;
+import spinnery.common.utilities.Positions;
+import spinnery.widget.WAbstractWidget;
 import spinnery.widget.WInterface;
 import spinnery.widget.api.WInterfaceProvider;
 
-public class BaseScreen extends Screen implements WInterfaceProvider {
+public abstract class BaseScreen extends Screen implements WInterfaceProvider {
 	protected final WInterface screenInterface = new WInterface();
 
 	private boolean isPauseScreen = false;
 
-	public BaseScreen() {
-		super(new LiteralText(""));
+	public BaseScreen(Text title) {
+		super(title);
+	}
+
+	public void init() {
+		super.init();
+
+		getInterface().getWidgets().clear();
+		initialize(width, height);
+		getInterface().getAllWidgets().forEach(WAbstractWidget::onLayoutChange);
 	}
 
 	@Override
-	public void render(MatrixStack matrices, int mouseX, int mouseY, float tick) {
-		this.fillGradient(matrices, 0, 0, this.width, this.height, -1072689136, -804253680);
+	public void render(MatrixStack matrices, int mouseX, int mouseY, float tickDelta) {
+		super.renderBackground(matrices);
 
-		VertexConsumerProvider.Immediate provider = MinecraftClient.getInstance().getBufferBuilders().getEntityVertexConsumers();
+		VertexConsumerProvider.Immediate provider = MinecraftClient.getInstance().getBufferBuilders().getEffectVertexConsumers();
 
-		getInterface().draw(matrices, provider);
+		for (WAbstractWidget widget : getInterface().getWidgets()) {
+			widget.draw(matrices, provider);
+		}
+
+		for (WAbstractWidget widget : getInterface().getAllWidgets()) {
+			if (!widget.isHidden() && widget.isFocused()) {
+				renderTooltip(matrices, widget.getTooltip(), mouseX, mouseY);
+			}
+		}
 
 		provider.draw();
 
-		super.render(matrices, mouseX, mouseY, tick);
+		super.render(matrices, mouseX, mouseY, tickDelta);
 	}
 
 	@Override
 	public WInterface getInterface() {
 		return screenInterface;
-	}
-
-	@Override
-	public boolean keyPressed(int keyCode, int character, int keyModifier) {
-		screenInterface.onKeyPressed(keyCode, character, keyModifier);
-
-		if (keyCode == GLFW.GLFW_KEY_ESCAPE && shouldCloseOnEsc()) {
-			onClose();
-			return true;
-		} else {
-			return false;
-		}
 	}
 
 	@Override
@@ -61,56 +70,76 @@ public class BaseScreen extends Screen implements WInterfaceProvider {
 
 	@Override
 	public void resize(MinecraftClient client, int width, int height) {
-		screenInterface.onAlign();
+		getInterface().onAlign();
 		super.resize(client, width, height);
 	}
 
-	public <S extends BaseScreen> S setIsPauseScreen(boolean isPauseScreen) {
-		this.isPauseScreen = isPauseScreen;
-		return (S) this;
-	}
-
 	@Override
+	@Environment(EnvType.CLIENT)
 	public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
-		screenInterface.onMouseClicked((float) mouseX, (float) mouseY, mouseButton);
-		return false;
+		getInterface().onMouseClicked((float) mouseX, (float) mouseY, mouseButton);
+
+		return super.mouseClicked(mouseX, mouseY, mouseButton);
 	}
 
 	@Override
+	@Environment(EnvType.CLIENT)
 	public boolean mouseReleased(double mouseX, double mouseY, int mouseButton) {
-		screenInterface.onMouseReleased((float) mouseX, (float) mouseY, mouseButton);
-		return false;
+		getInterface().onMouseReleased((float) mouseX, (float) mouseY, mouseButton);
+
+		return super.mouseReleased(mouseX, mouseY, mouseButton);
 	}
 
 	@Override
+	@Environment(EnvType.CLIENT)
+	public void mouseMoved(double mouseX, double mouseY) {
+		getInterface().onMouseMoved((float) mouseX, (float) mouseY);
+
+		Positions.setMouseX((float) mouseX);
+		Positions.setMouseY((float) mouseY);
+
+		super.mouseMoved(mouseX, mouseY);
+	}
+
+	@Override
+	@Environment(EnvType.CLIENT)
 	public boolean mouseDragged(double mouseX, double mouseY, int mouseButton, double deltaX, double deltaY) {
-		screenInterface.onMouseDragged((float) mouseX, (float) mouseY, mouseButton, deltaX, deltaY);
-		return false;
+		getInterface().onMouseDragged((float) mouseX, (float) mouseY, mouseButton, deltaX, deltaY);
+
+		return super.mouseDragged(mouseX, mouseY, mouseButton, deltaX, deltaY);
 	}
 
 	@Override
+	@Environment(EnvType.CLIENT)
 	public boolean mouseScrolled(double mouseX, double mouseY, double deltaY) {
-		screenInterface.onMouseScrolled((float) mouseX, (float) mouseY, deltaY);
-		return false;
+		getInterface().onMouseScrolled((float) mouseX, (float) mouseY, deltaY);
+
+		return super.mouseScrolled(mouseX, mouseY, deltaY);
 	}
 
 	@Override
+	@Environment(EnvType.CLIENT)
+	public boolean keyPressed(int keyCode, int character, int keyModifier) {
+		getInterface().onKeyPressed(keyCode, character, keyModifier);
+
+		return super.keyPressed(keyCode, character, keyModifier);
+	}
+
+	@Override
+	@Environment(EnvType.CLIENT)
 	public boolean keyReleased(int character, int keyCode, int keyModifier) {
-		screenInterface.onKeyReleased(character, keyCode, keyModifier);
-		return false;
+		getInterface().onKeyReleased(character, keyCode, keyModifier);
+
+		return super.keyReleased(character, keyCode, keyModifier);
 	}
 
 	@Override
+	@Environment(EnvType.CLIENT)
 	public boolean charTyped(char character, int keyCode) {
-		screenInterface.onCharTyped(character, keyCode);
+		getInterface().onCharTyped(character, keyCode);
+
 		return super.charTyped(character, keyCode);
 	}
 
-	@Override
-	public void mouseMoved(double mouseX, double mouseY) {
-		screenInterface.onMouseMoved((float) mouseX, (float) mouseY);
-
-		MouseUtilities.mouseX = (float) mouseX;
-		MouseUtilities.mouseY = (float) mouseY;
-	}
+	public abstract void initialize(int width, int height);
 }

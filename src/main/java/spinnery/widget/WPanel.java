@@ -4,8 +4,8 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
-import spinnery.client.render.BaseRenderer;
-import spinnery.client.render.TextRenderer;
+import spinnery.client.utilities.Drawings;
+import spinnery.client.utilities.Texts;
 import spinnery.widget.api.WDelegatedEventListener;
 import spinnery.widget.api.WEventListener;
 import spinnery.widget.api.WLayoutElement;
@@ -34,10 +34,10 @@ public class WPanel extends WAbstractWidget implements WModifiableCollection, WD
 		float sX = getWidth();
 		float sY = getHeight();
 
-		BaseRenderer.drawPanel(matrices, provider, x, y, z, sX, sY, getStyle().asColor("shadow"), getStyle().asColor("background"), getStyle().asColor("highlight"), getStyle().asColor("outline"));
+		Drawings.drawPanel(matrices, provider, x, y, z, sX, sY, getStyle().asColor("shadow"), getStyle().asColor("background"), getStyle().asColor("highlight"), getStyle().asColor("outline"));
 
 		if (hasLabel()) {
-			TextRenderer.pass().shadow(isLabelShadowed())
+			Texts.pass().shadow(isLabelShadowed())
 					.text(getLabel()).at(x + 8, y + 6, z)
 					.color(getStyle().asColor("label.color")).shadowColor(getStyle().asColor("label.shadow_color")).render(matrices, provider);
 		}

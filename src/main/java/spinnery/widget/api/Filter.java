@@ -18,9 +18,8 @@ public class Filter {
 		return (WInputFilter<T>) ENTRIES.get(clazz);
 	}
 
-	/**
-	 * Filter for strings.
-	 */
+
+
 	public static final WInputFilter<String> STRING_FILTER = new WInputFilter<String>() {
 		@Override
 		public String toString(String value) {
@@ -38,9 +37,8 @@ public class Filter {
 		}
 	};
 
-	/**
-	 * Filter for decimal integers and hexadecimal integers.
-	 */
+
+
 	public static final WInputFilter<Integer> INTEGER_FILTER = new WInputFilter<Integer>() {
 		@Override
 		public String toString(Integer value) {
@@ -62,9 +60,8 @@ public class Filter {
 		}
 	};
 
-	/**
-	 * Filter for decimal longs and hexadecimal longs.
-	 */
+
+
 	public static final WInputFilter<Long> LONG_FILTER = new WInputFilter<Long>() {
 		@Override
 		public String toString(Long value) {
@@ -86,9 +83,8 @@ public class Filter {
 		}
 	};
 
-	/**
-	 * Filter for floats.
-	 */
+
+
 	public static final WInputFilter<Float> FLOAT_FILTER = new WInputFilter<Float>() {
 		@Override
 		public String toString(Float value) {
@@ -110,9 +106,8 @@ public class Filter {
 		}
 	};
 
-	/**
-	 * Filter for doubles.
-	 */
+
+
 	public static final WInputFilter<Double> DOUBLE_FILTER = new WInputFilter<Double>() {
 		@Override
 		public String toString(Double value) {

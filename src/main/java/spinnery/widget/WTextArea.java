@@ -5,8 +5,8 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import org.lwjgl.glfw.GLFW;
-import spinnery.client.render.BaseRenderer;
-import spinnery.client.render.TextRenderer;
+import spinnery.client.utilities.Drawings;
+import spinnery.client.utilities.Texts;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +40,7 @@ public class WTextArea extends WAbstractTextEditor {
 		float sX = getWidth();
 		float sY = getHeight();
 
-		BaseRenderer.drawBeveledPanel(matrices, provider, x, y, z, sX, sY, getStyle().asColor("top_left"), getStyle().asColor("background"), getStyle().asColor("bottom_right"));
+		Drawings.drawBeveledPanel(matrices, provider, x, y, z, sX, sY, getStyle().asColor("top_left"), getStyle().asColor("background"), getStyle().asColor("bottom_right"));
 
 		if (lineWrap && xOffset != 0) xOffset = 0;
 
@@ -79,11 +79,11 @@ public class WTextArea extends WAbstractTextEditor {
 			StringBuilder currentLine = new StringBuilder();
 			int lineWidth = 0;
 			for (char c : text.toCharArray()) {
-				lineWidth += Math.round(TextRenderer.width(c) * scale);
+				lineWidth += Math.round(Texts.width(c) * scale);
 				if (lineWidth > getInnerSize().getWidth() || c == '\n') {
 					lines.add(currentLine.toString());
 					newLine.add(c == '\n');
-					lineWidth = Math.round(TextRenderer.width(c) * scale);
+					lineWidth = Math.round(Texts.width(c) * scale);
 					currentLine = new StringBuilder();
 				}
 				if (c != '\n') currentLine.append(c);

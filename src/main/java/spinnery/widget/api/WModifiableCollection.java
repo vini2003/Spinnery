@@ -5,46 +5,35 @@ import spinnery.widget.WInterface;
 
 import java.util.function.Supplier;
 
-/**
- * Generic interface representing a collection of widgets that may be modified by adding or removing widgets.
- * Modifiable collections provide a factory for creating child widgets, and expose convenience methods for
- * creating children.
- */
+
+  Modifiable collections provide a factory for creating child widgets, and expose convenience methods for
+ /
 public interface WModifiableCollection extends WCollection {
-	/**
-	 * Adds the specified widgets to this collection. By convention, widgets added with this method are added as
-	 * direct children, and as such should be contained in the Set returned by {@link #getWidgets()}.
+
+	  direct children, and as such should be contained in the Set returned by {@link #getWidgets()}.
 	 *
-	 * @param widgets widgets to add
-	 */
+
 	void add(WAbstractWidget... widgets);
 
-	/**
-	 * Removes the specified widgets from this collection. By convention, if passed widgets that are not direct
-	 * children, this should be a no-op.
+
+	  children, this should be a no-op.
 	 *
-	 * @param widgets widgets to remove
-	 */
+
 	void remove(WAbstractWidget... widgets);
 
-	/**
-	 * Convenience method for short-circuiting factory.get().
-	 *
-	 * @param factory widget factory
-	 * @return created widget
+
+
+	  @return created widget
 	 */
 	default <W extends WAbstractWidget> W createChild(Supplier<W> factory) {
 		return createChild(factory, null, null);
 	}
 
-	/**
-	 * Convenience method for short-circuiting factory.get() and setting the widget's
-	 * position and size.
+
+	  position and size.
 	 *
-	 * @param factory  widget factory
-	 * @param position initial widget position
-	 * @param size     initial widget size
-	 * @return created widget
+	  @param position initial widget position
+	  @return created widget
 	 */
 	default <W extends WAbstractWidget> W createChild(Supplier<? extends W> factory, Position position, Size size) {
 		W widget = factory.get();
@@ -66,14 +55,11 @@ public interface WModifiableCollection extends WCollection {
 		return widget;
 	}
 
-	/**
-	 * Convenience method for short-circuiting {@code factory.get()} and setting the widget's
-	 * position.
+
+	  position.
 	 *
-	 * @param factory  widget factory
-	 * @param position initial widget position
-	 * @return created widget
-	 */
+	  @param position initial widget position
+
 	default <W extends WAbstractWidget> W createChild(Supplier<W> factory, Position position) {
 		return createChild(factory, position, null);
 	}

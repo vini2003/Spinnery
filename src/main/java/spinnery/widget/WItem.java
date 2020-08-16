@@ -3,7 +3,7 @@ package spinnery.widget;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
-import spinnery.client.render.BaseRenderer;
+import spinnery.client.utilities.Drawings;
 
 public class WItem extends WAbstractWidget {
 	private static final int Z_ITEM_OFFSET = 3;
@@ -25,7 +25,7 @@ public class WItem extends WAbstractWidget {
 			return;
 		}
 
-		BaseRenderer.getAdvancedItemRenderer().renderInGui(matrices, provider, stack, getX(), getY(), getZ() + Z_ITEM_OFFSET);
+		Drawings.getAdvancedItemRenderer().renderInGui(matrices, provider, stack, getX(), getY(), getZ() + Z_ITEM_OFFSET);
 
 		super.draw(matrices, provider);
 	}
