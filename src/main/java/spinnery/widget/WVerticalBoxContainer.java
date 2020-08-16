@@ -141,10 +141,6 @@ public class WVerticalBoxContainer extends WAbstractWidget implements WModifiabl
 		for (WAbstractWidget widget : widgets) {
 			Size newWidgetSize = Size.of(widgetSizeX, widgetSizeY);
 
-			if (widget.getMaximumAutoSize().isSmallerInWidthOrHeight(newWidgetSize)) {
-				newWidgetSize = widget.getMaximumAutoSize();
-			}
-
 			Position newWidgetPosition = Position.of(this, positionX, lastPositionY);
 
 			widget.setPosition(newWidgetPosition);
@@ -172,14 +168,12 @@ public class WVerticalBoxContainer extends WAbstractWidget implements WModifiabl
 		}
 
 		if (hasBorder()) {
-			Drawings.drawQuad(matrices, provider, getX(), getY(), getZ(), getWidth(), outerBorderWidth, getStyle().asColor("border"));
-			Drawings.drawQuad(matrices, provider, getX(), getY(), getZ(), outerBorderWidth, getHeight(), getStyle().asColor("border"));
-			Drawings.drawQuad(matrices, provider, getX(), getHighY() - 1, getZ(), getWidth(), outerBorderWidth, getStyle().asColor("border"));
-			Drawings.drawQuad(matrices, provider, getWideX() - 1, getY(), getZ(), outerBorderWidth, getHeight(), getStyle().asColor("border"));
+			Drawings.drawQuad(matrices, provider, getX(), getY(), getWidth(), outerBorderWidth, getStyle().asColor("border"));
+			Drawings.drawQuad(matrices, provider, getX(), getY(), outerBorderWidth, getHeight(), getStyle().asColor("border"));
+			Drawings.drawQuad(matrices, provider, getX(), getHighY() - 1, getWidth(), outerBorderWidth, getStyle().asColor("border"));
+			Drawings.drawQuad(matrices, provider, getWideX() - 1, getY(), outerBorderWidth, getHeight(), getStyle().asColor("border"));
 		}
 
 		area.destroy(provider);
-
-		super.draw(matrices, provider);
 	}
 }

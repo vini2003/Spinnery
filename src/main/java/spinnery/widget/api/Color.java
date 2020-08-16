@@ -4,9 +4,7 @@ import blue.endless.jankson.JsonElement;
 import blue.endless.jankson.JsonPrimitive;
 
 
-  A, R, G, B; the color int may be accessed via the fields
- /
-public class Color implements JanksonSerializable {
+public class Color {
 	public static final Color DEFAULT = Color.of(0xffffffff);
 
 	public float A = 1.0f, R = 1.0f, G = 1.0f, B = 1.0f;
@@ -62,10 +60,5 @@ public class Color implements JanksonSerializable {
 		int g = (intColor >> 8) & 0xFF;
 		int b = (intColor & 0xFF);
 		return new Color(r, g, b, a);
-	}
-
-	@Override
-	public JsonElement toJson() {
-		return new JsonPrimitive(ARGB);
 	}
 }

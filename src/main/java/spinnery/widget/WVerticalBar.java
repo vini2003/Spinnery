@@ -26,7 +26,7 @@ public class WVerticalBar extends WAbstractBar {
 		float rawHeight = MinecraftClient.getInstance().getWindow().getHeight();
 		float scale = (float) MinecraftClient.getInstance().getWindow().getScaleFactor();
 
-		float sBGY = (((sY / limit.getValue().intValue()) * progress.getValue().intValue()));
+		float sBGY = (((sY / limitSupplier.getValue().intValue()) * progressSupplier.getValue().intValue()));
 
 		Scissors area = new Scissors(provider, (int) (x * scale), (int) (rawHeight - ((y + sY - sBGY) * scale)), (int) (sX * scale), (int) ((sY - sBGY) * scale));
 

@@ -4,7 +4,7 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import spinnery.client.utilities.Drawings;
 import spinnery.widget.api.Color;
-import spinnery.widget.api.WLayoutElement;
+import spinnery.widget.api.WDrawableElement;
 import spinnery.widget.api.WModifiableCollection;
 
 import java.util.Arrays;
@@ -47,7 +47,7 @@ public class WTooltip extends WAbstractWidget implements WModifiableCollection {
 		Drawings.drawGradientQuad(matrices, provider, x - 3, y - 3, x + width + 3, y - 3 + 1, z, colorStart, colorStart); // top outline
 		Drawings.drawGradientQuad(matrices, provider, x - 3, y + height + 2, x + width + 3, y + height + 3, z, colorEnd, colorEnd); // bottom outline
 
-		for (WLayoutElement widget : widgets) {
+		for (WDrawableElement widget : widgets) {
 			widget.draw(matrices, provider);
 		}
 

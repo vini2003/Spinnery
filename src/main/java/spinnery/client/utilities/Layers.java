@@ -16,7 +16,7 @@ public class Layers extends RenderLayer {
 		return of("entity_cutout", VertexFormats.POSITION_COLOR_TEXTURE_LIGHT, 7, 256, true, true, multiPhaseParameters);
 	}
 
-	private static final RenderLayer FLAT = of("spinnery", VertexFormats.POSITION_COLOR_LIGHT, 7, 256, RenderLayer.MultiPhaseParameters.builder()
+	private static final RenderLayer DEFAULT = of("spinnery", VertexFormats.POSITION_COLOR_LIGHT, 7, 256, RenderLayer.MultiPhaseParameters.builder()
 			.texture(NO_TEXTURE)
 			.cull(ENABLE_CULLING)
 			.lightmap(ENABLE_LIGHTMAP)
@@ -26,26 +26,7 @@ public class Layers extends RenderLayer {
 			.alpha(ONE_TENTH_ALPHA)
 			.layering(VIEW_OFFSET_Z_LAYERING).build(false));
 
-	private static final RenderLayer TOOLTIP = of(
-			"blade_tooltip",
-			VertexFormats.POSITION_COLOR_LIGHT, 7, 256,
-			MultiPhaseParameters.builder()
-					.texture(NO_TEXTURE)
-					.cull(ENABLE_CULLING)
-					.lightmap(ENABLE_LIGHTMAP)
-					.shadeModel(SMOOTH_SHADE_MODEL)
-					.depthTest(ALWAYS_DEPTH_TEST)
-					.transparency(NO_TRANSPARENCY)
-					.alpha(ONE_TENTH_ALPHA)
-					.layering(VIEW_OFFSET_Z_LAYERING)
-					.build(false));
-
-
-	public static RenderLayer getFlat() {
-		return FLAT;
-	}
-
-	public static RenderLayer getTooltip() {
-		return TOOLTIP;
+	public static RenderLayer getDefault() {
+		return DEFAULT;
 	}
 }

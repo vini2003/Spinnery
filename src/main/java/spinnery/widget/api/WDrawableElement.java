@@ -7,16 +7,8 @@ import net.minecraft.text.Text;
 
 import java.util.List;
 
-
-
-  Every widget must implement this interface
- */
-public interface WLayoutElement extends WPositioned, WSized, Comparable<WLayoutElement> {
-
-
+public interface WDrawableElement extends WPositioned, WSized, Comparable<WDrawableElement> {
 	void draw(MatrixStack matrices, VertexConsumerProvider provider);
-
-
 
 	default void drawTooltip(MatrixStack matrices, VertexConsumerProvider provider) {
 		return;
@@ -26,15 +18,11 @@ public interface WLayoutElement extends WPositioned, WSized, Comparable<WLayoutE
 		return Lists.newArrayList();
 	}
 
-
-	  this layout element. Such layout changes include e.g. changes in position and size of this element, or
-	  in other ways, e.g. adding or removing a label.
-	 */
 	default void onLayoutChange() {
 	}
 
 	@Override
-	default int compareTo(WLayoutElement element) {
-		return Float.compare(element.getZ(), getZ());
+	default int compareTo(WDrawableElement element) {
+		return Float.compare(element.getZ());
 	}
 }

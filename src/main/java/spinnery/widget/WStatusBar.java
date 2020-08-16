@@ -123,14 +123,14 @@ public class WStatusBar extends WAbstractWidget {
 				x = (numContainers - i - 1) * config.spriteWidth;
 			}
 
-			config.background.draw(matrices, provider, getX() + x, getY(), getZ(), config.spriteWidth, config.spriteHeight, config.mirror);
+			config.background.draw(matrices, provider, getX() + x, getY(), config.spriteWidth, config.spriteHeight, config.mirror);
 
 			if (i * 2 <= value) {
 				Sprites.Sprite sprite = config.half;
 				if (value - 2 * i > 1.0F) {
 					sprite = config.full;
 				}
-				sprite.draw(matrices, provider, getX() + x, getY(), getZ() + 1, config.spriteWidth, config.spriteHeight, config.mirror);
+				sprite.draw(matrices, provider, getX() + x, getY() + 1, config.spriteWidth, config.spriteHeight, config.mirror);
 			}
 		}
 

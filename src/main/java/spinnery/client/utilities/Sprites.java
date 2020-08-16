@@ -5,13 +5,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import spinnery.widget.api.Color;
 
-
-  {@link spinnery.widget.WSprite} and {@link spinnery.widget.WStatusBar.BarConfig}
- /
 public class Sprites {
-
-	  rendering things like health, hunger, oxygen.
-
 	public static final Sprites MINECRAFT_ICONS = new Sprites(new Identifier("minecraft:textures/gui/icons.png"), 256, 256).crop(16, 0, 162, 54).setDimensions(9, 9);
 
 	public static class Sprite {
@@ -29,7 +23,7 @@ public class Sprites {
 			this.h = h;
 		}
 
-		public void draw(MatrixStack matrices, VertexConsumerProvider provider, float x, float y, float z, float sX, float sY, boolean mirror) {
+		public void draw(MatrixStack matrices, VertexConsumerProvider provider, float x, float y, float sX, float sY, boolean mirror) {
 			float u1 = this.x;
 			float v1 = this.y;
 			float u2 = u1 + this.w;
@@ -42,7 +36,7 @@ public class Sprites {
 				u1 = temp;
 			}
 
-			Drawings.drawTexturedQuad(matrices, provider, x, y, z, sX, sY, u1, v1, u2, v2, 0x00f000f0, Color.DEFAULT, atlas);
+			Drawings.drawTexturedQuad(matrices, provider, x, y, sX, sY, u1, v1, u2, v2, 0x00f000f0, Color.DEFAULT, atlas);
 		}
 	}
 

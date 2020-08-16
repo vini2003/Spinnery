@@ -5,10 +5,7 @@ import spinnery.common.utilities.Janksons;
 
 import java.util.Objects;
 
-
-  are ordered clockwise from the top).
- */
-public class Padding implements JanksonSerializable {
+public class Padding {
 	protected final float top;
 	protected final float bottom;
 	protected final float left;
@@ -73,10 +70,5 @@ public class Padding implements JanksonSerializable {
 				", bottom=" + bottom +
 				", left=" + left +
 				'}';
-	}
-
-	@Override
-	public JsonElement toJson() {
-		return Janksons.arrayOfPrimitives(top, right, bottom, left);
 	}
 }

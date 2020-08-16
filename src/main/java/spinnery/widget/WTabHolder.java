@@ -218,7 +218,7 @@ public class WTabHolder extends WAbstractWidget implements WCollection, WDelegat
 		}
 
 		public void setActive(boolean isActive) {
-			getToggle().setToggleState(isActive);
+			getToggle().setToggled(isActive);
 			body.setHidden(!isActive);
 		}
 

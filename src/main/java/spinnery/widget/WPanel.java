@@ -7,8 +7,8 @@ import net.minecraft.client.util.math.MatrixStack;
 import spinnery.client.utilities.Drawings;
 import spinnery.client.utilities.Texts;
 import spinnery.widget.api.WDelegatedEventListener;
+import spinnery.widget.api.WDrawableElement;
 import spinnery.widget.api.WEventListener;
-import spinnery.widget.api.WLayoutElement;
 import spinnery.widget.api.WModifiableCollection;
 
 import java.util.Arrays;
@@ -42,7 +42,7 @@ public class WPanel extends WAbstractWidget implements WModifiableCollection, WD
 					.color(getStyle().asColor("label.color")).shadowColor(getStyle().asColor("label.shadow_color")).render(matrices, provider);
 		}
 
-		for (WLayoutElement widget : widgets) {
+		for (WDrawableElement widget : widgets) {
 			widget.draw(matrices, provider);
 		}
 

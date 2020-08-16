@@ -3,8 +3,8 @@ package spinnery.common.utilities;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import net.minecraft.util.Identifier;
-import spinnery.widget. Registers all of Spinnery's widgets with Spinnery.
- */
+import spinnery.widget.*;
+
 public class Widgets {
 	private static final BiMap<Identifier, Class<? extends WAbstractWidget>> widgetMap = HashBiMap.create();
 
@@ -33,7 +33,7 @@ public class Widgets {
 		register(new Identifier("spinnery", "horizontal_slider"), WHorizontalSlider.class);
 		register(new Identifier("spinnery", "panel"), WPanel.class);
 		register(new Identifier("spinnery", "slot"), WSlot.class);
-		register(new Identifier("spinnery", "static_image"), WStaticImage.class);
+		register(new Identifier("spinnery", "static_image"), WTexture.class);
 		register(new Identifier("spinnery", "static_text"), WStaticText.class);
 		register(new Identifier("spinnery", "tab_holder"), WTabHolder.class);
 		register(new Identifier("spinnery", "tab_toggle"), WTabToggle.class);

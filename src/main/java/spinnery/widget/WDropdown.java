@@ -92,7 +92,7 @@ public class WDropdown extends WAbstractWidget implements WModifiableCollection,
 		}
 
 		if (getState()) {
-			for (WLayoutElement widgetC : widgets) {
+			for (WDrawableElement widgetC : widgets) {
 				widgetC.draw(matrices, provider);
 			}
 		}

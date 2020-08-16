@@ -18,7 +18,7 @@ public class WTabToggle extends WAbstractToggle {
 	@Override
 	public void onMouseClicked(float mouseX, float mouseY, int mouseButton) {
 		super.onMouseClicked(mouseX, mouseY, mouseButton);
-		setToggleState(true);
+		setToggled(true);
 		if (parent instanceof WTabHolder.WTab) {
 			WTabHolder.WTab tab = (WTabHolder.WTab) parent;
 			if (tab.getParent() instanceof WTabHolder) {
@@ -40,7 +40,7 @@ public class WTabToggle extends WAbstractToggle {
 		float sX = getWidth();
 		float sY = getHeight();
 
-		if (getToggleState()) {
+		if (isToggled()) {
 			Drawings.drawPanel(matrices, provider, x, y, z - 1, sX, sY, getStyle().asColor("shadow.off"), getStyle().asColor("background.off"), getStyle().asColor("highlight.off"), getStyle().asColor("outline.off"));
 
 			WTabHolder parent = (WTabHolder) ((WTabHolder.WTab) getParent()).getParent();

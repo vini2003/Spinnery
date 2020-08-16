@@ -46,8 +46,8 @@ public interface WModifiableCollection extends WCollection {
 			widget.setInterface((WInterface) this);
 		}
 
-		if (this instanceof WLayoutElement) {
-			widget.setParent((WLayoutElement) this);
+		if (this instanceof WDrawableElement) {
+			widget.setParent((WDrawableElement) this);
 		}
 
 		add(widget);

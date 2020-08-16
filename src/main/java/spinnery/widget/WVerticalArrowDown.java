@@ -25,10 +25,6 @@ public class WVerticalArrowDown extends WButton {
 			return;
 		}
 
-		if (!isLowered()) {
-			Drawings.drawTexturedQuad(matrices, provider, getX(), getY(), getZ(), getWidth(), getHeight(), IMAGE);
-		}
-
 		super.draw(matrices, provider);
 	}
 

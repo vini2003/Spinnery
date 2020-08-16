@@ -42,7 +42,7 @@ public class WTooltipItem extends WItem {
 		if (tooltip == null)
 			tooltip = getInterface().createChild(WTooltip::new, Position.of(this), Size.of(this)).setHidden(true);
 		if (tooltipText == null)
-			tooltipText = getInterface().createChild(WStaticText::new, Position.of(tooltip).add(0, 0, 1), Size.of(this)).setHidden(true);
+			tooltipText = getInterface().createChild(WStaticText::new, Position.of(tooltip).add(0, 0), Size.of(this)).setHidden(true);
 	}
 
 	public void updateText() {
@@ -50,7 +50,7 @@ public class WTooltipItem extends WItem {
 	}
 
 	public void updatePositions(float mouseX, float mouseY) {
-		tooltip.setPosition(Position.of(mouseX + 12, mouseY - 4, 1));
+		tooltip.setPosition(Position.of(mouseX + 12, mouseY - 4));
 	}
 
 	public void updateSizes() {

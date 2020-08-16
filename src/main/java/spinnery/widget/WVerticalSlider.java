@@ -77,6 +77,6 @@ public class WVerticalSlider extends WAbstractSlider {
 	protected void updatePosition(float mouseX, float mouseY) {
 		float innerHeight = getInnerSize().getHeight();
 		float percentComplete = Math.max(0, (getInnerAnchor().getY() + innerHeight - mouseY) / innerHeight);
-		setProgress(min + percentComplete * (max - min));
+		setProgress(minimum + percentComplete * (maximum - minimum));
 	}
 }

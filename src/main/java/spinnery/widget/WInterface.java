@@ -11,14 +11,13 @@ import net.minecraft.util.Identifier;
 import spinnery.client.screen.BaseHandledScreen;
 import spinnery.common.utilities.Networks;
 import spinnery.common.screenhandler.BaseScreenHandler;
-import spinnery.widget.api.WLayoutElement;
+import spinnery.widget.api.WDrawableElement;
 import spinnery.widget.api.WModifiableCollection;
-import spinnery.widget.api.WNetworked;
 import spinnery.widget.api.WThemable;
 
 import java.util.*;
 
-public class WInterface implements WModifiableCollection, WLayoutElement, WThemable {
+public class WInterface implements WModifiableCollection, WDrawableElement, WThemable {
 	protected BaseScreenHandler handler;
 	protected Set<WAbstractWidget> widgets = new LinkedHashSet<>();
 	protected Map<Class<? extends WAbstractWidget>, WAbstractWidget> cachedWidgets = new HashMap<>();
@@ -218,7 +217,7 @@ public class WInterface implements WModifiableCollection, WLayoutElement, WThema
 
 	@Override
 	public void draw(MatrixStack matrices, VertexConsumerProvider provider) {
-		for (WLayoutElement widget : widgets) {
+		for (WDrawableElement widget : widgets) {
 			widget.draw(matrices, provider);
 		}
 	}

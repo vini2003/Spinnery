@@ -1,29 +1,20 @@
 package spinnery.widget;
 
-
-  general toggle-like widget, like a {@link WToggle}.
- */
 public abstract class WAbstractToggle extends WAbstractWidget {
-	protected boolean toggleState = false;
+	protected boolean isToggled = false;
 
 	@Override
 	public void onMouseClicked(float mouseX, float mouseY, int mouseButton) {
-		setToggleState(!getToggleState());
+		setToggled(!isToggled());
 		super.onMouseClicked(mouseX, mouseY, mouseButton);
 	}
 
-
-
-
-	public boolean getToggleState() {
-		return toggleState;
+	public boolean isToggled() {
+		return isToggled;
 	}
 
-
-
-
-	public <W extends WAbstractToggle> W setToggleState(boolean toggleState) {
-		this.toggleState = toggleState;
+	public <W extends WAbstractToggle> W setToggled(boolean toggled) {
+		this.isToggled = toggled;
 		return (W) this;
 	}
 }

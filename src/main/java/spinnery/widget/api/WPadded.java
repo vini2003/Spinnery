@@ -1,8 +1,5 @@
 package spinnery.widget.api;
 
-
-  the inner anchor and size.
- */
 public interface WPadded extends WInnerSized {
 	@Override
 	default Size getInnerSize() {

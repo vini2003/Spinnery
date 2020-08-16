@@ -35,21 +35,17 @@ public class WTextArea extends WAbstractTextEditor {
 
 		float x = getX();
 		float y = getY();
-		float z = getZ();
 
 		float sX = getWidth();
 		float sY = getHeight();
 
-		Drawings.drawBeveledPanel(matrices, provider, x, y, z, sX, sY, getStyle().asColor("top_left"), getStyle().asColor("background"), getStyle().asColor("bottom_right"));
+		Drawings.drawBeveledPanel(matrices, provider, x, y, sX, sY, getStyle().asColor("top_left"), getStyle().asColor("background"), getStyle().asColor("bottom_right"));
 
 		if (lineWrap && xOffset != 0) xOffset = 0;
 
 		renderField(matrices, provider);
+	}
 
-		super.draw(matrices, provider);
-	}    // Essentially this function checks if a given line is a true "new" line, or if it's wrapped.
-
-	// This is useful e.g. for line numbering
 	protected boolean hasNewline(int index) {
 		return lineWrap ? newLine.get(index) : true;
 	}

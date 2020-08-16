@@ -3,8 +3,6 @@ package spinnery.widget.api;
 import spinnery.widget.WAbstractWidget;
 
 
-  allowing actions to be taken based on the lock state.
- */
 public interface WContextLock {
 	boolean isActive();
 

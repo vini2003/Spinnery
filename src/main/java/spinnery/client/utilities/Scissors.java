@@ -2,7 +2,7 @@ package spinnery.client.utilities;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.VertexConsumerProvider;
-import spinnery.widget.api.WLayoutElement;
+import spinnery.widget.api.WDrawableElement;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -46,7 +46,7 @@ public class Scissors {
 		}
 	}
 
-	public Scissors(VertexConsumerProvider provider, WLayoutElement element) {
+	public Scissors(VertexConsumerProvider provider, WDrawableElement element) {
 		this(provider, (int) (element.getX() * MinecraftClient.getInstance().getWindow().getScaleFactor()),
 				(int) (MinecraftClient.getInstance().getWindow().getHeight() - ((element.getY() + element.getHeight()) * MinecraftClient.getInstance().getWindow().getScaleFactor())),
 				(int) (element.getWidth() * MinecraftClient.getInstance().getWindow().getScaleFactor()),

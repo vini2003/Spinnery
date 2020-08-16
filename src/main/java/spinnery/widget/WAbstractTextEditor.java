@@ -20,14 +20,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-
-
-  Engineer, you shall pay dearly
-  <p>
-  I will not be commenting this in the name
-  7:53AM, 6/8/2020
-  add input filters. I am suffering.
- */
 @SuppressWarnings("unchecked")
 @Environment(EnvType.CLIENT)
 public abstract class WAbstractTextEditor extends WAbstractWidget implements WPadded, WContextLock {
@@ -42,19 +34,9 @@ public abstract class WAbstractTextEditor extends WAbstractWidget implements WPa
 	protected float xOffset = 0;
 	protected float yOffset = 0;
 	protected int cursorTick = 20;
-	protected WInputFilter<?> filter = null;
 
 	public WAbstractTextEditor() {
 		setText("");
-	}
-
-	public WInputFilter<?> getFilter() {
-		return filter;
-	}
-
-	public <W extends WAbstractTextEditor> W setFilter(WInputFilter<?> filter) {
-		this.filter = filter;
-		return (W) this;
 	}
 
 	protected boolean hasSelection() {
@@ -196,23 +178,22 @@ public abstract class WAbstractTextEditor extends WAbstractWidget implements WPa
 
 	@Override
 	public void onCharTyped(char character, int keyCode) {
-		if (filter == null || filter.accepts(String.valueOf(character), text)) {
-			if (active) {
-				if (hasSelection()) {
-					cursor.assign(selection.getLeft());
-					deleteText(selection.getLeft(), selection.getRight());
-					clearSelection();
-				}
-				insertText(String.valueOf(character));
-				int prevY = cursor.y;
-				cursor.right();
-				if (cursor.y != prevY) {
-					cursor.right();
-				}
-				onCursorMove();
+		if (active) {
+			if (hasSelection()) {
+				cursor.assign(selection.getLeft());
+				deleteText(selection.getLeft(), selection.getRight());
+				clearSelection();
 			}
-			cursorTick = 20;
+			insertText(String.valueOf(character));
+			int prevY = cursor.y;
+			cursor.right();
+			if (cursor.y != prevY) {
+				cursor.right();
+			}
+			onCursorMove();
 		}
+
+		cursorTick = 20;
 
 		super.onCharTyped(character, keyCode);
 	}
@@ -267,11 +248,6 @@ public abstract class WAbstractTextEditor extends WAbstractWidget implements WPa
 	}
 
 	@Override
-	public boolean isFocusedKeyboardListener() {
-		return true;
-	}
-
-	@Override
 	public boolean isFocused() {
 		return super.isFocused() || active;
 	}
@@ -291,9 +267,6 @@ public abstract class WAbstractTextEditor extends WAbstractWidget implements WPa
 		return Math.round(Texts.height() * scale);
 	}
 
-
-	  and not {@link #onKeyPressed(int, int, int)}!
-	 */
 	// TODO: Comment selection expansion/contraction logic
 	// *******************
 	// * BLESS THIS MESS *
@@ -615,8 +588,6 @@ public abstract class WAbstractTextEditor extends WAbstractWidget implements WPa
 	}
 
 	protected void renderField(MatrixStack matrices, VertexConsumerProvider provider) {
-		float z = getZ();
-
 		Position innerPos = getInnerAnchor();
 		Size innerSize = getInnerSize();
 		float innerX = innerPos.getX();
@@ -625,8 +596,8 @@ public abstract class WAbstractTextEditor extends WAbstractWidget implements WPa
 		float innerHeight = innerSize.getHeight();
 
 		if (isEmpty() && !active) {
-			Texts.pass().text(getLabel()).at(innerX, innerY, z).scale(scale)
-					.shadow(getStyle().asBoolean("label.shadow")).shadowColor(getStyle().asColor("label.shadow_color"))
+			Texts.pass().text(getLabel()).at(innerX, innerY).scale(scale)
+					.shadow(getStyle().asBoolean("label.shadow"))
 					.color(getStyle().asColor("label.color"))
 					.render(matrices, provider);
 			return;
@@ -650,8 +621,8 @@ public abstract class WAbstractTextEditor extends WAbstractWidget implements WPa
 			if (i < 0 || !isLineVisible(i) || i > lines.size() - 1) continue;
 			float adjustedI = i - lineOffset;
 			String line = lines.get(i);
-			Texts.pass().text(line).at(innerX, innerY + (cH + 2) * adjustedI, z).scale(scale)
-					.shadow(getStyle().asBoolean("text.shadow")).shadowColor(getStyle().asColor("text.shadow_color"))
+			Texts.pass().text(line).at(innerX, innerY + (cH + 2) * adjustedI).scale(scale)
+					.shadow(getStyle().asBoolean("text.shadow"))
 					.color(getStyle().asColor("text.color"))
 					.render(matrices, provider);
 
@@ -659,11 +630,11 @@ public abstract class WAbstractTextEditor extends WAbstractWidget implements WPa
 			if (selectedChars != null) {
 				float selW = getXOffset(i, selectedChars.getRight()) - getXOffset(i, selectedChars.getLeft());
 				Drawings.drawQuad(matrices, provider, innerX + getXOffset(i, selectedChars.getLeft()),
-						innerY + (cH + 2) * adjustedI, z, selW, cH + 1, getStyle().asColor("highlight"));
+						innerY + (cH + 2) * adjustedI, selW, cH + 1, getStyle().asColor("highlight"));
 			}
 		}
 		if (active && cursorTick > 10) {
-			Drawings.drawQuad(matrices, provider, cursorX, cursorY, z, 1, cH + 2,
+			Drawings.drawQuad(matrices, provider, cursorX, cursorY, 1, cH + 2,
 					getStyle().asColor("cursor"));
 		}
 		RenderSystem.popMatrix();

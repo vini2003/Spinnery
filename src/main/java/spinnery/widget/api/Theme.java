@@ -14,9 +14,6 @@ import spinnery.common.utilities.Janksons;
 import java.util.HashMap;
 import java.util.Map;
 
-
-  Most importantly, this contains Styles for all widgets in the theme.
- */
 public class Theme {
 	protected final Identifier id;
 	protected final Identifier parent;
@@ -131,17 +128,10 @@ public class Theme {
 		return new Theme(themeId, parent, styles);
 	}
 
-
-
-
 	public Identifier getId() {
 		return id;
 	}
 
-
-
-	  @return Style of the given widget.
-	 */
 	public Style getStyle(Identifier widgetId) {
 		Style style = styles.get(widgetId);
 		if (parent != null) {

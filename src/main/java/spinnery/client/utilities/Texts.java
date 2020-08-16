@@ -58,10 +58,10 @@ public class Texts {
 		}
 
 		public RenderPass at(Position position) {
-			return at(position.getX(), position.getY(), position.getZ());
+			return at(position.getX(), position.getY());
 		}
 
-		public RenderPass at(Number x, Number y, Number z) {
+		public RenderPass at(Number x, Number y) {
 			this.x = x.intValue();
 			this.y = y.intValue();
 			return this;

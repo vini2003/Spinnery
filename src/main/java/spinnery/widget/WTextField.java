@@ -38,15 +38,12 @@ public class WTextField extends WAbstractTextEditor {
 
 		float x = getX();
 		float y = getY();
-		float z = getZ();
 
 		float sX = getWidth();
 		float sY = getHeight();
 
-		Drawings.drawBeveledPanel(matrices, provider, x, y, z, sX, sY, getStyle().asColor("top_left"), getStyle().asColor("background"), getStyle().asColor("bottom_right"));
+		Drawings.drawBeveledPanel(matrices, provider, x, y, sX, sY, getStyle().asColor("top_left"), getStyle().asColor("background"), getStyle().asColor("bottom_right"));
 
 		renderField(matrices, provider);
-
-		super.draw(matrices, provider);
 	}
 }

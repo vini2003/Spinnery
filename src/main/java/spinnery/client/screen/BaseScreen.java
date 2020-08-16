@@ -62,18 +62,7 @@ public abstract class BaseScreen extends Screen implements WInterfaceProvider {
 	public void tick() {
 		getInterface().tick();
 	}
-
-	@Override
-	public boolean isPauseScreen() {
-		return isPauseScreen;
-	}
-
-	@Override
-	public void resize(MinecraftClient client, int width, int height) {
-		getInterface().onAlign();
-		super.resize(client, width, height);
-	}
-
+	
 	@Override
 	@Environment(EnvType.CLIENT)
 	public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {

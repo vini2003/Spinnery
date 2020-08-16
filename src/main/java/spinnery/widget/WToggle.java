@@ -28,9 +28,9 @@ public class WToggle extends WAbstractToggle {
 		Drawings.drawQuad(matrices, provider, x, y + sY, z, sX, 1, getStyle().asColor("bottom_right.background"));
 		Drawings.drawQuad(matrices, provider, x + sX, y, z, 1, sY + 1, getStyle().asColor("bottom_right.background"));
 
-		Drawings.drawQuad(matrices, provider, x + 1, y + 1, z, sX - 1, sY - 1, getToggleState() ? getStyle().asColor("background.on") : getStyle().asColor("background.off"));
+		Drawings.drawQuad(matrices, provider, x + 1, y + 1, z, sX - 1, sY - 1, isToggled() ? getStyle().asColor("background.on") : getStyle().asColor("background.off"));
 
-		if (getToggleState()) {
+		if (isToggled()) {
 			Drawings.drawBeveledPanel(matrices, provider, x + sX - 8, y - 1, z, 8, sY + 3, getStyle().asColor("top_left.foreground"), getStyle().asColor("foreground"), getStyle().asColor("bottom_right.foreground"));
 		} else {
 			Drawings.drawBeveledPanel(matrices, provider, x + 1, y - 1, z, 8, sY + 3, getStyle().asColor("top_left.foreground"), getStyle().asColor("foreground"), getStyle().asColor("bottom_right.foreground"));

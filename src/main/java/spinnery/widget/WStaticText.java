@@ -42,13 +42,10 @@ public class WStaticText extends WAbstractWidget {
 
 		float x = getX();
 		float y = getY();
-		float z = getZ();
 
-		Texts.pass().text(getText()).at(x, y, z).scale(scale).maxWidth(maxWidth)
-				.shadow(getStyle().asBoolean("shadow")).shadowColor(getStyle().asColor("shadowColor"))
+		Texts.pass().text(getText()).at(x, y).scale(scale).maxWidth(maxWidth)
+				.shadow(getStyle().asBoolean("shadow"))
 				.color(getStyle().asColor("text")).render(matrices, provider);
-
-		super.draw(matrices, provider);
 	}
 
 	@Override
@@ -73,10 +70,5 @@ public class WStaticText extends WAbstractWidget {
 	public <W extends WStaticText> W setText(String text) {
 		this.text = new LiteralText(text);
 		return (W) this;
-	}
-
-	@Override
-	public boolean isFocusedMouseListener() {
-		return true;
 	}
 }

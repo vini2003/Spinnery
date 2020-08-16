@@ -118,7 +118,7 @@ public class WDraggableContainer extends WAbstractWidget implements WModifiableC
 
 		Scissors area = new Scissors(provider, this);
 
-		for (WLayoutElement widget : widgets) {
+		for (WDrawableElement widget : widgets) {
 			widget.draw(matrices, provider);
 		}
 
